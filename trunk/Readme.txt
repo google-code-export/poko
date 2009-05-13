@@ -3,9 +3,10 @@ FWORK 0.5 Release
 
 There are two parts to the release:
 
-** FWORK **
+** POKO FRAMEWORK **
 
-fwork is a small f(rame)work for hxphp websites found in src/fwork. The framework is basically used to serve web requests - eg. "site.com?request=MyRequest" will look for a classfile named 'site.MyRequest' (site is appended to all requests - will be variable later). The request has events called on it - notably main() which should be the entry point for a page request.
+Poko is a mini-framework for hxphp websites found in src/poko. The framework is basically used to serve web requests. For example with the request "site.com?request=MyRequest" will search for a classfile named 'site.MyRequest' ('site' is appended to all requests).
+When a request is found (otherwise a 404 is called), events are called, notably main() will be called which should be the entry point for a page request.
 see blog.touchmypixel.com for details.
 
 INSTALLATION 
@@ -16,10 +17,10 @@ INSTALLATION
 	
 
 	
-** FWORK CMS **
+** POKO CMS **
 
-a flexible CMS build over fwork
-The cms requires that you setup a MySQL database for it to access. It is a small but flexible cms aimed at allowing rapid CRUD of most common DB setups. This is useful for flash sites and the like, which often need ver specific data arrangemets. You can use haxe native db connections and spod also by bypassing the built in db object. - we just like it for its simplicity, and its similar to our previous workflow :P
+a flexible CMS build over poko framework
+The cms requires that you setup a MySQL database for it to access. It is a small but flexible cms aimed at allowing rapid CRUD of most common DB setups. This is useful for flash sites and the like, which often need very specific data arrangemets. You can use haxe native db connections and spod also by bypassing the built in db object. - we just like it for its simplicity, and its similar to our previous workflow :P
 
 INSTALLATION
 
