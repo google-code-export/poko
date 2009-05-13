@@ -1,0 +1,17 @@
+
+::raw header::
+
+::foreach section sections.keys()::
+	
+	<h3>::section::</h3>
+	<ul>
+	::foreach item sections.get(section)::
+		<li><a href="?request=::item.link::">::raw item.indents::::raw item.title:: </a></li>
+	::end::
+	
+	</ul>
+	<br />
+	
+::end::
+
+::raw footer::

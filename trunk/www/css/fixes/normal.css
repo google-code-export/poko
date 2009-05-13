@@ -1,0 +1,58 @@
+﻿
+body{
+	font-family: Times, Serif;
+	font-size:14px;
+	color:#222;
+	padding:10px;
+}
+
+h1 {
+	font-size:20px;
+	font-weight:bold;
+}
+
+h2{
+	font-size:18px;
+	font-weight:bold;
+	margin-bottom:10px;
+}
+
+h3,h4 {
+	font-size:14px;
+	font-weight:bold;
+	margin-bottom:10px;
+}
+
+
+td,tr{
+	padding:3px;
+}
+
+p{
+	margin:5px;
+}
+
+textarea
+{
+	width:200px;
+	height:200px;
+	padding:2px;
+}
+
+
+
+#MailinglistCompose #subject{
+	width: 500px;
+}
+#MailinglistCompose #body{
+	width: 500px;
+	height:400px;
+}
+#MailinglistCompose #footer{
+	width: 500px;
+}
+
+.order
+{
+	width: 30px;
+}

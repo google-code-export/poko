@@ -1,0 +1,17 @@
+<h3>List Groups</h3>
+<table>
+	<tr>
+		<td>Group</td>
+		<td>Description</td>
+		<td>Permissions</td>
+		<td>Action</td>
+	</tr>
+	::foreach g groups::
+		<tr>
+			<td>::g.name::</td>
+			<td>::g.description::</td>
+			<td>::if g.isAdmin:: Admin ::end:: ::if g.isSuper:: Super ::end::</td>
+			<td><a href="?request=cms.modules.base.Users_Group&action=edit&id=::g.id::">Edit</a> | <a href="?request=cms.modules.base.Users_Groups&action=delete&id=::g.id::">Delete</a> </td>
+		</tr>
+	::end::
+</table>

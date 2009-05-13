@@ -1,0 +1,88 @@
+
+	::if !linkMode::
+	<h3>::label::</h3>
+	::end::
+	
+	<p><a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkCategoryField=::linkCategoryField::&linkCategory=::linkCategory::&linkValueField=::linkValueField::&linkValue=::linkValue::">Add to dataset</a></p>
+	
+	::if !linkMode::
+		::raw optionsForm.getOpenTag() ::
+			<div>
+			::if showFiltering::
+			
+				Filter By ::raw optionsForm.getElement("filterBy") ::
+				<div id="filter_normal">
+					::raw optionsForm.getElement("filterByOperator") ::
+					::raw optionsForm.getElement("filterByValue") ::
+				</div>
+				<div id="filter_assoc">
+					::raw optionsForm.getElement("filterByAssoc") ::
+				</div>
+			::end::
+			</div>
+			
+			<div>
+			:: if showOrderBy ::
+				Order By 
+				::raw optionsForm.getElement("orderBy") ::
+				::raw optionsForm.getElement("orderByDirection") ::	
+			::end::
+			</div>
+			
+			:: if (showOrderBy || showFiltering) ::
+				::raw optionsForm.getElement("resetButton") ::
+				::raw optionsForm.getElement("updateButton") ::
+			::end::
+		::raw optionsForm.getCloseTag() ::	
+	::end::
+	
+	<form action="" method="POST">
+		<table class="greyTable" id="News">
+			
+			
+			<tr>
+			<td></td>
+			::if (isOrderingEnabled):: 
+				<td></td> 
+			::end::
+			
+			::foreach field fieldLabels ::
+			
+				<td><b>:: field ::</b></td>
+			
+			::end::
+			
+			<td></td>
+			</tr>
+			::set cols=0::
+			::if data.length > 0::
+				::foreach row data::
+					<tr>
+						::set cols= cols+1:: <td><input type="checkbox" name="delete[]" value="::row.cms_primaryKey::"  /></td>
+						
+						::if isOrderingEnabled ::
+							::set cols = cols+1::
+							<td><input type="input" name="order[:: row.cms_primaryKey ::]" value="::row.dataset__orderField::" class="order" /></td>
+						::end::
+						
+						::foreach field fields::
+							
+							::set cols = cols+fields.length::
+							<td>::raw controller.preview(row, field) ::</td>
+						
+						::end::
+						
+						::set cols = cols+1::
+						<td><a  href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkCategoryField=::linkCategoryField::&linkCategory=::linkCategory::&linkValueField=::linkValueField::&linkValue=::linkValue::">edit</a> | 
+							<a  href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkCategoryField=::linkCategoryField::&linkCategory=::linkCategory::&linkValueField=::linkValueField::&linkValue=::linkValue::">dup</a></td>
+					</tr>
+				::end::
+			::else::
+				<tr><td colspan="::cols::">No Content</td></tr>
+			::end::
+			</table>
+			
+			<input type="hidden" name="action" value="update" />
+		
+			<input type="submit" name="submitted_delete" value="::if isOrderingEnabled:: delete & order ::else:: delete checked ::end::"  />
+	</form>

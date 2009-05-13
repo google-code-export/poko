@@ -1,0 +1,28 @@
+
+	<h3>Manage Datasets</h3>
+	
+	<form action="" method="POST">
+		<table class="greyTable">
+			<tr>
+				<td><b>ord</b></td>
+				<td><b>Label</b></td>
+				<td><b>DB table</b></td>
+				<td><b>Definition</b></td>
+				<td><b>Indents</b></td>
+				<td></td>
+			</tr>
+			::foreach row data::
+				<tr>
+					<td>::if row.order != null::<input type="input" name="order[::row.id::]" value="::row.order::" class="order" />::end::</td>
+					<td>::if row.label:: ::row.label:: ::else:: - none - ::end::</td>
+					<td>::row.tableName::</td>
+					<td>::if row.definitionName:: ::row.definitionName:: ::else:: - none - ::end::</td>
+					<td>::if row.indents != null:: ::row.indents:: ::else:: - none - ::end::</td>
+					<td><a href="?request=cms.modules.base.DatasetsLink&tableName=::row.tableName::">edit</a></td>
+				</tr>
+			::end::
+		</table>
+		
+		<input type="hidden" name="action" value="order" />
+		<button type="submit">update order</button>
+	</form>

@@ -1,0 +1,279 @@
+/** 
+ * poko haxe goodness
+ * @author Tony Polinelli <tonyp@touchmypixel.com>
+ */
+
+package poko;
+
+import poko.utils.PhpTools;
+import haxe.remoting.Context;
+import haxe.remoting.HttpConnection;
+import php.FileSystem;
+import php.Lib;
+import php.Session;
+import php.Sys;
+import php.Web;
+import poko.utils.JsBinding;
+
+class Request extends TemploObject
+{
+	public var authenticate:Bool;
+	public var authenticationRequired:Array<String>;
+	
+	public var request_output:String;
+	public var request_content:String;
+	public var request_content_file:String;
+	
+	public var head:HtmlHeader;
+	public var js:List<String>;
+	public var css:List<String>;
+	public var cssPrint:List<String>;
+	
+	public var remoting:Context;
+	
+	public var jsBindings:Hash<JsBinding>;
+	public var jsCalls:List<String>;
+	
+	public function new() 
+	{
+		super();
+		
+		js = new List();
+		css = new List();
+		cssPrint = new List();
+		head = new HtmlHeader();
+		head.title = "haxe poko";
+		
+		jsBindings = new Hash();
+		jsCalls =  new List();
+		
+		if (Type.getSuperClass(Type.getClass(this)) == Request || Type.getSuperClass(Type.getClass(this)) == Service)
+		{
+			// Request that doesnt extend a layout
+		
+			template_file = StringTools.replace(Type.getClassName(Type.getClass(this)), ".", "/") + ".mtt";
+		} 
+		else 
+		{
+			// Request extending a layout
+		
+			var c:Class<Dynamic> = Type.getClass(this);
+			
+			while (Type.getSuperClass(c) != Request) c = Type.getSuperClass(c);
+			
+			template_file = StringTools.replace(Type.getClassName(c), ".", "/") + ".mtt";
+			
+			request_content_file =  StringTools.replace(Type.getClassName(Type.getClass(this)), ".", "/") + ".mtt";
+		}
+		
+		authenticate = false;
+	}
+	
+	/**  set the 'content' to be parsed */
+	public function setContentTemplate(file:String):Void
+	{
+		request_content_file = Application.instance.sitePackage+ "/" + file;
+	}
+	
+	/**  set the 'template' to be parsed */
+	public function setRequestTemplate(file:String):Void
+	{
+		trace(Application.instance.sitePackage);
+		template_file = Application.instance.sitePackage+ "/" + file;
+	}
+	
+	/**  Override content to be included in the request template by includeRequest() global function */
+	public function setContentOutput(output)
+	{
+		request_content = output;
+	}
+	
+	/**  Override all output sent to the browser */
+	public function setOutput(output)
+	{
+		request_output = output;
+	}
+	
+	/**  set up the request */
+	public function init()
+	{
+		if (application.params.get("logout") == "true") 
+		{
+			Session.set("authenticated", null);
+			Web.redirect("?request=cms.Index");
+		}		
+		
+		remoting = new Context();
+	}
+	
+	/**  fired before authentication */
+	public function pre() { }
+	
+	/* check request authentication */
+	public function auth():Bool
+	{
+		if (!application.user.authenticated) return false;
+		if (authenticationRequired != null && authenticationRequired.length > 0) {
+			for (s in application.user.groups) {
+				if (Lambda.has(authenticationRequired, s)) return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	
+	/**  main request event */
+	public function main() { }
+	
+	/**  run just before rendering event */
+	public function preRender() { }	
+	
+	/**  fired after request render */
+	public function post(){}
+	
+	
+	/**  render the request request event */
+	override public function render():String
+	{
+		init();
+		
+		if (application.isDbRequired)
+			if (application.db.cnx == null)
+				throw("You have not setup a DB connection and you application states that one is required");
+		
+		pre();
+		
+		if (!application.skipAuthentication && (authenticate && !auth()))
+		{
+			application.redirect("?request=cms.Index");
+			//request_output = "Authentication Failed";
+		} 
+		else
+		{
+			if (!HttpConnection.handleRequest(remoting)) 
+			{
+				main();
+				
+				if (request_output == null) 
+				{
+					var tpl = "./tpl/" + StringTools.replace(template_file, "/", "__") + ".php";
+					if(FileSystem.exists(tpl))
+					{
+						preRender();
+						request_output = super.render();
+					} else {
+						throw ("No content set, falling back to template mode - Cannot find your Requests's template file: '" + tpl + "'");
+					}
+				}
+			}
+		}
+		
+		post();
+		
+		return request_output;
+	}
+
+	public function getRequestContent()
+	{
+		if (request_content != null)
+		{
+			return request_content;
+		} else {
+			return template_parseTemplate(request_content_file);
+		}
+	}
+	
+	public function nl2br(input:String):String
+	{
+		#if php
+			return untyped __call__("nl2br", input);
+		#else
+			return StringTools.replace(input, "\n", "<br />");
+		#end
+	}
+	
+}
+
+class HtmlHeader 
+{	
+	public var title:String;
+	public var description:String;
+	public var meta:String;
+	public var keywords:String;
+	public var publisher:String;
+	public var date:String;
+	public var favicon:String;
+	
+	public var js:List<String>;
+	public var css:List<String>;
+	public var cssPrint:List<String>;
+	public var cssIe6:List<String>;
+	public var cssIe7:List<String>;
+	
+	
+	public function new()
+	{
+		title = description = meta = keywords = publisher = date = "";
+		js = new List();
+		css = new List();
+		cssPrint = new List();
+		cssIe6 = new List();
+		cssIe7 = new List();
+	}
+	
+	public function getJs()
+	{
+		var str = "";
+		for (jsItem in js) 
+			str += "<script type=\"text/javascript\" src=\""+ jsItem +"\" ></script> \n";
+			
+		var jsBindings = Application.instance.request.jsBindings;
+		for(jsBinding in jsBindings.keys())
+			str += "<script> poko.js.JsApplication.instance.addRequest(\"" + jsBinding + "\") </script> \n";
+		
+		return str;
+	}
+	
+	public function getJsCalls()
+	{
+		var str = "";
+		var jsCalls = Application.instance.request.jsCalls;
+		for(jsCall in jsCalls)
+			str += "<script> "+jsCall+" </script> \n";
+		return str;
+	}
+	
+	public function getCssIe6()
+	{
+		var str = "";
+		for (cssItem in cssIe6) 
+			str += "<script type=\"text/javascript\" src=\"" + cssItem +"\" ></script> \n";
+			
+		return str;
+	}
+	
+	public function getCssIe7()
+	{
+		var str = "";
+		for (cssItem in cssIe7) 
+			str += "<script type=\"text/javascript\" src=\"" + cssItem +"\" ></script> \n";
+			
+		return str;
+	}
+	
+	public function getCss()
+	{
+		var str = "";
+		for (cssItem in css) 
+			str += "<link rel=\"stylesheet\" href=\"" + cssItem + "\" type=\"text/css\" /> \n";
+		return str;
+	}
+	
+	public function getCssPrint()
+	{
+		var str = "";
+		for (cssItem in cssPrint) 
+			str += "<link rel=\"stylesheet\" href=\"" + cssItem + "\" type=\"text/css\" media=\"print\" /> \n";
+		return str;
+	}	
+}

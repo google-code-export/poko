@@ -1,0 +1,32 @@
+
+<h3>
+	::label:: 
+	::if pagesMode==false && id !=null:: 
+		&gt; row ::id:: 
+	::end::
+</h3>
+
+::raw form.getErrors()::
+
+::raw form.getOpenTag()::
+
+<table class="greyTable datasetItem">
+
+	:: foreach element form.getElements() ::
+		::if (element.getType() == "site.cms.modules.base.formElements.LinkTable")::
+			<tr>
+				<td colspan="2" class="contentTd">::raw element.getLabel():: <br /> ::raw element::</td>
+			</tr>
+		::elseif (element.getType() != "fwork.form.elements.Hidden")::
+			<tr>
+				<td class="labelTd" >::raw element.getLabel()::</td>
+				<td class="contentTd">::raw element::</td>
+			</tr>
+		::else::
+			::raw element::
+		::end::
+	::end::
+
+</table>
+
+::raw form.getCloseTag()::
