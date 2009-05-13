@@ -9,7 +9,7 @@ poko.js.JsRequest.prototype.application = null;
 poko.js.JsRequest.prototype.call = function(method,args) {
 	var func = Reflect.field(this,method);
 	if(func == null) {
-		haxe.Log.trace("Method does not exist: " + method,{ fileName : "JsRequest.hx", lineNumber : 34, className : "poko.js.JsRequest", methodName : "call"});
+		haxe.Log.trace("Method does not exist: " + method,{ fileName : "JsRequest.hx", lineNumber : 57, className : "poko.js.JsRequest", methodName : "call"});
 		return;
 	}
 	var a = haxe.Unserializer.run(args);
@@ -39,7 +39,7 @@ poko.js.JsRequest.prototype.getThis = function() {
 poko.js.JsRequest.prototype.init = function() {
 	this.remoting = haxe.remoting.HttpAsyncConnection.urlConnect(js.Lib.window.location.href);
 	this.remoting.setErrorHandler(function(e) {
-		haxe.Log.trace("Remoting Error : " + Std.string(e),{ fileName : "JsRequest.hx", lineNumber : 25, className : "poko.js.JsRequest", methodName : "init"});
+		haxe.Log.trace("Remoting Error : " + Std.string(e),{ fileName : "JsRequest.hx", lineNumber : 48, className : "poko.js.JsRequest", methodName : "init"});
 	});
 }
 poko.js.JsRequest.prototype.main = function() {
