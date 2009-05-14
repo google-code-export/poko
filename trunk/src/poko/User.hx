@@ -72,8 +72,13 @@ class User
 	{
 		if (authenticated) {
 			var data = Application.instance.db.requestSingle("SELECT * FROM _users WHERE username=" + username);
-			groups = data.groups != null ? data.groups.split(",") : new Array();
-			id = data.id;
+			if(data != null){
+				groups = data.groups != null ? data.groups.split(",") : new Array();
+				id = data.id;
+			}else {
+				groups = [];
+				id = -1;
+			}
 		}
 	}
 	
