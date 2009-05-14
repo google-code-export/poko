@@ -3,14 +3,14 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: May 14, 2009 at 07:20 PM
+-- Generation Time: May 14, 2009 at 09:11 PM
 -- Server version: 5.0.45
 -- PHP Version: 5.2.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 -- 
--- Database: `poko`
+-- Database: `pokotest`
 -- 
 
 -- --------------------------------------------------------
@@ -230,7 +230,7 @@ CREATE TABLE `_users` (
 -- 
 
 INSERT INTO `_users` (`id`, `username`, `password`, `name`, `email`, `groups`, `updated`, `added`) VALUES 
-(5, 'super', 'pass', 'Super User', 'email@email.com', 'cms_admin,cms_manager,cms_editor', '2009-03-26 18:51:01', '0000-00-00 00:00:00'),
+(5, 'super', '1a1dc91c907325c69271ddf0c944bc72', 'Super User', 'email@email.com', 'cms_admin,cms_manager,cms_editor', '2009-03-26 18:51:01', '0000-00-00 00:00:00'),
 (34, 'editor', '1a1dc91c907325c69271ddf0c944bc72', 'Editor', 'email@email.com', 'cms_editor', '2009-03-30 18:59:48', '2009-03-30 18:58:07'),
 (35, 'manager', '1a1dc91c907325c69271ddf0c944bc72', 'Manager', 'email@email.com', 'cms_manager', '2009-03-30 18:59:59', '2009-03-30 18:58:19'),
 (36, 'admin', '1a1dc91c907325c69271ddf0c944bc72', 'Admin', 'email@email.com', 'cms_admin', '2009-03-30 19:00:19', '2009-03-30 18:58:40');
