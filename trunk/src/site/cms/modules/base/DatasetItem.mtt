@@ -13,7 +13,7 @@
 <table class="greyTable datasetItem">
 
 	:: foreach element form.getElements() ::
-		::if (element.getType() == "site.cms.modules.base.formElements.LinkTable")::
+		::if (element.getType() == "site.cms.modules.base.formElements.LinkTo")::
 			<tr>
 				<td colspan="2" class="contentTd">::raw element.getLabel():: <br /> ::raw element::</td>
 			</tr>

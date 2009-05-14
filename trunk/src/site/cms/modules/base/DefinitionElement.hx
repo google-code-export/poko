@@ -149,7 +149,7 @@ class DefinitionElement extends DefinitionsBase
 		var data:Dynamic = meta.properties;
 		
 		// for type selector
-		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image", "richtext", "date", "association", "multilink", "keyvalue", "read-only", "order", "linkcategory", "linkvalue", "hidden"]);
+		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image", "richtext", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden"]);
 		
 		// for bool selectors
 		var yesno = new List();
@@ -175,30 +175,42 @@ class DefinitionElement extends DefinitionsBase
 		var assocFields:List<Dynamic> = null;
 		if (selectedAssocTable != null)
 		{
-			assocFields= application.db.request("SHOW FIELDS FROM `" + selectedAssocTable + "`");
-			assocFields = Lambda.map(assocFields, function(field) {
-				return { key:field.Field, value:field.Field };
-			});
+			try {
+				assocFields= application.db.request("SHOW FIELDS FROM `" + selectedAssocTable + "`");
+				assocFields = Lambda.map(assocFields, function(field) {
+					return { key:field.Field, value:field.Field };
+				});
+			} catch (e:Dynamic) { 
+				assocFields = null;
+			}
 		}
 		
 		var selectedMultiTable = data.table;
 		var multiFields:List<Dynamic> = null;
 		if (selectedMultiTable != null)
 		{
-			multiFields = application.db.request("SHOW FIELDS FROM `" + selectedMultiTable + "`");
-			multiFields = Lambda.map(multiFields, function(field) {
-				return { key:field.Field, value:field.Field };
-			});
+			try {
+				multiFields = application.db.request("SHOW FIELDS FROM `" + selectedMultiTable + "`");
+				multiFields = Lambda.map(multiFields, function(field) {
+					return { key:field.Field, value:field.Field };
+				});
+			} catch (e:Dynamic) { 
+				multiFields = null;
+			}
 		}
 		
-		var selectedMultiLinkTable = data.link;
+		var selectedMultilinkTable = data.link;
 		var multiLinkFields:List<Dynamic> = null;
-		if (selectedMultiLinkTable != null)
+		if (selectedMultilinkTable != null)
 		{
-			multiLinkFields = application.db.request("SHOW FIELDS FROM `" + selectedMultiLinkTable + "`");
-			multiLinkFields = Lambda.map(multiLinkFields, function(field) {
-				return { key:field.Field, value:field.Field };
-			});
+			try {
+				multiLinkFields = application.db.request("SHOW FIELDS FROM `" + selectedMultilinkTable + "`");
+				multiLinkFields = Lambda.map(multiLinkFields, function(field) {
+					return { key:field.Field, value:field.Field };
+				});
+			} catch (e:Dynamic) { 
+				multiLinkFields = null;
+			}
 		}
 		
 		// for text mode field
@@ -214,7 +226,7 @@ class DefinitionElement extends DefinitionsBase
 		elements = new List();
 		form.addElement(new Readonly( "att_name", "Field", meta.name));
 		
-		if (meta.type == "linkdisplay") 
+		if (meta.type == "linkdisplay" || meta.type == "multilink"  ) 
 		{
 			// Sepcial display for links
 			form.addElement(new Input( "att_label", "Label", data.label));
@@ -337,10 +349,10 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(multiLabel, "properties");
 		
 		//
-		var multiLinkTable:Selectbox = new Selectbox( "def_multilink_link", "Link Table", tableList, data.linkTable);
+		var multilinkTable:Selectbox = new Selectbox( "def_multilink_link", "Link Table", tableList, data.linktable);
 		//TODO
-		multiLinkTable.onChange =  jsBind.getRawCall("onChangeSelectbox(this)");
-		form.addElement(multiLinkTable, "properties");
+		multilinkTable.onChange =  jsBind.getRawCall("onChangeSelectbox(this)");
+		form.addElement(multilinkTable, "properties");
 		
 		var multiLinkField1:Selectbox = new Selectbox( "def_multilink_linkField1", "Link Field 1", multiLinkFields, data.linkField1);
 		form.addElement(multiLinkField1, "properties");

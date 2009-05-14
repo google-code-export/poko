@@ -51,12 +51,12 @@ class DefaultTemplate extends Request
 		head.css.add("css/cms/cms.css");
 		
 		navigation = new Navigation();
+		navigation.addLink("Test Page",			"examples.TestPage");
 		navigation.addLink("Pages", 			"examples.Pages");
 		navigation.addLink("Basic data",	 	"examples.Basic");
 		navigation.addLink("Forms", 			"examples.Forms");
 		navigation.addLink("Image Processing", "examples.ImageProcessing");
-		navigation.addLink("Multilinked", 		"examples.Multilinked");
-		navigation.addLink("Linked Table", 		"examples.LinkedTables");
+		navigation.addLink("Complex Data", 		"examples.ComplexData");
 		
 		navigation.setSelectedByRequest(application.params.get('request'));
 	}

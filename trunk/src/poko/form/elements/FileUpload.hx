@@ -52,7 +52,7 @@ class FileUpload extends FormElement
 			}
 		}
 		
-		str += "<input type=\"file\" name=\""+n+"\" id=\""+n+"\" "+attributes+" />";
+		str += "<input type=\"file\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " />";
 		
 		return str;
 	}

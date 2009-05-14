@@ -3,7 +3,7 @@
 	<h3>::label::</h3>
 	::end::
 	
-	<p><a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkCategoryField=::linkCategoryField::&linkCategory=::linkCategory::&linkValueField=::linkValueField::&linkValue=::linkValue::">Add to dataset</a></p>
+	<p><a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">Add to dataset</a></p>
 	
 	::if !linkMode::
 		::raw optionsForm.getOpenTag() ::
@@ -73,8 +73,8 @@
 						::end::
 						
 						::set cols = cols+1::
-						<td><a  href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkCategoryField=::linkCategoryField::&linkCategory=::linkCategory::&linkValueField=::linkValueField::&linkValue=::linkValue::">edit</a> | 
-							<a  href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkCategoryField=::linkCategoryField::&linkCategory=::linkCategory::&linkValueField=::linkValueField::&linkValue=::linkValue::">dup</a></td>
+						<td><a  href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">edit</a> | 
+							<a  href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">dup</a></td>
 					</tr>
 				::end::
 			::else::

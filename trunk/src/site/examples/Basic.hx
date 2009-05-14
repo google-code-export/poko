@@ -35,7 +35,7 @@ class Basic extends DefaultTemplate
 	
 	override public function main()
 	{
-		products = application.db.request("SELECT * FROM `example_products` WHERE `visible`=1");
+		products = application.db.request("SELECT * FROM `example_projects` WHERE `visible`=1");
 	}
 	
 	public function trim(value:String, length)

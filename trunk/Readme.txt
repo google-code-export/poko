@@ -14,7 +14,6 @@ INSTALLATION
 -install haxe 2.03 (haxe.org) 
 -edit src/Main.hx  
 	change the db.connect(xxx) to connect to your MySql Database. 
-	
 
 	
 ** POKO CMS **
@@ -26,7 +25,7 @@ INSTALLATION
 
 -install haxe
 -install templo via typeing "haxelib install templo" at the command prompt
-- execure the fworkcms.sql on your database. 
+- execure the 'poko -w examples.sql' on your database. 
 - go to yoursite.com/cms/ - this will redirect you to "?request=cms.Index"
 - login using:
 	u: admin

@@ -50,12 +50,12 @@ class Image extends Request
 	{
 		var src:String = application.params.get("src");
 		
-		
-		if (application.params.get("preset"))
+		if (application.params.get("preset") != null)
 		{
 			var image:ImageProcessor = new ImageProcessor(application.uploadFolder + "/" + src);
 			image.cacheFolder = application.uploadFolder+ "/cache";
-			image.format = ImageOutputFormat.PNG;
+			image.format = ImageOutputFormat.PNG;		
+			
 			
 			switch(application.params.get("preset"))
 			{
@@ -63,6 +63,8 @@ class Image extends Request
 					image.queueFitSize(40, 40);
 				case "thumb":
 					image.queueFitSize(100, 100);
+				case "square":
+					image.queueFitSize(200, 200);
 				case "aspect": 
 					var w:Int = Std.parseInt(application.params.get("w"));
 					var h:Int = Std.parseInt(application.params.get("h"));

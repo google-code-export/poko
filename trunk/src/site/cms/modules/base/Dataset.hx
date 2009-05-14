@@ -60,8 +60,8 @@ class Dataset extends DatasetBase
 	public var showOrderBy:Bool;
 	public var showFiltering:Bool;
 	
-	private var linkCategoryField:String;
-	private var linkCategory:String;
+	private var linkToField:String;
+	private var linkTo:String;
 	private var linkValueField:String;
 	private var linkValue:Int;
 	
@@ -162,7 +162,7 @@ class Dataset extends DatasetBase
 		var hasWhere = false;
 		// filtering
 		var filterBySelector = optionsForm.getElement('filterBy');
-		if(optionsForm.isSubmitted() && filterBySelector.value != "")
+		if(optionsForm.isSubmitted() && filterBySelector.value != null && filterBySelector.value != "" )
 		{
 			// Associative filter
 			if (definition.getElement(filterBySelector.value).type == "association")
@@ -190,8 +190,8 @@ class Dataset extends DatasetBase
 		// Only display a section of data for linking
 		if (linkMode)
 		{
-			linkCategoryField = application.params.get("linkCategoryField");
-			linkCategory = application.params.get("linkCategory");
+			linkToField = application.params.get("linkToField");
+			linkTo = application.params.get("linkTo");
 			linkValueField= application.params.get("linkValueField");
 			linkValue= Std.parseInt(application.params.get("linkValue"));
 			
@@ -200,7 +200,7 @@ class Dataset extends DatasetBase
 			else 
 				sql += " AND ";
 				
-			sql += "`" + linkCategoryField + "`=\"" + linkCategory + "\" ";
+			sql += "`" + linkToField + "`=\"" + linkTo + "\" ";
 			sql += "AND `" + linkValueField + "`=\"" + linkValue + "\" ";
 		}
 		
@@ -213,7 +213,7 @@ class Dataset extends DatasetBase
 			sql += "ORDER BY `dataset__orderField`";
 		} 
 		// Use OrderBy Filter
-		else if (optionsForm.isSubmitted() && orderBySelector.value != null)
+		else if (optionsForm.isSubmitted() && orderBySelector.value != null && orderBySelector.value != "")
 		{
 			sql += "ORDER BY `" + orderBySelector.value + "` " + optionsForm.getElement("orderByDirection").value;
 		} 
@@ -324,8 +324,8 @@ class Dataset extends DatasetBase
 				url += "&dataset=" + dataset;
 				url += "&id=" + insertedId;
 				url += "&linkMode=" + (linkMode ? "true" : "false");
-				url += "&linkCategoryField=" + application.params.get("linkCategoryField");
-				url += "&linkCategory=" + application.params.get("linkCategory");
+				url += "&linkToField=" + application.params.get("linkToField");
+				url += "&linkTo=" + application.params.get("linkTo");
 				url += "&linkValueField=" + application.params.get("linkValueField");
 				url += "&linkValue=" + application.params.get("linkValue");
 				application.redirect(url);
@@ -487,6 +487,9 @@ class Dataset extends DatasetBase
 	}
 	public function formatDate(d:Date)
 	{
+		if (!Std.is(d, Date))
+			return null;
+		
 		var months = Lambda.array(ListData.getMonths());
 		return d.getDate() + " " + months[d.getMonth()].key +" " + d.getFullYear();
 	}

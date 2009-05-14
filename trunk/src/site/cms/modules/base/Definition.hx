@@ -165,6 +165,20 @@ class Definition extends DefinitionsBase
 						var el = definition.addElement(linkname);
 						el.type = "linkdisplay";
 						definition.save();
+					case "multilink":
+						var lastlink = null; 
+						for (el in definition.elements)
+							if (el.type == "multilink")
+								lastlink = el;
+						var linkname = "multilink_";
+						if(lastlink == null)
+							linkname += "1";
+						else 
+							linkname += cast Std.parseInt(cast(lastlink.name.split("_")[1])) + 1;
+							
+						var el = definition.addElement(linkname);
+						el.type = "multilink";
+						definition.save();
 				}
 				
 		}

@@ -108,7 +108,7 @@ class Form
 		return o;
 	}
 	
-	public function getData():Hash<String>
+	public function getData():Dynamic
 	{
 		var data:Dynamic = {};
 		for (element in getElements())

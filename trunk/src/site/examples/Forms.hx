@@ -26,47 +26,46 @@
  */ 
 
 package site.examples;
+import poko.form.elements.Input;
+import poko.form.elements.Selectbox;
+import poko.form.elements.Button;
+import poko.form.Form;
+import poko.form.validators.StringValidator;
 import poko.Request;
 import site.cms.common.PageData;
 import site.examples.components.Navigation;
 import site.examples.templates.DefaultTemplate;
 
-class Pages extends DefaultTemplate
+class Forms extends DefaultTemplate
 {
-	public var pages:List<PageData>;
-	public var pageNav:Navigation;
-	
-	public var selectedPage:PageData;
+	public var form1:Form;
+	public var form2:Form;
 	
 	override public function main()
 	{
-		pages = PageData.getPages();
+		form1 = new Form("form1");
+		form1.addElement(new Input("name", "You Name"));
+		form1.addElement(new Selectbox("gender", "Gender"));
+		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));
+		form1.populateElements();
 		
-		pageNav = new Navigation();
-		pageNav.selected = application.params.get("page");
+		var gender = form1.getElementTyped("gender", Selectbox);
+		gender.addOption( { key:"male", value:"male" } );
+		gender.addOption( { key:"female", value:"female" } );
 		
-		for (page in pages)
-		{
-			pageNav.addLink(page.definition.name, application.params.get("request"), { page:page.definition.name } );
-			
-			if (page.name == application.params.get("page"))
-				selectedPage = page;
-		}
 		
-	}
-	
-	public function getData(element)
-	{
-		return Reflect.field(selectedPage.data, element);
-	}
-	
-	public function trim(value:String, length)
-	{
-		if (value.length > length)
-		{
-			return value.substr(0, length-3) + "...";
-		} else {
-			return value;
-		}
+		
+		form2 = new Form("form2");
+		var el = new Input("name", "You Name",null,true);
+		el.addValidator(new StringValidator(3, 10, "abcdefg"));
+		form2.addElement(el);
+		form2.addElement(new Selectbox("gender", "Gender"));
+		form2.setSubmitButton(form2.addElement(new Button("submit", "Submit")));
+		form2.populateElements();
+		
+		var gender = form2.getElementTyped("gender", Selectbox);
+		gender.addOption( { key:"male", value:"male" } );
+		gender.addOption( { key:"female", value:"female" } );
+		
 	}
 }

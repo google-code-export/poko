@@ -167,7 +167,7 @@ class DatasetItem extends DatasetBase
 				}		
 		}
 
-		// update multilink linktables
+		// update multilink linkTos
 		var elements = pagesMode ? Lambda.list(definition.elements) : getElementMatches();
 		for (element in elements)
 		{
@@ -198,8 +198,8 @@ class DatasetItem extends DatasetBase
 			var url = "?request=cms.modules.base.Dataset";
 			url += "&dataset=" + dataset;
 			url += "&linkMode=" + (linkMode ? "true" : "false");
-			url += "&linkCategoryField=" + application.params.get("linkCategoryField");
-			url += "&linkCategory=" + application.params.get("linkCategory");
+			url += "&linkToField=" + application.params.get("linkToField");
+			url += "&linkTo=" + application.params.get("linkTo");
 			url += "&linkValueField=" + application.params.get("linkValueField");
 			url += "&linkValue=" + application.params.get("linkValue");
 			application.redirect(url);
@@ -400,7 +400,7 @@ class DatasetItem extends DatasetBase
 		
 		if (linkMode)
 		{
-			form.addElement(new Hidden(application.params.get("linkCategoryField"), application.params.get("linkCategory")));
+			form.addElement(new Hidden(application.params.get("linkToField"), application.params.get("linkTo")));
 			form.addElement(new Hidden(application.params.get("linkValueField"), application.params.get("linkValue")));
 		}
 		

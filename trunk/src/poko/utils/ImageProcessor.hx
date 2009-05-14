@@ -229,7 +229,7 @@ class ImageProcessor
 	
 	public function getFileFormat(file:String):ImageOutputFormat
 	{
-		var ext = file.substr(file.lastIndexOf(".") + 1);
+		var ext = file.substr(file.lastIndexOf(".") + 1).toLowerCase();
 		
 		return switch(ext) 
 		{

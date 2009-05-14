@@ -26,47 +26,56 @@
  */ 
 
 package site.examples;
+import poko.form.elements.Button;
+import poko.form.elements.Selectbox;
+import poko.form.Form;
 import poko.Request;
 import site.cms.common.PageData;
 import site.examples.components.Navigation;
 import site.examples.templates.DefaultTemplate;
 
-class Pages extends DefaultTemplate
+class ComplexData extends DefaultTemplate
 {
-	public var pages:List<PageData>;
-	public var pageNav:Navigation;
+	public var form1:Form;
+	public var showProject:Bool;
+	public var projectId:String;
+	public var projectData:Dynamic;
+	public var projectServices:List<Dynamic>;
+	public var projectImages:List<Dynamic>;
 	
-	public var selectedPage:PageData;
 	
 	override public function main()
 	{
-		pages = PageData.getPages();
+		form1= new Form("form1");
+		form1.addElement(new Selectbox("project", "Project"));
+		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));
+		form1.populateElements();
 		
-		pageNav = new Navigation();
-		pageNav.selected = application.params.get("page");
+		var options = application.db.request("SELECT `id` as 'value', `name` as 'key' FROM example_projects");
 		
-		for (page in pages)
-		{
-			pageNav.addLink(page.definition.name, application.params.get("request"), { page:page.definition.name } );
+		for(option in options)
+			form1.getElementTyped("project", Selectbox).addOption(option);
+		
 			
-			if (page.name == application.params.get("page"))
-				selectedPage = page;
-		}
+		showProject = false;
 		
-	}
-	
-	public function getData(element)
-	{
-		return Reflect.field(selectedPage.data, element);
-	}
-	
-	public function trim(value:String, length)
-	{
-		if (value.length > length)
+		if (form1.isSubmitted())
 		{
-			return value.substr(0, length-3) + "...";
-		} else {
-			return value;
+			projectId = form1.getData().project;
+			
+			if (projectId != "") 
+				viewProject();
 		}
+	}
+	
+	private function viewProject():Void
+	{
+		showProject = true;
+		
+		projectData = application.db.requestSingle("SELECT * FROM `example_projects` p, `example_categories` c WHERE c.`id`=p.`category` AND p.`id`=\"" + projectId + "\"");
+		
+		projectServices = application.db.request("SELECT * FROM `example_services` s, `example_projects_services` link WHERE link.`projectId`=" + projectId + " AND s.`id`=link.`serviceId`");
+		
+		projectImages = application.db.request("SELECT * FROM `example_images` WHERE `link_to`='example_projects' AND `link_value`=\""+projectId+"\"");
 	}
 }

@@ -28,45 +28,16 @@
 package site.examples;
 import poko.Request;
 import site.cms.common.PageData;
-import site.examples.components.Navigation;
 import site.examples.templates.DefaultTemplate;
 
-class Pages extends DefaultTemplate
+class ImageProcessing extends DefaultTemplate
 {
-	public var pages:List<PageData>;
-	public var pageNav:Navigation;
-	
-	public var selectedPage:PageData;
+	public var imageUrl:String;
 	
 	override public function main()
 	{
-		pages = PageData.getPages();
+		var page = PageData.getPageByName("Test Page");
 		
-		pageNav = new Navigation();
-		pageNav.selected = application.params.get("page");
-		
-		for (page in pages)
-		{
-			pageNav.addLink(page.definition.name, application.params.get("request"), { page:page.definition.name } );
-			
-			if (page.name == application.params.get("page"))
-				selectedPage = page;
-		}
-		
-	}
-	
-	public function getData(element)
-	{
-		return Reflect.field(selectedPage.data, element);
-	}
-	
-	public function trim(value:String, length)
-	{
-		if (value.length > length)
-		{
-			return value.substr(0, length-3) + "...";
-		} else {
-			return value;
-		}
+		imageUrl = page.data.image;
 	}
 }

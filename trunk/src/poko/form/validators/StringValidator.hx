@@ -52,13 +52,14 @@ class StringValidator extends Validator
 		
 		errorMinChars = "Must be at least %s characters long";
 		errorMaxChars = "Must be less than  %s characters long";
-		errorDenyChars = "Cannot contain the characters %s";
-		errorAllowChars = "Must contain only the characers %s";
+		errorDenyChars = "Cannot contain the characters '%s'";
+		errorAllowChars = "Must contain only the characers '%s'";
 	
 		this.minChars = minChars;
 		this.maxChars = maxChars;
 		this.charList = charList;
 		this.mode = mode;
+		if (this.mode == null) this.mode = StringValidatorMode.ALLOW;
 		
 		this.regex = regex;
 		this.regexError = regexError != null ? regexError : "Doesn't match required input.";
@@ -96,7 +97,8 @@ class StringValidator extends Validator
 						if (charList.indexOf(letter) == -1)
 						{
 							valid = false;
-							errors.add(StringTools2.printf(errorAllowChars, [StringTools2.toSentenceList(charList)]));
+						//	errors.add(StringTools2.printf(errorAllowChars, [StringTools2.toSentenceList(charList)]));
+							errors.add(StringTools2.printf(errorAllowChars, [charList]));
 							break;
 						}
 					}
@@ -107,7 +109,8 @@ class StringValidator extends Validator
 						if (charList.indexOf(letter) != -1)
 						{
 							valid = false;
-							errors.add(StringTools2.printf(errorDenyChars, [StringTools2.toSentenceList(charList)]));
+							//errors.add(StringTools2.printf(errorDenyChars, [StringTools2.toSentenceList(charList)]));
+							errors.add(StringTools2.printf(errorDenyChars, [charList]));
 							break;
 						}
 					}

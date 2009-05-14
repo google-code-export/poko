@@ -31,42 +31,19 @@ import site.cms.common.PageData;
 import site.examples.components.Navigation;
 import site.examples.templates.DefaultTemplate;
 
-class Pages extends DefaultTemplate
+class TestPage extends DefaultTemplate
 {
-	public var pages:List<PageData>;
-	public var pageNav:Navigation;
+	public var page:PageData;
 	
-	public var selectedPage:PageData;
+	public var heading:String;
+	public var content:String;
+	public var image:String;
 	
 	override public function main()
 	{
-		pages = PageData.getPages();
-		
-		pageNav = new Navigation();
-		pageNav.selected = application.params.get("page");
-		
-		for (page in pages)
-		{
-			pageNav.addLink(page.definition.name, application.params.get("request"), { page:page.definition.name } );
-			
-			if (page.name == application.params.get("page"))
-				selectedPage = page;
-		}
-		
-	}
-	
-	public function getData(element)
-	{
-		return Reflect.field(selectedPage.data, element);
-	}
-	
-	public function trim(value:String, length)
-	{
-		if (value.length > length)
-		{
-			return value.substr(0, length-3) + "...";
-		} else {
-			return value;
-		}
+		page = PageData.getPageByName("Test Page");
+		heading = page.data.heading;
+		content = page.data.content;
+		image = page.data.image;
 	}
 }

@@ -69,6 +69,7 @@
 	
 	<br /><br/>
 	<h3>Extras</h3>
+	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=multilink">Add 'Multilink'</a><br/>
 	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=linkdisplay">Add 'Link-Display'</a>
 	::end::
 	

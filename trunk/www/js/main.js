@@ -1754,10 +1754,10 @@ site.cms.js.JsTest.__name__ = ["site","cms","js","JsTest"];
 site.cms.js.JsTest.__super__ = poko.js.JsRequest;
 for(var k in poko.js.JsRequest.prototype ) site.cms.js.JsTest.prototype[k] = poko.js.JsRequest.prototype[k];
 site.cms.js.JsTest.prototype.calltest = function(v1,v2,v3) {
-	haxe.Log.trace("testies XXXX",{ fileName : "JsTest.hx", lineNumber : 17, className : "site.cms.js.JsTest", methodName : "calltest"});
-	haxe.Log.trace(v1,{ fileName : "JsTest.hx", lineNumber : 18, className : "site.cms.js.JsTest", methodName : "calltest"});
-	haxe.Log.trace(v2,{ fileName : "JsTest.hx", lineNumber : 19, className : "site.cms.js.JsTest", methodName : "calltest"});
-	haxe.Log.trace(v3,{ fileName : "JsTest.hx", lineNumber : 20, className : "site.cms.js.JsTest", methodName : "calltest"});
+	haxe.Log.trace("testies XXXX",{ fileName : "JsTest.hx", lineNumber : 39, className : "site.cms.js.JsTest", methodName : "calltest"});
+	haxe.Log.trace(v1,{ fileName : "JsTest.hx", lineNumber : 40, className : "site.cms.js.JsTest", methodName : "calltest"});
+	haxe.Log.trace(v2,{ fileName : "JsTest.hx", lineNumber : 41, className : "site.cms.js.JsTest", methodName : "calltest"});
+	haxe.Log.trace(v3,{ fileName : "JsTest.hx", lineNumber : 42, className : "site.cms.js.JsTest", methodName : "calltest"});
 }
 site.cms.js.JsTest.prototype.__class__ = site.cms.js.JsTest;
 js = {}

@@ -39,17 +39,17 @@ import haxe.Serializer;
 class LinkTable extends FormElement
 {
 	public var linkTable:String;
-	public var linkCategory:String;
+	public var linkTo:String;
 	public var linkValue:Int;
 	
-	public function new(name:String, label:String, linkTable:String, linkCategory:String, linkValue:Int, ?validatorsKey:Array<Validator>, ?validatorsValue:Array<Validator>, ?attibutes:String="") 
+	public function new(name:String, label:String, linkTable:String, linkTo:String, linkValue:Int, ?validatorsKey:Array<Validator>, ?validatorsValue:Array<Validator>, ?attibutes:String="") 
 	{
 		super();
 		this.name = name;
 		this.label = label;
 		this.attributes = attibutes;
 		this.linkTable = linkTable;
-		this.linkCategory = linkCategory;
+		this.linkTo = linkTo;
 		this.linkValue = linkValue;
 	}
 	
@@ -58,21 +58,21 @@ class LinkTable extends FormElement
 		var str = "";
 		
 		var linkDefId = site.cms.common.Definition.tableToDefinitionId(linkTable);
-		var linkCategoryField = null;
+		var linkToField = null;
 		var linkValueField = null;
 		var linkdef = new site.cms.common.Definition(linkDefId);
 		for (el in linkdef.elements)
 		{
-			if (el.type == "linkcategory")
+			if (el.type == "link-to")
 			{
-				linkCategoryField = el.name;
+				linkToField = el.name;
 				break;
 			}
 		}
 		
 		for (el in linkdef.elements)
 		{
-			if (el.type == "linkvalue")
+			if (el.type == "link-value")
 			{
 				linkValueField = el.name;
 				break;
@@ -83,16 +83,16 @@ class LinkTable extends FormElement
 		{
 			str += "Please edit link tables after adding item.";
 		}
-		else if(linkValueField == null || linkCategoryField == null)
+		else if(linkValueField == null || linkToField == null)
 		{
-			if (linkValueField == null) str += "Could not find a 'linkcategory' in dataset definition<br/>";
-			if (linkCategoryField==null) str += "Could not find both 'linkvalue' in dataset definition<br/>";
+			if (linkValueField == null) str += "Could not find a 'link-to' in dataset definition<br/>";
+			if (linkToField==null) str += "Could not find both 'link-value' in dataset definition<br/>";
 		} 
 		else 
 		{
 			var url = "?request=cms.modules.base.Dataset&dataset=" + linkDefId + "&linkMode=true";
-			url += "&linkCategoryField=" + linkCategoryField;
-			url += "&linkCategory=" + linkCategory;
+			url += "&linkToField=" + linkToField;
+			url += "&linkTo=" + linkTo;
 			url += "&linkValueField=" + linkValueField;
 			url += "&linkValue=" + linkValue;
 			
