@@ -36,7 +36,7 @@ class TextArea extends Input
 		}		
 		
 		var s = "";
-		if (required && form.isSubmitted()) s += "required<br />";
+		if (required && form.isSubmitted() && printRequired) s += "required<br />";
 		var style = useSizeValues ? "style=\"width:" + width + "px; height:" + height + "px;\"" : "";
 		
 		s += "<textarea "+style+" name=\"" + n + "\" id=\"" + n + "\">" + value + "</textarea>";

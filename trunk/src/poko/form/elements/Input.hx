@@ -17,6 +17,7 @@ class Input extends FormElement
 	public var width:Int;
 	public var showLabelAsDefaultValue:Bool;
 	public var useSizeValues:Bool;
+	public var printRequired:Bool;
 	
 	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attibutes:String="") 
 	{
@@ -30,6 +31,7 @@ class Input extends FormElement
 		
 		showLabelAsDefaultValue = false;
 		useSizeValues = false;
+		printRequired = true;
 		
 		width = 180;
 	}
@@ -48,7 +50,7 @@ class Input extends FormElement
 		}		
 		
 		var style = useSizeValues ? "style=\"width:"+width+"px\"" : "";
-		return "<input "+style+" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />"+ (if(required && form.isSubmitted()) " required");
+		return "<input "+style+" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />" + (if(required && form.isSubmitted() && printRequired) " required");
 	}
 	
 	public function toString() :String
