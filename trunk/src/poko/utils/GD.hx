@@ -1,28 +1,6 @@
-/*
- * Copyright (c) 2008, TouchMyPixel & contributors
- * Original author : Tony Polinelli <tonyp@touchmypixel.com> 
- * Contributers: Tarwin Stroh-Spijer 
- * All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *   - Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   - Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE TOUCH MY PIXEL & CONTRIBUTERS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE TOUCH MY PIXEL & CONTRIBUTORS
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
- * THE POSSIBILITY OF SUCH DAMAGE.
+/** 
+ * fwork haxe goodness
+ * @author Tony Polinelli <tonyp@touchmypixel.com>
  */
 
 package poko.utils;
@@ -43,8 +21,18 @@ class GD
 	{
 		var types:Array<ImageType> = [GIF, JPG, PNG, SWF, PSD, BMP, TIFF_II, TIFF_MM, JPC, JP2, JPX, JB2, SWC, IFF, WBMP, XBM];
 		var a:Array<Dynamic> = untyped __call__("getimagesize", filename);
+
+		var bits = null;
+		var channels = null;
+		var mime = null;
 		
-		return { width: a[0], height: a[1], type: types[a[2]], bits: a[4], channels: a[5], mime: a[6] };
+		try {
+			bits = a[4] != null ? a[4] : null;
+			channels = a[5] != null ? a[5] : null;
+			mime = a[6] != null ? a[6] : null;
+		}catch (e:Dynamic) {}
+		
+		return { width: a[0], height: a[1], type: types[a[2]], bits: bits, channels: channels, mime: mime };
 	}
 	
 	/** Get file extension for image an ImageType */ 
