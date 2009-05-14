@@ -8,10 +8,12 @@ package poko.form.elements;
 import poko.form.elements.Input;
 import poko.form.Form;
 import poko.form.Validator;
+import poko.form.validators.BoolValidator;
 
 class TextArea extends Input
 {
 	public var height:Int;
+
 	
 	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attibutes:String="") 
 	{
@@ -25,9 +27,19 @@ class TextArea extends Input
 	{
 		var n = form.name + "_" +name;
 		
+		if (showLabelAsDefaultValue && value == label){
+			addValidator(new BoolValidator(false, "Not valid"));
+		}
+		
+		if ((value == null || value == "") && showLabelAsDefaultValue) {
+			value = label;
+		}		
+		
 		var s = "";
 		if (required && form.isSubmitted()) s += "required<br />";
-		s += "<textarea style=\"width:" + width + "px; height:" + height + "px;\" name=\"" + n + "\" id=\"" + n + "\">" + value + "</textarea>";
+		var style = useSizeValues ? "style=\"width:" + width + "px; height:" + height + "px;\"" : "";
+		
+		s += "<textarea "+style+" name=\"" + n + "\" id=\"" + n + "\">" + value + "</textarea>";
 		return s;
 	}
 	

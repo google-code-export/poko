@@ -26,23 +26,30 @@
  */
 
 package poko.form.validators;
-import poko.form.Form;
-import poko.form.FormElement;
 import poko.form.Validator;
 
-class CustomValidator extends Validator
+class BoolValidator extends Validator
 {
-	public var validationFunction:FormElement->Bool;
+	public var errorNotValid:String;
+	public var valid:Bool;
 	
-	public function new(validationFunction:FormElement->Bool) 
+	public function new(valid:Bool, ?error:String) 
 	{
-		this.validationFunction = validationFunction;
+		super();
+		
+		this.valid = valid;
+		
+		if (error != null) {
+			errorNotValid = error;
+		}else {
+			errorNotValid = "Not valid.";
+		}
 	}
 	
-	override public function isValid(value:Dyanmic):Bool
+	override public function isValid(value):Bool
 	{
-		super.isValid(value);
-		
-		return Reflect.callMethod(null, validationFunction, [formElement])
+		if (!valid)
+			errors.push(errorNotValid);
+		return valid;
 	}
 }

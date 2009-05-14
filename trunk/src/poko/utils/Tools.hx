@@ -26,6 +26,7 @@
  */
 
 package poko.utils;
+import poko.form.Form;
 
 class Tools 
 {
@@ -34,4 +35,14 @@ class Tools
 	{
 		
 	}
+	
+	public static function getFormDataAsString(form:Form):String
+	{
+		var out = "";
+		for (element in form.getElements())
+		{
+			out += element.label + ": " + element.value + "\n";
+		}
+		return(out);
+	}	
 }

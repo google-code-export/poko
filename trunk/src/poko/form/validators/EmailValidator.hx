@@ -44,6 +44,9 @@ class EmailValidator extends Validator
 		super.isValid(value);
 		
 		var valid = emailRegex.match(Std.string(value));
+		if (!valid)
+			errors.add(errorNotValid);
+		
 		return valid;
 	}
 

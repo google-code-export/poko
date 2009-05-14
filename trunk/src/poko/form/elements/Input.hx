@@ -8,12 +8,15 @@ package poko.form.elements;
 import poko.form.Form;
 import poko.form.FormElement;
 import poko.form.Validator;
+import poko.form.validators.BoolValidator;
 
 
 class Input extends FormElement
 {
 	public var password:Bool;
 	public var width:Int;
+	public var showLabelAsDefaultValue:Bool;
+	public var useSizeValues:Bool;
 	
 	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attibutes:String="") 
 	{
@@ -25,6 +28,9 @@ class Input extends FormElement
 		this.attributes = attibutes;
 		this.password = false;
 		
+		showLabelAsDefaultValue = false;
+		useSizeValues = false;
+		
 		width = 180;
 	}
 	
@@ -33,7 +39,16 @@ class Input extends FormElement
 		var n = form.name + "_" +name;
 		var tType:String = password ? "password" : "text";
 		
-		return "<input style=\"width:"+width+"px\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />"+ (if(required && form.isSubmitted()) " required");
+		if (showLabelAsDefaultValue && value == label){
+			addValidator(new BoolValidator(false, "Not valid"));
+		}
+		
+		if ((value == null || value == "") && showLabelAsDefaultValue) {
+			value = label;
+		}		
+		
+		var style = useSizeValues ? "style=\"width:"+width+"px\"" : "";
+		return "<input "+style+" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />"+ (if(required && form.isSubmitted()) " required");
 	}
 	
 	public function toString() :String
