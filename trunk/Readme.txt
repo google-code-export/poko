@@ -32,6 +32,9 @@ INSTALLATION
 	p: pass
 - view the help section for details about how the cms works. 
 
+EXAMPLES
+
+goto ?request=examples.Index to view examples
 
 COMPILING
 
