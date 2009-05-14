@@ -35,7 +35,7 @@ import poko.form.elements.Button;
 import poko.form.elements.CheckboxGroup;
 import site.cms.modules.base.formElements.KeyValueInput;
 import poko.form.elements.DateSelector;
-import poko.form.elements.FileUpload;
+import site.cms.modules.base.formElements.FileUpload;
 import poko.form.elements.Hidden;
 import poko.form.elements.Input;
 import poko.form.elements.RadioGroup;

@@ -469,7 +469,7 @@ class Dataset extends DatasetBase
 		{
 			case "text": (data).substr(0,50) + (data.length > 50 ? "..." :  "");
 			case "richtext": StringTools.htmlEscape(data.substr(0,50)) + ((data.length > 50) ? "..." : "");
-			case "image": "<img src=\"?request=services.Image&preset=tiny&src="+data+"\" /> <br/>";
+			case "image": "<img src=\"?request=cms.services.Image&preset=tiny&src="+data+"\" /> <br/>";
 			case "bool": formatBool(cast data, properties);
 			case "date": formatDate(cast data);
 			case "keyvalue": "list of values";

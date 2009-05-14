@@ -26,7 +26,7 @@ import site.cms.modules.base.Users_Group;
 
 import site.cms.modules.help.Help;
 
-import site.cms.modules.base.DbStructure;
+import site.cms.services.Image;
 
 
 class ImportAll {}

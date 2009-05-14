@@ -3,7 +3,7 @@
  * @author Tony Polinelli <tonyp@touchmypixel.com>
  */
 
-package poko.form.elements;
+package site.cms.modules.base.formElements;
 import poko.Application;
 import poko.form.Form;
 import poko.form.FormElement;
@@ -41,6 +41,16 @@ class FileUpload extends FormElement
 	{
 		var n = form.name + "_" +name;
 		var str:String = "";
+		
+		if (value != "")
+		{
+			var s:String = value;
+			var ext = s.substr(s.lastIndexOf(".")+1).toLowerCase();
+			if (ext == "jpg" || ext == "gif" || ext == "png")
+			{
+				str += "<a href=\"?request=cms.services.Image&src="+value+"\" ><img src=\"?request=services.Image&preset=thumb&src="+value+"\" /></a> <br/>";
+			}
+		}
 		
 		str += "<input type=\"file\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " />";
 		
