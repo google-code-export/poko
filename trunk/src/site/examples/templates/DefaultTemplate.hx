@@ -25,39 +25,39 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package poko;
+package site.examples.templates;
 
-import poko.Application;
+import poko.Request;
+import site.examples.components.Navigation;
 
-class Component extends TemploObject
-{
-	public var output:String;
+class DefaultTemplate extends Request
+{	
+	public var navigation:Navigation;
 	
 	public function new() 
 	{
 		super();
-		template_file = StringTools.replace(Type.getClassName(Type.getClass(this)), ".", "/") + ".mtt";
+	}
+	
+	override public function init()
+	{
+		head.title = "haXe poko examples site";
 		
-		application = Application.instance;
-	}
-	
-	public function setTemplate(file:String):Void
-	{
-		template_file = Application.instance.packageRoot + "/" + file;
-	}
-	
-	public function main(){}
-	
-	public function setOutput(value)
-	{
-		output = Std.string(value);
-	}
-	
-	override public function render():String
-	{
-		main();
+		//app.defaultJS.add("js/firebug-lite.js");
+		head.css.add("css/reset.css");
+		head.css.add("css/fonts.css");
+		head.css.add("css/normal.css");
 		
-		return output != null ? output : super.render();
+		head.css.add("css/cms/cms.css");
+		
+		navigation = new Navigation();
+		navigation.addLink("Pages", 			"examples.Pages");
+		navigation.addLink("Basic data",	 	"examples.Basic");
+		navigation.addLink("Forms", 			"examples.Forms");
+		navigation.addLink("Image Processing", "examples.ImageProcessing");
+		navigation.addLink("Multilinked", 		"examples.Multilinked");
+		navigation.addLink("Linked Table", 		"examples.LinkedTables");
+		
+		navigation.setSelectedByRequest(application.params.get('request'));
 	}
-	
 }

@@ -34,6 +34,8 @@ import php.Lib;
 import php.Web;
 
 import site.cms.ImportAll;
+import site.examples.ImportAll;
+
 
 import site.services.Rss;
 import site.services.XmlData;
@@ -97,10 +99,9 @@ class Main
 			switch(Web.getHostName())
 			{
 				case "staging.touchmypixel.com":
-					app.db.connect("localhost", "touchmyp_texstyle", "touchmyp_texstyl", "mextex");
+					//app.db.connect("xxx", "xxx", "xxx", "xxx");
 				default:
-					app.db.connect("192.168.1.10", "cms", "root", "");
-					//app.db.connect("192.168.1.10", "joshmurray_texstyle", "root", "");
+					app.db.connect("192.168.1.10", "poko", "root", "");
 			}
 			
 			

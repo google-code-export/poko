@@ -56,9 +56,9 @@ class Navigation extends Component
 		requests.set("modules.base.Datasets", "Data");
 		requests.set("modules.help.Help", "Help");
 		
-		if (application.user.isAdmin() || application.user.isSuper()) {
+		//if (application.user.isAdmin() || application.user.isSuper()) {
 			requests.set("modules.base.Users", "Users");
-		}
+		//}
 		
 		content = "<ul>";
 

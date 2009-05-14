@@ -23,41 +23,28 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- */
+ */ 
 
-package poko;
+package site.examples;
+import poko.Request;
+import site.examples.templates.DefaultTemplate;
 
-import poko.Application;
-
-class Component extends TemploObject
+class Basic extends DefaultTemplate
 {
-	public var output:String;
+	public var products:List<Dynamic>;
 	
-	public function new() 
+	override public function main()
 	{
-		super();
-		template_file = StringTools.replace(Type.getClassName(Type.getClass(this)), ".", "/") + ".mtt";
-		
-		application = Application.instance;
+		products = application.db.request("SELECT * FROM `example_products` WHERE `visible`=1");
 	}
 	
-	public function setTemplate(file:String):Void
+	public function trim(value:String, length)
 	{
-		template_file = Application.instance.packageRoot + "/" + file;
+		if (value.length > length)
+		{
+			return value.substr(0, length-3) + "...";
+		} else {
+			return value;
+		}
 	}
-	
-	public function main(){}
-	
-	public function setOutput(value)
-	{
-		output = Std.string(value);
-	}
-	
-	override public function render():String
-	{
-		main();
-		
-		return output != null ? output : super.render();
-	}
-	
 }

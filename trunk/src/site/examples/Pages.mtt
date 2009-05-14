@@ -1,0 +1,14 @@
+<h1>Pages</h1>
+
+<p>Lets get the data out of a table, show images as images and trim description text to 200chars :</p>
+
+<h3>Pages</h3>
+
+::raw pageNav::
+
+
+::if selectedPage != null::
+
+	<h2>Page: ::selectedPage.name::</h2>
+	
+::end::

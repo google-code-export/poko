@@ -1,7 +1,7 @@
 
 package site;
 
-import site.cms.common.Page;
+import site.cms.common.PageData;
 import poko.Request;
 import site.templates.DefaultTemplate;
 import templo.Loader;

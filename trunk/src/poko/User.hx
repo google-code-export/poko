@@ -99,6 +99,7 @@ class User
 			sql += pre + " stub='" + s + "'";
 			pre = " OR";
 		}
+		
 		var res = Application.instance.db.request(sql);
 		
 		_isAdmin = false;
