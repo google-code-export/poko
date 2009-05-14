@@ -25,10 +25,12 @@ INSTALLATION
 
 -install haxe
 -install templo via typeing "haxelib install templo" at the command prompt
-- execure the 'poko -w examples.sql' on your database. 
-- go to yoursite.com/cms/ - this will redirect you to "?request=cms.Index"
+- execute the 'poko 0.5.sql' on your database. 
+- set the database details in src/Main.hx
+- compile
+- go to http://*yoursite*/*poko folder*/www - you can put 'cms' after this to be direct staight to the cms
 - login using:
-	u: admin
+	u: super
 	p: pass
 - view the help section for details about how the cms works. 
 
