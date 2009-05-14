@@ -116,8 +116,8 @@ class Definition
 		description = results.description;
 		primaryKey = results.primaryKey;
 		
-		showFiltering = results.showFiltering == 1 ? true : false;
-		showOrdering = results.showOrdering == 1 ? true : false;
+		showFiltering = results.showFiltering;
+		showOrdering = results.showOrdering;
 		
 		try{
 			elements = Unserializer.run(results.elements);
@@ -140,8 +140,8 @@ class Definition
 		data.elements = s.toString();
 		data.primaryKey = primaryKey;
 		
-		data.showFiltering = showFiltering ? 1 : 0;
-		data.showOrdering = showOrdering ? 1 : 0;
+		data.showFiltering = showFiltering;
+		data.showOrdering = showOrdering;
 		
 		Application.instance.db.update("_definitions", data, "`id`=\"" + id + "\"" );
 	}

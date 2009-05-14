@@ -31,6 +31,26 @@ import neko.FileSystem;
 import neko.Lib;
 import neko.Sys;
 
+
+class Test {
+	
+	public function new() {}
+	
+	public function toString()
+	{
+		return "toString on Test1";
+	}
+}
+
+class Test2 extends Test
+{
+	public function new()
+	{
+		super();
+	}
+}
+
+
 /**
  * Simple Program which iterates -from folder, finds .mtt templates and compiles them to the -to folder
  */
@@ -53,6 +73,13 @@ class MakeTemplates
 	
 	public function new()
 	{
+		var t = new Test();
+		var t2 = new Test2();
+		trace(t);
+		trace(t2);
+		
+		return;
+		
 		parseArgs();
 		
 		items = [];

@@ -239,9 +239,9 @@ class DefinitionElement extends DefinitionsBase
 			form.addElement(new Input( "att_label", "Label", data.label));
 			typeSelector = new Selectbox( "type", "Type", datatypes, meta.type, true, "");
 			form.addElement(typeSelector);
-			form.addElement(new RadioGroup( "att_showInList", "Show in List?", yesno, data.showInList, "0", false));	
-			form.addElement(new RadioGroup( "att_showInFiltering", "Show in filter?", yesno, data.showInFiltering, "0", false));	
-			form.addElement(new RadioGroup( "att_showInOrdering", "Enable ordering?", yesno, data.showInOrdering, "0", false));	
+			form.addElement(new RadioGroup( "att_showInList", "Show in List?", yesno, meta.showInList ? "1" : "0", "0", false));	
+			form.addElement(new RadioGroup( "att_showInFiltering", "Show in filter?", yesno, meta.showInFiltering ? "1" : "0", "0", false));	
+			form.addElement(new RadioGroup( "att_showInOrdering", "Enable ordering?", yesno, meta.showInOrdering ? "1" : "0", "0", false));	
 		}
 		
 		form.addFieldset("properties", new FieldSet("propertiesFieldset", "Properties", true));

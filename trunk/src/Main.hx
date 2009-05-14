@@ -44,14 +44,14 @@ import site.services.Image;
 
 import site.Index;
 
-class Test implements Dynamic
-{
+class Test {
 	
-	public function new()
+	public function new() {}
+	
+	public function toString()
 	{
-		
+		return "toString on Test1";
 	}
-
 }
 
 class Main 
@@ -61,8 +61,6 @@ class Main
 	public static function main() 
 	{	
 		PhpTools.setupTrace();
-		
-		
 		
 		app = new Application();
 		

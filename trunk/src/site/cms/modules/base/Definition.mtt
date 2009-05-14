@@ -35,9 +35,9 @@
 					<td>::element.name::</td>
 					::if !pagesMode::<td>(::if element.dbtype !=null::::element.dbtype::::end::)</td>::end::
 					<td>(::element.type::)</td>
-					<td>::if element.showInList == 1:: &#x2714; ::else:: &#x02610; ::end::</td>
-					<td>::if element.showInFiltering == 1:: &#x2714; ::else:: &#x02610; ::end::</td>
-					<td>::if element.showInOrdering == 1:: &#x2714; ::else:: &#x02610; ::end::</td>
+					<td><a id="checkboxToggle_showInList_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInList"])::">::if element.showInList:: &#x2714; ::else:: &#x02610; ::end::</a></td>
+					<td><a id="checkboxToggle_showInFiltering_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInFiltering"])::">::if element.showInFiltering:: &#x2714; ::else:: &#x02610; ::end::</a></td>
+					<td><a id="checkboxToggle_showInOrdering_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInOrdering"])::">::if element.showInOrdering:: &#x2714; ::else:: &#x02610; ::end::</a></td>
 					<td><a href="?request=cms.modules.base.DefinitionElement&id=::id::&definition=::element.name::&pagesMode=::pagesMode::">edit</a></td>
 				</tr>
 				

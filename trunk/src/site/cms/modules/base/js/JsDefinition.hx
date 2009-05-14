@@ -24,33 +24,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
+package site.cms.modules.base.js;
 
-package site.cms.common;
+import poko.js.JsRequest;
+import haxe.Serializer;
+import haxe.Unserializer;
+import js.Dom;
+import js.Lib;
 
-class DefinitionElementMeta
-{
-	public var name:String;
-	public var type:String;
-	public var dbtype:String;
-	public var label:String;
-	public var properties:Dynamic;
-	public var order:Float;
-	
-	public var showInList:Bool;
-	public var showInFiltering:Bool;
-	public var showInOrdering:Bool;
-	
-	public function new(name:String) 
+class JsDefinition extends JsRequest
+{	
+	override public function main()
 	{
-		this.properties = {}; 
-		this.name = name;
-		showInList = true;
-		showInFiltering = false;
-		showInOrdering = false;
+		
 	}
 	
-	public function toString():String
+	public function toggleCheckbox(field, index, type)
 	{
-		return "DefinitionElementMeta: " + name + (", Show In List: " + ((showInList) ? "true" : "false"));
+		remoting.api.toggleCheckbox.call([field, index, type], onResponse);
+	}
+	
+	private function onResponse(data):Void
+	{
+		var el = Lib.document.getElementById("checkboxToggle_" + data.type + "_" + data.index);
+		el.innerHTML = data.value ? "&#x2714;" : "&#x02610;";
 	}
 }

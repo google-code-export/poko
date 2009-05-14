@@ -2218,6 +2218,23 @@ Hash.prototype.toString = function() {
 	return s.b.join("");
 }
 Hash.prototype.__class__ = Hash;
+site.cms.modules.base.js.JsDefinition = function(p) { if( p === $_ ) return; {
+	poko.js.JsRequest.apply(this,[]);
+}}
+site.cms.modules.base.js.JsDefinition.__name__ = ["site","cms","modules","base","js","JsDefinition"];
+site.cms.modules.base.js.JsDefinition.__super__ = poko.js.JsRequest;
+for(var k in poko.js.JsRequest.prototype ) site.cms.modules.base.js.JsDefinition.prototype[k] = poko.js.JsRequest.prototype[k];
+site.cms.modules.base.js.JsDefinition.prototype.main = function() {
+	null;
+}
+site.cms.modules.base.js.JsDefinition.prototype.onResponse = function(data) {
+	var el = js.Lib.document.getElementById("checkboxToggle_" + data.type + "_" + data.index);
+	el.innerHTML = (data.value?"&#x2714;":"&#x02610;");
+}
+site.cms.modules.base.js.JsDefinition.prototype.toggleCheckbox = function(field,index,type) {
+	this.remoting.resolve("api").resolve("toggleCheckbox").call([field,index,type],$closure(this,"onResponse"));
+}
+site.cms.modules.base.js.JsDefinition.prototype.__class__ = site.cms.modules.base.js.JsDefinition;
 $Main = function() { }
 $Main.__name__ = ["@Main"];
 $Main.prototype.__class__ = $Main;

@@ -29,6 +29,7 @@ package site.cms.modules.base;
 
 import poko.form.elements.RadioGroup;
 import poko.form.elements.Readonly;
+import poko.utils.JsBinding;
 import site.cms.common.Definition;
 import site.cms.common.DefinitionElementMeta;
 import poko.form.elements.Button;
@@ -49,17 +50,40 @@ class Definition extends DefinitionsBase
 	
 	public var definition:site.cms.common.Definition;
 	
+	public var jsBind:JsBinding;
+	
 	override public function pre()
 	{
 		super.pre();
+		
+		id = application.params.get("id");
+		definition = new site.cms.common.Definition(id);
+		
+		//
+		
+		remoting.addObject("api", { toggleCheckbox:toggleCheckbox } );
+		
+		jsBind = new JsBinding("site.cms.modules.base.js.JsDefinition");
+	}
+	
+	
+	public function toggleCheckbox(field:String, index:Int, type:String)
+	{
+		var element = definition.getElement(field);
+		var val = Reflect.setField(element, type, !Reflect.field(element, type));
+		definition.save();
+		
+		var d:Dynamic = { };
+		d.field = field;
+		d.index = index;
+		d.type = type;
+		d.value = val;
+		return d;
 	}
 	
 	override public function main()
 	{
 		super.main();
-		
-		id = application.params.get("id");
-		definition = new site.cms.common.Definition(id);
 		
 		setupForm1();
 		
@@ -124,6 +148,7 @@ class Definition extends DefinitionsBase
 				if (el != null) 
 				{
 					el.type = "read-only";
+					el.showInList = true;
 					definition.save();
 				} else {
 					trace("name missing");
@@ -147,6 +172,7 @@ class Definition extends DefinitionsBase
 				var define = application.params.get("define");
 				var el = definition.addElement(define);
 				el.type = "read-only";
+				el.showInList = true;
 				definition.save();
 				application.redirect("?request=cms.modules.base.DefinitionElement&id=" + id + "&definition=" + define + "&pagesMode=false");
 			case "addExtra":
@@ -214,4 +240,5 @@ class Definition extends DefinitionsBase
 		indentSelector.addOption( { key:4, value:4 } );
 		
 	}
+	
 }

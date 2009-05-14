@@ -121,7 +121,6 @@ class Dataset extends DatasetBase
 		orderField = getOrderField();
 		isOrderingEnabled = orderField != null;
 		
-		if (application.params.get("action")) process();
 		
 		fields = getFieldMatches();
 	
@@ -138,6 +137,8 @@ class Dataset extends DatasetBase
 			var field = primaryData.pop().Field;
 			definition.primaryKey = field;
 		}
+		
+		if (application.params.get("action")) process();
 		
 		
 		getAssociationExtras();
@@ -267,6 +268,7 @@ class Dataset extends DatasetBase
 			var id = application.params.get("id");
 			if (id == null || id == "")
 				return;
+			
 			var data = application.db.requestSingle("SELECT * FROM `"+table+"` WHERE " + definition.primaryKey + "=" + application.db.cnx.quote(Std.string(id)));
 
 			// pre duplication field stuff
@@ -442,7 +444,7 @@ class Dataset extends DatasetBase
 		
 		// find matches on definition fields and table fields
 		fields = Lambda.filter(fields, function(row:String) {	
-			var match = Lambda.has(definitionFields, row) && ((ths.definition.getElement(row).type != "hidden" && ths.definition.getElement(row).type != "order" && ths.definition.getElement(row).showInList == 1));
+			var match = Lambda.has(definitionFields, row) && ((ths.definition.getElement(row).type != "hidden" && ths.definition.getElement(row).type != "order" && ths.definition.getElement(row).showInList));
 			return match || row == ths.definition.primaryKey;
 		});
 		
