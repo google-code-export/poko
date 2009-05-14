@@ -3,14 +3,14 @@
 -- http://www.phpmyadmin.net
 -- 
 -- Host: localhost
--- Generation Time: May 14, 2009 at 09:11 PM
+-- Generation Time: May 15, 2009 at 01:32 AM
 -- Server version: 5.0.45
 -- PHP Version: 5.2.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 -- 
--- Database: `pokotest`
+-- Database: `poko`
 -- 
 
 -- --------------------------------------------------------
@@ -24,7 +24,7 @@ CREATE TABLE `example_categories` (
   `category` varchar(255) collate latin1_general_ci NOT NULL,
   `description` varchar(255) collate latin1_general_ci NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
 
 -- 
 -- Dumping data for table `example_categories`
@@ -32,7 +32,7 @@ CREATE TABLE `example_categories` (
 
 INSERT INTO `example_categories` (`id`, `category`, `description`) VALUES 
 (1, 'web projects', ''),
-(2, 'games', 'our games projects');
+(2, 'games', 'our games projectsd');
 
 -- --------------------------------------------------------
 
@@ -46,15 +46,15 @@ CREATE TABLE `example_images` (
   `link_to` varchar(255) collate latin1_general_ci NOT NULL,
   `link_value` int(22) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=6 ;
 
 -- 
 -- Dumping data for table `example_images`
 -- 
 
 INSERT INTO `example_images` (`id`, `image`, `link_to`, `link_value`) VALUES 
-(1, '37275b33ace1f72bf311fd803990edd0305567259_65b43754f1.jpg', 'example_projects', 5),
-(2, '2f7f1b3c2d78a5f0910472b3ca8ebfec346512198_0aebf172c5.jpg', 'example_projects', 5);
+(5, '3868fd9f742f3589462f82a0628f609b346512198_0aebf172c5.jpg', 'example_projects', 5),
+(4, '545b832a1546114e187107ec04392e4f305567259_65b43754f1.jpg', 'example_projects', 5);
 
 -- --------------------------------------------------------
 
@@ -70,14 +70,14 @@ CREATE TABLE `example_news` (
   `order` float NOT NULL,
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=11 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=12 ;
 
 -- 
 -- Dumping data for table `example_news`
 -- 
 
 INSERT INTO `example_news` (`id`, `title`, `date`, `content`, `order`, `timestamp`) VALUES 
-(2, 'hello', '2009-05-14', '<p>"Good Guys &amp; Bad Guys" Toy Mini Series by Play Imagination in stores late 2009</p>', 7, '2009-05-14 16:14:57'),
+(2, 'hello', '2009-05-14', '<p>"Good Guys &amp; Bad Guys" Toy Mini Series by Play Imagination in stores late 2009</p>\r\n<p>&nbsp;</p>', 7, '2009-05-14 22:05:48'),
 (4, 'hello', '2009-01-01', '<p>this is a test</p>', 6, '2009-05-14 16:17:51'),
 (8, 'Game release ', '2009-01-01', '<p>this is a test</p>', 3, '2009-05-14 16:18:05'),
 (9, 'test again', '2009-01-01', '<p>sdg</p>', 4, '2009-05-14 16:18:12'),
@@ -104,7 +104,7 @@ CREATE TABLE `example_projects` (
 -- 
 
 INSERT INTO `example_projects` (`id`, `category`, `name`, `heroimage`, `description`, `visible`) VALUES 
-(5, 1, 'My Website', '474619aa1b173858cd688ed275da6e88225128134_d664a1c398.jpg', '<p>This is an example project</p>', 1);
+(5, 1, 'My Websites', '87ac6304cbb6fade6c7d19382da6a90b225128134_d664a1c398.jpg', '<p>This is an example projects</p>', 1);
 
 -- --------------------------------------------------------
 
@@ -117,14 +117,14 @@ CREATE TABLE `example_projects_services` (
   `projectId` int(11) NOT NULL,
   `serviceId` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=11 ;
 
 -- 
 -- Dumping data for table `example_projects_services`
 -- 
 
 INSERT INTO `example_projects_services` (`id`, `projectId`, `serviceId`) VALUES 
-(6, 5, 1);
+(10, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -167,7 +167,7 @@ CREATE TABLE `_definitions` (
   `order` float NOT NULL,
   `indents` tinyint(4) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=10 ;
 
 -- 
 -- Dumping data for table `_definitions`
@@ -178,7 +178,7 @@ INSERT INTO `_definitions` (`id`, `name`, `description`, `primaryKey`, `isPage`,
 (2, 'contact', '', '', 1, '', 0, 0, 0, 'acy37:site.cms.common.DefinitionElementMetay4:namey7:addressy4:typey4:texty6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListzy15:showInFilteringzy14:showInOrderingzy11:isMultiliney1:0y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR13y8:requiredR13gy5:orderd1R9zR10zR11zgcR0R1y5:phoneR3R4R5nR6y14:Phone%20numberR8oR3R4R1R27R6R28R9zR10zR11zR12R13R14R7R15R7R16R7R17R7R18R7R19R20R21R7R22R7R23R7R24R13R25R13gR26d1R9zR10zR11zgcR0R1y7:detailsR3y8:richtextR5nR6R7R8oR3R30R1R29R6R7R9zR10zR11zR19y6:SIMPLER14R7R15R7y3:cssR7R25R13gR26d2R9zR10zR11zgh', 2, 0),
 (3, 'about', '', '', 1, '', 0, 0, 0, 'acy37:site.cms.common.DefinitionElementMetay4:namey8:bodytexty4:typey8:richtexty6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListzy15:showInFilteringzy14:showInOrderingzy4:modey6:SIMPLEy5:widthR7y6:heightR7y3:cssR7y8:requiredy1:0gy5:orderd1R9zR10zR11zgcR0R1y8:servicesR3y8:keyvalueR5nR6R7R8oR3R21R1R20R6R7R9zR10zR11zy8:keyLabely7:servicey14:keyIsMultilineR18y8:keyWidthR7y9:keyHeightR7y11:keyMinCharsR7y11:keyMaxCharsR7y12:keyCharsListR7y7:keyNodey5:ALLOWy8:keyRegexR7y13:keyRegexErrorR7y14:keyDescriptionR7y23:keyRegexCaseInsensitiveR18y11:keyRequiredR18y10:valueLabely11:descriptiony16:valueIsMultilineR18y10:valueWidthR7y11:valueHeightR7y13:valueMinCharsR7y13:valueMaxCharsR7y14:valueCharsListR7y9:valueModeR31y10:valueRegexR7y15:valueRegexErrorR7y16:valueDescriptionR7y25:valueRegexCaseInsensitiveR18y13:valueRequiredR18gR19d2R9zR10zR11zgh', 3, 0),
 (4, 'News', '', '', 0, 'example_news', 0, 1, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListzy15:showInFilteringzy14:showInOrderingzgy5:ordernR9zR10zR11zgcR0R1y4:dateR3R13R5nR6R7R8oR3R13R1R13R6R7R9i1R10zR11i1y11:restrictMiny1:0y9:minOffsetR7y11:restrictMaxR15y9:maxOffsetR7y8:requiredR15gR12nR9i1R10zR11i1gcR0R1y5:titleR3y4:textR5nR6R7R8oR3R21R1R20R6R7R9i1R10i1R11i1y11:isMultilineR15y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR15R19R15gR12nR9i1R10i1R11i1gcR0R1y7:contentR3y8:richtextR5nR6R7R8oR3R35R1R34R6R7R9zR10zR11zR28y6:SIMPLER23R7R24R7y3:cssR7R19R15gR12nR9zR10zR11zgh', 3, 0),
-(6, 'Projects', '', '', 0, 'example_projects', 1, 1, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:orderd1R9i1R10zR11zgcR0R1y8:categoryR3y11:associationR5nR6R7R8oR3R14R1R13R6R7R9i1R10i1R11i1y5:tabley18:example_categoriesy5:fieldR2y10:fieldLabelR13y11:showAsLabely1:1gR12d2R9i1R10i1R11i1gcR0R1R1R3y4:textR5nR6R7R8oR3R21R1R1R6R7R9i1R10zR11zy11:isMultiliney1:0y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR23y8:requiredR23gR12d3R9i1R10zR11zgcR0R1y9:heroimageR3y5:imageR5nR6R7R8oR3R37R1R36R6R7R9i1R10zR11zR35R23gR12d4R9i1R10zR11zgcR0R1y11:descriptionR3y8:richtextR5nR6R7R8oR3R39R1R38R6R7R9zR10zR11zR29y6:SIMPLER24R7R25R7y3:cssR7R35R23gR12d5R9zR10zR11zgcR0R1y7:visibleR3y4:boolR5nR6R7R8oR3R43R1R42R6R7R9i1R10zR11zy9:labelTrueR7y10:labelFalseR7gR12d6R9i1R10zR11zgcR0R1y11:multilink_1R3y9:multilinkR5nR6y8:ServicesR8oR3R47R1R46R6R48R15y16:example_servicesR17R2R18R1y4:linky25:example_projects_servicesy10:linkField1y9:projectIdy10:linkField2y9:serviceIdgR12nR9nR10nR11ngcR0R1y6:link_1R3y11:linkdisplayR5nR6y6:ImagesR8oR3R57R1R56R6R58R15y14:example_imagesgR12nR9nR10nR11ngh', 1, 0),
+(6, 'Projects', '', '', 0, 'example_projects', 1, 1, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:orderd1R9tR10tR11tgcR0R1y8:categoryR3y11:associationR5nR6R7R8oR3R14R1R13R6R7R9i1R10i1R11i1y5:tabley18:example_categoriesy5:fieldR2y10:fieldLabelR13y11:showAsLabely1:1gR12d2R9tR10tR11ty12:showInFiltertgcR0R1R1R3y4:textR5nR6R7R8oR3R22R1R1R6R7R9i1R10zR11zy11:isMultiliney1:0y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR24y8:requiredR24gR12d3R9i1R10zR11zR21ty11:showInOrdertgcR0R1y9:heroimageR3y5:imageR5nR6R7R8oR3R39R1R38R6R7R9i1R10zR11zR36R24gR12d4R9i1R10zR11zgcR0R1y11:descriptionR3y8:richtextR5nR6R7R8oR3R41R1R40R6R7R9zR10zR11zR30y6:SIMPLER25R7R26R7y3:cssR7R36R24gR12d5R9zR10zR11zgcR0R1y11:multilink_1R3y9:multilinkR5nR6y8:ServicesR8oR3R45R1R44R6R46R15y16:example_servicesR17R2R18R1y4:linky25:example_projects_servicesy10:linkField1y9:projectIdy10:linkField2y9:serviceIdgR12d6R9nR10nR11ngcR0R1y6:link_1R3y11:linkdisplayR5nR6y6:ImagesR8oR3R55R1R54R6R56R15y14:example_imagesgR12d7R9nR10nR11ngcR0R1y7:visibleR3y4:boolR5nR6R7R8oR3R59R1R58R6R7R9i1R10zR11zy9:labelTrueR7y10:labelFalseR7gR12nR9i1R10zR11zgh', 1, 0),
 (5, 'Categories', '', '', 0, 'example_categories', 0, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListzy15:showInFilteringzy14:showInOrderingzgy5:ordernR9zR10zR11zgcR0R1y8:categoryR3y4:textR5nR6R7R8oR3R14R1R13R6R7R9i1R10zR11zy11:isMultiliney1:0y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR16y8:requiredR16gR12nR9i1R10zR11zgcR0R1y11:descriptionR3R14R5nR6R7R8oR3R14R1R29R6R7R9i1R10zR11zR15R16R17R7R18R7R19R7R20R7R21R7R22R23R24R7R25R7R26R7R27R16R28R16gR12nR9i1R10zR11zgh', 2, 1),
 (7, 'Images', '', '', 0, 'example_images', 0, 0, 0, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:orderd1R9i1R10zR11zgcR0R1y5:imageR3R13R5nR6R7R8oR3R13R1R13R6R7R9i1R10zR11zy8:requiredy1:0gR12d2R9i1R10zR11zgcR0R1y7:link_toR3y7:link-toR5nR6R7R8oR3R17R1R16R6R7R9zR10zR11zgR12d3R9zR10zR11zgcR0R1y10:link_valueR3y10:link-valueR5nR6R7R8oR3R19R1R18R6R7R9zR10zR11zgR12d4R9zR10zR11zgh', 5, 0),
 (8, 'Services', '', '', 0, 'example_services', 0, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:ordernR9i1R10zR11zgcR0R1R1R3y4:textR5nR6R7R8oR3R13R1R1R6R7R9i1R10zR11zy11:isMultiliney1:0y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR15y8:requiredR15gR12nR9i1R10zR11zgcR0R1y11:descriptionR3y8:richtextR5nR6R7R8oR3R29R1R28R6R7R9zR10zR11zR21y6:SIMPLER16R7R17R7y3:cssR7R27R15gR12nR9zR10zR11zgh', 4, 0);
@@ -195,15 +195,15 @@ CREATE TABLE `_pages` (
   `data` text collate latin1_general_ci NOT NULL,
   `updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
 
 -- 
 -- Dumping data for table `_pages`
 -- 
 
 INSERT INTO `_pages` (`id`, `definitionId`, `data`, `updated`) VALUES 
-(1, 1, 'oy7:headingy14:Test%20Headingy7:contenty468:%3Cp%3EThis%20is%20the%20content%20of%20the%20test%20page.%20you%20can%20style%20it%20a%20little%3C%2Fp%3E%0D%0A%3Cp%3E%3Cspan%20style%3D%22text-decoration%3A%20underline%3B%22%3E%3Cem%3E%3Cstrong%3Elike%20this%3C%2Fstrong%3E%3C%2Fem%3E%3C%2Fspan%3E%3C%2Fp%3E%0D%0A%3Cp%3EYou%20can%20also%20set%20the%20WYSIWYG%20editor%20to%20have%20full%20options..%20this%20is%20the%20simple%20mode%20however.%20%3Cem%3E%3Cstrong%3E%3Cbr%20%2F%3E%3C%2Fstrong%3E%3C%2Fem%3E%3C%2Fp%3Ey5:imagey56:5392aabd9822cb964a85663eca3360ee225128134_d664a1c398.jpgy8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:32'),
-(2, 2, 'oy7:addressy13:2%20Somehtingy5:phoney14:123445%2012345y7:detailsy44:%3Cp%3Ethese%20are%20the%20details%3C%2Fp%3Ey8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:46'),
+(1, 1, 'oy7:headingy14:Test%20Headingy7:contenty468:%3Cp%3EThis%20is%20the%20content%20of%20the%20test%20page.%20you%20can%20style%20it%20a%20little%3C%2Fp%3E%0D%0A%3Cp%3E%3Cspan%20style%3D%22text-decoration%3A%20underline%3B%22%3E%3Cem%3E%3Cstrong%3Elike%20this%3C%2Fstrong%3E%3C%2Fem%3E%3C%2Fspan%3E%3C%2Fp%3E%0D%0A%3Cp%3EYou%20can%20also%20set%20the%20WYSIWYG%20editor%20to%20have%20full%20options..%20this%20is%20the%20simple%20mode%20however.%20%3Cem%3E%3Cstrong%3E%3Cbr%20%2F%3E%3C%2Fstrong%3E%3C%2Fem%3E%3C%2Fp%3Ey5:imagey56:08ca1aeb33aa9fac369c64c4b2eac815225128134_d664a1c398.jpgy8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:32'),
+(2, 2, 'oy7:addressy13:2%20Somehtingy5:phoney14:123445%2012345y7:detailsy50:%3Cp%3Ethese%20are%20the%20details%20csc%3C%2Fp%3Ey8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:46'),
 (3, 3, 'oy8:bodytexty61:%3Cp%3EWe%20make%20websites%2C%20you%20might%20also%3C%2Fp%3Ey8:servicesy110:aoy3%3Akeyy12%3Aweb%2520designy5%3Avaluey15%3Awe%2520make%2520webgoR0y5%3AgamesR2y17%3Awe%2520make%2520gamesghy8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:50');
 
 -- --------------------------------------------------------
