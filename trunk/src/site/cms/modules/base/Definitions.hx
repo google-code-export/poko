@@ -111,7 +111,7 @@ class Definitions extends DefinitionsBase
 						}
 					}
 				}
-				trace(php.Web.getParamValues("order"));
+				
 				var c = 0;
 				for (val in php.Web.getParamValues("order"))
 				{

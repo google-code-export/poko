@@ -27,6 +27,7 @@
 
 package;
 
+import php.db.Mysql;
 import poko.Application;
 import poko.utils.PhpTools;
 import haxe.Timer;
@@ -48,8 +49,7 @@ class Test implements Dynamic
 	
 	public function new()
 	{
-		var str = "sdsds";		
-		trace(str.split(""));
+		
 	}
 
 }
@@ -62,7 +62,7 @@ class Main
 	{	
 		PhpTools.setupTrace();
 		
-		//new Test();
+		
 		
 		app = new Application();
 		

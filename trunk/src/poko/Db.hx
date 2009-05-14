@@ -127,7 +127,7 @@ class Db
 		var c = 0;
 		for (d in fieldData) {
 			if (c > 0) sql += " , ";
-			sql += "\"" + cnx.escape(d) + "\"";
+			sql += cnx.quote(d);
 			c++;
 		}
 		
@@ -169,7 +169,7 @@ class Db
 			if (variable != null) 
 			{
 				if (c > 0) sql += " , ";
-				sql += " `"+fieldName+"`=\"" + cnx.escape(variable) + "\"";
+				sql += " `"+fieldName+"`=" + cnx.quote(variable);
 				c++;
 			}
 		}

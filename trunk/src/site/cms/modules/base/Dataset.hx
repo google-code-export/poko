@@ -267,7 +267,7 @@ class Dataset extends DatasetBase
 			var id = application.params.get("id");
 			if (id == null || id == "")
 				return;
-			var data = application.db.requestSingle("SELECT * FROM `"+table+"` WHERE " + definition.primaryKey + "=" + id);
+			var data = application.db.requestSingle("SELECT * FROM `"+table+"` WHERE " + definition.primaryKey + "=" + application.db.cnx.quote(Std.string(id)));
 
 			// pre duplication field stuff
 			for (element in definition.elements) {
@@ -311,7 +311,7 @@ class Dataset extends DatasetBase
 						case "multilink":
 							// add the multilinks
 							var p = element.properties;
-							var result = application.db.request("SELECT `" + p.linkField1 + "`, `" + p.linkField2 + "` FROM `" + p.link + "` WHERE `" + p.linkField1 + "`=" + id);
+							var result = application.db.request("SELECT `" + p.linkField1 + "`, `" + p.linkField2 + "` FROM `" + p.link + "` WHERE `" + p.linkField1 + "`=" + application.db.cnx.quote(Std.string(id)));
 							for (o in result) {
 								Reflect.setField(o, p.linkField1, insertedId);
 								application.db.insert(p.link, o);

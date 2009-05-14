@@ -100,7 +100,6 @@ class Request extends TemploObject
 	/**  set the 'template' to be parsed */
 	public function setRequestTemplate(file:String):Void
 	{
-		trace(Application.instance.sitePackage);
 		template_file = Application.instance.sitePackage+ "/" + file;
 	}
 	

@@ -114,7 +114,7 @@ class DatasetItem extends DatasetBase
 			definition = new Definition(dataset);
 			label = definition.name;
 			table = definition.table;
-			data = application.db.requestSingle("SELECT * FROM `" + table + "` WHERE `id`='" + id + "'");
+			data = application.db.requestSingle("SELECT * FROM `" + table + "` WHERE `id`=" + application.db.cnx.quote(Std.string(id)));
 			
 			orderField = getOrderField();
 			isOrderingEnabled = orderField != null;
@@ -123,7 +123,7 @@ class DatasetItem extends DatasetBase
 			
 			// Pages mode
 			
-			var result = application.db.requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id='" + id + "'");
+			var result = application.db.requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" + application.db.cnx.quote(Std.string(id)));
 			label = page = result.name;
 			
 			data = result.data != "" ? cast Unserializer.run(result.data) : {};
@@ -161,9 +161,9 @@ class DatasetItem extends DatasetBase
 				if (pagesMode)
 				{
 					var sdata = Serializer.run( form.getData());
-					application.db.update("_pages", {data:sdata}, "`id`=\"" + id + "\"");
+					application.db.update("_pages", {data:sdata}, "`id`=" + application.db.cnx.quote(Std.string(id)));
 				} else {
-					application.db.update(table, data, "`id`=\"" + id + "\"");
+					application.db.update(table, data, "`id`=" + application.db.cnx.quote(Std.string(id)));
 				}		
 		}
 
@@ -174,7 +174,7 @@ class DatasetItem extends DatasetBase
 			if (element.type == "multilink")
 			{
 				// delete existing links
-				application.db.delete(element.properties.link, "`" + element.properties.linkField1 + "`='" + id + "'");
+				application.db.delete(element.properties.link, "`" + element.properties.linkField1 + "`=" + application.db.cnx.quote(Std.string(id)));
 				
 				// insert new links
 				for (check in cast(Reflect.field(data, element.name), Array<Dynamic>))
@@ -252,13 +252,13 @@ class DatasetItem extends DatasetBase
 				Reflect.setField(data, name, filename);
 				
 				if(!pagesMode){
-					application.db.update(table, data, "`id`=\"" + id + "\"");
+					application.db.update(table, data, "`id`=" + application.db.cnx.quote(Std.string(id)));
 				} else {
 					var d:Dynamic = form.getData();
 					Reflect.setField(d, name, filename);
 					
 					var sdata = Serializer.run(d);
-					application.db.update("_pages", { data:sdata }, "`id`=\"" + id + "\"");
+					application.db.update("_pages", { data:sdata }, "`id`=" + application.db.cnx.quote(Std.string(id)));
 				}
 			}			
 		}
@@ -306,7 +306,6 @@ class DatasetItem extends DatasetBase
 					form.addElement(el);
 					
 				case "number":
-					//trace(element.properties);
 					var el = new Input(element.name, label, value, element.properties.required == "1");
 					el.addValidator(new NumberValidator(element.properties.min != "" ? element.properties.min : null, 
 														element.properties.max != "" ? element.properties.max : null, 
@@ -376,7 +375,7 @@ class DatasetItem extends DatasetBase
 						var sql = "";
 						sql += "SELECT `" + element.properties.linkField2 + "` as 'link' 	";
 						sql += "  FROM `" + element.properties.link + "`";
-						sql += " WHERE `" + element.properties.linkField1 + "`='" + id + "'";
+						sql += " WHERE `" + element.properties.linkField1 + "`=" + application.db.cnx.quote(Std.string(id));
 						
 						var result = application.db.request(sql);
 						

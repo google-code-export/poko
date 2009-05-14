@@ -115,6 +115,7 @@ class Definition extends DefinitionsBase
 				var type = "hidden";
 				
 				if (name == "") {
+					
 					trace("name missing");
 					return;
 				}
@@ -125,7 +126,7 @@ class Definition extends DefinitionsBase
 					el.type = "read-only";
 					definition.save();
 				} else {
-					trace("name exists");
+					trace("name missing");
 				}
 			case "update":
 				
