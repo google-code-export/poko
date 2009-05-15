@@ -31,13 +31,7 @@ import js.Dom;
 import js.Lib;
 import poko.js.JsApplication;
 
-import site.cms.js.JsCommon;
-import site.cms.modules.base.js.JsKeyValueInput;
-import site.cms.modules.base.js.JsDefinitionElement;
-import site.cms.modules.base.js.JsDatasetItem;
-import site.cms.modules.base.js.JsDataset;
-import site.cms.modules.base.js.JsDefinition;
-import site.cms.js.JsTest;
+import site.cms.ImportAll;
 
 class MainJS 
 {

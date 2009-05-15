@@ -5,6 +5,7 @@
 
 package site.cms;
 
+#if php
 
 /* import  all CMS pages */
 
@@ -29,4 +30,16 @@ import site.cms.modules.help.Help;
 import site.cms.services.Image;
 
 
-class ImportAll {}
+class ImportAll { }
+
+#elseif js
+
+import site.cms.js.JsCommon;
+import site.cms.modules.base.js.JsKeyValueInput;
+import site.cms.modules.base.js.JsDefinitionElement;
+import site.cms.modules.base.js.JsDatasetItem;
+import site.cms.modules.base.js.JsDataset;
+import site.cms.modules.base.js.JsDefinition;
+import site.cms.js.JsTest;
+
+#end
