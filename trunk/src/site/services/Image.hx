@@ -54,7 +54,7 @@ class Image extends Request
 		{
 			var image:ImageProcessor = new ImageProcessor(application.uploadFolder + "/" + src);
 			image.cacheFolder = application.uploadFolder+ "/cache";
-			image.format = ImageOutputFormat.PNG;		
+			image.format = ImageOutputFormat.JPG;		
 			
 			
 			switch(application.params.get("preset"))
