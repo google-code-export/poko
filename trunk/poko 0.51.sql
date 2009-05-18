@@ -1,82 +1,82 @@
 -- phpMyAdmin SQL Dump
--- version 2.10.3
+-- version 3.1.3.1
 -- http://www.phpmyadmin.net
--- 
+--
 -- Host: localhost
--- Generation Time: May 15, 2009 at 01:32 AM
--- Server version: 5.0.45
--- PHP Version: 5.2.3
+-- Generation Time: May 18, 2009 at 12:55 PM
+-- Server version: 5.1.33
+-- PHP Version: 5.2.9
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
--- 
+--
 -- Database: `poko`
--- 
+--
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `example_categories`
--- 
+--
 
-CREATE TABLE `example_categories` (
-  `id` int(22) NOT NULL auto_increment,
-  `category` varchar(255) collate latin1_general_ci NOT NULL,
-  `description` varchar(255) collate latin1_general_ci NOT NULL,
-  PRIMARY KEY  (`id`)
+CREATE TABLE IF NOT EXISTS `example_categories` (
+  `id` int(22) NOT NULL AUTO_INCREMENT,
+  `category` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `description` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
 
--- 
+--
 -- Dumping data for table `example_categories`
--- 
+--
 
-INSERT INTO `example_categories` (`id`, `category`, `description`) VALUES 
+INSERT INTO `example_categories` (`id`, `category`, `description`) VALUES
 (1, 'web projects', ''),
 (2, 'games', 'our games projectsd');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `example_images`
--- 
+--
 
-CREATE TABLE `example_images` (
-  `id` int(22) NOT NULL auto_increment,
-  `image` varchar(255) collate latin1_general_ci NOT NULL,
-  `link_to` varchar(255) collate latin1_general_ci NOT NULL,
+CREATE TABLE IF NOT EXISTS `example_images` (
+  `id` int(22) NOT NULL AUTO_INCREMENT,
+  `image` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `link_to` varchar(255) COLLATE latin1_general_ci NOT NULL,
   `link_value` int(22) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=6 ;
 
--- 
+--
 -- Dumping data for table `example_images`
--- 
+--
 
-INSERT INTO `example_images` (`id`, `image`, `link_to`, `link_value`) VALUES 
+INSERT INTO `example_images` (`id`, `image`, `link_to`, `link_value`) VALUES
 (5, '3868fd9f742f3589462f82a0628f609b346512198_0aebf172c5.jpg', 'example_projects', 5),
 (4, '545b832a1546114e187107ec04392e4f305567259_65b43754f1.jpg', 'example_projects', 5);
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `example_news`
--- 
+--
 
-CREATE TABLE `example_news` (
-  `id` int(22) NOT NULL auto_increment,
-  `title` varchar(255) collate latin1_general_ci NOT NULL,
+CREATE TABLE IF NOT EXISTS `example_news` (
+  `id` int(22) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE latin1_general_ci NOT NULL,
   `date` date NOT NULL,
-  `content` text collate latin1_general_ci NOT NULL,
+  `content` text COLLATE latin1_general_ci NOT NULL,
   `order` float NOT NULL,
-  `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`)
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=12 ;
 
--- 
+--
 -- Dumping data for table `example_news`
--- 
+--
 
-INSERT INTO `example_news` (`id`, `title`, `date`, `content`, `order`, `timestamp`) VALUES 
+INSERT INTO `example_news` (`id`, `title`, `date`, `content`, `order`, `timestamp`) VALUES
 (2, 'hello', '2009-05-14', '<p>"Good Guys &amp; Bad Guys" Toy Mini Series by Play Imagination in stores late 2009</p>\r\n<p>&nbsp;</p>', 7, '2009-05-14 22:05:48'),
 (4, 'hello', '2009-01-01', '<p>this is a test</p>', 6, '2009-05-14 16:17:51'),
 (8, 'Game release ', '2009-01-01', '<p>this is a test</p>', 3, '2009-05-14 16:18:05'),
@@ -85,95 +85,95 @@ INSERT INTO `example_news` (`id`, `title`, `date`, `content`, `order`, `timestam
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `example_projects`
--- 
+--
 
-CREATE TABLE `example_projects` (
-  `id` int(22) NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `example_projects` (
+  `id` int(22) NOT NULL AUTO_INCREMENT,
   `category` int(22) NOT NULL,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
-  `heroimage` varchar(255) collate latin1_general_ci NOT NULL,
-  `description` text collate latin1_general_ci NOT NULL,
-  `visible` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY  (`id`)
+  `name` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `heroimage` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `description` text COLLATE latin1_general_ci NOT NULL,
+  `visible` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=11 ;
 
--- 
+--
 -- Dumping data for table `example_projects`
--- 
+--
 
-INSERT INTO `example_projects` (`id`, `category`, `name`, `heroimage`, `description`, `visible`) VALUES 
+INSERT INTO `example_projects` (`id`, `category`, `name`, `heroimage`, `description`, `visible`) VALUES
 (5, 1, 'My Websites', '87ac6304cbb6fade6c7d19382da6a90b225128134_d664a1c398.jpg', '<p>This is an example projects</p>', 1);
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `example_projects_services`
--- 
+--
 
-CREATE TABLE `example_projects_services` (
-  `id` int(11) NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `example_projects_services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `projectId` int(11) NOT NULL,
   `serviceId` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=11 ;
 
--- 
+--
 -- Dumping data for table `example_projects_services`
--- 
+--
 
-INSERT INTO `example_projects_services` (`id`, `projectId`, `serviceId`) VALUES 
+INSERT INTO `example_projects_services` (`id`, `projectId`, `serviceId`) VALUES
 (10, 5, 1);
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `example_services`
--- 
+--
 
-CREATE TABLE `example_services` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
-  `description` text collate latin1_general_ci NOT NULL,
-  PRIMARY KEY  (`id`)
+CREATE TABLE IF NOT EXISTS `example_services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `description` text COLLATE latin1_general_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=3 ;
 
--- 
+--
 -- Dumping data for table `example_services`
--- 
+--
 
-INSERT INTO `example_services` (`id`, `name`, `description`) VALUES 
+INSERT INTO `example_services` (`id`, `name`, `description`) VALUES
 (1, 'design', '<p>good design</p>'),
 (2, 'washing', '<p>we can wash too</p>');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `_definitions`
--- 
+--
 
-CREATE TABLE `_definitions` (
-  `id` int(22) NOT NULL auto_increment,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
-  `description` varchar(255) collate latin1_general_ci NOT NULL,
-  `primaryKey` varchar(255) collate latin1_general_ci NOT NULL,
-  `isPage` tinyint(1) NOT NULL default '0',
-  `table` varchar(255) collate latin1_general_ci NOT NULL,
-  `showFiltering` tinyint(1) NOT NULL default '0',
-  `showOrdering` tinyint(1) NOT NULL default '0',
-  `showInMenu` tinyint(1) NOT NULL,
-  `elements` text collate latin1_general_ci NOT NULL,
-  `order` float NOT NULL,
-  `indents` tinyint(4) NOT NULL,
-  PRIMARY KEY  (`id`)
+CREATE TABLE IF NOT EXISTS `_definitions` (
+  `id` int(22) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `description` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  `primaryKey` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `isPage` tinyint(1) NOT NULL DEFAULT '0',
+  `table` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  `showFiltering` tinyint(1) NOT NULL DEFAULT '0',
+  `showOrdering` tinyint(1) NOT NULL DEFAULT '0',
+  `showInMenu` tinyint(1) NOT NULL DEFAULT '0',
+  `elements` text COLLATE latin1_general_ci,
+  `order` float DEFAULT NULL,
+  `indents` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=10 ;
 
--- 
+--
 -- Dumping data for table `_definitions`
--- 
+--
 
-INSERT INTO `_definitions` (`id`, `name`, `description`, `primaryKey`, `isPage`, `table`, `showFiltering`, `showOrdering`, `showInMenu`, `elements`, `order`, `indents`) VALUES 
+INSERT INTO `_definitions` (`id`, `name`, `description`, `primaryKey`, `isPage`, `table`, `showFiltering`, `showOrdering`, `showInMenu`, `elements`, `order`, `indents`) VALUES
 (1, 'Test Page', 'test 3', '', 1, '', 0, 0, 0, 'acy37:site.cms.common.DefinitionElementMetay4:namey7:headingy4:typey4:texty6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListzy15:showInFilteringzy14:showInOrderingzy11:isMultiliney1:0y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR13y8:requiredR13gy5:orderd1R9zR10zR11zgcR0R1y7:contentR3y8:richtextR5nR6y14:Page%20ContentR8oR3R28R1R27R6R29R9zR10zR11zR19y6:SIMPLER14R7R15R7y3:cssR7R25R13gR26d2R9zR10zR11zgcR0R1y5:imageR3R32R5nR6R7R8oR3R32R1R32R6R7R9zR10zR11zR25R13gR26d3R9zR10zR11zgh', 1, 0),
 (2, 'contact', '', '', 1, '', 0, 0, 0, 'acy37:site.cms.common.DefinitionElementMetay4:namey7:addressy4:typey4:texty6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListzy15:showInFilteringzy14:showInOrderingzy11:isMultiliney1:0y5:widthR7y6:heightR7y8:minCharsR7y8:maxCharsR7y9:charsListR7y4:modey5:ALLOWy5:regexR7y10:regexErrorR7y16:regexDescriptionR7y20:regexCaseInsensitiveR13y8:requiredR13gy5:orderd1R9zR10zR11zgcR0R1y5:phoneR3R4R5nR6y14:Phone%20numberR8oR3R4R1R27R6R28R9zR10zR11zR12R13R14R7R15R7R16R7R17R7R18R7R19R20R21R7R22R7R23R7R24R13R25R13gR26d1R9zR10zR11zgcR0R1y7:detailsR3y8:richtextR5nR6R7R8oR3R30R1R29R6R7R9zR10zR11zR19y6:SIMPLER14R7R15R7y3:cssR7R25R13gR26d2R9zR10zR11zgh', 2, 0),
 (3, 'about', '', '', 1, '', 0, 0, 0, 'acy37:site.cms.common.DefinitionElementMetay4:namey8:bodytexty4:typey8:richtexty6:dbtypeny5:labely0:y10:propertiesoR3R4R1R2R6R7y10:showInListzy15:showInFilteringzy14:showInOrderingzy4:modey6:SIMPLEy5:widthR7y6:heightR7y3:cssR7y8:requiredy1:0gy5:orderd1R9zR10zR11zgcR0R1y8:servicesR3y8:keyvalueR5nR6R7R8oR3R21R1R20R6R7R9zR10zR11zy8:keyLabely7:servicey14:keyIsMultilineR18y8:keyWidthR7y9:keyHeightR7y11:keyMinCharsR7y11:keyMaxCharsR7y12:keyCharsListR7y7:keyNodey5:ALLOWy8:keyRegexR7y13:keyRegexErrorR7y14:keyDescriptionR7y23:keyRegexCaseInsensitiveR18y11:keyRequiredR18y10:valueLabely11:descriptiony16:valueIsMultilineR18y10:valueWidthR7y11:valueHeightR7y13:valueMinCharsR7y13:valueMaxCharsR7y14:valueCharsListR7y9:valueModeR31y10:valueRegexR7y15:valueRegexErrorR7y16:valueDescriptionR7y25:valueRegexCaseInsensitiveR18y13:valueRequiredR18gR19d2R9zR10zR11zgh', 3, 0),
@@ -185,51 +185,51 @@ INSERT INTO `_definitions` (`id`, `name`, `description`, `primaryKey`, `isPage`,
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `_pages`
--- 
+--
 
-CREATE TABLE `_pages` (
-  `id` int(11) NOT NULL auto_increment,
+CREATE TABLE IF NOT EXISTS `_pages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `definitionId` int(22) NOT NULL,
-  `data` text collate latin1_general_ci NOT NULL,
-  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`)
+  `data` text COLLATE latin1_general_ci,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=5 ;
 
--- 
+--
 -- Dumping data for table `_pages`
--- 
+--
 
-INSERT INTO `_pages` (`id`, `definitionId`, `data`, `updated`) VALUES 
+INSERT INTO `_pages` (`id`, `definitionId`, `data`, `updated`) VALUES
 (1, 1, 'oy7:headingy14:Test%20Headingy7:contenty468:%3Cp%3EThis%20is%20the%20content%20of%20the%20test%20page.%20you%20can%20style%20it%20a%20little%3C%2Fp%3E%0D%0A%3Cp%3E%3Cspan%20style%3D%22text-decoration%3A%20underline%3B%22%3E%3Cem%3E%3Cstrong%3Elike%20this%3C%2Fstrong%3E%3C%2Fem%3E%3C%2Fspan%3E%3C%2Fp%3E%0D%0A%3Cp%3EYou%20can%20also%20set%20the%20WYSIWYG%20editor%20to%20have%20full%20options..%20this%20is%20the%20simple%20mode%20however.%20%3Cem%3E%3Cstrong%3E%3Cbr%20%2F%3E%3C%2Fstrong%3E%3C%2Fem%3E%3C%2Fp%3Ey5:imagey56:08ca1aeb33aa9fac369c64c4b2eac815225128134_d664a1c398.jpgy8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:32'),
 (2, 2, 'oy7:addressy13:2%20Somehtingy5:phoney14:123445%2012345y7:detailsy50:%3Cp%3Ethese%20are%20the%20details%20csc%3C%2Fp%3Ey8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:46'),
 (3, 3, 'oy8:bodytexty61:%3Cp%3EWe%20make%20websites%2C%20you%20might%20also%3C%2Fp%3Ey8:servicesy110:aoy3%3Akeyy12%3Aweb%2520designy5%3Avaluey15%3Awe%2520make%2520webgoR0y5%3AgamesR2y17%3Awe%2520make%2520gamesghy8:__actiony4:edity8:__submity6:Submitg', '2009-05-14 11:58:50');
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `_users`
--- 
+--
 
-CREATE TABLE `_users` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `username` varchar(255) collate latin1_general_ci NOT NULL,
-  `password` varchar(255) collate latin1_general_ci NOT NULL,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
-  `email` varchar(255) collate latin1_general_ci NOT NULL,
-  `groups` text collate latin1_general_ci NOT NULL,
-  `updated` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  `added` timestamp NOT NULL default '0000-00-00 00:00:00',
-  PRIMARY KEY  (`id`),
+CREATE TABLE IF NOT EXISTS `_users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `password` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `name` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `email` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `groups` text COLLATE latin1_general_ci,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `added` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=38 ;
 
--- 
+--
 -- Dumping data for table `_users`
--- 
+--
 
-INSERT INTO `_users` (`id`, `username`, `password`, `name`, `email`, `groups`, `updated`, `added`) VALUES 
+INSERT INTO `_users` (`id`, `username`, `password`, `name`, `email`, `groups`, `updated`, `added`) VALUES
 (5, 'super', '1a1dc91c907325c69271ddf0c944bc72', 'Super User', 'email@email.com', 'cms_admin,cms_manager,cms_editor', '2009-03-26 18:51:01', '0000-00-00 00:00:00'),
 (34, 'editor', '1a1dc91c907325c69271ddf0c944bc72', 'Editor', 'email@email.com', 'cms_editor', '2009-03-30 18:59:48', '2009-03-30 18:58:07'),
 (35, 'manager', '1a1dc91c907325c69271ddf0c944bc72', 'Manager', 'email@email.com', 'cms_manager', '2009-03-30 18:59:59', '2009-03-30 18:58:19'),
@@ -237,25 +237,25 @@ INSERT INTO `_users` (`id`, `username`, `password`, `name`, `email`, `groups`, `
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Table structure for table `_users_groups`
--- 
+--
 
-CREATE TABLE `_users_groups` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `isAdmin` tinyint(1) NOT NULL default '0',
-  `isSuper` tinyint(1) NOT NULL default '0',
-  `stub` varchar(255) collate latin1_general_ci NOT NULL,
-  `name` varchar(255) collate latin1_general_ci NOT NULL,
-  `description` varchar(255) collate latin1_general_ci NOT NULL,
-  PRIMARY KEY  (`id`)
+CREATE TABLE IF NOT EXISTS `_users_groups` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `isAdmin` tinyint(1) NOT NULL DEFAULT '0',
+  `isSuper` tinyint(1) NOT NULL DEFAULT '0',
+  `stub` varchar(255) COLLATE latin1_general_ci NOT NULL,
+  `name` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE latin1_general_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=4 ;
 
--- 
+--
 -- Dumping data for table `_users_groups`
--- 
+--
 
-INSERT INTO `_users_groups` (`id`, `isAdmin`, `isSuper`, `stub`, `name`, `description`) VALUES 
+INSERT INTO `_users_groups` (`id`, `isAdmin`, `isSuper`, `stub`, `name`, `description`) VALUES
 (1, 0, 0, 'cms_editor', 'CMS Editor', 'Can edit CMS content.'),
 (2, 1, 0, 'cms_manager', 'CMS Manager', 'Can edit CMS content as well as adding / removing CMS editors.'),
 (3, 1, 1, 'cms_admin', 'CMS Admin', 'Can manage Managers. Can edit definitions.');
