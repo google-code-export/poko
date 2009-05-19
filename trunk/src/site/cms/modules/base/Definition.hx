@@ -89,8 +89,12 @@ class Definition extends DefinitionsBase
 		
 		// Update data
 		if (form1.isSubmitted())
+		{
 			application.db.update("_definitions", form1.getData(), "`id`=" + id);
+		}
 		
+			
+	
 		if (application.params.get("action"))
 			process();
 			
