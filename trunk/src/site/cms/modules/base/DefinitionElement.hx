@@ -149,7 +149,7 @@ class DefinitionElement extends DefinitionsBase
 		var data:Dynamic = meta.properties;
 		
 		// for type selector
-		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image", "richtext", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden"]);
+		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden"]);
 		
 		// for bool selectors
 		var yesno = new List();
@@ -287,11 +287,15 @@ class DefinitionElement extends DefinitionsBase
 		rtf.add( { key:"Simple w/ tables", value:"SIMPLE_TABLES"} );
 		rtf.add( { key:"Advanced", value:"ADVANCED" } );
 		
-		form.addElement(new Selectbox( "def_richtext_mode", "Mode", rtf, data.mode, false,""), "properties");
-		form.addElement(new Input( "def_richtext_width", "Width", data.width), "properties");
-		form.addElement(new Input( "def_richtext_height", "Height", data.height), "properties");
-		form.addElement(new Input( "def_richtext_content_css", "CSS file", data.content_css), "properties");
-		form.addElement(new RadioGroup( "def_richtext_required", "Required", yesno, data.required, "0", false), "properties");
+		form.addElement(new Selectbox( "def_richtext-tinymce_mode", "Mode", rtf, data.mode, false,""), "properties");
+		form.addElement(new Input( "def_richtext-tinymce_width", "Width", data.width), "properties");
+		form.addElement(new Input( "def_richtext-tinymce_height", "Height", data.height), "properties");
+		form.addElement(new Input( "def_richtext-tinymce_content_css", "CSS file", data.content_css), "properties");
+		form.addElement(new RadioGroup( "def_richtext-tinymce_required", "Required", yesno, data.required, "0", false), "properties");
+		
+		form.addElement(new Input( "def_richtext-wym_width", "Width", data.width), "properties");
+		form.addElement(new Input( "def_richtext-wym_height", "Height", data.height), "properties");
+		form.addElement(new RadioGroup( "def_richtext-wym_required", "Required", yesno, data.required, "0", false), "properties");
 		
 		form.addFieldset("key", new FieldSet("def_keyvalue_keyFieldset", "Key"));
 		form.addElement(new Input("def_keyvalue_keyLabel", "Label", data.keyLabel), "key");

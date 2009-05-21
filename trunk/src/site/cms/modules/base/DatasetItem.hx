@@ -27,6 +27,7 @@
 
 package site.cms.modules.base;
 
+import poko.form.elements.RichtextWym;
 import poko.form.validators.DateValidator;
 import poko.utils.JsBinding;
 import haxe.Md5;
@@ -87,6 +88,7 @@ class DatasetItem extends DatasetBase
 		
 		head.js.add("js/cms/tiny_mce/tiny_mce.js");
 		head.js.add("js/cms/jquery-ui-1.7.1.custom.min.js");
+		head.js.add("js/cms/wymeditor/jquery.wymeditor.pack.js");
 		
 		head.css.add("css/cms/cupertino/jquery-ui-1.7.1.custom.css");
 		
@@ -328,7 +330,7 @@ class DatasetItem extends DatasetBase
 					
 					form.addElement(el);
 				
-				case "richtext":
+				case "richtext-tinymce":
 					var el = new Richtext(element.name, label, value, element.properties.required);
 					
 					if (element.properties.mode) el.mode = Type.createEnum(Type.resolveEnum("poko.form.elements.RichtextMode"), element.properties.mode);
@@ -337,6 +339,14 @@ class DatasetItem extends DatasetBase
 					if (element.properties.content_css != "" && element.properties.content_css != null) el.content_css = element.properties.content_css;
 					
 					form.addElement(el);
+					
+				case "richtext-wym":
+					var el = new RichtextWym(element.name, label, value, element.properties.required);
+					
+					if (element.properties.width != "") el.width = Std.parseInt(element.properties.width);
+					if (element.properties.height != "") el.height = Std.parseInt(element.properties.height);
+					
+					form.addElement(el);					
 				
 				case "read-only":
 					form.addElement(new Readonly(element.name, label, value, element.properties.required));
