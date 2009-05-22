@@ -17,6 +17,7 @@ extern class JQuery implements ArrayAccess<HtmlDom>
 
 	// mine
 	public static function create(element:String, ?attributes:Dynamic, ?children:Dynamic):JQuery;
+	public static function wymeditors(instance:Int):Dynamic;
 	
     /**
         Core

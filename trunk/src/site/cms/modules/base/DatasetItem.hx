@@ -92,6 +92,8 @@ class DatasetItem extends DatasetBase
 		
 		head.css.add("css/cms/cupertino/jquery-ui-1.7.1.custom.css");
 		
+		jsBind = new JsBinding("site.cms.modules.base.js.JsDatasetItem");
+		
 		// change layout for link view
 		if (linkMode)
 		{
@@ -418,8 +420,11 @@ class DatasetItem extends DatasetBase
 		var submitButton = new Button( "__submit", application.params.get("action") == "add" ? "Add" : "Update", null, ButtonType.SUBMIT);
 		
 		var keyValJsBinding = jsBindings.get("site.cms.modules.base.js.JsKeyValueInput"); 
-		if (keyValJsBinding != null)
-			submitButton.attributes = "onClick=\"return(" + keyValJsBinding.getCall("flushKeyValueInputs", []) +");\"";
+		if (keyValJsBinding != null){
+			submitButton.attributes = "onClick=\"" + jsBind.getCall("flushWymEditors", []) + "; return(" + keyValJsBinding.getCall("flushKeyValueInputs", []) +");\"";
+		}else {
+			submitButton.attributes = "onClick=\"return(" + jsBind.getCall("flushWymEditors", []) + ");\"";
+		}
 		
 		form.addElement(submitButton);
 		

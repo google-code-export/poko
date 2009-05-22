@@ -58,24 +58,18 @@ site.cms.modules.base.js.JsDatasetItem = function(p) { if( p === $_ ) return; {
 site.cms.modules.base.js.JsDatasetItem.__name__ = ["site","cms","modules","base","js","JsDatasetItem"];
 site.cms.modules.base.js.JsDatasetItem.__super__ = poko.js.JsRequest;
 for(var k in poko.js.JsRequest.prototype ) site.cms.modules.base.js.JsDatasetItem.prototype[k] = poko.js.JsRequest.prototype[k];
-site.cms.modules.base.js.JsDatasetItem.prototype.addKeyValueInput = function(keyValue,valueValue,removeable) {
-	if(removeable == null) removeable = true;
-	if(valueValue == null) valueValue = "";
-	if(keyValue == null) keyValue = "";
-	var keyElement = (this.properties.keyIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.keyHeight + "px; width:" + this.properties.keyWidth + "px;"},[keyValue]):JQuery.create("input",{ type : "text", value : keyValue, style : "width:" + this.properties.keyWidth + "px;"},[]));
-	var valueElement = (this.properties.valueIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.valueHeight + "px; width:" + this.properties.valueWidth + "px;"},[valueValue]):JQuery.create("input",{ type : "text", value : valueValue, style : "width:" + this.properties.valueWidth + "px;"},[]));
-	var removeElement = (removeable?JQuery.create("a",{ href : "#", onclick : this.getRawCall("removeKeyValueInput(this)") + "; return(false);"},"remove"):null);
-	new JQuery("#" + this.id + "_keyValueTable tr:last").after(JQuery.create("tr",{ },[JQuery.create("td",{ valign : "top"},[keyElement]),JQuery.create("td",{ valign : "top"},[valueElement]),JQuery.create("td",{ valign : "top"},[removeElement])]));
-}
-site.cms.modules.base.js.JsDatasetItem.prototype.flushKeyValueInputs = function() {
-	var data = [];
-	new JQuery("#" + this.id + "_keyValueTable tr").each(function($int,html) {
-		var items = new JQuery(html).find("td").children("input,textarea");
-		if(items.length > 0) {
-			data.push({ key : Reflect.field(items[0],"value"), value : Reflect.field(items[1],"value")});
+site.cms.modules.base.js.JsDatasetItem.prototype.flushWymEditors = function() {
+	var c = 0;
+	while(c > -1) {
+		var editor = JQuery.wymeditors(c);
+		if(editor == null) {
+			c = -1;
 		}
-	});
-	this.valueHolder.val(haxe.Serializer.run(data));
+		else {
+			c++;
+			editor.update();
+		}
+	}
 	return (true);
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.id = null;
@@ -83,33 +77,6 @@ site.cms.modules.base.js.JsDatasetItem.prototype.main = function() {
 	null;
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.properties = null;
-site.cms.modules.base.js.JsDatasetItem.prototype.removeKeyValueInput = function(link) {
-	new JQuery(link).parent().parent().remove();
-}
-site.cms.modules.base.js.JsDatasetItem.prototype.setupKeyValueInput = function(id,properties) {
-	this.id = id;
-	this.properties = properties;
-	this.valueHolder = new JQuery("#" + id);
-	this.table = new JQuery("#" + id + "_keyValueTable");
-	var val = this.valueHolder.val();
-	var data = [];
-	if(val != "") data = haxe.Unserializer.run(val);
-	if(data.length != 0) {
-		var remove = false;
-		{
-			var _g = 0;
-			while(_g < data.length) {
-				var item = data[_g];
-				++_g;
-				this.addKeyValueInput(item.key,item.value,remove);
-				remove = true;
-			}
-		}
-	}
-	else {
-		this.addKeyValueInput("","",false);
-	}
-}
 site.cms.modules.base.js.JsDatasetItem.prototype.table = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.valueHolder = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.__class__ = site.cms.modules.base.js.JsDatasetItem;
