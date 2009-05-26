@@ -28,7 +28,7 @@
 package poko.form;
 
 import poko.Application;
-import poko.utils.JsBinding;
+import poko.js.JsBinding;
 import poko.utils.PhpTools;
 import php.Web;
 

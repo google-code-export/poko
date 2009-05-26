@@ -19,7 +19,7 @@ poko.js.JsRequest.prototype.call = function(method,args) {
 			var f = _g1[_g];
 			++_g;
 			var field = Reflect.field(a,f);
-			if(Std["is"](field,poko.utils.JsBinding)) a[f] = this.application.resolveRequest(field.jsRequest);
+			if(Std["is"](field,poko.js.JsBinding)) a[f] = this.application.resolveRequest(field.jsRequest);
 		}
 	}
 	func.apply(this,a);
@@ -361,6 +361,9 @@ site.cms.modules.base.js.JsDataset.prototype.main = function() {
 			else {
 				if(js.Lib.document.getElementById("filter_normal") != null) js.Lib.document.getElementById("filter_normal").style.display = "inline";
 			}
+			filterByAssocSelector.onchange = function(e) {
+				haxe.Log.trace(filterByAssocSelector.value,{ fileName : "JsDataset.hx", lineNumber : 58, className : "site.cms.modules.base.js.JsDataset", methodName : "main"});
+			}
 		}
 		var resetButton = js.Lib.document.getElementById("options_resetButton");
 		resetButton.onclick = function(e) {
@@ -372,7 +375,8 @@ site.cms.modules.base.js.JsDataset.prototype.main = function() {
 }
 site.cms.modules.base.js.JsDataset.prototype.onGetFilterInfo = function(response) {
 	this.hideFilterOptions();
-	if(response.type == "association") {
+	switch(response.type) {
+	case "association":case "bool":{
 		js.Lib.document.getElementById("filter_assoc").style.display = "inline";
 		var select = js.Lib.document.getElementById("options_filterByAssoc");
 		var options = response.data;
@@ -380,11 +384,14 @@ site.cms.modules.base.js.JsDataset.prototype.onGetFilterInfo = function(response
 		select.innerHTML = "<option value=\"\" >- select -</option>";
 		{ var $it3 = options.keys();
 		while( $it3.hasNext() ) { var option = $it3.next();
-		select.innerHTML += "<option value=\"" + option + "\">" + options.get(option) + "</option>";
+		{
+			select.innerHTML += "<option value=\"" + option + "\">" + options.get(option) + "</option>";
+		}
 		}}
-	}
-	else {
+	}break;
+	default:{
 		if(js.Lib.document.getElementById("filter_normal") != null) js.Lib.document.getElementById("filter_normal").style.display = "inline";
+	}break;
 	}
 }
 site.cms.modules.base.js.JsDataset.prototype.showFilterOptions = function(field) {
@@ -2011,13 +2018,6 @@ IntHash.prototype.toString = function() {
 	return s.b.join("");
 }
 IntHash.prototype.__class__ = IntHash;
-poko.utils = {}
-poko.utils.JsBinding = function(p) { if( p === $_ ) return; {
-	null;
-}}
-poko.utils.JsBinding.__name__ = ["poko","utils","JsBinding"];
-poko.utils.JsBinding.prototype.jsRequest = null;
-poko.utils.JsBinding.prototype.__class__ = poko.utils.JsBinding;
 site.cms.modules.base.js.JsDefinitionElement = function(p) { if( p === $_ ) return; {
 	poko.js.JsRequest.apply(this,[]);
 }}
@@ -2106,6 +2106,12 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.showElements = function(f
 }
 site.cms.modules.base.js.JsDefinitionElement.prototype.types = null;
 site.cms.modules.base.js.JsDefinitionElement.prototype.__class__ = site.cms.modules.base.js.JsDefinitionElement;
+poko.js.JsBinding = function(p) { if( p === $_ ) return; {
+	null;
+}}
+poko.js.JsBinding.__name__ = ["poko","js","JsBinding"];
+poko.js.JsBinding.prototype.jsRequest = null;
+poko.js.JsBinding.prototype.__class__ = poko.js.JsBinding;
 site.cms.js.JsCommon = function(p) { if( p === $_ ) return; {
 	poko.js.JsRequest.apply(this,[]);
 }}

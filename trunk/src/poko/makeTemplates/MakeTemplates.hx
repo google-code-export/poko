@@ -73,10 +73,7 @@ class MakeTemplates
 	
 	public function new()
 	{
-		var t = new Test();
-		var t2 = new Test2();
-		trace(t);
-		trace(t2);
+		trace("value " + false);
 		
 		return;
 		

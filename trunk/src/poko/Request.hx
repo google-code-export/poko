@@ -35,7 +35,7 @@ import php.Lib;
 import php.Session;
 import php.Sys;
 import php.Web;
-import poko.utils.JsBinding;
+import poko.js.JsBinding;
 
 class Request extends TemploObject
 {

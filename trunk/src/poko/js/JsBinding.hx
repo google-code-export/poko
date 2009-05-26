@@ -25,54 +25,62 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package poko.js;
 
-package poko.form.elements;
+#if php
+
 import poko.Application;
-import poko.form.Form;
-import poko.form.FormElement;
-import poko.utils.PhpTools;
+import haxe.Serializer;
 
-class FileUpload extends FormElement
+class JsBinding
 {
-
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false ) 
+	public var jsRequest:String;
+	
+	public function new(jsRequest:String)
 	{
-		super();
-		this.name = name;
-		this.label = label;
-		this.value = value;
-		this.required = required;
+		Application.instance.request.jsBindings.set(jsRequest, this);
+		this.jsRequest = jsRequest;
 	}
 	
-	override public function populate()
+	public function getCall(method:String, args:Array<Dynamic>):String
 	{
-		var n = form.name + "_" + name;
-		var file:Hash<String> = PhpTools.getFilesInfo().get(n);
-		
-		if (file != null && file.get("error") == "0")
+		var str = this + ".call('" + method + "', ";
+		str += "'" +Serializer.run(args) + "'";
+		str += ")";
+		return str; 
+	}
+	
+	public function queueCall(method:String, args:Array<Dynamic>, ?afterPageLoad=true):Void
+	{
+		var call = getCall(method, args);
+		if (afterPageLoad)
 		{
-			var v = file.get("name");
-			
-			if (v != null)
-			{
-				value = v;
-			}
+			Application.instance.request.jsCalls.add(call);
+		} else {
+			// TODO make early JS call (after header - before body)
+			Application.instance.request.jsCalls.add(call);
 		}
 	}
 	
-	override public function render():String
+	public function getRawCall(method:String):String
 	{
-		var n = form.name + "_" +name;
-		var str:String = "";
-		
-		str += "<input type=\"file\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " />";
-		
-		return str;
+		return this + "." + method;
 	}
 	
-	public function toString() :String
+	public function toString():String
 	{
-		return render();
+		return "poko.js.JsApplication.instance.resolveRequest('" + jsRequest + "')";
 	}
-	
 }
+
+#elseif js
+
+/** Unserialized in JS with a refrence to the request - to resolve */
+
+class JsBinding
+{
+	public var jsRequest:String;
+	public function new(){}
+}
+
+#end

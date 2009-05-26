@@ -53,6 +53,10 @@ class JsDataset extends JsRequest
 					if (Lib.document.getElementById("filter_normal") != null)
 						Lib.document.getElementById("filter_normal").style.display = "inline";
 				}
+				filterByAssocSelector.onchange = function(e)
+				{
+					trace(filterByAssocSelector.value);
+				}
 			}
 			
 			var resetButton:Button =  cast Lib.document.getElementById("options_resetButton");
@@ -86,23 +90,27 @@ class JsDataset extends JsRequest
 	public function onGetFilterInfo(response:Dynamic)
 	{
 		hideFilterOptions();
-		 
-		if (response.type == "association")
+		
+		switch (response.type)
 		{
-			Lib.document.getElementById("filter_assoc").style.display = "inline";
 			
-			var select:Select = cast Lib.document.getElementById("options_filterByAssoc");
-			var options:Hash<Dynamic> = response.data;
+			case "association", "bool":
+				Lib.document.getElementById("filter_assoc").style.display = "inline";
+				
+				var select:Select = cast Lib.document.getElementById("options_filterByAssoc");
+				var options:Hash<Dynamic> = response.data;
+				
+				select.style.display = "block";
+				select.innerHTML  = "<option value=\"\" >- select -</option>";
+				
+				for (option in options.keys())
+				{
+					select.innerHTML += "<option value=\"" + option + "\">" + options.get(option) + "</option>";
+				}
 			
-			select.style.display = "block";
-			select.innerHTML  = "<option value=\"\" >- select -</option>";
-			
-			for (option in options.keys())
-				select.innerHTML += "<option value=\"" + option + "\">" + options.get(option) + "</option>";
-			
-		} else {
-			if(Lib.document.getElementById("filter_normal") != null)
-				Lib.document.getElementById("filter_normal").style.display = "inline";
+			default:
+				if(Lib.document.getElementById("filter_normal") != null)
+					Lib.document.getElementById("filter_normal").style.display = "inline";
 		}
 	}
 }

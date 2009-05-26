@@ -51,6 +51,6 @@ class DefinitionElementMeta
 	
 	public function toString():String
 	{
-		return "DefinitionElementMeta: " + name + (", Show In List: " + ((showInList) ? "true" : "false"));
+		return "DefinitionElementMeta: " + name + (", ShowInList: " + ((showInList) ? "true" : "false"));
 	}
 }

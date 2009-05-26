@@ -29,7 +29,7 @@ package site.cms.modules.base;
 
 import poko.form.elements.RichtextWym;
 import poko.form.validators.DateValidator;
-import poko.utils.JsBinding;
+import poko.js.JsBinding;
 import haxe.Md5;
 import site.cms.common.DefinitionElementMeta;
 import poko.form.elements.Button;

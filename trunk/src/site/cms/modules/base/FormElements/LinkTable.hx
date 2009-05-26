@@ -32,7 +32,7 @@ import poko.Application;
 import poko.form.Form;
 import poko.form.FormElement;
 import poko.form.Validator;
-import poko.utils.JsBinding;
+import poko.js.JsBinding;
 import site.cms.common.InputTypeDef;
 import haxe.Serializer;
 

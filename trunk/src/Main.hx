@@ -46,7 +46,10 @@ import site.Index;
 
 class Test {
 	
-	public function new() {}
+	public function new() 
+	{
+		
+	}
 	
 	public function toString()
 	{
@@ -61,6 +64,7 @@ class Main
 	public static function main() 
 	{	
 		PhpTools.setupTrace();
+		
 		
 		app = new Application();
 		

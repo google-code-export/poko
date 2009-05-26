@@ -28,7 +28,7 @@
 package site.cms.modules.base;
 
 import poko.form.elements.Readonly;
-import poko.utils.JsBinding;
+import poko.js.JsBinding;
 import site.cms.common.Definition;
 import site.cms.common.DefinitionElementMeta;
 import poko.form.elements.CheckboxGroup;

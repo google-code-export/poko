@@ -27,7 +27,7 @@
 
 package poko.js;
 
-import poko.utils.JsBinding;
+import poko.js.JsBinding;
 import haxe.remoting.HttpAsyncConnection;
 import haxe.Unserializer;
 import js.Lib;

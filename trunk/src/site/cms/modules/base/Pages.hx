@@ -28,7 +28,7 @@
 package site.cms.modules.base;
 import poko.Application;
 import poko.TemploObject;
-import poko.utils.JsBinding;
+import poko.js.JsBinding;
 import site.cms.templates.CmsTemplate;
 
 

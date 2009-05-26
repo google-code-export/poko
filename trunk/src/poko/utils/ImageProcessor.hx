@@ -85,9 +85,9 @@ class ImageProcessor
 		return GD.imageSY(resource);
 	}
 	
-	public function queueFitSize(maxWidth:Int, maxHeight:Int)
+	public function queueFitSize(maxWidth:Int, maxHeight:Int, ?upsize:Bool=false)
 	{
-		queue.add( { type:ImageAction.FIT, maxWidth:maxWidth, maxHeight:maxHeight } );
+		queue.add( { type:ImageAction.FIT, maxWidth:maxWidth, maxHeight:maxHeight, upsize:upsize } );
 	}
 	
 	public function queueCropToAspect(w:Float, h:Float)
@@ -116,7 +116,7 @@ class ImageProcessor
 	}
 	
 	
-	public function applyFitSize(maxWidth:Int, maxHeight:Int)
+	public function applyFitSize(maxWidth:Int, maxHeight:Int, ?upsize:Bool=false)
 	{
 		var ow:Int = GD.imageSX(resource);
 		var oh:Int = GD.imageSY(resource);
@@ -130,6 +130,22 @@ class ImageProcessor
 		var nh:Int = Std.int(oh * scale);
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
+		
+		//Upsize
+		if (upsize && nw < maxWidth && nh < maxHeight)
+		{
+			var scale:Float = 1;
+			if (nw / maxWidth < nh / maxHeight)
+			{
+				scale = 1 / (nh / maxHeight);
+			}else
+			{
+				scale = 1/(nw / maxWidth);
+			}
+			
+			nw = Math.round(nw*scale);
+			nh = Math.round(nh*scale);
+		}
 		
 		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
 		
@@ -215,7 +231,7 @@ class ImageProcessor
 		{
 			switch(action.type) 
 			{
-				case ImageAction.FIT: applyFitSize(action.maxWidth, action.maxHeight);
+				case ImageAction.FIT: applyFitSize(action.maxWidth, action.maxHeight, action.upsize);
 				case ImageAction.ASPECT: applyCropToAspect(action.w, action.h);
 				case ImageAction.RESIZE: applyResize(action.width, action.height);
 				case ImageAction.SCALE: applyScale(action.scaleX, action.scaleY);
@@ -286,6 +302,7 @@ class ImageProcessor
 	{
 		if (cache && !forceNoCache) 
 		{
+			
 			var cacheFile = cacheFolder + "/" + getCacheName();
 			if (FileSystem.exists(cacheFile))
 			{
@@ -323,7 +340,7 @@ class ImageProcessor
 		
 		Web.setHeader("Content-Transfer-Encoding", "binary");
 		
-		if (FileSystem.exists(cacheFile))
+		if (FileSystem.exists(cacheFile) && !forceNoCache)
 		{
 			Web.setHeader("Content-Disposition", "inline; filename=" + cacheName);
 			Web.setHeader("Etag", cacheName);			
