@@ -176,7 +176,7 @@ class DefinitionElement extends DefinitionsBase
 		if (selectedAssocTable != null)
 		{
 			try {
-				assocFields= application.db.request("SHOW FIELDS FROM `" + selectedAssocTable + "`");
+				assocFields = application.db.request("SHOW FIELDS FROM `" + selectedAssocTable + "`");
 				assocFields = Lambda.map(assocFields, function(field) {
 					return { key:field.Field, value:field.Field };
 				});
@@ -353,8 +353,8 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(multiLabel, "properties");
 		
 		//
-		var multilinkTable:Selectbox = new Selectbox( "def_multilink_link", "Link Table", tableList, data.linktable);
-		//TODO
+		var multilinkTable:Selectbox = new Selectbox( "def_multilink_link", "Link Table", tableList, data.link);
+		//
 		multilinkTable.onChange =  jsBind.getRawCall("onChangeSelectbox(this)");
 		form.addElement(multilinkTable, "properties");
 		

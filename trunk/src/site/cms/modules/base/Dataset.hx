@@ -252,7 +252,9 @@ class Dataset extends DatasetBase
 		if (php.Web.getParamValues("delete") != null)
 		{
 			for (delId in php.Web.getParamValues("delete"))
-				application.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");	
+			{
+				application.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");
+			}
 		}	
 		// ordering
 		if (isOrderingEnabled)
