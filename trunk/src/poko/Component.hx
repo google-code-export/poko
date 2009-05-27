@@ -29,7 +29,7 @@ package poko;
 
 import poko.Application;
 
-class Component extends TemploObject
+class Component extends TemploContext
 {
 	public var output:String;
 	
@@ -60,4 +60,8 @@ class Component extends TemploObject
 		return output != null ? output : super.render();
 	}
 	
+	override public function toString()
+	{
+		return "NAAAV";
+	}
 }

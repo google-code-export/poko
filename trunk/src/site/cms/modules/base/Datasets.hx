@@ -34,7 +34,7 @@ import poko.form.elements.Selectbox;
 import poko.form.Form;
 import poko.form.FormElement;
 import poko.Request;
-import poko.TemploObject;
+import poko.TemploContext;
 import php.Web;
 import site.cms.common.Tools;
 import site.cms.templates.CmsTemplate;
@@ -55,7 +55,7 @@ class Datasets extends DatasetBase
 			var str = "< Select a Dataset";
 			
 			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
-				str += TemploObject.parse("site/cms/modules/base/blocks/datasets.mtt",{});
+				str += TemploContext.parse("site/cms/modules/base/blocks/datasets.mtt",{});
 			
 			setContentOutput(str);
 			

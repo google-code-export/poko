@@ -27,7 +27,7 @@
 
 package site.cms.modules.base;
 
-import poko.TemploObject;
+import poko.TemploContext;
 import php.Web;
 import site.cms.common.Tools;
 import site.cms.templates.CmsTemplate;
@@ -59,7 +59,7 @@ class Definitions extends DefinitionsBase
 		{			
 			var str = "< Select a Dataset";
 			
-			str += TemploObject.parse("site/cms/modules/base/blocks/definitions.mtt");
+			str += TemploContext.parse("site/cms/modules/base/blocks/definitions.mtt");
 			
 			setContentOutput(str);
 		}

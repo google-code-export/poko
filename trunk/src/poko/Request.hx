@@ -37,7 +37,7 @@ import php.Sys;
 import php.Web;
 import poko.js.JsBinding;
 
-class Request extends TemploObject
+class Request extends TemploContext
 {
 	public var authenticate:Bool;
 	public var authenticationRequired:Array<String>;

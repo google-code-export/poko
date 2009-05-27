@@ -26,7 +26,7 @@
  */
 
 package site.cms.modules.help;
-import poko.TemploObject;
+import poko.TemploContext;
 import site.cms.templates.CmsTemplate;
 
 class Help extends CmsTemplate
@@ -82,6 +82,6 @@ class Help extends CmsTemplate
 				topic = "user_home";
 			}
 		}
-		setContentOutput("<div class=\"helpWrapper\">"+TemploObject.parse("site/cms/modules/help/blocks/"+topic+".mtt")+"</div>");
+		setContentOutput("<div class=\"helpWrapper\">"+TemploContext.parse("site/cms/modules/help/blocks/"+topic+".mtt")+"</div>");
 	}
 }

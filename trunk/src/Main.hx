@@ -44,6 +44,9 @@ import site.services.Image;
 
 import site.Index;
 
+
+
+
 class Test {
 	
 	public function new() 
@@ -64,7 +67,6 @@ class Main
 	public static function main() 
 	{	
 		PhpTools.setupTrace();
-		
 		
 		app = new Application();
 		

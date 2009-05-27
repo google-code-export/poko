@@ -27,7 +27,7 @@
 
 package site.cms.modules.base;
 import poko.Application;
-import poko.TemploObject;
+import poko.TemploContext;
 import poko.js.JsBinding;
 import site.cms.templates.CmsTemplate;
 
@@ -54,7 +54,7 @@ class Pages extends PageBase
 			var str = "< Select a Page";
 			
 			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
-				str += TemploObject.parse("site/cms/modules/base/blocks/pages.mtt");
+				str += TemploContext.parse("site/cms/modules/base/blocks/pages.mtt");
 				
 			setContentOutput(str);
 			
