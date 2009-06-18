@@ -27,11 +27,11 @@
 
 package site.cms.modules.base;
 
+import poko.js.JsBinding;
 import poko.form.elements.Input;
 import poko.form.elements.Button;
 import poko.form.elements.Selectbox;
 import poko.form.Form;
-import poko.utils.JsBinding;
 import poko.utils.PhpTools;
 import haxe.Md5;
 import haxe.Unserializer;

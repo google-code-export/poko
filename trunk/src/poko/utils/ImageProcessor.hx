@@ -51,6 +51,9 @@ class ImageProcessor
 	public var quality:Float;
 	public var format:ImageOutputFormat;
 	
+	public var hash:String;
+	public var dateModified:Date;
+	
 	public function new(file:String) 
 	{
 		fileName = file;
@@ -62,6 +65,7 @@ class ImageProcessor
 		quality =  .8;
 		format = ImageOutputFormat.JPG;
 		
+		hash = getHash();
 		
 		//var fname = fileName.lastIndexOf("/");
 		
@@ -85,9 +89,9 @@ class ImageProcessor
 		return GD.imageSY(resource);
 	}
 	
-	public function queueFitSize(maxWidth:Int, maxHeight:Int, ?upsize:Bool=false)
+	public function queueFitSize(maxWidth:Int, maxHeight:Int)
 	{
-		queue.add( { type:ImageAction.FIT, maxWidth:maxWidth, maxHeight:maxHeight, upsize:upsize } );
+		queue.add( { type:ImageAction.FIT, maxWidth:maxWidth, maxHeight:maxHeight } );
 	}
 	
 	public function queueCropToAspect(w:Float, h:Float)
@@ -116,7 +120,7 @@ class ImageProcessor
 	}
 	
 	
-	public function applyFitSize(maxWidth:Int, maxHeight:Int, ?upsize:Bool=false)
+	public function applyFitSize(maxWidth:Int, maxHeight:Int)
 	{
 		var ow:Int = GD.imageSX(resource);
 		var oh:Int = GD.imageSY(resource);
@@ -130,22 +134,6 @@ class ImageProcessor
 		var nh:Int = Std.int(oh * scale);
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
-		
-		//Upsize
-		if (upsize && nw < maxWidth && nh < maxHeight)
-		{
-			var scale:Float = 1;
-			if (nw / maxWidth < nh / maxHeight)
-			{
-				scale = 1 / (nh / maxHeight);
-			}else
-			{
-				scale = 1/(nw / maxWidth);
-			}
-			
-			nw = Math.round(nw*scale);
-			nh = Math.round(nh*scale);
-		}
 		
 		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
 		
@@ -231,7 +219,7 @@ class ImageProcessor
 		{
 			switch(action.type) 
 			{
-				case ImageAction.FIT: applyFitSize(action.maxWidth, action.maxHeight, action.upsize);
+				case ImageAction.FIT: applyFitSize(action.maxWidth, action.maxHeight);
 				case ImageAction.ASPECT: applyCropToAspect(action.w, action.h);
 				case ImageAction.RESIZE: applyResize(action.width, action.height);
 				case ImageAction.SCALE: applyScale(action.scaleX, action.scaleY);
@@ -262,11 +250,14 @@ class ImageProcessor
 			for (field in Reflect.fields(action))
 				s += "&" + field + "=" + Reflect.field(action, field);
 		
-		var stat = FileSystem.stat(fileName);
+		var stat:FileStat = FileSystem.stat(fileName);
 		
 		s += "&" + stat.mtime + "&" + stat.ctime + "&" + revision;
 		
-		return Md5.encode(s);
+		var hash = Md5.encode(s);
+		dateModified = stat.mtime;
+		
+		return hash;
 	}
 	
 	private function output():String
@@ -302,7 +293,6 @@ class ImageProcessor
 	{
 		if (cache && !forceNoCache) 
 		{
-			
 			var cacheFile = cacheFolder + "/" + getCacheName();
 			if (FileSystem.exists(cacheFile))
 			{
@@ -334,16 +324,16 @@ class ImageProcessor
 		
 		Web.setHeader("content-type", "image");
 		
-		Web.setHeader("Expires", "");
+		/*Web.setHeader("Expires", "");
 		Web.setHeader("Cache-Control", "");
-		Web.setHeader("Pragma", "");
+		Web.setHeader("Pragma", "");*/
 		
 		Web.setHeader("Content-Transfer-Encoding", "binary");
 		
-		if (FileSystem.exists(cacheFile) && !forceNoCache)
+		if (FileSystem.exists(cacheFile))
 		{
 			Web.setHeader("Content-Disposition", "inline; filename=" + cacheName);
-			Web.setHeader("Etag", cacheName);			
+			//Web.setHeader("Etag", cacheName);
 			
 			#if php
 				Web.setHeader("Content-Length", untyped __call__("filesize", cacheFile));

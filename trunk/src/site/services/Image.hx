@@ -27,6 +27,7 @@
 
 package site.services;
 
+import haxe.Md5;
 import poko.utils.ImageProcessor;
 import poko.utils.PhpTools;
 import php.FileSystem;
@@ -78,14 +79,17 @@ class Image extends Request
 			image.flushOutput();
 			
 		}else {
-			Web.setHeader("content-type", "image");
-			
-			Web.setHeader("Expires", "");
-			Web.setHeader("Cache-Control", "");
+			var dateModified = FileSystem.stat(application.uploadFolder + "/" + src).mtime;
+			var dateModifiedString = DateTools.format(dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
+			Web.setHeader("Last-Modified", dateModifiedString);
+			Web.setHeader("Expires", DateTools.format(new Date(dateModified.getFullYear() + 1, dateModified.getMonth(), dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
+			Web.setHeader("Cache-Control", "public, max-age=31536000");
+			Web.setHeader("ETag", "\"" + Md5.encode(src) + "\"");
 			Web.setHeader("Pragma", "");
 			
+			Web.setHeader("content-type", "image");
+			
 			Web.setHeader("Content-Disposition", "inline; filename=" + src.substr(32));
-			Web.setHeader("Etag", src);
 			Web.setHeader("Content-Transfer-Encoding", "binary");
 			
 			#if php

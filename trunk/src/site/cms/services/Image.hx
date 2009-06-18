@@ -27,6 +27,7 @@
 
 package site.cms.services;
 
+import haxe.Md5;
 import poko.utils.ImageProcessor;
 import poko.utils.PhpTools;
 import php.FileSystem;
@@ -74,18 +75,27 @@ class Image extends Request
 					image.queueFitSize(w, h);
 			}
 			
-			image.flushOutput();
-			
-		}else {
-			Web.setHeader("content-type", "image");
-			
-			Web.setHeader("Expires", "");
-			Web.setHeader("Cache-Control", "");
+			var dateModifiedString = DateTools.format(image.dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
+			Web.setHeader("Last-Modified", dateModifiedString);
+			Web.setHeader("Expires", DateTools.format(new Date(image.dateModified.getFullYear() + 1, image.dateModified.getMonth(), image.dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
+			Web.setHeader("Cache-Control" ,"public, max-age=31536000");
+			Web.setHeader("ETag", "\"" + image.hash + "\"");
 			Web.setHeader("Pragma", "");
 			
-			Web.setHeader("Content-Disposition", "inline; filename=" + src.substr(32));
-			Web.setHeader("Etag", src);
-			Web.setHeader("Content-Transfer-Encoding", "binary");
+			Web.setHeader("content-type", "image");
+			
+			setOutput(image.getOutput());
+			
+		}else {
+			var dateModified = FileSystem.stat(application.uploadFolder + "/" + src).mtime;
+			var dateModifiedString = DateTools.format(dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
+			Web.setHeader("Last-Modified", dateModifiedString);
+			Web.setHeader("Expires", DateTools.format(new Date(dateModified.getFullYear() + 1, dateModified.getMonth(), dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
+			Web.setHeader("Cache-Control", "public, max-age=31536000");
+			Web.setHeader("ETag", "\"" + Md5.encode(src) + "\"");
+			Web.setHeader("Pragma", "");
+			
+			Web.setHeader("content-type", "image");
 			
 			#if php
 				Web.setHeader("Content-Length", untyped __call__("filesize", application.uploadFolder + "/" + src));
