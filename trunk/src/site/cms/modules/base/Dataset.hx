@@ -31,7 +31,7 @@ import poko.form.elements.Input;
 import poko.form.elements.Button;
 import poko.form.elements.Selectbox;
 import poko.form.Form;
-import poko.js.JsBinding;
+import poko.utils.JsBinding;
 import poko.utils.PhpTools;
 import haxe.Md5;
 import haxe.Unserializer;
@@ -101,20 +101,10 @@ class Dataset extends DatasetBase
 	
 	public function getFilterInfo(field):Dynamic
 	{
-		var properties = definition.getElement(field).properties;
 		var response:Dynamic = { };
-		response.data = new Hash();
 		response.type = definition.getElement(field).type;
-		switch(response.type)
-		{
-			case "association":
-				response.ass = properties.table;
-				response.data = getAssocFields(field);
-			case "bool":
-				response.data.set(properties.labelTrue == "" ? "true" : properties.labelTrue, true);
-				response.data.set(properties.labelFalse == "" ? "false" : properties.labelFalse, false);
-		}
-		
+		response.ass= definition.getElement(field).properties.table;
+		response.data = getAssocFields(field);
 		return response;
 	}
 	
@@ -150,7 +140,6 @@ class Dataset extends DatasetBase
 		
 		if (application.params.get("action")) process();
 		
-		
 		getAssociationExtras();
 		
 		setupOptionsForm();
@@ -175,32 +164,26 @@ class Dataset extends DatasetBase
 		var filterBySelector = optionsForm.getElement('filterBy');
 		if(optionsForm.isSubmitted() && filterBySelector.value != null && filterBySelector.value != "" )
 		{
-			switch(definition.getElement(filterBySelector.value).type)
-			{
-				case "association":
-					// Associative filter
-					var filterByAssocSelector = optionsForm.getElement('filterByAssoc');
-					if (filterByAssocSelector.value != "")
-						sql += "WHERE `" + filterBySelector.value + "`='" + filterByAssocSelector.value + "' ";
-					
+			// Associative filter
+			if (definition.getElement(filterBySelector.value).type == "association")
+			{	
+				var filterByAssocSelector = optionsForm.getElement('filterByAssoc');
+				if (filterByAssocSelector.value != "")
+					sql += "WHERE `" + filterBySelector.value + "`='" + filterByAssocSelector.value + "' ";
+				hasWhere = true;
+			}
+			// Evaluate Filter
+			else 
+			{	
+				var filterByOperatorSelector = optionsForm.getElement('filterByOperator');
+				var filterByValueSelector = optionsForm.getElement('filterByValue');
+				if (filterByOperatorSelector.value != "" && filterByValueSelector.value != "")
+				{
+					var op = filterByOperatorSelector.value == "~" ? "LIKE" : filterByOperatorSelector.value;
+					var val = filterByOperatorSelector.value == "~" ? "%" +filterByValueSelector.value+ "%" : filterByValueSelector.value;
+					sql += "WHERE `" + filterBySelector.value + "` " + op + " '" + val + "' ";
 					hasWhere = true;
-				case "bool": 
-					// Bool filter
-					var filterByAssocSelector = optionsForm.getElement('filterByAssoc');
-					if (filterByAssocSelector.value != "")
-						sql += "WHERE `" + filterBySelector.value + "`='" + (filterByAssocSelector.value == "true"? "1":"0") + "' ";
-					hasWhere = true;
-				default:
-					// Evaluate Filter
-					var filterByOperatorSelector = optionsForm.getElement('filterByOperator');
-					var filterByValueSelector = optionsForm.getElement('filterByValue');
-					if (filterByOperatorSelector.value != "" && filterByValueSelector.value != "")
-					{
-						var op = filterByOperatorSelector.value == "~" ? "LIKE" : filterByOperatorSelector.value;
-						var val = filterByOperatorSelector.value == "~" ? "%" +filterByValueSelector.value+ "%" : filterByValueSelector.value;
-						sql += "WHERE `" + filterBySelector.value + "` " + op + " '" + val + "' ";
-						hasWhere = true;
-					}	
+				}				
 			}
 		}
 		
@@ -248,39 +231,6 @@ class Dataset extends DatasetBase
 	/** Process Delete & Order */
 	private function process():Void
 	{
-		// delete
-		if (php.Web.getParamValues("delete") != null)
-		{
-			for (delId in php.Web.getParamValues("delete"))
-			{
-				application.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");
-			}
-		}	
-		// ordering
-		if (isOrderingEnabled)
-		{
-			var c = 0;
-			for (orderId in php.Web.getParamValues("order"))
-			{
-				if (orderId != null) {
-					
-					var d:Dynamic = { };
-					Reflect.setField(d, orderField, orderId);
-					application.db.update(table, d, "`"+definition.primaryKey+"`='"+c+"'");
-				}
-				c++;
-			}
-			
-			c = 0;
-			var res = application.db.request("SELECT `" + definition.primaryKey + "` as 'id' from " + table + " ORDER BY `" + orderField + "`");
-			for (item in res)
-			{
-				var d:Dynamic = { };
-				Reflect.setField(d, orderField, ++c);
-				application.db.update(table, d, "`" + definition.primaryKey + "`='" + item.id + "'");
-			}
-		}
-		
 		// duplicate if that's what we're doing?!
 		if (application.params.get("action") == "duplicate") {
 			var id = application.params.get("id");
@@ -353,6 +303,38 @@ class Dataset extends DatasetBase
 			}else {
 				application.messages.addError("Error duplicating item.");
 			}
+		}else {
+			// delete
+			if (php.Web.getParamValues("delete") != null)
+			{
+				for (delId in php.Web.getParamValues("delete"))
+					application.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");	
+			}	
+			
+			// ordering
+			if (isOrderingEnabled)
+			{
+				var c = 0;
+				for (orderId in php.Web.getParamValues("order"))
+				{
+					if (orderId != null) {
+						
+						var d:Dynamic = { };
+						Reflect.setField(d, orderField, orderId);
+						application.db.update(table, d, "`"+definition.primaryKey+"`='"+c+"'");
+					}
+					c++;
+				}
+				
+				c = 0;
+				var res = application.db.request("SELECT `" + definition.primaryKey + "` as 'id' from " + table + " ORDER BY `" + orderField + "`");
+				for (item in res)
+				{
+					var d:Dynamic = { };
+					Reflect.setField(d, orderField, ++c);
+					application.db.update(table, d, "`" + definition.primaryKey + "`='" + item.id + "'");
+				}
+			}			
 		}
 	}
 	
@@ -386,7 +368,7 @@ class Dataset extends DatasetBase
 		optionsForm.addElement(new Selectbox("filterByAssoc", "filterByAssoc"));
 		
 		optionsForm.addElement(new Selectbox("orderBy", "orderBy"));
-		optionsForm.addElement(new Selectbox("orderByDirection", "direction",null,null,null,""));
+		optionsForm.addElement(new Selectbox("orderByDirection", "direction"));
 		
 		optionsForm.addElement(new Button("updateButton", "Update Filter"));
 		optionsForm.addElement(new Button("resetButton", "Reset", "", poko.form.elements.ButtonType.BUTTON));
@@ -406,33 +388,16 @@ class Dataset extends DatasetBase
 			var filterBySelector = optionsForm.getElementTyped("filterBy", Selectbox);
 			
 			for (field in fields)
-			{
 				if (definition.getElement(field).showInFiltering)
 				{
 					var label = definition.getElement(field).label != "" ? definition.getElement(field).label : field;
 					filterBySelector.addOption( { key:label, value:field } );
 				}
-			}
 			var filterAssocSelector = optionsForm.getElementTyped("filterByAssoc", Selectbox);
 			var data:Hash<Dynamic> = associateExtras.get(filterBySelector.value);
-			
-			if (filterBySelector.value != null && filterBySelector.value != "")
-			{
-				if (definition.getElement(filterBySelector.value).type == "bool")
-				{
-					data = new Hash();
-					var el = definition.getElement(filterBySelector.value);					
-					data.set("true", true);
-					data.set("false", false);
-				}
-			}
 			if (data != null)
-			{
 				for (d in data.keys())
-				{
 					filterAssocSelector.addOption( { key:data.get(d), value:d } );
-				}
-			}
 			
 			var filterOperatorSelector = optionsForm.getElementTyped("filterByOperator", Selectbox);
 			filterOperatorSelector.addOption( { key:"=", value:"=" } );
@@ -445,14 +410,8 @@ class Dataset extends DatasetBase
 		{
 			var orderBySelector = optionsForm.getElementTyped("orderBy", Selectbox);
 			for (field in fields)
-			{
-				var el = definition.getElement(field);
-				if(el.showInOrdering)
-				{
-					var label = el.label != "" ? el.label : el.name;
-					orderBySelector.addOption( { key:label, value:field } );
-				}
-			}
+				if(definition.getElement(field).showInOrdering)
+					orderBySelector.addOption( { key:field, value:field } );
 					
 			var orderByDirectionSelector = optionsForm.getElementTyped("orderByDirection", Selectbox);
 			orderByDirectionSelector.addOption( { key:"ASC", value:"ASC" } );
