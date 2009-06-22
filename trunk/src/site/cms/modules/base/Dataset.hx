@@ -27,6 +27,8 @@
 
 package site.cms.modules.base;
 
+import haxe.Public;
+import php.Session;
 import poko.js.JsBinding;
 import poko.form.elements.Input;
 import poko.form.elements.Button;
@@ -68,7 +70,7 @@ class Dataset extends DatasetBase
 	private var associateExtras:Hash<Hash<Dynamic>>;
 	public var jsBind:JsBinding;
 	
-	public function new() 
+	public function new()
 	{
 		super();
 	}
@@ -76,6 +78,8 @@ class Dataset extends DatasetBase
 	override public function pre():Void
 	{	
 		super.pre();
+		
+		head.js.add("js/cms/jquery.qtip.min.js");
 		
 		dataset = Std.parseInt(application.params.get("dataset"));
 		definition = new Definition(dataset);
@@ -118,13 +122,13 @@ class Dataset extends DatasetBase
 	
 	override public function main():Void
 	{		
+		FilterSettings.lastDataset = table;
+		
 		orderField = getOrderField();
 		isOrderingEnabled = orderField != null;
-		
-		
+			
 		fields = getFieldMatches();
 	
-		
 		// get primary key
 		var primaryData = application.db.request("SHOW COLUMNS FROM `"+table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 		if (primaryData.length < 1)
@@ -141,7 +145,6 @@ class Dataset extends DatasetBase
 		if (application.params.get("action")) process();
 		
 		getAssociationExtras();
-		
 		setupOptionsForm();
 		
 		var ths = this;
@@ -160,33 +163,57 @@ class Dataset extends DatasetBase
 		sql += "FROM `" + table + "` ";
 		
 		var hasWhere = false;
+		
+		var currentFilterSettings:FilterSettings = FilterSettings.get(table);
+		if (application.params.get("resetState") == "true" || optionsForm.isSubmitted()) 
+			currentFilterSettings.clear();
+			
+		//--------------------------------------------------------		
 		// filtering
-		var filterBySelector = optionsForm.getElement('filterBy');
-		if(optionsForm.isSubmitted() && filterBySelector.value != null && filterBySelector.value != "" )
+		
+		// setup values
+		var filterByValue = optionsForm.getElement('filterBy').value;
+		var filterByAssocValue = optionsForm.getElement('filterByAssoc').value;
+		var filterByOperatorValue = optionsForm.getElement('filterByOperator').value;
+		var filterByValueValue = optionsForm.getElement('filterByValue').value;
+		
+		//do we load?
+		if (currentFilterSettings.enabled)
+		{
+			filterByValue = currentFilterSettings.filterBy;
+			filterByAssocValue = currentFilterSettings.filterByAssoc;
+			filterByOperatorValue = currentFilterSettings.filterByOperator;
+			filterByValueValue = currentFilterSettings.filterByValue;
+			
+			optionsForm.getElement('filterBy').value = filterByValue;
+			optionsForm.getElement('filterByAssoc').value = filterByAssocValue;
+			optionsForm.getElement('filterByOperator').value = filterByOperatorValue;
+			optionsForm.getElement('filterByValue').value = filterByValueValue;
+		}
+
+		if((currentFilterSettings.enabled || optionsForm.isSubmitted()) && filterByValue != null && filterByValue != "")
 		{
 			// Associative filter
-			if (definition.getElement(filterBySelector.value).type == "association")
+			if (definition.getElement(filterByValue).type == "association" || definition.getElement(filterByValue).type == "bool")
 			{	
-				var filterByAssocSelector = optionsForm.getElement('filterByAssoc');
-				if (filterByAssocSelector.value != "")
-					sql += "WHERE `" + filterBySelector.value + "`='" + filterByAssocSelector.value + "' ";
+				if (filterByAssocValue != "")
+					sql += "WHERE `" + filterByValue + "`='" + filterByAssocValue + "' ";
 				hasWhere = true;
 			}
 			// Evaluate Filter
-			else 
+			else
 			{	
-				var filterByOperatorSelector = optionsForm.getElement('filterByOperator');
-				var filterByValueSelector = optionsForm.getElement('filterByValue');
-				if (filterByOperatorSelector.value != "" && filterByValueSelector.value != "")
+				if (filterByOperatorValue != "" && filterByValueValue != "")
 				{
-					var op = filterByOperatorSelector.value == "~" ? "LIKE" : filterByOperatorSelector.value;
-					var val = filterByOperatorSelector.value == "~" ? "%" +filterByValueSelector.value+ "%" : filterByValueSelector.value;
-					sql += "WHERE `" + filterBySelector.value + "` " + op + " '" + val + "' ";
+					var op = filterByOperatorValue == "~" ? "LIKE" : filterByOperatorValue;
+					var val = filterByOperatorValue == "~" ? "%" +filterByValueValue+ "%" : filterByValueValue;
+					sql += "WHERE `" + filterByValue + "` " + op + " '" + val + "' ";
 					hasWhere = true;
-				}				
+				}
 			}
 		}
 		
+		//--------------------------------------------------------
 		// Only display a section of data for linking
 		if (linkMode)
 		{
@@ -204,23 +231,50 @@ class Dataset extends DatasetBase
 			sql += "AND `" + linkValueField + "`=\"" + linkValue + "\" ";
 		}
 		
+		//--------------------------------------------------------
 		// Ordering 
-		
 		// Use Order Field
-		var orderBySelector = optionsForm.getElement("orderBy");
-		if (isOrderingEnabled && this.orderField != null && (!optionsForm.isSubmitted() || orderBySelector.value == null))
+		
+		// setup values
+		var orderByValue = optionsForm.getElement("orderBy").value;
+		var orderByDirectionValue = optionsForm.getElement("orderByDirection").value;
+		
+		//do we load?
+		if (currentFilterSettings.enabled)
+		{
+			orderByValue = currentFilterSettings.orderBy;
+			orderByDirectionValue = currentFilterSettings.orderByDirection;
+			
+			optionsForm.getElement("orderBy").value = orderByValue;
+			optionsForm.getElement("orderByDirection").value = orderByDirectionValue;
+		}
+		
+		if (isOrderingEnabled && this.orderField != null && (!(optionsForm.isSubmitted() || currentFilterSettings.enabled) || orderByValue == null))
 		{
 			sql += "ORDER BY `dataset__orderField`";
-		} 
+		}
 		// Use OrderBy Filter
-		else if (optionsForm.isSubmitted() && orderBySelector.value != null && orderBySelector.value != "")
+		else if ((optionsForm.isSubmitted() || currentFilterSettings.enabled) && orderByValue != null && orderByValue != "")
 		{
-			sql += "ORDER BY `" + orderBySelector.value + "` " + optionsForm.getElement("orderByDirection").value;
+			sql += "ORDER BY `" + orderByValue + "` " + orderByDirectionValue;
 		} 
 		// Use Primary key
 		else 
 		{
 			sql += "ORDER BY `" + definition.primaryKey + "`";
+		}
+		
+		if (optionsForm.isSubmitted()){
+			currentFilterSettings.enabled = true;
+			
+			currentFilterSettings.filterBy = filterByValue;
+			currentFilterSettings.filterByAssoc = filterByAssocValue;
+			currentFilterSettings.filterByOperator = filterByOperatorValue;
+			currentFilterSettings.filterByValue = filterByValueValue;
+			currentFilterSettings.orderBy = orderByValue;
+			currentFilterSettings.orderByDirection = orderByDirectionValue;
+			
+			currentFilterSettings.save();
 		}
 		
 		data = application.db.request(sql);	
@@ -342,6 +396,7 @@ class Dataset extends DatasetBase
 	private function getAssociationExtras():Void
 	{
 		associateExtras = new Hash();
+		var element:DefinitionElementMeta;
 		for (element in definition.elements) {
 			if (element.properties.type == "association" && element.properties.showAsLabel == "1") {
 				var sql = "SELECT " + element.properties.field + " AS id, "+element.properties.fieldLabel + " AS label FROM " + element.properties.table;
@@ -349,6 +404,17 @@ class Dataset extends DatasetBase
 				var h:Hash<Dynamic> = new Hash();
 				for (e in result)
 					h.set(Std.string(e.id), e.label);
+				associateExtras.set(element.properties.name, h);
+			}
+			if (element.properties.type == "bool") {
+				var h:Hash<Dynamic> = new Hash();
+				if (element.properties.labelTrue != "" && element.properties.labelFalse != "") {
+					h.set("1", element.properties.labelTrue);
+					h.set("0", element.properties.labelFalse);
+				}else {
+					h.set("1", "true");
+					h.set("0", "false");
+				}
 				associateExtras.set(element.properties.name, h);
 			}
 		}
@@ -370,7 +436,7 @@ class Dataset extends DatasetBase
 		optionsForm.addElement(new Selectbox("orderBy", "orderBy"));
 		optionsForm.addElement(new Selectbox("orderByDirection", "direction"));
 		
-		optionsForm.addElement(new Button("updateButton", "Update Filter"));
+		optionsForm.addElement(new Button("updateButton", "Update"));
 		optionsForm.addElement(new Button("resetButton", "Reset", "", poko.form.elements.ButtonType.BUTTON));
 		
 		// populate the elements with PostBack values from the user's input
@@ -393,8 +459,11 @@ class Dataset extends DatasetBase
 					var label = definition.getElement(field).label != "" ? definition.getElement(field).label : field;
 					filterBySelector.addOption( { key:label, value:field } );
 				}
+			
 			var filterAssocSelector = optionsForm.getElementTyped("filterByAssoc", Selectbox);
-			var data:Hash<Dynamic> = associateExtras.get(filterBySelector.value);
+			var currentFilter:FilterSettings = FilterSettings.getLast();
+			var filterByValue = (optionsForm.isSubmitted()) ? filterBySelector.value : currentFilter.filterBy;
+			var data:Hash<Dynamic> = associateExtras.get(filterByValue);
 			if (data != null)
 				for (d in data.keys())
 					filterAssocSelector.addOption( { key:data.get(d), value:d } );
@@ -495,5 +564,66 @@ class Dataset extends DatasetBase
 		
 		var months = Lambda.array(ListData.getMonths());
 		return d.getDate() + " " + months[d.getMonth()].key +" " + d.getFullYear();
+	}
+}
+
+class FilterSettings
+{
+	public var enabled:Bool;
+	public var dataset:String;
+	
+	public var filterBy:String;
+	public var filterByOperator:String;
+	public var filterByAssoc:String;
+	public var filterByValue:String;
+	public var orderBy:String;
+	public var orderByDirection:String;
+	
+	public static var lastDataset:String;
+	
+	public function new(dataset:String)
+	{
+		this.dataset = dataset;
+		lastDataset = dataset;
+		clear();
+	}
+	
+	public function clear():Void
+	{
+		enabled = false;
+		
+		filterBy = "";
+		filterByOperator = "";
+		filterByAssoc = "";
+		filterByValue = "";
+		
+		orderBy = "";
+		orderByDirection = "";
+		
+		save();		
+	}
+	
+	public static function get(dataset:String)
+	{
+		if (Session.get("datasetFilterSettings-" + dataset)) {
+			return Session.get("datasetFilterSettings-" + dataset);
+		}else {
+			return new FilterSettings(dataset);
+		}
+	}
+	
+	public static function getLast():FilterSettings
+	{
+		return get(lastDataset);
+	}	
+	
+	public function save()
+	{
+		Session.set("datasetFilterSettings-" + dataset, this);
+	}
+	
+	public function toString():String
+	{
+		return((enabled ? "ON" : "OFF") +" dataset:" + dataset);
 	}
 }

@@ -1,4 +1,3 @@
-
 	::if !linkMode::
 	<h3>::label::</h3>
 	::end::
@@ -6,8 +5,9 @@
 	<p><a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">Add to dataset</a></p>
 	
 	::if !linkMode::
+		<div id="filterOrderWrapper">
 		::raw optionsForm.getOpenTag() ::
-			<div>
+			<div id="filterOptions">
 			::if showFiltering::
 			
 				Filter By ::raw optionsForm.getElement("filterBy") ::
@@ -21,7 +21,7 @@
 			::end::
 			</div>
 			
-			<div>
+			<div id="orderOptions">
 			:: if showOrderBy ::
 				Order By 
 				::raw optionsForm.getElement("orderBy") ::
@@ -30,10 +30,13 @@
 			</div>
 			
 			:: if (showOrderBy || showFiltering) ::
-				::raw optionsForm.getElement("resetButton") ::
-				::raw optionsForm.getElement("updateButton") ::
+				<div id="filterOrderButtons">
+					::raw optionsForm.getElement("resetButton") ::
+					::raw optionsForm.getElement("updateButton") ::
+				</div>
 			::end::
 		::raw optionsForm.getCloseTag() ::	
+		</div>
 	::end::
 	
 	<form action="" method="POST">
@@ -41,9 +44,9 @@
 			
 			
 			<tr>
-			<td></td>
+			<td><a href="#" class="qTip" title="<b>Deleting</b><br /><br />To remove items just select the check box next to them and then click the 'delete and order' button.">[?]</a></td>
 			::if (isOrderingEnabled):: 
-				<td></td> 
+				<td><a href="#" class="qTip" title="<b>Ordering</b><br /><br />To order elements change the numbers in the boxes below and then click the 'delete and order' button.<br /><br />If you have elements 1, 2, 3 and 4 and you want to move 4 between 1 and 2 then put any number between 1 and 2 in the box ie 1.5">[?]</a></td> 
 			::end::
 			
 			::foreach field fieldLabels ::
@@ -74,7 +77,7 @@
 						
 						::set cols = cols+1::
 						<td><a  href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">edit</a> | 
-							<a  href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">dup</a></td>
+							<a class="qTip" title="Duplicate" href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">dup</a></td>
 					</tr>
 				::end::
 			::else::
@@ -86,3 +89,10 @@
 		
 			<input type="submit" name="submitted_delete" value="::if isOrderingEnabled:: delete & order ::else:: delete checked ::end::"  />
 	</form>
+	
+	<script>
+		$('.qTip').qtip({
+			tooltip: 'bottomRight',
+			style: 'cream'
+		});
+	</script>	

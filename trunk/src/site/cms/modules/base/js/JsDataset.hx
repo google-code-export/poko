@@ -46,7 +46,7 @@ class JsDataset extends JsRequest
 			if (filterBySelector.selectedIndex > 0)
 			{
 				var filterByAssocSelector:Select  = cast Lib.document.getElementById("options_filterByAssoc");
-				if (filterByAssocSelector.childNodes.length > 1){
+				if (filterByAssocSelector.childNodes.length > 1) {
 					if (Lib.document.getElementById("filter_assoc") != null)
 						Lib.document.getElementById("filter_assoc").style.display = "inline";
 				}else {

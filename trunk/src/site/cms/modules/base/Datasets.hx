@@ -120,7 +120,7 @@ class DatasetBase extends CmsTemplate
 			{
 				if(table.showInMenu){
 					var name = table.name != "" ? table.name : table.table;
-					leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id, table.indents);
+					leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id + "&resetState=true", table.indents);
 				}
 			}
 			

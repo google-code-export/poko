@@ -76,7 +76,16 @@ class Image extends Request
 					image.queueFitSize(w, h);
 			}
 			
-			image.flushOutput();
+			var dateModifiedString = DateTools.format(image.dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
+			Web.setHeader("Last-Modified", dateModifiedString);
+			Web.setHeader("Expires", DateTools.format(new Date(image.dateModified.getFullYear() + 1, image.dateModified.getMonth(), image.dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
+			Web.setHeader("Cache-Control" ,"public, max-age=31536000");
+			Web.setHeader("ETag", "\"" + image.hash + "\"");
+			Web.setHeader("Pragma", "");
+			
+			Web.setHeader("content-type", "image");
+			
+			setOutput(image.getOutput());
 			
 		}else {
 			var dateModified = FileSystem.stat(application.uploadFolder + "/" + src).mtime;

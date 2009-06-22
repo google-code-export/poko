@@ -218,8 +218,35 @@ fieldset.fieldsetNoDisplay legend{
 	color: #000;
 }
 /* ------------------------------------------------------- */
+/* filtering and ordering controls */
+/*
+#filterOrderWrapper
+{
+}
 
+#filterOptions
+{
+	background: green;
+}
 
+#filter_normal
+{
+	background: purple;
+}
 
+#filter_assoc
+{
+	background: lightgreen;
+}
 
+#orderOptions
+{
+	background: orange;
+}
 
+#filterOrderButtons
+{
+	background: red;
+}
+*/
+/* ------------------------------------------------------- */
