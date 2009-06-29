@@ -454,7 +454,7 @@ class DatasetItem extends DatasetBase
 		
 		form.addElement(submitButton);
 		
-		if (application.params.get("action") == "add") {
+		if (application.params.get("action") == "add" && linkMode) {
 			var cancelButton = new Button("__cancel", "Cancel", "Cancel", ButtonType.BUTTON);
 			form.addElement(cancelButton);
 		}
