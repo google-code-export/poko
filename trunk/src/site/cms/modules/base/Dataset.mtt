@@ -95,6 +95,14 @@
 	</form>
 	
 	<script>
+		::if linkMode::
+				$(document).ready(function(){
+					var el = $("#form1___submit", top.document);
+					el.text("Update");
+					el[0].disabled = false;
+				});
+		::end::	
+	
 		$('.qTip').qtip({
 			tooltip: 'bottomRight',
 			style: 'cream',

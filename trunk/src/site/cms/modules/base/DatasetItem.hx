@@ -288,8 +288,10 @@ class DatasetItem extends DatasetBase
 					if (element.properties.isMultiline) {
 						el = new TextArea(element.name, label, value, element.properties.required);
 						el.height = element.properties.height;
+						if (el.height > 0 && el.width > 0) el.useSizeValues = true;
 					}else {
 						el = new Input(element.name, label, value, element.properties.required);
+						if (el.width > 0) el.useSizeValues = true;
 					}
 					el.width = element.properties.width;
 					el.addValidator(new StringValidator(element.properties.minChars != "" ? element.properties.minChars : null, 
@@ -451,6 +453,11 @@ class DatasetItem extends DatasetBase
 		}
 		
 		form.addElement(submitButton);
+		
+		if (application.params.get("action") == "add") {
+			var cancelButton = new Button("__cancel", "Cancel", "Cancel", ButtonType.BUTTON);
+			form.addElement(cancelButton);
+		}
 		
 		form.populateElements();
 	}

@@ -33,6 +33,14 @@
 
 <script>
 	$(document).ready(function(){
+		::if linkMode::
+				$(document).ready(function(){
+					var el = $("#form1___submit", top.document);
+					el.text("Editing linked data");
+					el[0].disabled = true;
+				});
+		::end::			
+		
 		$(".resizableFrame").resizable();
 		
 		$('.qTip').qtip({

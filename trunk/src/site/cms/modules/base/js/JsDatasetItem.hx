@@ -41,6 +41,9 @@ class JsDatasetItem extends JsRequest
 	
 	override public function main()
 	{
+		var el = new JQuery("#form1___cancel").click(function(e){
+			Lib.window.history.back();
+		});
 	}
 	
 	public function flushWymEditors()

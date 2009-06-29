@@ -74,7 +74,9 @@ site.cms.modules.base.js.JsDatasetItem.prototype.flushWymEditors = function() {
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.id = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.main = function() {
-	null;
+	var el = new JQuery("#form1___cancel").click(function(e) {
+		js.Lib.window.history.back();
+	});
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.properties = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.table = null;
