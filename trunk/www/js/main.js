@@ -1677,30 +1677,50 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.main = function() {
 	}}
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.removeKeyValueInput = function(link) {
-	new JQuery(link).parent().parent().remove();
+	new JQuery(link).parent().parent().parent().remove();
 }
-site.cms.modules.base.js.JsKeyValueInput.prototype.setupKeyValueInput = function(id,properties) {
+site.cms.modules.base.js.JsKeyValueInput.prototype.setupKeyValueInput = function(id,properties,minRows,maxRows) {
+	if(maxRows == null) maxRows = 0;
+	if(minRows == null) minRows = 0;
 	if(this.keyValueSets == null) this.keyValueSets = new List();
-	this.keyValueSets.add(new site.cms.modules.base.js.KeyValueSet(id,properties,this));
+	this.keyValueSets.add(new site.cms.modules.base.js.KeyValueSet(id,properties,this,minRows,maxRows));
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.__class__ = site.cms.modules.base.js.JsKeyValueInput;
-site.cms.modules.base.js.KeyValueSet = function(id,properties,request) { if( id === $_ ) return; {
+site.cms.modules.base.js.KeyValueSet = function(id,properties,request,minRows,maxRows) { if( id === $_ ) return; {
+	if(maxRows == null) maxRows = 0;
+	if(minRows == null) minRows = 0;
 	this.id = id;
 	this.properties = properties;
 	this.request = request;
+	this.minRows = minRows;
+	this.maxRows = maxRows;
+	this.currentRows = 0;
 }}
 site.cms.modules.base.js.KeyValueSet.__name__ = ["site","cms","modules","base","js","KeyValueSet"];
 site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueValue,removeable) {
 	if(removeable == null) removeable = true;
 	if(valueValue == null) valueValue = "";
 	if(keyValue == null) keyValue = "";
+	if(this.maxRows > 0 && this.currentRows == this.maxRows) {
+		js.Lib.alert("Only " + this.maxRows + " allowed.");
+		return (false);
+	}
 	var keyElement = (this.properties.keyIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.keyHeight + "px; width:" + this.properties.keyWidth + "px;"},[keyValue]):JQuery.create("input",{ type : "text", value : keyValue, style : "width:" + this.properties.keyWidth + "px;"},[]));
 	var valueElement = (this.properties.valueIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.valueHeight + "px; width:" + this.properties.valueWidth + "px;"},[valueValue]):JQuery.create("input",{ type : "text", value : valueValue, style : "width:" + this.properties.valueWidth + "px;"},[]));
 	var d = { src : "./res/cms/delete.png", title : "remove"}
 	d["class"] = "qTip";
-	var removeElement = (removeable?JQuery.create("a",{ href : "#", onclick : this.request.getRawCall("removeKeyValueInput(this)") + "; return(false);"},JQuery.create("img",d)):null);
+	var removeElement = (removeable?JQuery.create("a",{ href : "#"},JQuery.create("img",d)):null);
+	var _r = this.request;
+	if(removeable) {
+		removeElement.click(function(e) {
+			_r.removeKeyValueInput(e.target);
+		});
+	}
 	new JQuery("#" + this.id + "_keyValueTable tr:last").after(JQuery.create("tr",{ },[JQuery.create("td",{ valign : "top"},[keyElement]),JQuery.create("td",{ valign : "top"},[valueElement]),JQuery.create("td",{ valign : "top"},[removeElement])]));
+	this.currentRows++;
+	return (true);
 }
+site.cms.modules.base.js.KeyValueSet.prototype.currentRows = null;
 site.cms.modules.base.js.KeyValueSet.prototype.flush = function() {
 	var data = [];
 	new JQuery("#" + this.id + "_keyValueTable tr").each(function($int,html) {
@@ -1712,6 +1732,8 @@ site.cms.modules.base.js.KeyValueSet.prototype.flush = function() {
 	this.valueHolder.val(haxe.Serializer.run(data));
 }
 site.cms.modules.base.js.KeyValueSet.prototype.id = null;
+site.cms.modules.base.js.KeyValueSet.prototype.maxRows = null;
+site.cms.modules.base.js.KeyValueSet.prototype.minRows = null;
 site.cms.modules.base.js.KeyValueSet.prototype.properties = null;
 site.cms.modules.base.js.KeyValueSet.prototype.request = null;
 site.cms.modules.base.js.KeyValueSet.prototype.setup = function() {
@@ -1722,18 +1744,29 @@ site.cms.modules.base.js.KeyValueSet.prototype.setup = function() {
 	if(val != "") data = haxe.Unserializer.run(val);
 	if(data.length != 0) {
 		var remove = false;
+		var c = 0;
 		{
 			var _g = 0;
 			while(_g < data.length) {
 				var item = data[_g];
 				++_g;
 				this.addRow(item.key,item.value,remove);
-				remove = true;
+				c++;
+				remove = (c >= this.minRows?true:false);
 			}
 		}
 	}
 	else {
 		this.addRow("","",false);
+	}
+	if(data.length < this.minRows) {
+		{
+			var _g1 = 0, _g = this.minRows - data.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				this.addRow("","",false);
+			}
+		}
 	}
 }
 site.cms.modules.base.js.KeyValueSet.prototype.table = null;

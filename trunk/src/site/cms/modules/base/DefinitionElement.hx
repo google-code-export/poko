@@ -254,8 +254,9 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new RadioGroup( "def_text_isMultiline", "Multiline?", yesno, data.isMultiline, "0", false), "properties");	
 		form.addElement(new Input( "def_text_width", "Width", data.width), "properties");
 		form.addElement(new Input( "def_text_height", "Height", data.height), "properties");
-		form.addElement(new Input( "def_text_minChars", "MinChars", data.minChars), "properties");
-		form.addElement(new Input( "def_text_maxChars", "MaxChars", data.maxChars), "properties");
+		form.addElement(new Input( "def_text_minChars", "Min Chars", data.minChars), "properties");
+		form.addElement(new Input( "def_text_maxChars", "Max Chars", data.maxChars), "properties");
+		form.addElement(new Input( "def_text_maxChars", "Max Chars", data.autoTrim), "properties");
 		form.addElement(new Input( "def_text_charsList", "Chars List", data.charsList), "properties");
 		form.addElement(new RadioGroup( "def_text_mode", "Chars List Mode", charsModeOptions, data.mode, "ALLOW", false), "properties");
 		form.addElement(new Input( "def_text_regex", "Regex", data.regex), "properties");
@@ -301,6 +302,9 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new Input( "def_richtext-wym_width", "Width", data.width), "properties");
 		form.addElement(new Input( "def_richtext-wym_height", "Height", data.height), "properties");
 		form.addElement(new RadioGroup( "def_richtext-wym_required", "Required", yesno, data.required, "0", false), "properties");
+		
+		form.addElement(new Input( "def_keyvalue_minRows", "Min Rows", data.minRows), "properties");
+		form.addElement(new Input( "def_keyvalue_maxRows", "Max Rows", data.maxRows), "properties");
 		
 		form.addFieldset("key", new FieldSet("def_keyvalue_keyFieldset", "Key"));
 		form.addElement(new Input("def_keyvalue_keyLabel", "Label", data.keyLabel), "key");

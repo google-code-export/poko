@@ -40,6 +40,9 @@ class KeyValueInput extends FormElement
 	public var properties:Dynamic;
 	private var jsBind:JsBinding;
 	
+	public var minRows:Int;
+	public var maxRows:Int;
+	
 	public function new(name:String, label:String, ?value:String, ?properties:Dynamic, ?validatorsKey:Array<Validator>, ?validatorsValue:Array<Validator>, ?attibutes:String="") 
 	{
 		super();
@@ -65,8 +68,8 @@ class KeyValueInput extends FormElement
 		s += "<table id=\""+n+"_keyValueTable\">";
 		s += "	<tr><td><label>"+keyLabel+"</label></td><td><label>"+valueLabel+"</label></td><td></td></tr>";
 		s += "</table>";
-		s += "<div><a href=\"#\" onClick=\"" + jsBind.getCall("addKeyValueInput", [n]) + "; return(false);\"><img class=\"qTip\" src=\"./res/cms/add.png\" title=\"add row\" /></a></div>";
-		s += "<script>$(document).ready(function(){" + jsBind.getCall("setupKeyValueInput", [n, properties]) + "});</script>"; 
+		s += "<div><a href=\"#\" onclick=\"" + jsBind.getCall("addKeyValueInput", [n]) + "; return(false);\"><img class=\"qTip\" src=\"./res/cms/add.png\" title=\"add row\" /></a></div>";
+		s += "<script>$(document).ready(function(){" + jsBind.getCall("setupKeyValueInput", [n, properties, minRows, maxRows]) + "});</script>"; 
 		return s;
 	}
 	

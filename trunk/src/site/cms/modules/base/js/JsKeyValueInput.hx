@@ -24,7 +24,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+ 
 package site.cms.modules.base.js;
 
 import poko.js.JsRequest;
@@ -45,10 +45,10 @@ class JsKeyValueInput extends JsRequest
 		}
 	}
 	
-	public function setupKeyValueInput(id, properties:String)
+	public function setupKeyValueInput(id, properties:String, ?minRows:Int = 0, ?maxRows:Int = 0)
 	{
 		if (keyValueSets == null) keyValueSets = new List();
-		keyValueSets.add(new KeyValueSet(id, properties, this));
+		keyValueSets.add(new KeyValueSet(id, properties, this, minRows, maxRows));
 	}
 	
 	public function addKeyValueInput(id)
@@ -62,7 +62,7 @@ class JsKeyValueInput extends JsRequest
 	
 	public function removeKeyValueInput(link)
 	{
-		new JQuery(link).parent().parent().remove();
+		new JQuery(link).parent().parent().parent().remove();
 	}
 	
 	public function flushKeyValueInputs()
@@ -88,12 +88,19 @@ class KeyValueSet
 	public var properties:Dynamic;
 	public var id:String;
 	public var request:JsKeyValueInput;
+	public var minRows:Int;
+	public var maxRows:Int;
+	public var currentRows:Int;
 	
-	public function new(id, properties, request:JsKeyValueInput)
+	public function new(id, properties, request:JsKeyValueInput, minRows:Int = 0, maxRows:Int = 0)
 	{
 		this.id = id;
 		this.properties = properties;
 		this.request = request;
+		this.minRows = minRows;
+		this.maxRows = maxRows;
+		
+		currentRows = 0;
 	}
 	
 	public function setup()
@@ -107,29 +114,49 @@ class KeyValueSet
 		
 		if (data.length != 0) {
 			var remove = false;
+			var c = 0;
 			for (item in data) {
 				addRow(item.key, item.value, remove);
-				remove = true;
+				c++;
+				remove = c >= minRows ? true : false;
 			}
 		}else {
 			addRow("", "", false);
 		}
+		
+		if (data.length < minRows) {
+			for(i in 0...minRows-data.length){
+				addRow("", "", false);
+			}
+		}
 	}
 	
-	public function addRow(?keyValue:String = "", ?valueValue:String = "", removeable:Bool = true)
+	public function addRow(?keyValue:String = "", ?valueValue:String = "", removeable:Bool = true):Bool
 	{
+		if (maxRows > 0 && currentRows == maxRows) {
+			Lib.alert("Only " + maxRows + " allowed.");
+			return(false);
+		}
 		var keyElement = properties.keyIsMultiline == "1" ? JQuery.create('textarea', { style:"height:"+properties.keyHeight+"px; width:"+properties.keyWidth+"px;" }, [keyValue] ) : JQuery.create('input', { type:"text", value:keyValue, style:"width:"+properties.keyWidth+"px;" }, [] );
 		var valueElement = properties.valueIsMultiline == "1" ? JQuery.create('textarea', { style:"height:"+properties.valueHeight+"px; width:"+properties.valueWidth+"px;" }, [valueValue] ) : JQuery.create('input', { type:"text", value:valueValue, style:"width:"+properties.valueWidth+"px;" }, [] );
 		var d = { src:"./res/cms/delete.png", title:"remove" };
 		Reflect.setField(d, "class", "qTip");
-		var removeElement = removeable ? JQuery.create('a', { href:"#", onclick: request.getRawCall("removeKeyValueInput(this)") + "; return(false);" }, JQuery.create('img', d)) : null;
+		var removeElement = removeable ? JQuery.create('a', { href:"#" }, JQuery.create('img', d)) : null;
+		var _r = request;
+		if (removeable){
+			removeElement.click(function(e){
+					_r.removeKeyValueInput(e.target);
+			});
+		}
 		new JQuery("#" + id + "_keyValueTable tr:last").after(
 			JQuery.create('tr', { }, [
 				JQuery.create('td', { valign:"top" }, [keyElement]),
 				JQuery.create('td', { valign:"top" }, [valueElement]),
 				JQuery.create('td', { valign:"top" }, [removeElement])
 			])
-		);		
+		);
+		currentRows++;
+		return(true);
 	}
 	
 	public function flush()

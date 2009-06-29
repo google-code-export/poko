@@ -416,8 +416,13 @@ class DatasetItem extends DatasetBase
 					form.addElement(el);
 					
 				case "keyvalue":
-					var el = new KeyValueInput(element.name, label, value, element.properties);
+					var el:KeyValueInput = new KeyValueInput(element.name, label, value, element.properties);
+					el.minRows = element.properties.minRows;
+					el.maxRows = element.properties.maxRows;
 					el.description = element.properties.description;
+					if (el.minRows > 0 || el.maxRows > 0) el.description += " <br />";
+					if (el.minRows > 0) el.description += " <br /><b>Minimum Rows</b>: " + el.minRows;
+					if (el.maxRows > 0) el.description += " <br /><b>Maximum Rows</b>: "+el.maxRows;
 					form.addElement(el);
 					
 				case "linkdisplay":
