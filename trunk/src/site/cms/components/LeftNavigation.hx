@@ -59,10 +59,14 @@ class LeftNavigation extends Component
 	{
 		var indentsData = [];
 		indentsData[0] = "";
-		indentsData[1] = "&#x02EA;&nbsp;";
+		/*indentsData[1] = "&#x02EA;&nbsp;";
 		indentsData[2] = "&nbsp;&#x02EA;&nbsp;";
 		indentsData[3] = "&nbsp;&nbsp;&#x02EA;&nbsp;";
-		indentsData[4] = "&nbsp;&nbsp;&nbsp;&#x02EA;&nbsp;";
+		indentsData[4] = "&nbsp;&nbsp;&nbsp;&#x02EA;&nbsp;";*/
+		indentsData[1] = "<img src=\"./res/cms/tree_kink.png\" />";
+		indentsData[2] = "&nbsp;<img src=\"./res/cms/tree_kink.png\" />";
+		indentsData[3] = "&nbsp;&nbsp;<img src=\"./res/cms/tree_kink.png\" />";
+		indentsData[4] = "&nbsp;&nbsp;&nbsp;<img src=\"./res/cms/tree_kink.png\" />";
 		var ind = indentsData[indents];
 		
 		sections.get(section).add( { title:title, link:link, external:external, indents:ind } );

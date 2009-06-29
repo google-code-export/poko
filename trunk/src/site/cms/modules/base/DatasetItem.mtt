@@ -15,11 +15,11 @@
 	:: foreach element form.getElements() ::
 		::if (element.getType() == "site.cms.modules.base.formElements.LinkTo")::
 			<tr>
-				<td colspan="2" class="contentTd">::raw element.getLabel():: <br /> ::raw element::</td>
+				<td colspan="2" class="contentTd">::raw element.getLabel():: <img src="./res/cms/help.png" /> <br /> ::raw element::</td>
 			</tr>
 		::elseif (element.getType() != "fwork.form.elements.Hidden")::
 			<tr>
-				<td class="labelTd" >::raw element.getLabel()::</td>
+				<td class="labelTd">::raw element.getLabel():: ::if element.description != null::<img class="qTip" src="./res/cms/help.png" title="::raw controller.nl2br(element.description)::" align="absmiddle" />::end::</td>
 				<td class="contentTd">::raw element::</td>
 			</tr>
 		::else::
@@ -30,3 +30,26 @@
 </table>
 
 ::raw form.getCloseTag()::
+
+<script>
+	$(document).ready(function(){
+		$(".resizableFrame").resizable();
+		
+		$('.qTip').qtip({
+			tooltip: 'bottomRight',
+			style: 'cream',
+			show: {
+				delay: 200,
+				solo: true,
+				effect: {
+					type: 'none'
+				}
+			},
+			hide: {
+				effect: {
+					type: 'none'
+				}
+			}
+		});		
+	});
+</script>

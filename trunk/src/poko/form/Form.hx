@@ -179,6 +179,11 @@ class Form
 		return Web.getParams().get(name + "_formSubmitted") == "true";
 	}
 	
+	public function getSubmittedValue():String
+	{
+		return Web.getParams().get(name + "_formSubmitted");
+	}	
+	
 	public function getErrors():String
 	{
 		var s:StringBuf = new StringBuf();

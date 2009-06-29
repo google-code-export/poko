@@ -29,6 +29,7 @@ package site.cms.modules.base;
 
 import haxe.Public;
 import php.Session;
+import poko.form.elements.Hidden;
 import poko.js.JsBinding;
 import poko.form.elements.Input;
 import poko.form.elements.Button;
@@ -69,6 +70,7 @@ class Dataset extends DatasetBase
 	
 	private var associateExtras:Hash<Hash<Dynamic>>;
 	public var jsBind:JsBinding;
+	private var currentFilterSettings:FilterSettings;
 	
 	public function new()
 	{
@@ -164,8 +166,8 @@ class Dataset extends DatasetBase
 		
 		var hasWhere = false;
 		
-		var currentFilterSettings:FilterSettings = FilterSettings.get(table);
-		if (application.params.get("resetState") == "true" || optionsForm.isSubmitted()) 
+		currentFilterSettings = FilterSettings.get(table);
+		if (application.params.get("resetState") == "true" || optionsForm.isSubmitted())
 			currentFilterSettings.clear();
 			
 		//--------------------------------------------------------		
@@ -264,7 +266,7 @@ class Dataset extends DatasetBase
 			sql += "ORDER BY `" + definition.primaryKey + "`";
 		}
 		
-		if (optionsForm.isSubmitted()){
+		if (optionsForm.isSubmitted() && optionsForm.getElement("reset").value != "true"){
 			currentFilterSettings.enabled = true;
 			
 			currentFilterSettings.filterBy = filterByValue;
@@ -435,6 +437,8 @@ class Dataset extends DatasetBase
 		
 		optionsForm.addElement(new Selectbox("orderBy", "orderBy"));
 		optionsForm.addElement(new Selectbox("orderByDirection", "direction"));
+		
+		optionsForm.addElement(new Hidden("reset", "false"));
 		
 		optionsForm.addElement(new Button("updateButton", "Update"));
 		optionsForm.addElement(new Button("resetButton", "Reset", "", poko.form.elements.ButtonType.BUTTON));

@@ -86,11 +86,12 @@ class DatasetItem extends DatasetBase
 	{
 		super.pre();
 		
-		head.js.add("js/cms/tiny_mce/tiny_mce.js");
-		head.js.add("js/cms/jquery-ui-1.7.1.custom.min.js");
-		head.js.add("js/cms/wymeditor/jquery.wymeditor.pack.js");
+		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
+		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
+		head.js.add("js/cms/jquery.qtip.min.js");
 		
-		head.css.add("css/cms/cupertino/jquery-ui-1.7.1.custom.css");
+		head.js.add("js/cms/tiny_mce/tiny_mce.js");
+		head.js.add("js/cms/wymeditor/jquery.wymeditor.pack.js");
 		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsDatasetItem");
 		
@@ -307,6 +308,7 @@ class DatasetItem extends DatasetBase
 					
 					// print out element.properties.regexDescription so we know what we need to input (if it exists)
 					
+					el.description = element.properties.description;
 					form.addElement(el);
 					
 				case "number":
@@ -314,10 +316,14 @@ class DatasetItem extends DatasetBase
 					el.addValidator(new NumberValidator(element.properties.min != "" ? element.properties.min : null, 
 														element.properties.max != "" ? element.properties.max : null, 
 														element.properties.isInt == "1"));
+					el.description = element.properties.description;
 					form.addElement(el);
 					
 				case "image":
-					form.addElement(new FileUpload(element.name, label, value, element.properties.required));
+					
+					var el:FileUpload = new FileUpload(element.name, label, value, element.properties.required);
+					el.description = element.properties.description;
+					form.addElement(el);
 					
 				case "date":
 					
@@ -330,6 +336,7 @@ class DatasetItem extends DatasetBase
 					// need to add min / max to date validation
 					el.addValidator(new DateValidator());
 					
+					el.description = element.properties.description;
 					form.addElement(el);
 				
 				case "richtext-tinymce":
@@ -340,6 +347,7 @@ class DatasetItem extends DatasetBase
 					if (element.properties.height != "") el.height = Std.parseInt(element.properties.height);
 					if (element.properties.content_css != "" && element.properties.content_css != null) el.content_css = element.properties.content_css;
 					
+					el.description = element.properties.description;
 					form.addElement(el);
 					
 				case "richtext-wym":
@@ -348,10 +356,13 @@ class DatasetItem extends DatasetBase
 					if (element.properties.width != "") el.width = Std.parseInt(element.properties.width);
 					if (element.properties.height != "") el.height = Std.parseInt(element.properties.height);
 					
+					el.description = element.properties.description;
 					form.addElement(el);					
 				
 				case "read-only":
-					form.addElement(new Readonly(element.name, label, value, element.properties.required));
+					var el = new Readonly(element.name, label, value, element.properties.required);
+					el.description = element.properties.description;	
+					form.addElement(el);
 				
 				case "bool":
 					var options = new List();
@@ -361,14 +372,19 @@ class DatasetItem extends DatasetBase
 					options.add( { key:trueLable, value:"1" } );
 					options.add( { key:falseLable, value:"0" } );
 					
-					form.addElement(new RadioGroup(element.name, label, options, value, "1", false));
+					var el = new RadioGroup(element.name, label, options, value, "1", false);
+					el.description = element.properties.description;
+					form.addElement(el);
 				
 				case "association":
 					var assocData = application.db.request("SELECT `" + element.properties.field + "` as value, "+ element.properties.fieldLabel +" as label FROM `" + element.properties.table + "`");
 					assocData = Lambda.map(assocData, function(value) {
 						return { key:value.label, value:value.value };
 					});
-					form.addElement(new Selectbox(element.name, label, assocData, value, element.properties.required));
+					
+					var el = new Selectbox(element.name, label, assocData, value, element.properties.required);
+					el.description = element.properties.description;
+					form.addElement(el);
 				
 				case "multilink":
 					
@@ -396,14 +412,17 @@ class DatasetItem extends DatasetBase
 					}
 					var el = new CheckboxGroup(element.name, label, linkData, selectedData);
 					
+					el.description = element.properties.description;
 					form.addElement(el);
 					
 				case "keyvalue":
 					var el = new KeyValueInput(element.name, label, value, element.properties);
+					el.description = element.properties.description;
 					form.addElement(el);
 					
 				case "linkdisplay":
-					var el = new LinkTable(element.name, label, element.properties.table, table, id);
+					var el = new LinkTable(element.name, label, element.properties.table, table, id, null, null, "class=\"resizableFrame\"");
+					el.description = element.properties.description;
 					form.addElement(el);
 			}
 			

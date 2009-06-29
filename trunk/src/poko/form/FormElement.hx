@@ -37,6 +37,7 @@ class FormElement
 	public var form:Form;
 	public var name:String;
 	public var label:String;
+	public var description:String;
 	public var value:Dynamic;
 	public var required:Bool;
 	public var errors:List<String>;

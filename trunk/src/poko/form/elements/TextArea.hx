@@ -37,9 +37,8 @@ class TextArea extends Input
 {
 	public var height:Int;
 
-	
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attibutes:String="") 
-	{
+	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attributes:String) 
+	{		
 		super(name, label, value, required, validators, attributes);
 		
 		width = 300;
@@ -62,7 +61,7 @@ class TextArea extends Input
 		if (required && form.isSubmitted() && printRequired) s += "required<br />";
 		var style = useSizeValues ? "style=\"width:" + width + "px; height:" + height + "px;\"" : "";
 		
-		s += "<textarea "+style+" name=\"" + n + "\" id=\"" + n + "\">" + value + "</textarea>";
+		s += "<textarea " + style + " name=\"" + n + "\" id=\"" + n + "\" " + attributes + " >" + value + "</textarea>";
 		return s;
 	}
 	

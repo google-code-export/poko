@@ -65,8 +65,8 @@ class KeyValueInput extends FormElement
 		s += "<table id=\""+n+"_keyValueTable\">";
 		s += "	<tr><td><label>"+keyLabel+"</label></td><td><label>"+valueLabel+"</label></td><td></td></tr>";
 		s += "</table>";
-		s += "<div><a href=\"#\" onClick=\"" + jsBind.getCall("addKeyValueInput", []) + "; return(false);\">add row</a></div>";
-		s += "<script>" + jsBind.getCall("setupKeyValueInput", [n, properties]) + "</script>"; 
+		s += "<div><a href=\"#\" onClick=\"" + jsBind.getCall("addKeyValueInput", [n]) + "; return(false);\"><img class=\"qTip\" src=\"./res/cms/add.png\" title=\"add row\" /></a></div>";
+		s += "<script>$(document).ready(function(){" + jsBind.getCall("setupKeyValueInput", [n, properties]) + "});</script>"; 
 		return s;
 	}
 	

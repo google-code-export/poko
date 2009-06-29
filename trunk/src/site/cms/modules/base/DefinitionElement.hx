@@ -28,6 +28,7 @@
 package site.cms.modules.base;
 
 import poko.form.elements.Readonly;
+import poko.form.elements.TextArea;
 import poko.js.JsBinding;
 import site.cms.common.Definition;
 import site.cms.common.DefinitionElementMeta;
@@ -81,6 +82,9 @@ class DefinitionElement extends DefinitionsBase
 	override public function pre()
 	{
 		super.pre();
+		
+		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
+		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");		
 		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsDefinitionElement");
 		
@@ -222,10 +226,10 @@ class DefinitionElement extends DefinitionsBase
 		var numberType = new List();
 		numberType.add( { key:"Float", value:"0" } );
 		numberType.add( { key:"Int", value:"1" } );
-		
+
 		elements = new List();
 		form.addElement(new Readonly( "att_name", "Field", meta.name));
-		
+
 		if (meta.type == "linkdisplay" || meta.type == "multilink"  ) 
 		{
 			// Sepcial display for links
@@ -237,15 +241,16 @@ class DefinitionElement extends DefinitionsBase
 		{
 			// general display
 			form.addElement(new Input( "att_label", "Label", data.label));
+			form.addElement(new TextArea("att_description", "Description", data.description, false, null, "class=\"resizable\" style=\"width: 200px; height: 3em;\""));
 			typeSelector = new Selectbox( "type", "Type", datatypes, meta.type, true, "");
 			form.addElement(typeSelector);
-			form.addElement(new RadioGroup( "att_showInList", "Show in List?", yesno, meta.showInList ? "1" : "0", "0", false));	
-			form.addElement(new RadioGroup( "att_showInFiltering", "Show in filter?", yesno, meta.showInFiltering ? "1" : "0", "0", false));	
-			form.addElement(new RadioGroup( "att_showInOrdering", "Enable ordering?", yesno, meta.showInOrdering ? "1" : "0", "0", false));	
+			form.addElement(new RadioGroup( "att_showInList", "Show in List?", yesno, meta.showInList ? "1" : "0", "0", false));
+			form.addElement(new RadioGroup( "att_showInFiltering", "Show in filter?", yesno, meta.showInFiltering ? "1" : "0", "0", false));
+			form.addElement(new RadioGroup( "att_showInOrdering", "Enable ordering?", yesno, meta.showInOrdering ? "1" : "0", "0", false));
 		}
-		
+
 		form.addFieldset("properties", new FieldSet("propertiesFieldset", "Properties", true));
-		
+
 		form.addElement(new RadioGroup( "def_text_isMultiline", "Multiline?", yesno, data.isMultiline, "0", false), "properties");	
 		form.addElement(new Input( "def_text_width", "Width", data.width), "properties");
 		form.addElement(new Input( "def_text_height", "Height", data.height), "properties");
@@ -389,13 +394,15 @@ class DefinitionElement extends DefinitionsBase
 				data.name = element.value;
 			if (element.name == "att_label")
 				data.label = element.value;
+			if (element.name == "att_description")
+				data.description = element.value;			
 			if (element.name == "att_showInList")
 				data.showInList = (element.value == "1") ? 1 : 0;
 				
 			if (element.name == "att_showInFiltering")
 				data.showInFiltering = (element.value == "1") ? 1 : 0;
 			if (element.name == "att_showInOrdering")
-				data.showInOrdering = (element.value == "1") ? 1 : 0;				
+				data.showInOrdering = (element.value == "1") ? 1 : 0;
 			
 			
 			if (element.name.indexOf("def_" + type ) != -1)

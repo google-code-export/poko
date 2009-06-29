@@ -34,20 +34,70 @@ import js.Lib;
 
 class JsKeyValueInput extends JsRequest
 {	
-	public var valueHolder:JQuery;
-	public var table:JQuery;
-	public var properties:Dynamic;
-	public var id:String;
+	public var keyValueSets:List<KeyValueSet>;
 	
 	override public function main()
 	{
+		var set:KeyValueSet;
+		for (set in keyValueSets)
+		{
+			set.setup();
+		}
 	}
 	
 	public function setupKeyValueInput(id, properties:String)
 	{
+		if (keyValueSets == null) keyValueSets = new List();
+		keyValueSets.add(new KeyValueSet(id, properties, this));
+	}
+	
+	public function addKeyValueInput(id)
+	{
+		var set:KeyValueSet;
+		for (set in keyValueSets)
+		{
+			if (set.id == id) set.addRow();
+		}
+	}
+	
+	public function removeKeyValueInput(link)
+	{
+		new JQuery(link).parent().parent().remove();
+	}
+	
+	public function flushKeyValueInputs()
+	{
+		var set:KeyValueSet;
+		for (set in keyValueSets) {
+			set.flush();
+		}
+		
+		return(true);
+	}
+}
+
+typedef KeyValuePair = {
+	var key:String;
+	var value:String;
+}
+
+class KeyValueSet
+{
+	public var valueHolder:JQuery;
+	public var table:JQuery;
+	public var properties:Dynamic;
+	public var id:String;
+	public var request:JsKeyValueInput;
+	
+	public function new(id, properties, request:JsKeyValueInput)
+	{
 		this.id = id;
 		this.properties = properties;
-		
+		this.request = request;
+	}
+	
+	public function setup()
+	{
 		valueHolder = new JQuery("#" + id);
 		table = new JQuery("#" + id + "_keyValueTable");
 		var val = valueHolder.val();
@@ -58,35 +108,31 @@ class JsKeyValueInput extends JsRequest
 		if (data.length != 0) {
 			var remove = false;
 			for (item in data) {
-				addKeyValueInput(item.key, item.value, remove);
+				addRow(item.key, item.value, remove);
 				remove = true;
 			}
 		}else {
-			addKeyValueInput("", "", false);
+			addRow("", "", false);
 		}
 	}
 	
-	public function addKeyValueInput(?keyValue:String = "", ?valueValue:String = "", removeable:Bool = true)
+	public function addRow(?keyValue:String = "", ?valueValue:String = "", removeable:Bool = true)
 	{
 		var keyElement = properties.keyIsMultiline == "1" ? JQuery.create('textarea', { style:"height:"+properties.keyHeight+"px; width:"+properties.keyWidth+"px;" }, [keyValue] ) : JQuery.create('input', { type:"text", value:keyValue, style:"width:"+properties.keyWidth+"px;" }, [] );
 		var valueElement = properties.valueIsMultiline == "1" ? JQuery.create('textarea', { style:"height:"+properties.valueHeight+"px; width:"+properties.valueWidth+"px;" }, [valueValue] ) : JQuery.create('input', { type:"text", value:valueValue, style:"width:"+properties.valueWidth+"px;" }, [] );
-		var removeElement = removeable ? JQuery.create('a', { href:"#", onclick: getRawCall("removeKeyValueInput(this)") + "; return(false);" }, "remove") : null;
-		
+		var d = { src:"./res/cms/delete.png", title:"remove" };
+		Reflect.setField(d, "class", "qTip");
+		var removeElement = removeable ? JQuery.create('a', { href:"#", onclick: request.getRawCall("removeKeyValueInput(this)") + "; return(false);" }, JQuery.create('img', d)) : null;
 		new JQuery("#" + id + "_keyValueTable tr:last").after(
 			JQuery.create('tr', { }, [
 				JQuery.create('td', { valign:"top" }, [keyElement]),
 				JQuery.create('td', { valign:"top" }, [valueElement]),
 				JQuery.create('td', { valign:"top" }, [removeElement])
 			])
-		);
+		);		
 	}
 	
-	public function removeKeyValueInput(link)
-	{
-		new JQuery(link).parent().parent().remove();
-	}
-	
-	public function flushKeyValueInputs()
+	public function flush()
 	{
 		var data:Array<KeyValuePair> = [];
 		
@@ -98,12 +144,5 @@ class JsKeyValueInput extends JsRequest
 		});
 		
 		valueHolder.val(Serializer.run(data));
-		
-		return(true);
 	}
-}
-
-typedef KeyValuePair = {
-	var key:String;
-	var value:String;
 }

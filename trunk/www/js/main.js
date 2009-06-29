@@ -369,7 +369,13 @@ site.cms.modules.base.js.JsDataset.prototype.main = function() {
 		resetButton.onclick = function(e) {
 			js.Lib.document.getElementById("options_filterBy").selectedIndex = 0;
 			js.Lib.document.getElementById("options_orderBy").selectedIndex = 0;
+			js.Lib.document.getElementById("options_reset").value = "true";
 			resetButton.form.submit();
+		}
+		var submitButton = js.Lib.document.getElementById("options_updateButton");
+		submitButton.onclick = function(e) {
+			js.Lib.document.getElementById("options_reset").value = "false";
+			submitButton.form.submit();
 		}
 	}
 }
@@ -1641,16 +1647,61 @@ site.cms.modules.base.js.JsKeyValueInput = function(p) { if( p === $_ ) return; 
 site.cms.modules.base.js.JsKeyValueInput.__name__ = ["site","cms","modules","base","js","JsKeyValueInput"];
 site.cms.modules.base.js.JsKeyValueInput.__super__ = poko.js.JsRequest;
 for(var k in poko.js.JsRequest.prototype ) site.cms.modules.base.js.JsKeyValueInput.prototype[k] = poko.js.JsRequest.prototype[k];
-site.cms.modules.base.js.JsKeyValueInput.prototype.addKeyValueInput = function(keyValue,valueValue,removeable) {
+site.cms.modules.base.js.JsKeyValueInput.prototype.addKeyValueInput = function(id) {
+	var set;
+	{ var $it15 = this.keyValueSets.iterator();
+	while( $it15.hasNext() ) { var set1 = $it15.next();
+	{
+		if(set1.id == id) set1.addRow();
+	}
+	}}
+}
+site.cms.modules.base.js.JsKeyValueInput.prototype.flushKeyValueInputs = function() {
+	var set;
+	{ var $it16 = this.keyValueSets.iterator();
+	while( $it16.hasNext() ) { var set1 = $it16.next();
+	{
+		set1.flush();
+	}
+	}}
+	return (true);
+}
+site.cms.modules.base.js.JsKeyValueInput.prototype.keyValueSets = null;
+site.cms.modules.base.js.JsKeyValueInput.prototype.main = function() {
+	var set;
+	{ var $it17 = this.keyValueSets.iterator();
+	while( $it17.hasNext() ) { var set1 = $it17.next();
+	{
+		set1.setup();
+	}
+	}}
+}
+site.cms.modules.base.js.JsKeyValueInput.prototype.removeKeyValueInput = function(link) {
+	new JQuery(link).parent().parent().remove();
+}
+site.cms.modules.base.js.JsKeyValueInput.prototype.setupKeyValueInput = function(id,properties) {
+	if(this.keyValueSets == null) this.keyValueSets = new List();
+	this.keyValueSets.add(new site.cms.modules.base.js.KeyValueSet(id,properties,this));
+}
+site.cms.modules.base.js.JsKeyValueInput.prototype.__class__ = site.cms.modules.base.js.JsKeyValueInput;
+site.cms.modules.base.js.KeyValueSet = function(id,properties,request) { if( id === $_ ) return; {
+	this.id = id;
+	this.properties = properties;
+	this.request = request;
+}}
+site.cms.modules.base.js.KeyValueSet.__name__ = ["site","cms","modules","base","js","KeyValueSet"];
+site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueValue,removeable) {
 	if(removeable == null) removeable = true;
 	if(valueValue == null) valueValue = "";
 	if(keyValue == null) keyValue = "";
 	var keyElement = (this.properties.keyIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.keyHeight + "px; width:" + this.properties.keyWidth + "px;"},[keyValue]):JQuery.create("input",{ type : "text", value : keyValue, style : "width:" + this.properties.keyWidth + "px;"},[]));
 	var valueElement = (this.properties.valueIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.valueHeight + "px; width:" + this.properties.valueWidth + "px;"},[valueValue]):JQuery.create("input",{ type : "text", value : valueValue, style : "width:" + this.properties.valueWidth + "px;"},[]));
-	var removeElement = (removeable?JQuery.create("a",{ href : "#", onclick : this.getRawCall("removeKeyValueInput(this)") + "; return(false);"},"remove"):null);
+	var d = { src : "./res/cms/delete.png", title : "remove"}
+	d["class"] = "qTip";
+	var removeElement = (removeable?JQuery.create("a",{ href : "#", onclick : this.request.getRawCall("removeKeyValueInput(this)") + "; return(false);"},JQuery.create("img",d)):null);
 	new JQuery("#" + this.id + "_keyValueTable tr:last").after(JQuery.create("tr",{ },[JQuery.create("td",{ valign : "top"},[keyElement]),JQuery.create("td",{ valign : "top"},[valueElement]),JQuery.create("td",{ valign : "top"},[removeElement])]));
 }
-site.cms.modules.base.js.JsKeyValueInput.prototype.flushKeyValueInputs = function() {
+site.cms.modules.base.js.KeyValueSet.prototype.flush = function() {
 	var data = [];
 	new JQuery("#" + this.id + "_keyValueTable tr").each(function($int,html) {
 		var items = new JQuery(html).find("td").children("input,textarea");
@@ -1659,21 +1710,13 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.flushKeyValueInputs = functio
 		}
 	});
 	this.valueHolder.val(haxe.Serializer.run(data));
-	return (true);
 }
-site.cms.modules.base.js.JsKeyValueInput.prototype.id = null;
-site.cms.modules.base.js.JsKeyValueInput.prototype.main = function() {
-	null;
-}
-site.cms.modules.base.js.JsKeyValueInput.prototype.properties = null;
-site.cms.modules.base.js.JsKeyValueInput.prototype.removeKeyValueInput = function(link) {
-	new JQuery(link).parent().parent().remove();
-}
-site.cms.modules.base.js.JsKeyValueInput.prototype.setupKeyValueInput = function(id,properties) {
-	this.id = id;
-	this.properties = properties;
-	this.valueHolder = new JQuery("#" + id);
-	this.table = new JQuery("#" + id + "_keyValueTable");
+site.cms.modules.base.js.KeyValueSet.prototype.id = null;
+site.cms.modules.base.js.KeyValueSet.prototype.properties = null;
+site.cms.modules.base.js.KeyValueSet.prototype.request = null;
+site.cms.modules.base.js.KeyValueSet.prototype.setup = function() {
+	this.valueHolder = new JQuery("#" + this.id);
+	this.table = new JQuery("#" + this.id + "_keyValueTable");
 	var val = this.valueHolder.val();
 	var data = [];
 	if(val != "") data = haxe.Unserializer.run(val);
@@ -1684,18 +1727,18 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.setupKeyValueInput = function
 			while(_g < data.length) {
 				var item = data[_g];
 				++_g;
-				this.addKeyValueInput(item.key,item.value,remove);
+				this.addRow(item.key,item.value,remove);
 				remove = true;
 			}
 		}
 	}
 	else {
-		this.addKeyValueInput("","",false);
+		this.addRow("","",false);
 	}
 }
-site.cms.modules.base.js.JsKeyValueInput.prototype.table = null;
-site.cms.modules.base.js.JsKeyValueInput.prototype.valueHolder = null;
-site.cms.modules.base.js.JsKeyValueInput.prototype.__class__ = site.cms.modules.base.js.JsKeyValueInput;
+site.cms.modules.base.js.KeyValueSet.prototype.table = null;
+site.cms.modules.base.js.KeyValueSet.prototype.valueHolder = null;
+site.cms.modules.base.js.KeyValueSet.prototype.__class__ = site.cms.modules.base.js.KeyValueSet;
 ValueType = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] }
 ValueType.TBool = ["TBool",3];
 ValueType.TBool.toString = $estr;
@@ -1818,9 +1861,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e15 ) {
+		catch( $e18 ) {
 			{
-				var e = $e15;
+				var e = $e18;
 				{
 					return "???";
 				}
@@ -1877,9 +1920,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e16 ) {
+	catch( $e19 ) {
 		{
-			var e = $e16;
+			var e = $e19;
 			{
 				if(cl == null) return false;
 			}
@@ -2005,8 +2048,8 @@ IntHash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it17 = it;
-	while( $it17.hasNext() ) { var i = $it17.next();
+	{ var $it20 = it;
+	while( $it20.hasNext() ) { var i = $it20.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -2133,9 +2176,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e18 ) {
+	catch( $e21 ) {
 		{
-			var e = $e18;
+			var e = $e21;
 			{
 				
 				for(var i in this.h)
@@ -2178,8 +2221,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it19 = it;
-	while( $it19.hasNext() ) { var i = $it19.next();
+	{ var $it22 = it;
+	while( $it22.hasNext() ) { var i = $it22.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -2305,16 +2348,16 @@ js.Boot.__init();
 		try {
 			return new ActiveXObject("Msxml2.XMLHTTP");
 		}
-		catch( $e20 ) {
+		catch( $e23 ) {
 			{
-				var e = $e20;
+				var e = $e23;
 				{
 					try {
 						return new ActiveXObject("Microsoft.XMLHTTP");
 					}
-					catch( $e21 ) {
+					catch( $e24 ) {
 						{
-							var e1 = $e21;
+							var e1 = $e24;
 							{
 								throw "Unable to create XMLHttpRequest object.";
 							}

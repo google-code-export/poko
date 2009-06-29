@@ -217,13 +217,17 @@ fieldset.fieldsetNoDisplay legend{
 	background: #ffc8c8;
 	color: #000;
 }
+
 /* ------------------------------------------------------- */
 /* filtering and ordering controls */
-/*
+
 #filterOrderWrapper
 {
+	background: #f6f6f6;
+	margin: 10px 0;
+	padding: 5px;
 }
-
+/*
 #filterOptions
 {
 	background: green;
@@ -250,3 +254,20 @@ fieldset.fieldsetNoDisplay legend{
 }
 */
 /* ------------------------------------------------------- */
+
+#datasetActionsWrapper
+{
+	background: #eee;
+	width: auto;
+	margin: 10px 0;
+	padding: 5px;
+}
+
+#datasetDeleteButton
+{
+	background-image: url(../../res/cms/delete.png);
+	background-repeat: no-repeat;
+	padding-left: 18px;
+	margin-top: 10px;
+}
+

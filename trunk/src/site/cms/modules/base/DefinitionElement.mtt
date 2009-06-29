@@ -31,3 +31,9 @@
 	::raw form.getElement('submit')::
 
 ::raw form.getCloseTag()::
+
+<script>
+	$(document).ready(function(){
+		$(".resizable").resizable();
+	});
+</script>

@@ -40,7 +40,7 @@ class CmsTemplate extends Request
 		head.css.add("css/cms/cms.css");
 		
 		
-		head.js.add("js/cms/jquery.js");
+		head.js.add("js/cms/jquery-1.3.2.min.js");
 		head.js.add("js/cms/jquery.domec.js");
 		head.js.add("js/main.js");
 		

@@ -64,8 +64,16 @@ class JsDataset extends JsRequest
 			{
 				cast(Lib.document.getElementById("options_filterBy")).selectedIndex = 0;
 				cast(Lib.document.getElementById("options_orderBy")).selectedIndex = 0;
+				cast(Lib.document.getElementById("options_reset")).value = "true";
 				resetButton.form.submit();
 			}
+			
+			var submitButton:Button = cast Lib.document.getElementById("options_updateButton");
+			submitButton.onclick = function (e:Event)
+			{
+				cast(Lib.document.getElementById("options_reset")).value = "false";
+				submitButton.form.submit();
+			}			
 		}
 	}
 	

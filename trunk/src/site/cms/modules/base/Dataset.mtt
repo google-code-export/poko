@@ -2,11 +2,15 @@
 	<h3>::label::</h3>
 	::end::
 	
-	<p><a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">Add to dataset</a></p>
+	<div id="datasetActionsWrapper">
+		<a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::"><img src="./res/cms/add.png" class="qTip" title="Add new item to list" /></a>
+		::if !linkMode && showFiltering || showOrderBy:: | <a href="#" onClick="return(toggleFilterOrder());"><img class="qTip" src="./res/cms/find.png" title="Show/hide filteringer and ordering options." /></a>::end::
+	</div>
 	
 	::if !linkMode::
 		<div id="filterOrderWrapper">
 		::raw optionsForm.getOpenTag() ::
+			::raw optionsForm.getElement("reset") ::
 			<div id="filterOptions">
 			::if showFiltering::
 			
@@ -44,9 +48,9 @@
 			
 			
 			<tr>
-			<td><a href="#" class="qTip" title="<b>Deleting</b><br /><br />To remove items just select the check box next to them and then click the 'delete and order' button.">[?]</a></td>
+			<td><img src="./res/cms/help.png" class="qTip" title="<b>Deleting</b><br /><br />To remove items just select the check box next to them and then click the 'delete and order' button." /></td>
 			::if (isOrderingEnabled):: 
-				<td><a href="#" class="qTip" title="<b>Ordering</b><br /><br />To order elements change the numbers in the boxes below and then click the 'delete and order' button.<br /><br />If you have elements 1, 2, 3 and 4 and you want to move 4 between 1 and 2 then put any number between 1 and 2 in the box ie 1.5">[?]</a></td> 
+				<td><img src="./res/cms/help.png" class="qTip" title="<b>Ordering</b><br /><br />To order elements change the numbers in the boxes below and then click the 'delete and order' button.<br /><br />If you have elements 1, 2, 3 and 4 and you want to move 4 between 1 and 2 then put any number between 1 and 2 in the box ie 1.5" /></td>
 			::end::
 			
 			::foreach field fieldLabels ::
@@ -76,8 +80,8 @@
 						::end::
 						
 						::set cols = cols+1::
-						<td><a  href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">edit</a> | 
-							<a class="qTip" title="Duplicate" href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::">dup</a></td>
+						<td><a class="qTip" title="Edit" href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::"><img src="./res/cms/pencil.png" /></a> | 
+							<a class="qTip" title="Duplicate" href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::"><img src="./res/cms/page_copy.png" /></a></td>
 					</tr>
 				::end::
 			::else::
@@ -87,12 +91,34 @@
 			
 			<input type="hidden" name="action" value="update" />
 		
-			<input type="submit" name="submitted_delete" value="::if isOrderingEnabled:: delete & order ::else:: delete checked ::end::"  />
+			<input type="submit" id="datasetDeleteButton" name="submitted_delete" value="::if isOrderingEnabled:: delete & order ::else:: delete checked ::end::"  />
 	</form>
 	
 	<script>
 		$('.qTip').qtip({
 			tooltip: 'bottomRight',
-			style: 'cream'
+			style: 'cream',
+			show: {
+				delay: 200,
+				solo: true,
+				effect: {
+					type: 'none'
+				}
+			},
+			hide: {
+				effect: {
+					type: 'none'
+				}
+			}
 		});
+		
+		:: if !currentFilterSettings.enabled::
+			$("#filterOrderWrapper").hide();
+		::end::
+		
+		function toggleFilterOrder()
+		{
+			$("#filterOrderWrapper").toggle();
+			return(false);
+		}
 	</script>	
