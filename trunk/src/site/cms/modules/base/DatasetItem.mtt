@@ -1,10 +1,11 @@
-
-<h3>
-	::label:: 
-	::if pagesMode==false && id !=null:: 
-		&gt; row ::id:: 
-	::end::
-</h3>
+::if !linkMode::
+	<h3>
+		::label:: 
+		::if pagesMode==false && id !=null:: 
+			&gt; row ::id:: 
+		::end::
+	</h3>
+::end::
 
 ::raw form.getErrors()::
 
@@ -39,7 +40,7 @@
 					el.text("Editing linked data");
 					el[0].disabled = true;
 				});
-		::end::			
+		::end::
 		
 		$(".resizableFrame").resizable();
 		

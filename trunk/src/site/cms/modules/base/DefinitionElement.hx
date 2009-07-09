@@ -153,12 +153,17 @@ class DefinitionElement extends DefinitionsBase
 		var data:Dynamic = meta.properties;
 		
 		// for type selector
-		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden"]);
+		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden"]);
 		
 		// for bool selectors
 		var yesno = new List();
 		yesno.add( { key:"Yes", value:"1" } );
 		yesno.add( { key:"No", value:"0" } );
+		
+		// for image text selectors
+		var imagefile = new List();
+		imagefile.add( { key:"Image", value:"1" } );
+		imagefile.add( { key:"File", value:"0" } );
 		
 		// DB Data types
 		var dataType = new List();
@@ -256,7 +261,6 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new Input( "def_text_height", "Height", data.height), "properties");
 		form.addElement(new Input( "def_text_minChars", "Min Chars", data.minChars), "properties");
 		form.addElement(new Input( "def_text_maxChars", "Max Chars", data.maxChars), "properties");
-		form.addElement(new Input( "def_text_maxChars", "Max Chars", data.autoTrim), "properties");
 		form.addElement(new Input( "def_text_charsList", "Chars List", data.charsList), "properties");
 		form.addElement(new RadioGroup( "def_text_mode", "Chars List Mode", charsModeOptions, data.mode, "ALLOW", false), "properties");
 		form.addElement(new Input( "def_text_regex", "Regex", data.regex), "properties");
@@ -274,11 +278,16 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new Input( "def_bool_labelFalse", "Label 'false'", data.labelFalse), "properties");
 		
 		/*
-		form.addElement("def_image_setAspect", new RadioGroup( form, "Set Aspect", yesno, data.setAspect, "0", false));
-		form.addElement("def_image_aspectW", new Input( form, "Aspect Width", data.aspectW, "0"));
-		form.addElement("def_image_aspectH", new Input( form, "Aspect Height", data.aspectW, "0"));
+		form.addElement("def_image-file_setAspect", new RadioGroup( form, "Set Aspect", yesno, data.setAspect, "0", false));
+		form.addElement("def_image-file_aspectW", new Input( form, "Aspect Width", data.aspectW, "0"));
+		form.addElement("def_image-file_aspectH", new Input( form, "Aspect Height", data.aspectW, "0"));
 		*/
-		form.addElement(new RadioGroup( "def_image_required", "Required", yesno, data.required, "0", false), "properties");
+		form.addElement(new RadioGroup( "def_image-file_required", "Required", yesno, data.required, "0", false), "properties");
+		form.addElement(new RadioGroup( "def_image-file_isImage", "Type", imagefile, data.isImage, "0", false), "properties");
+		form.addElement(new Input( "def_image-file_extList", "Ext (jpg,gif,png)", data.extList, false), "properties");
+		form.addElement(new RadioGroup( "def_image-file_extMode", "Ext Mode", charsModeOptions, data.extMode, "ALLOW", false), "properties");
+		form.addElement(new Input( "def_image-file_minSize", "Min size (Kb)", data.minSize, false), "properties");
+		form.addElement(new Input( "def_image-file_maxSize", "Max size (Kb)", data.maxSize, false), "properties");
 		
 		//form.addElement("def_date_selector", new DateSelector( form, "Select Date", Date.now()));
 		form.addElement(new RadioGroup( "def_date_restrictMin", "Restrict Min", yesno, data.restrictMin, "0", false), "properties");

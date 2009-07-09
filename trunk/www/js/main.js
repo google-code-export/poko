@@ -1822,6 +1822,9 @@ js.Lib.window = null;
 js.Lib.alert = function(v) {
 	alert(js.Boot.__string_rec(v,""));
 }
+js.Lib.confirm = function(message) {
+	return confirm(message);
+}
 js.Lib.eval = function(code) {
 	return eval(code);
 }
@@ -2190,13 +2193,6 @@ poko.js.JsBinding = function(p) { if( p === $_ ) return; {
 poko.js.JsBinding.__name__ = ["poko","js","JsBinding"];
 poko.js.JsBinding.prototype.jsRequest = null;
 poko.js.JsBinding.prototype.__class__ = poko.js.JsBinding;
-site.cms.js.JsCommon = function(p) { if( p === $_ ) return; {
-	poko.js.JsRequest.apply(this,[]);
-}}
-site.cms.js.JsCommon.__name__ = ["site","cms","js","JsCommon"];
-site.cms.js.JsCommon.__super__ = poko.js.JsRequest;
-for(var k in poko.js.JsRequest.prototype ) site.cms.js.JsCommon.prototype[k] = poko.js.JsRequest.prototype[k];
-site.cms.js.JsCommon.prototype.__class__ = site.cms.js.JsCommon;
 Hash = function(p) { if( p === $_ ) return; {
 	this.h = {}
 	if(this.h.__proto__ != null) {
@@ -2269,6 +2265,70 @@ Hash.prototype.toString = function() {
 	return s.b.join("");
 }
 Hash.prototype.__class__ = Hash;
+site.cms.modules.base.js.JsFileUpload = function(p) { if( p === $_ ) return; {
+	poko.js.JsRequest.apply(this,[]);
+}}
+site.cms.modules.base.js.JsFileUpload.__name__ = ["site","cms","modules","base","js","JsFileUpload"];
+site.cms.modules.base.js.JsFileUpload.__super__ = poko.js.JsRequest;
+for(var k in poko.js.JsRequest.prototype ) site.cms.modules.base.js.JsFileUpload.prototype[k] = poko.js.JsRequest.prototype[k];
+site.cms.modules.base.js.JsFileUpload.prototype.deleteFile = function(file,display) {
+	var _t = this;
+	var d = new JQuery("#" + display);
+	d.fadeTo(0,.2);
+	var img = d.find("a:last img")[0];
+	img.src = "./res/cms/add.png";
+	d.find("a:last")[0].onclick = function(e) {
+		e.preventDefault();
+		_t.undeleteFile(file,display);
+	}
+	site.cms.modules.base.js.JsFileUpload.filesToDelete.set(file,display.substr(18));
+	this.update();
+	return false;
+}
+site.cms.modules.base.js.JsFileUpload.prototype.main = function() {
+	null;
+}
+site.cms.modules.base.js.JsFileUpload.prototype.onResponse = function(data) {
+	if(data.success) {
+		new JQuery("#" + data.display).html("<p>deleted</p>");
+	}
+	else {
+		new JQuery("#" + data.display).html("<p>ERROR: " + data.error + "</p>");
+	}
+}
+site.cms.modules.base.js.JsFileUpload.prototype.undeleteFile = function(file,display) {
+	var _t = this;
+	var d = new JQuery("#" + display);
+	d.fadeTo(0,1);
+	var img = d.find("a:last img")[0];
+	img.src = "./res/cms/delete.png";
+	d.find("a:last")[0].onclick = function(e) {
+		e.preventDefault();
+		_t.deleteFile(file,display);
+	}
+	site.cms.modules.base.js.JsFileUpload.filesToDelete.remove(file);
+	this.update();
+	return false;
+}
+site.cms.modules.base.js.JsFileUpload.prototype.update = function() {
+	var h;
+	h = new JQuery("#form1__filesToDelete");
+	if(h.length == 0) {
+		var f = new JQuery("#form1___submit");
+		var e = JQuery.create("input",{ type : "hidden", name : "form1__filesToDelete", id : "form1__filesToDelete"});
+		f.before(e);
+		h = new JQuery("#form1__filesToDelete");
+	}
+	h.val(haxe.Serializer.run(site.cms.modules.base.js.JsFileUpload.filesToDelete));
+}
+site.cms.modules.base.js.JsFileUpload.prototype.__class__ = site.cms.modules.base.js.JsFileUpload;
+site.cms.js.JsCommon = function(p) { if( p === $_ ) return; {
+	poko.js.JsRequest.apply(this,[]);
+}}
+site.cms.js.JsCommon.__name__ = ["site","cms","js","JsCommon"];
+site.cms.js.JsCommon.__super__ = poko.js.JsRequest;
+for(var k in poko.js.JsRequest.prototype ) site.cms.js.JsCommon.prototype[k] = poko.js.JsRequest.prototype[k];
+site.cms.js.JsCommon.prototype.__class__ = site.cms.js.JsCommon;
 site.cms.modules.base.js.JsDefinition = function(p) { if( p === $_ ) return; {
 	poko.js.JsRequest.apply(this,[]);
 }}
@@ -2414,4 +2474,5 @@ haxe.Serializer.USE_CACHE = false;
 haxe.Serializer.USE_ENUM_INDEX = false;
 haxe.Serializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
 js.Lib.onerror = null;
+site.cms.modules.base.js.JsFileUpload.filesToDelete = new Hash();
 $Main.init = MainJS.main();

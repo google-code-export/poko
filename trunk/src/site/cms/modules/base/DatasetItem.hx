@@ -27,6 +27,7 @@
 
 package site.cms.modules.base;
 
+import php.FileSystem;
 import poko.form.elements.RichtextWym;
 import poko.form.validators.DateValidator;
 import poko.js.JsBinding;
@@ -94,6 +95,7 @@ class DatasetItem extends DatasetBase
 		head.js.add("js/cms/wymeditor/jquery.wymeditor.pack.js");
 		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsDatasetItem");
+		remoting.addObject("api", { deleteFile:deleteFile } );
 		
 		// change layout for link view
 		if (linkMode)
@@ -134,7 +136,7 @@ class DatasetItem extends DatasetBase
 			data = result.data != "" ? cast Unserializer.run(result.data) : {};
 				
 			definition = new Definition(result.definitionId);
-		}		
+		}
 		
 		navigation.pageHeading += " (" + label + ")";
 		
@@ -147,9 +149,36 @@ class DatasetItem extends DatasetBase
 		setupLeftNav();
 	}
 	
+	public function deleteFile(filename:String, display:String)
+	{
+		id = Std.parseInt(application.params.get('id'));
+		dataset = Std.parseInt(application.params.get("dataset"));
+		definition = new Definition(dataset);
+		table = definition.table;
+		
+		try {
+			var d:Hash<String> = new Hash();
+			d.set(display.substr(18), "");
+			var result = application.db.update(table, d, "id="+id);
+			return {
+				success: FileSystem.deleteFile(application.uploadFolder + "/" + filename) && result,
+				display: display,
+				error: null
+			};
+		}catch (e:Dynamic) {
+			return { success: false, display: display, error: e };
+		}
+	}
+	
 	private function processForm():Void
 	{
 		var data = form.getData();
+		
+		// upload files
+		var uploadData = uploadFiles();
+		for (k in uploadData.keys()) {
+			Reflect.setField(data, k, uploadData.get(k));
+		}
 		
 		switch(form.getElement("__action").value)
 		{
@@ -193,9 +222,6 @@ class DatasetItem extends DatasetBase
 			}
 		}
 		
-		// upload files
-		uploadFiles();
-		
 		application.messages.addMessage((pagesMode ? "Page" : "Dataset") + " updated.");
 		
 		if (!pagesMode) 
@@ -238,35 +264,120 @@ class DatasetItem extends DatasetBase
 		return elements;
 	}
 	
-	private function uploadFiles():Void
+	// handles upload of files
+	// returns a hash representing field/new value
+	private function uploadFiles():Hash<String>
 	{
+		// setup the data for deleting files ...
+		var filesToDelete:List<String> = new List();
+		var fieldsToWipe:List<String> = new List();
+		var safeId = application.db.cnx.quote(Std.string(id));
+		
+		var nFilesReplaced:Int = 0;
+		var nFilesAdded:Int = 0;
+		var nFilesDeleted:Int = 0;
+		
+		// delete files we were asked to delete
+		// get the list of files to delete
+		var f = Web.getParams().get("form1__filesToDelete");
+		var h = new Hash();
+		try {
+			h = Unserializer.run(f);
+		}catch (e:Dynamic) {}
+		// add them to the list
+		for (k in h.keys()) {
+			filesToDelete.add(k);
+			fieldsToWipe.add(h.get(k));
+		}
+		
+		// add new files
 		var files:Hash <Hash<String>> = PhpTools.getFilesInfo();
+		// data to insert into DB
+		var data:Hash<String> = new Hash();
 		
 		for (file in files.keys())
 		{
 			var info:Hash<Dynamic> = files.get(file);
 			var name = file.substr(form.name.length + 1);
 			var filename = info.get("name");
-			filename = Md5.encode(Date.now().toString()) + filename;
+			filename = Md5.encode(Date.now().toString()+Math.random()) + filename;
 			
 			if (info.get("error") == 0) 
 			{
 				PhpTools.moveFile(info.get("tmp_name"), application.uploadFolder + "/" + filename);
+				data.set(name, filename);
 				
-				var data:Dynamic = {};
-				Reflect.setField(data, name, filename);
-				
-				if(!pagesMode){
-					application.db.update(table, data, "`id`=" + application.db.cnx.quote(Std.string(id)));
-				} else {
-					var d:Dynamic = form.getData();
-					Reflect.setField(d, name, filename);
-					
-					var sdata = Serializer.run(d);
-					application.db.update("_pages", { data:sdata }, "`id`=" + application.db.cnx.quote(Std.string(id)));
-				}
-			}			
+				nFilesAdded++;
+			}
 		}
+
+		// get old file names and add to delete list
+		var sql:String = "SELECT ";
+		var c = 0;
+
+		for (k in data.keys())
+		{
+			// only add if we hadn't been asked to delete already
+			if (!Lambda.has(fieldsToWipe, k)){
+				sql += "`" + k + "`,";
+				c++;
+			}
+		}
+		sql = sql.substr(0, sql.length - 1);
+		sql += " FROM " + table + " WHERE id=" + safeId;
+		if(c > 0){
+			var result = application.db.requestSingle(sql);
+			for (i in Reflect.fields(result)) {
+				filesToDelete.add(Reflect.field(result, i));
+				nFilesAdded--;
+				nFilesReplaced++;
+			}
+		}
+		
+		// delete the files
+		for (f in filesToDelete) {
+			try {
+				FileSystem.deleteFile(application.uploadFolder + "/" + f);
+			}catch (e:Dynamic) {
+				application.messages.addError("Problem deleting file: " + f);
+			}
+		}
+		
+		// set fields to wipe for fields not already in data (ones already in data are newly uploaded)
+		for (f in fieldsToWipe) {
+			if (data.get(f) == null) {
+				data.set(f, '');
+				nFilesDeleted++;
+			}else {
+				nFilesReplaced++;
+				nFilesAdded--;
+			}
+		}
+		
+		// update database
+		if (nFilesAdded > 0 || nFilesReplaced > 0 || nFilesDeleted > 0){
+			application.messages.addMessage("Files: " + nFilesAdded + " added, " + nFilesReplaced + " replaced and " + nFilesDeleted + " deleted.");
+		}
+		return data;
+		
+		/*
+		if (!pagesMode) {
+			application.db.update(table, data, "`id`=" + safeId);
+		} else {
+			var d:Dynamic = form.getData();
+			for(k in data.keys()){
+				Reflect.setField(d, k, data.get(k));
+			}
+		
+			var sdata = Serializer.run(d);
+			application.db.update("_pages", { data:sdata }, "`id`=" + safeId);
+		}
+		*/
+	}
+	
+	public function stringCompare(a, b)
+	{
+		return a.toString() == b.toString();
 	}
 	
 	private function setupForm():Void
@@ -321,10 +432,26 @@ class DatasetItem extends DatasetBase
 					el.description = element.properties.description;
 					form.addElement(el);
 					
-				case "image":
-					
+				case "image-file":
 					var el:FileUpload = new FileUpload(element.name, label, value, element.properties.required);
-					el.description = element.properties.description;
+					if (element.properties.description) el.description = element.properties.description + "<br />";
+					if (element.properties.isImage) el.description += "Images Only<br />";
+					if (element.properties.extList) {
+						el.description += "File Types";
+						el.description += (element.properties.extMode == "ALLOW") ? " Allowed: " : " Denied: ";
+						var a:Array<String> = element.properties.extList.split(",");
+						for (i in a) {
+							el.description += i+", ";
+						}
+						el.description = el.description.substr(0, el.description.length - 2);
+						el.description += "<br />";
+					}
+					if (element.properties.minSize && element.properties.maxSize) {
+						el.description += "Size: "+element.properties.minSize+"Kb - "+element.properties.maxSize+"Kb";
+					}else {
+						if (element.properties.minSize) el.description += "Min Size: " + element.properties.minSize + "Kb";
+						if (element.properties.maxSize) el.description += "Max Size: " + element.properties.maxSize + "Kb";
+					}
 					form.addElement(el);
 					
 				case "date":

@@ -36,6 +36,7 @@ class ImportAll { }
 
 import site.cms.js.JsCommon;
 import site.cms.modules.base.js.JsKeyValueInput;
+import site.cms.modules.base.js.JsFileUpload;
 import site.cms.modules.base.js.JsDefinitionElement;
 import site.cms.modules.base.js.JsDatasetItem;
 import site.cms.modules.base.js.JsDataset;

@@ -30,7 +30,6 @@ import poko.js.JsRequest;
 import haxe.Serializer;
 import haxe.Unserializer;
 import js.Lib;
-import site.cms.modules.base.js.JsKeyValueInput;
 
 class JsDatasetItem extends JsRequest
 {	
