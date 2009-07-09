@@ -191,10 +191,9 @@ class DatasetItem extends DatasetBase
 				application.db.insert(table, data);
 				id = application.db.cnx.lastInsertId();
 			case "edit": 
-			
 				if (pagesMode)
 				{
-					var sdata = Serializer.run( form.getData());
+					var sdata = Serializer.run(data);
 					application.db.update("_pages", {data:sdata}, "`id`=" + application.db.cnx.quote(Std.string(id)));
 				} else {
 					application.db.update(table, data, "`id`=" + application.db.cnx.quote(Std.string(id)));
@@ -234,8 +233,11 @@ class DatasetItem extends DatasetBase
 			url += "&linkValueField=" + application.params.get("linkValueField");
 			url += "&linkValue=" + application.params.get("linkValue");
 			application.redirect(url);
+		}else {
+			var url = "?request=cms.modules.base.DatasetItem";
+			url += "&pagesMode=true&action=edit&id="+id;
+			application.redirect(url);
 		}
-		
 	}
 	
 	private function getOrderField():String
@@ -312,25 +314,45 @@ class DatasetItem extends DatasetBase
 		}
 
 		// get old file names and add to delete list
-		var sql:String = "SELECT ";
-		var c = 0;
+		if(!pagesMode){
+			// delete files linked to dataset items
+			var sql:String = "SELECT ";
+			var c = 0;
 
-		for (k in data.keys())
-		{
-			// only add if we hadn't been asked to delete already
-			if (!Lambda.has(fieldsToWipe, k)){
-				sql += "`" + k + "`,";
-				c++;
+			for (k in data.keys())
+			{
+				// only add if we hadn't been asked to delete already
+				if (!Lambda.has(fieldsToWipe, k)){
+					sql += "`" + k + "`,";
+					c++;
+				}
 			}
-		}
-		sql = sql.substr(0, sql.length - 1);
-		sql += " FROM " + table + " WHERE id=" + safeId;
-		if(c > 0){
-			var result = application.db.requestSingle(sql);
-			for (i in Reflect.fields(result)) {
-				filesToDelete.add(Reflect.field(result, i));
-				nFilesAdded--;
-				nFilesReplaced++;
+			sql = sql.substr(0, sql.length - 1);
+			sql += " FROM " + table + " WHERE id=" + safeId;
+			if(c > 0){
+				var result = application.db.requestSingle(sql);
+				for (i in Reflect.fields(result)) {
+					filesToDelete.add(Reflect.field(result, i));
+					nFilesAdded--;
+					nFilesReplaced++;
+				}
+			}
+		}else {
+			// delete files linked to pages?
+			var r = application.db.requestSingle("SELECT data FROM _pages WHERE `id`=" + safeId);
+			try {
+				var d = Unserializer.run(r.data);
+				for (k in data.keys())
+				{
+					// only add if we hadn't been asked to delete already
+					if (!Lambda.has(fieldsToWipe, k)){
+						filesToDelete.add(Reflect.field(d, k));
+						nFilesAdded--;
+						nFilesReplaced++;
+					}
+				}
+			}catch (e:Dynamic) {
+				application.messages.addError("There may have been a problem updating your page.");
 			}
 		}
 		
@@ -339,7 +361,8 @@ class DatasetItem extends DatasetBase
 			try {
 				FileSystem.deleteFile(application.uploadFolder + "/" + f);
 			}catch (e:Dynamic) {
-				application.messages.addError("Problem deleting file: " + f);
+				//TO DO: need to get this warning working properly!
+				//application.messages.addError("Problem deleting file: " + f);
 			}
 		}
 		
