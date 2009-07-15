@@ -28,7 +28,7 @@
 package poko.utils;
 
 import haxe.Md5;
-import poko.utils.GD;
+import hxphp.GD;
 import php.FileSystem;
 import php.io.File;
 import php.Lib;
@@ -40,7 +40,7 @@ class ImageProcessor
 	private static var revision = "0.1";
 	
 	private var fileName:String;
-	private var resource:ImageResource;
+	private var resource:GDImageResource;
 	
 	public var queue:List<Dynamic>;
 	
@@ -135,12 +135,14 @@ class ImageProcessor
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
 		
-		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
+		var newResource:GDImageResource = GD.imageCreateTrueColor(nw, nh);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, 0, 0, nw, nh, ow, oh);
 		if (!success) throw("There was an error resizing the image");
 		
+		var old = resource;
 		resource = newResource;
+		GD.imageDestroy(old);
 	}
 	
 	public function applyCropToAspect(w:Float, h:Float)
@@ -160,22 +162,26 @@ class ImageProcessor
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
 		
-		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
+		var newResource:GDImageResource = GD.imageCreateTrueColor(nw, nh);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, Std.int((ow - nw) / 2), Std.int((oh - nh) / 2), nw, nh, nw, nh);
 		if (!success) throw("There was an error cropping the image to aspect");
 		
+		var old = resource;
 		resource = newResource;
+		GD.imageDestroy(old);
 	}
 
 	public function applyCrop(x:Int, y:Int, width:Int, height:Int)
 	{		
-		var newResource:ImageResource = GD.imageCreateTrueColor(width, height);
+		var newResource:GDImageResource = GD.imageCreateTrueColor(width, height);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, x, y, width, height, width, height);
 		if (!success) throw("There was an error cropping the image to aspect");
 		
+		var old = resource;
 		resource = newResource;
+		GD.imageDestroy(old);
 	}
 	
 	public function applyResize(width:Int, height:Int)
@@ -183,12 +189,14 @@ class ImageProcessor
 		var ow:Int = GD.imageSX(resource);
 		var oh:Int = GD.imageSY(resource);
 		
-		var newResource:ImageResource = GD.imageCreateTrueColor(width, height);
+		var newResource:GDImageResource = GD.imageCreateTrueColor(width, height);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, 0, 0, width, height, ow, oh);
 		if (!success) throw("There was an error resizing the image");
 		
+		var old = resource;
 		resource = newResource;
+		GD.imageDestroy(old);
 	}
 	
 	public function applyScale(scaleX:Float, scaleY:Float)
@@ -200,12 +208,14 @@ class ImageProcessor
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
 		
-		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
+		var newResource:GDImageResource = GD.imageCreateTrueColor(nw, nh);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, 0, 0, nw, nh, ow, oh);
 		if (!success) throw("There was an error applying scale to the image");
 		
+		var old = resource;
 		resource = newResource;
+		GD.imageDestroy(old);
 	}
 	
 	public function applyRotation(angle:Float, ?CW:Bool = true, ?bgcolor:Int = 0, ?transparentBg:Bool=false )
