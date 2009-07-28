@@ -232,10 +232,12 @@ class DatasetItem extends DatasetBase
 			url += "&linkTo=" + application.params.get("linkTo");
 			url += "&linkValueField=" + application.params.get("linkValueField");
 			url += "&linkValue=" + application.params.get("linkValue");
+			if (siteMode) url += "&siteMode=true";
 			application.redirect(url);
 		}else {
 			var url = "?request=cms.modules.base.DatasetItem";
-			url += "&pagesMode=true&action=edit&id="+id;
+			url += "&pagesMode=true&action=edit&id=" + id;
+			if (siteMode) url += "&siteMode=true";
 			application.redirect(url);
 		}
 	}
@@ -590,6 +592,8 @@ class DatasetItem extends DatasetBase
 			form.addElement(new Hidden(application.params.get("linkToField"), application.params.get("linkTo")));
 			form.addElement(new Hidden(application.params.get("linkValueField"), application.params.get("linkValue")));
 		}
+		if (application.params.get("siteMode") == "true")
+			form.addElement(new Hidden("siteMode", "true"));
 		
 		form.addElement(new Hidden( "__action", application.params.get("action")));
 		

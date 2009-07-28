@@ -24,6 +24,7 @@ import site.cms.modules.base.Users;
 import site.cms.modules.base.User;
 import site.cms.modules.base.Users_Groups;
 import site.cms.modules.base.Users_Group;
+import site.cms.modules.base.SiteView;
 
 import site.cms.modules.help.Help;
 
@@ -41,6 +42,7 @@ import site.cms.modules.base.js.JsDefinitionElement;
 import site.cms.modules.base.js.JsDatasetItem;
 import site.cms.modules.base.js.JsDataset;
 import site.cms.modules.base.js.JsDefinition;
+import site.cms.modules.base.js.JsSiteView;
 import site.cms.js.JsTest;
 
 #end

@@ -1,0 +1,128 @@
+<style>
+	.connectedSortable {
+		padding: 5px;
+		background-color: 0x333;
+		border: 1px solid 0xccc;
+		min-height: 30px;
+		margin-left: 30px;
+		font-weight: normal;
+	}
+	
+	.connectedSortable {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		margin-right: 10px;
+		background: #eee;
+		padding: 2px;
+		width: 300px;
+		font-size: 10px;
+	}
+	
+	.connectedSortable li {
+		border-bottom: 1px solid #fff;
+		cursor: move;
+	}
+	
+	.connectedSortable li:hover
+	{
+		background-color: #FFFD7C;
+	}
+	
+	.connectedSortableMover
+	{
+		float:right;
+		font-size: 9px;
+		cursor: hand;
+	}
+	
+	.connectedSortableMover a:link, .connectedSortableMover a:visited
+	{
+		padding: 3px 5px;
+		background-color: #aaa;
+		color: #fff;
+		position: relative;
+	}
+	
+	.connectedSortableMover a:hover
+	{
+		background-color: #fff;
+		color: #000;
+		cursor: pointer;
+	}
+	
+	.connectedSortable li
+	{
+		margin: 5px;
+		padding: 5px;
+		font-size: 1.2em;
+		width: 280px;
+	}
+	
+	.listTreeIndent1:before
+	{
+		content: url(./res/cms/tree_kink.png);
+	}
+	
+	.listTreeIndent2:before
+	{
+		content: url(./res/cms/tree_kink_2.png);
+	}
+
+	.listTreeIndent3:before
+	{
+		content: url(./res/cms/tree_kink_3.png);
+	}
+	
+	.listTreeIndent4:before
+	{
+		content: url(./res/cms/tree_kink_4.png);
+	}
+	
+	#siteViewSection li:hover
+	{
+		cursor: move;
+	}
+	
+	#siteViewSection li.sectionSeperator
+	{
+		height: 24px;
+		background: #bbb;
+		width:304px;
+		margin: 10px 0;
+		text-align:center;
+		font-size: 10px;
+		color: #fff;
+		padding-top:10px;
+	}
+	
+	#siteViewSection
+	{
+		font-weight: bold;
+	}
+	
+</style>
+
+<p>Add section: <input type="text" name="addSectionInput" value="" id="addSectionInput" /> <a href="#" id="addSectionButton"><img src="./res/cms/add.png" align="absmiddle" /></a></p>
+<p>Add seperator <a href="#" id="addSeperatorButton"><img src="./res/cms/add.png" align="absmiddle" /></a></p>
+<form name="" id="" action="" method="post">
+	<input type="hidden" name="request" value="cms.modules.base.SiteView" />
+	<input type="hidden" name="manage" value="true" />
+
+	<input type="hidden" name="action" id="saveSiteView" value="saveSiteView" />
+	<input type="hidden" name="siteView" id="siteView" value="::siteViewSerialized::" />
+	<input type="hidden" name="siteViewHidden" id="siteViewHidden" value="::siteViewHiddenSerialized::" />
+	<input type="hidden" name="siteViewData" id="siteViewData" value="" />
+	<input type="submit" value="Save" id="siteViewSaveButton" />
+</form>
+
+<hr />
+
+<ul id="siteViewSection">
+</ul>
+
+<hr />
+
+<p><b>Hidden</b></p>
+<ul id="siteViewHiddenSection" class="connectedSortable">
+</ul>

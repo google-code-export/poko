@@ -354,6 +354,7 @@ class Dataset extends DatasetBase
 				url += "&linkTo=" + application.params.get("linkTo");
 				url += "&linkValueField=" + application.params.get("linkValueField");
 				url += "&linkValue=" + application.params.get("linkValue");
+				if (siteMode) url += "&siteMode=true";
 				application.redirect(url);
 				
 			}else {

@@ -27,6 +27,9 @@
 
 package site.cms.modules.base;
 
+import haxe.Serializer;
+import haxe.Unserializer;
+import php.Exception;
 import poko.Application;
 import poko.form.elements.Button;
 import poko.form.elements.Input;
@@ -37,6 +40,7 @@ import poko.Request;
 import poko.TemploContext;
 import php.Web;
 import site.cms.common.Tools;
+import site.cms.modules.base.helper.MenuDef;
 import site.cms.templates.CmsTemplate;
 
 class Datasets extends DatasetBase
@@ -49,7 +53,7 @@ class Datasets extends DatasetBase
 	}
 	
 	override public function main()
-	{	
+	{
 		if (application.params.get("manage") == null)
 		{
 			var str = "< Select a Dataset";
@@ -64,13 +68,20 @@ class Datasets extends DatasetBase
 		}
 		
 		// Managment is done in the definitions page
-	}	
+	}
 }
 
 class DatasetBase extends CmsTemplate
 {
 	public var pagesMode:Bool;
+	public var siteMode:Bool;
 	public var linkMode:Bool;
+	
+	public var siteView:MenuDef;
+	public var siteViewHidden:MenuDef;
+	
+	public var siteViewSerialized:String;
+	public var siteViewHiddenSerialized:String;
 	
 	override public function pre()
 	{
@@ -80,14 +91,16 @@ class DatasetBase extends CmsTemplate
 		
 		linkMode = application.params.get("linkMode") == "true";
 		pagesMode = application.params.get("pagesMode") == "true";
+		siteMode = application.params.get("siteMode") == "true" || siteMode;
 		
 		if (pagesMode) 
 		{
 			navigation.pageHeading = "Pages";
 			navigation.setSelected("Pages");
-		} 
-		else 
-		{
+		} else if (siteMode) {
+			navigation.pageHeading = "Site"; 
+			navigation.setSelected("SiteView");				
+		}else{
 			navigation.pageHeading = "Datasets"; 
 			navigation.setSelected("Datasets");
 		}
@@ -95,7 +108,7 @@ class DatasetBase extends CmsTemplate
 	
 	private function setupLeftNav():Void
 	{
-		if (pagesMode) 
+		if (pagesMode && !siteMode) 
 		{
 			var pages = application.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
 			
@@ -107,9 +120,92 @@ class DatasetBase extends CmsTemplate
 			
 			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
 				leftNavigation.footer = "<br /><a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a><br />";
-		} 
-		else 
-		{
+				
+		} else if (siteMode) { 
+			
+			var pages = application.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+			var tables = application.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
+			
+			var siteViewData:String = application.db.requestSingle("SELECT `value` FROM `_settings` WHERE `key`='siteView'").value;
+			var menu:MenuDef = new MenuDef();
+	
+			siteView = new MenuDef();
+			
+			try {
+				menu = Unserializer.run(siteViewData);
+			}catch (e:Dynamic) {
+			}
+
+			if (menu.headings.length == 0) {
+				leftNavigation.addSection("ERROR");
+				leftNavigation.addLink("ERROR", ">> Manage", "cms.modules.base.SiteView&manage=true");
+			}else {
+				for (heading in menu.headings) {
+					leftNavigation.addSection(heading.name, heading.isSeperator);
+					if(!heading.isSeperator){
+						siteView.addHeading(heading.name);
+					}else {
+						siteView.addSeperator();
+					}
+				}
+
+				// go through menu items and make sure they still exist in DB, otherwise just ignore them and they'll be removed on the next save!
+				for (item in menu.items) {
+					switch(item.type) {
+						case MenuItemType.DATASET:
+							if(Lambda.exists(tables, function(x){
+								return(x.id == item.id);
+							})) {
+								// add to nav
+								var link = "cms.modules.base.Dataset&dataset=" + item.id + "&resetState=true&siteMode=true";
+								leftNavigation.addLink(item.heading, item.name, link, item.indent);
+								
+								// remove from tables list
+								tables = Lambda.filter(tables, function(x)
+								{
+									return x.id != item.id;
+								});
+								
+								// add to printing list
+								siteView.addItem(item.id, item.type, item.name, item.heading, item.indent);
+							}
+						case MenuItemType.PAGE:
+							if(Lambda.exists(pages, function(x){
+								return(x.id == item.id);
+							})) {
+								// add to nav
+								var link = "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id="+item.id+"&siteMode=true";
+								leftNavigation.addLink(item.heading, item.name, link, item.indent);
+								
+								// remove from pages list
+								pages = Lambda.filter(pages, function(x)
+								{
+									return x.id != item.id;
+								});
+								
+								// add to printing list
+								siteView.addItem(item.id, item.type, item.name, item.heading, item.indent);
+							}
+					}
+				}
+			}
+			
+			// add the non-shown stuff
+			siteViewHidden = new MenuDef();
+			for (item in tables) {
+				siteViewHidden.addItem(item.id, MenuItemType.DATASET, item.name);
+			}
+			for (item in pages) {
+				siteViewHidden.addItem(item.id, MenuItemType.PAGE, item.name);
+			}
+			
+			siteViewSerialized = Serializer.run(siteView);
+			siteViewHiddenSerialized = Serializer.run(siteViewHidden);
+
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
+				leftNavigation.footer = "<br /><a href=\"?request=cms.modules.base.SiteView&manage=true\">Manage Menu</a><br />";
+			
+		}else{
 			var tables:List <Dynamic> = application.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 			
 			// build the nav
@@ -125,7 +221,7 @@ class DatasetBase extends CmsTemplate
 			}
 			
 			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
-				leftNavigation.footer = "<br /><a href=\"?request=cms.modules.base.Definitions&manage=true\">Manage</a><br />";			
+				leftNavigation.footer = "<br /><a href=\"?request=cms.modules.base.Definitions&manage=true\">Manage Lists</a><br />";			
 		}
 	}
 }

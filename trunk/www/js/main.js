@@ -1,4 +1,37 @@
 $estr = function() { return js.Boot.__string_rec(this,''); }
+site = {}
+site.cms = {}
+site.cms.modules = {}
+site.cms.modules.base = {}
+site.cms.modules.base.helper = {}
+site.cms.modules.base.helper.MenuDef = function(headings,items) { if( headings === $_ ) return; {
+	this.headings = (headings != null?headings:new Array());
+	this.items = (items != null?items:new Array());
+	this.numberOfSeperators = 0;
+}}
+site.cms.modules.base.helper.MenuDef.__name__ = ["site","cms","modules","base","helper","MenuDef"];
+site.cms.modules.base.helper.MenuDef.prototype.addHeading = function(name) {
+	this.headings.push({ name : name, isSeperator : false});
+}
+site.cms.modules.base.helper.MenuDef.prototype.addItem = function(id,type,name,heading,indent) {
+	if(indent == null) indent = 0;
+	this.items.push({ id : id, type : type, name : name, heading : heading, indent : indent});
+}
+site.cms.modules.base.helper.MenuDef.prototype.addSeperator = function() {
+	this.numberOfSeperators++;
+	this.headings.push({ name : "__sep" + this.numberOfSeperators + "__", isSeperator : true});
+}
+site.cms.modules.base.helper.MenuDef.prototype.headings = null;
+site.cms.modules.base.helper.MenuDef.prototype.items = null;
+site.cms.modules.base.helper.MenuDef.prototype.numberOfSeperators = null;
+site.cms.modules.base.helper.MenuDef.prototype.__class__ = site.cms.modules.base.helper.MenuDef;
+site.cms.modules.base.helper.MenuItemType = { __ename__ : ["site","cms","modules","base","helper","MenuItemType"], __constructs__ : ["PAGE","DATASET"] }
+site.cms.modules.base.helper.MenuItemType.DATASET = ["DATASET",1];
+site.cms.modules.base.helper.MenuItemType.DATASET.toString = $estr;
+site.cms.modules.base.helper.MenuItemType.DATASET.__enum__ = site.cms.modules.base.helper.MenuItemType;
+site.cms.modules.base.helper.MenuItemType.PAGE = ["PAGE",0];
+site.cms.modules.base.helper.MenuItemType.PAGE.toString = $estr;
+site.cms.modules.base.helper.MenuItemType.PAGE.__enum__ = site.cms.modules.base.helper.MenuItemType;
 poko = {}
 poko.js = {}
 poko.js.JsRequest = function(p) { if( p === $_ ) return; {
@@ -47,10 +80,6 @@ poko.js.JsRequest.prototype.main = function() {
 }
 poko.js.JsRequest.prototype.remoting = null;
 poko.js.JsRequest.prototype.__class__ = poko.js.JsRequest;
-site = {}
-site.cms = {}
-site.cms.modules = {}
-site.cms.modules.base = {}
 site.cms.modules.base.js = {}
 site.cms.modules.base.js.JsDatasetItem = function(p) { if( p === $_ ) return; {
 	poko.js.JsRequest.apply(this,[]);
@@ -70,7 +99,7 @@ site.cms.modules.base.js.JsDatasetItem.prototype.flushWymEditors = function() {
 			editor.update();
 		}
 	}
-	return (true);
+	return true;
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.id = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.main = function() {
@@ -82,45 +111,266 @@ site.cms.modules.base.js.JsDatasetItem.prototype.properties = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.table = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.valueHolder = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.__class__ = site.cms.modules.base.js.JsDatasetItem;
-haxe = {}
-haxe.io = {}
-haxe.io.BytesBuffer = function(p) { if( p === $_ ) return; {
-	this.b = new Array();
+site.cms.modules.base.js.JsSiteView = function(p) { if( p === $_ ) return; {
+	poko.js.JsRequest.apply(this,[]);
 }}
-haxe.io.BytesBuffer.__name__ = ["haxe","io","BytesBuffer"];
-haxe.io.BytesBuffer.prototype.add = function(src) {
-	var b1 = this.b;
-	var b2 = src.b;
-	{
-		var _g1 = 0, _g = src.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			this.b.push(b2[i]);
+site.cms.modules.base.js.JsSiteView.__name__ = ["site","cms","modules","base","js","JsSiteView"];
+site.cms.modules.base.js.JsSiteView.__super__ = poko.js.JsRequest;
+for(var k in poko.js.JsRequest.prototype ) site.cms.modules.base.js.JsSiteView.prototype[k] = poko.js.JsRequest.prototype[k];
+site.cms.modules.base.js.JsSiteView.createSorter = function() {
+	var j = new JQuery("#siteView");
+	var m = new site.cms.modules.base.helper.MenuDef();
+	try {
+		m = haxe.Unserializer.run(j.val());
+	}
+	catch( $e0 ) {
+		{
+			var e = $e0;
+			null;
 		}
 	}
-}
-haxe.io.BytesBuffer.prototype.addByte = function($byte) {
-	this.b.push($byte);
-}
-haxe.io.BytesBuffer.prototype.addBytes = function(src,pos,len) {
-	if(pos < 0 || len < 0 || pos + len > src.length) throw haxe.io.Error.OutsideBounds;
-	var b1 = this.b;
-	var b2 = src.b;
+	var s = "";
 	{
-		var _g1 = pos, _g = pos + len;
-		while(_g1 < _g) {
-			var i = _g1++;
-			this.b.push(b2[i]);
+		var _g = 0, _g1 = m.headings;
+		while(_g < _g1.length) {
+			var section = _g1[_g];
+			++_g;
+			if(section.isSeperator) {
+				s += "<li class=\"sectionSeperator\">seperator <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></li>";
+			}
+			else {
+				var name = section.name;
+				s += "<li class=\"sectionHeading\"><p><span>" + section.name + "</span> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p>";
+				s += "<ul class=\"connectedSortable\">";
+				{
+					var _g2 = 0, _g3 = m.items;
+					while(_g2 < _g3.length) {
+						var item = _g3[_g2];
+						++_g2;
+						if(item.heading == name) {
+							s += "<li><span class=\"listTreeIndent" + item.indent + "\" data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+						}
+					}
+				}
+				s += "</ul>";
+				s += "</li>";
+			}
 		}
 	}
+	j = new JQuery("#siteViewSection");
+	j.html(s);
+	j = new JQuery("#siteViewHidden");
+	try {
+		m = haxe.Unserializer.run(j.val());
+	}
+	catch( $e1 ) {
+		{
+			var e = $e1;
+			null;
+		}
+	}
+	s = "";
+	{
+		var _g = 0, _g1 = m.items;
+		while(_g < _g1.length) {
+			var item = _g1[_g];
+			++_g;
+			s += "<li><span data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+		}
+	}
+	j = new JQuery("#siteViewHiddenSection");
+	j.html(s);
 }
-haxe.io.BytesBuffer.prototype.b = null;
-haxe.io.BytesBuffer.prototype.getBytes = function() {
-	var bytes = new haxe.io.Bytes(this.b.length,this.b);
-	this.b = null;
-	return bytes;
+site.cms.modules.base.js.JsSiteView.prototype.addSection = function(e) {
+	var j = new JQuery("#addSectionInput");
+	if(!j.val()) {
+		js.Lib.alert("Please enter a name.");
+		j[0].focus();
+	}
+	else {
+		var s = "<li class=\"sectionHeading\"><p><span>" + j.val() + "</span> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p><ul class=\"connectedSortable\"></ul></li>";
+		var j1 = new JQuery("#siteViewSection");
+		j1.html(s + j1.html());
+		j1.val("");
+		this.refreshBehaviour();
+		this.flushSorter(null);
+	}
+	e.preventDefault();
 }
-haxe.io.BytesBuffer.prototype.__class__ = haxe.io.BytesBuffer;
+site.cms.modules.base.js.JsSiteView.prototype.addSeperator = function(e) {
+	var s = "<li class=\"sectionSeperator\">seperator <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></li>";
+	var j = new JQuery("#siteViewSection");
+	j.html(s + j.html());
+	this.refreshBehaviour();
+	this.flushSorter(null);
+	e.preventDefault();
+}
+site.cms.modules.base.js.JsSiteView.prototype.flushSorter = function(e) {
+	var dataPlace = new JQuery("#siteViewData");
+	var m = new site.cms.modules.base.helper.MenuDef();
+	var j = new JQuery("#siteViewSection > li");
+	{
+		var _g1 = 0, _g = j.length;
+		while(_g1 < _g) {
+			var n = _g1++;
+			if(j[n].className == "sectionSeperator") {
+				m.addSeperator();
+			}
+			else {
+				var headingName = new JQuery("p > span",j[n]).html();
+				m.addHeading(headingName);
+				var items = new JQuery("li",j[n]);
+				{
+					var _g3 = 0, _g2 = items.length;
+					while(_g3 < _g2) {
+						var n2 = _g3++;
+						var j2 = new JQuery("span",items[n2]);
+						var itemName = j2.html();
+						var tIndent = 0;
+						if(j2.hasClass("listTreeIndent1")) tIndent = 1;
+						if(j2.hasClass("listTreeIndent2")) tIndent = 2;
+						if(j2.hasClass("listTreeIndent3")) tIndent = 3;
+						if(j2.hasClass("listTreeIndent4")) tIndent = 4;
+						var d = haxe.Unserializer.run(j2.attr("data"));
+						var tId = d.id;
+						var tType = d.type;
+						m.addItem(tId,tType,itemName,headingName,tIndent);
+					}
+				}
+			}
+		}
+	}
+	dataPlace.val(haxe.Serializer.run(m));
+}
+site.cms.modules.base.js.JsSiteView.prototype.main = function() {
+	var _t = this;
+	new JQuery(js.Lib.document).ready(function() {
+		site.cms.modules.base.js.JsSiteView.createSorter();
+		_t.refreshBehaviour();
+		new JQuery("#addSeperatorButton").click($closure(_t,"addSeperator"));
+		new JQuery("#addSectionButton").click($closure(_t,"addSection"));
+		_t.flushSorter(null);
+	});
+}
+site.cms.modules.base.js.JsSiteView.prototype.minus = function(e) {
+	var t = new JQuery(e.currentTarget).parent().parent().find("span");
+	var cC = 0;
+	if(t.hasClass("listTreeIndent1")) cC = 1;
+	if(t.hasClass("listTreeIndent2")) cC = 2;
+	if(t.hasClass("listTreeIndent3")) cC = 3;
+	if(t.hasClass("listTreeIndent4")) cC = 4;
+	t.removeClass("listTreeIndent1");
+	t.removeClass("listTreeIndent2");
+	t.removeClass("listTreeIndent3");
+	t.removeClass("listTreeIndent4");
+	switch(cC) {
+	case 2:{
+		t.addClass("listTreeIndent1");
+	}break;
+	case 3:{
+		t.addClass("listTreeIndent2");
+	}break;
+	case 4:{
+		t.addClass("listTreeIndent3");
+	}break;
+	}
+	this.flushSorter(null);
+	e.preventDefault();
+}
+site.cms.modules.base.js.JsSiteView.prototype.plus = function(e) {
+	var t = new JQuery(e.currentTarget).parent().parent().find("span");
+	var cC = 0;
+	if(t.hasClass("listTreeIndent1")) cC = 1;
+	if(t.hasClass("listTreeIndent2")) cC = 2;
+	if(t.hasClass("listTreeIndent3")) cC = 3;
+	if(t.hasClass("listTreeIndent4")) cC = 4;
+	t.removeClass("listTreeIndent1");
+	t.removeClass("listTreeIndent2");
+	t.removeClass("listTreeIndent3");
+	t.removeClass("listTreeIndent4");
+	switch(cC) {
+	case 0:{
+		t.addClass("listTreeIndent1");
+	}break;
+	case 1:{
+		t.addClass("listTreeIndent2");
+	}break;
+	case 2:{
+		t.addClass("listTreeIndent3");
+	}break;
+	case 3:{
+		t.addClass("listTreeIndent4");
+	}break;
+	case 4:{
+		t.addClass("listTreeIndent4");
+	}break;
+	}
+	this.flushSorter(null);
+	e.preventDefault();
+}
+site.cms.modules.base.js.JsSiteView.prototype.refreshBehaviour = function() {
+	var j;
+	j = new JQuery("#siteViewSection");
+	j.sortable({ axis : "y", opacity : 0.8, update : $closure(this,"flushSorter")}).disableSelection();
+	j = new JQuery(".connectedSortable");
+	j.sortable({ connectWith : ".connectedSortable", axis : "y", opacity : 0.8, update : $closure(this,"flushSorter")}).disableSelection();
+	new JQuery(".connectedSortableMover a:even").unbind("click",$closure(this,"minus"));
+	new JQuery(".connectedSortableMover a:even").bind("click",null,$closure(this,"minus"));
+	new JQuery(".connectedSortableMover a:odd").unbind("click",$closure(this,"plus"));
+	new JQuery(".connectedSortableMover a:odd").bind("click",null,$closure(this,"plus"));
+	new JQuery(".sectionSeperator a.deleteItem").unbind("click",$closure(this,"removeSeperator"));
+	new JQuery(".sectionSeperator a.deleteItem").bind("click",null,$closure(this,"removeSeperator"));
+	new JQuery(".sectionHeading a.deleteItem").unbind("click",$closure(this,"removeHeading"));
+	new JQuery(".sectionHeading a.deleteItem").bind("click",null,$closure(this,"removeHeading"));
+}
+site.cms.modules.base.js.JsSiteView.prototype.removeHeading = function(e) {
+	var t = new JQuery(e.currentTarget).parent().parent();
+	var items = t.find("li");
+	this.setIndent(items.find("span"),0);
+	var s = "";
+	{
+		var _g1 = 0, _g = items.length;
+		while(_g1 < _g) {
+			var n = _g1++;
+			s += "<li>" + items[n].innerHTML + "</li>";
+		}
+	}
+	var j = new JQuery("#siteViewHiddenSection");
+	j.html(s + j.html());
+	t.remove();
+	this.refreshBehaviour();
+	this.flushSorter(null);
+	e.preventDefault();
+}
+site.cms.modules.base.js.JsSiteView.prototype.removeSeperator = function(e) {
+	var t = new JQuery(e.currentTarget).parent();
+	t.remove();
+	this.flushSorter(null);
+	e.preventDefault();
+}
+site.cms.modules.base.js.JsSiteView.prototype.setIndent = function(t,indent) {
+	t.removeClass("listTreeIndent1");
+	t.removeClass("listTreeIndent2");
+	t.removeClass("listTreeIndent3");
+	t.removeClass("listTreeIndent4");
+	switch(indent) {
+	case 1:{
+		t.addClass("listTreeIndent1");
+	}break;
+	case 2:{
+		t.addClass("listTreeIndent2");
+	}break;
+	case 3:{
+		t.addClass("listTreeIndent3");
+	}break;
+	case 4:{
+		t.addClass("listTreeIndent4");
+	}break;
+	}
+	this.flushSorter(null);
+}
+site.cms.modules.base.js.JsSiteView.prototype.__class__ = site.cms.modules.base.js.JsSiteView;
+haxe = {}
 haxe.remoting = {}
 haxe.remoting.AsyncConnection = function() { }
 haxe.remoting.AsyncConnection.__name__ = ["haxe","remoting","AsyncConnection"];
@@ -232,8 +482,8 @@ Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
 	if(o.hasOwnProperty != null) return o.hasOwnProperty(field);
 	var arr = Reflect.fields(o);
-	{ var $it0 = arr.iterator();
-	while( $it0.hasNext() ) { var t = $it0.next();
+	{ var $it2 = arr.iterator();
+	while( $it2.hasNext() ) { var t = $it2.next();
 	if(t == field) return true;
 	}}
 	return false;
@@ -243,9 +493,9 @@ Reflect.field = function(o,field) {
 	try {
 		v = o[field];
 	}
-	catch( $e1 ) {
+	catch( $e3 ) {
 		{
-			var e = $e1;
+			var e = $e3;
 			null;
 		}
 	}
@@ -272,9 +522,9 @@ Reflect.fields = function(o) {
 		try {
 			t = o.__proto__;
 		}
-		catch( $e2 ) {
+		catch( $e4 ) {
 			{
-				var e = $e2;
+				var e = $e4;
 				{
 					t = null;
 				}
@@ -390,8 +640,8 @@ site.cms.modules.base.js.JsDataset.prototype.onGetFilterInfo = function(response
 		var options = response.data;
 		select.style.display = "block";
 		select.innerHTML = "<option value=\"\" >- select -</option>";
-		{ var $it3 = options.keys();
-		while( $it3.hasNext() ) { var option = $it3.next();
+		{ var $it5 = options.keys();
+		while( $it5.hasNext() ) { var option = $it5.next();
 		{
 			select.innerHTML += "<option value=\"" + option + "\">" + options.get(option) + "</option>";
 		}
@@ -491,8 +741,8 @@ poko.js.JsApplication.prototype.resolveRequest = function(req) {
 	return this.requests.get(req);
 }
 poko.js.JsApplication.prototype.run = function() {
-	{ var $it4 = this.requests.iterator();
-	while( $it4.hasNext() ) { var req = $it4.next();
+	{ var $it6 = this.requests.iterator();
+	while( $it6.hasNext() ) { var req = $it6.next();
 	req.main();
 	}}
 }
@@ -508,6 +758,7 @@ poko.js.JsApplication.prototype.setupRequest = function(req) {
 	return request;
 }
 poko.js.JsApplication.prototype.__class__ = poko.js.JsApplication;
+haxe.io = {}
 haxe.io.Bytes = function(length,b) { if( length === $_ ) return; {
 	this.length = length;
 	this.b = b;
@@ -622,7 +873,7 @@ haxe.io.Bytes.prototype.readString = function(pos,len) {
 	return s;
 }
 haxe.io.Bytes.prototype.set = function(pos,v) {
-	this.b[pos] = v;
+	this.b[pos] = (v & 255);
 }
 haxe.io.Bytes.prototype.sub = function(pos,len) {
 	if(pos < 0 || len < 0 || pos + len > this.length) throw haxe.io.Error.OutsideBounds;
@@ -676,7 +927,7 @@ haxe.remoting.HttpAsyncConnection.prototype.call = function(params,onResult) {
 	s.serialize(params);
 	h.setHeader("X-Haxe-Remoting","1");
 	h.setParameter("__x",s.toString());
-	var error = $closure(this.__data,"error");
+	var error = this.__data.error;
 	h.onData = function(response) {
 		var ok = true;
 		var ret;
@@ -685,9 +936,9 @@ haxe.remoting.HttpAsyncConnection.prototype.call = function(params,onResult) {
 			var s1 = new haxe.Unserializer(response.substr(3));
 			ret = s1.unserialize();
 		}
-		catch( $e5 ) {
+		catch( $e7 ) {
 			{
-				var err = $e5;
+				var err = $e7;
 				{
 					ret = null;
 					ok = false;
@@ -762,9 +1013,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e6 ) {
+	catch( $e8 ) {
 		{
-			var e = $e6;
+			var e = $e8;
 			{
 				cl = null;
 			}
@@ -778,9 +1029,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e7 ) {
+	catch( $e9 ) {
 		{
-			var err = $e7;
+			var err = $e9;
 			{
 				e = null;
 			}
@@ -806,6 +1057,11 @@ Type.createEnum = function(e,constr,params) {
 	}
 	if(params != null && params.length != 0) throw "Constructor " + constr + " does not need parameters";
 	return f;
+}
+Type.createEnumIndex = function(e,index,params) {
+	var c = Type.getEnumConstructs(e)[index];
+	if(c == null) throw index + " is not a valid enum constructor index";
+	return Type.createEnum(e,c,params);
 }
 Type.getInstanceFields = function(c) {
 	var a = Reflect.fields(c.prototype);
@@ -857,16 +1113,26 @@ Type["typeof"] = function(v) {
 }
 Type.enumEq = function(a,b) {
 	if(a == b) return true;
-	if(a[0] != b[0]) return false;
-	{
-		var _g1 = 2, _g = a.length;
-		while(_g1 < _g) {
-			var i = _g1++;
-			if(!Type.enumEq(a[i],b[i])) return false;
+	try {
+		if(a[0] != b[0]) return false;
+		{
+			var _g1 = 2, _g = a.length;
+			while(_g1 < _g) {
+				var i = _g1++;
+				if(!Type.enumEq(a[i],b[i])) return false;
+			}
+		}
+		var e = a.__enum__;
+		if(e != b.__enum__ || e == null) return false;
+	}
+	catch( $e10 ) {
+		{
+			var e = $e10;
+			{
+				return false;
+			}
 		}
 	}
-	var e = a.__enum__;
-	if(e != b.__enum__ || e == null) return false;
 	return true;
 }
 Type.enumConstructor = function(e) {
@@ -1094,29 +1360,30 @@ haxe.Unserializer.prototype.unserialize = function() {
 			codes = haxe.Unserializer.initCodes();
 			haxe.Unserializer.CODES = codes;
 		}
-		var b = new haxe.io.BytesBuffer();
 		var i = this.pos;
 		var rest = len & 3;
+		var size = (len >> 2) * 3 + (((rest >= 2)?rest - 1:0));
 		var max = i + (len - rest);
+		var bytes = haxe.io.Bytes.alloc(size);
+		var bpos = 0;
 		while(i < max) {
 			var c1 = codes[buf.cca(i++)];
 			var c2 = codes[buf.cca(i++)];
-			b.b.push((c1 << 2) | (c2 >> 4));
+			bytes.b[bpos++] = (((c1 << 2) | (c2 >> 4)) & 255);
 			var c3 = codes[buf.cca(i++)];
-			b.b.push(((c2 << 4) | (c3 >> 2)) & 255);
+			bytes.b[bpos++] = (((c2 << 4) | (c3 >> 2)) & 255);
 			var c4 = codes[buf.cca(i++)];
-			b.b.push(((c3 << 6) | c4) & 255);
+			bytes.b[bpos++] = (((c3 << 6) | c4) & 255);
 		}
 		if(rest >= 2) {
 			var c1 = codes[buf.cca(i++)];
 			var c2 = codes[buf.cca(i++)];
-			b.b.push((c1 << 2) | (c2 >> 4));
+			bytes.b[bpos++] = (((c1 << 2) | (c2 >> 4)) & 255);
 			if(rest == 3) {
 				var c3 = codes[buf.cca(i++)];
-				b.b.push(((c2 << 4) | (c3 >> 2)) & 255);
+				bytes.b[bpos++] = (((c2 << 4) | (c3 >> 2)) & 255);
 			}
 		}
-		var bytes = b.getBytes();
 		this.pos += len;
 		this.cache.push(bytes);
 		return bytes;
@@ -1247,8 +1514,8 @@ haxe.Serializer.prototype.serialize = function(v) {
 		case List:{
 			this.buf.add("l");
 			var v1 = v;
-			{ var $it8 = v1.iterator();
-			while( $it8.hasNext() ) { var i = $it8.next();
+			{ var $it11 = v1.iterator();
+			while( $it11.hasNext() ) { var i = $it11.next();
 			this.serialize(i);
 			}}
 			this.buf.add("h");
@@ -1261,8 +1528,8 @@ haxe.Serializer.prototype.serialize = function(v) {
 		case Hash:{
 			this.buf.add("b");
 			var v1 = v;
-			{ var $it9 = v1.keys();
-			while( $it9.hasNext() ) { var k = $it9.next();
+			{ var $it12 = v1.keys();
+			while( $it12.hasNext() ) { var k = $it12.next();
 			{
 				this.serializeString(k);
 				this.serialize(v1.get(k));
@@ -1273,8 +1540,8 @@ haxe.Serializer.prototype.serialize = function(v) {
 		case IntHash:{
 			this.buf.add("q");
 			var v1 = v;
-			{ var $it10 = v1.keys();
-			while( $it10.hasNext() ) { var k = $it10.next();
+			{ var $it13 = v1.keys();
+			while( $it13.hasNext() ) { var k = $it13.next();
 			{
 				this.buf.add(":");
 				this.buf.add(k);
@@ -1519,7 +1786,7 @@ List.prototype.toString = function() {
 	while(l != null) {
 		if(first) first = false;
 		else s.b[s.b.length] = ", ";
-		s.b[s.b.length] = l[0];
+		s.b[s.b.length] = Std.string(l[0]);
 		l = l[1];
 	}
 	s.b[s.b.length] = "}";
@@ -1533,7 +1800,7 @@ haxe.Http = function(url) { if( url === $_ ) return; {
 	this.async = true;
 }}
 haxe.Http.__name__ = ["haxe","Http"];
-haxe.Http.request = function(url) {
+haxe.Http.requestUrl = function(url) {
 	var h = new haxe.Http(url);
 	h.async = false;
 	var r = null;
@@ -1564,19 +1831,19 @@ haxe.Http.prototype.request = function(post) {
 	var r = new js.XMLHttpRequest();
 	var onreadystatechange = function() {
 		if(r.readyState != 4) return;
-		var s = function($this) {
+		var s = (function($this) {
 			var $r;
 			try {
 				$r = r.status;
 			}
-			catch( $e11 ) {
+			catch( $e14 ) {
 				{
-					var e = $e11;
+					var e = $e14;
 					$r = null;
 				}
 			}
 			return $r;
-		}(this);
+		}(this));
 		if(s == undefined) s = null;
 		if(s != null) me.onStatus(s);
 		if(s != null && s >= 200 && s < 400) me.onData(r.responseText);
@@ -1598,8 +1865,8 @@ haxe.Http.prototype.request = function(post) {
 	r.onreadystatechange = onreadystatechange;
 	var uri = this.postData;
 	if(uri != null) post = true;
-	else { var $it12 = this.params.keys();
-	while( $it12.hasNext() ) { var p = $it12.next();
+	else { var $it15 = this.params.keys();
+	while( $it15.hasNext() ) { var p = $it15.next();
 	{
 		if(uri == null) uri = "";
 		else uri += "&";
@@ -1615,9 +1882,9 @@ haxe.Http.prototype.request = function(post) {
 		}
 		else r.open("GET",this.url,this.async);
 	}
-	catch( $e13 ) {
+	catch( $e16 ) {
 		{
-			var e = $e13;
+			var e = $e16;
 			{
 				this.onError(e.toString());
 				return;
@@ -1625,8 +1892,8 @@ haxe.Http.prototype.request = function(post) {
 		}
 	}
 	if(this.headers.get("Content-Type") == null && post && this.postData == null) r.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	{ var $it14 = this.headers.keys();
-	while( $it14.hasNext() ) { var h = $it14.next();
+	{ var $it17 = this.headers.keys();
+	while( $it17.hasNext() ) { var h = $it17.next();
 	r.setRequestHeader(h,this.headers.get(h));
 	}}
 	r.send(uri);
@@ -1651,8 +1918,8 @@ site.cms.modules.base.js.JsKeyValueInput.__super__ = poko.js.JsRequest;
 for(var k in poko.js.JsRequest.prototype ) site.cms.modules.base.js.JsKeyValueInput.prototype[k] = poko.js.JsRequest.prototype[k];
 site.cms.modules.base.js.JsKeyValueInput.prototype.addKeyValueInput = function(id) {
 	var set;
-	{ var $it15 = this.keyValueSets.iterator();
-	while( $it15.hasNext() ) { var set1 = $it15.next();
+	{ var $it18 = this.keyValueSets.iterator();
+	while( $it18.hasNext() ) { var set1 = $it18.next();
 	{
 		if(set1.id == id) set1.addRow();
 	}
@@ -1660,19 +1927,19 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.addKeyValueInput = function(i
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.flushKeyValueInputs = function() {
 	var set;
-	{ var $it16 = this.keyValueSets.iterator();
-	while( $it16.hasNext() ) { var set1 = $it16.next();
+	{ var $it19 = this.keyValueSets.iterator();
+	while( $it19.hasNext() ) { var set1 = $it19.next();
 	{
 		set1.flush();
 	}
 	}}
-	return (true);
+	return true;
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.keyValueSets = null;
 site.cms.modules.base.js.JsKeyValueInput.prototype.main = function() {
 	var set;
-	{ var $it17 = this.keyValueSets.iterator();
-	while( $it17.hasNext() ) { var set1 = $it17.next();
+	{ var $it20 = this.keyValueSets.iterator();
+	while( $it20.hasNext() ) { var set1 = $it20.next();
 	{
 		set1.setup();
 	}
@@ -1705,7 +1972,7 @@ site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueV
 	if(keyValue == null) keyValue = "";
 	if(this.maxRows > 0 && this.currentRows == this.maxRows) {
 		js.Lib.alert("Only " + this.maxRows + " allowed.");
-		return (false);
+		return false;
 	}
 	var keyElement = (this.properties.keyIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.keyHeight + "px; width:" + this.properties.keyWidth + "px;"},[keyValue]):JQuery.create("input",{ type : "text", value : keyValue, style : "width:" + this.properties.keyWidth + "px;"},[]));
 	var valueElement = (this.properties.valueIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.valueHeight + "px; width:" + this.properties.valueWidth + "px;"},[valueValue]):JQuery.create("input",{ type : "text", value : valueValue, style : "width:" + this.properties.valueWidth + "px;"},[]));
@@ -1720,7 +1987,7 @@ site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueV
 	}
 	new JQuery("#" + this.id + "_keyValueTable tr:last").after(JQuery.create("tr",{ },[JQuery.create("td",{ valign : "top"},[keyElement]),JQuery.create("td",{ valign : "top"},[valueElement]),JQuery.create("td",{ valign : "top"},[removeElement])]));
 	this.currentRows++;
-	return (true);
+	return true;
 }
 site.cms.modules.base.js.KeyValueSet.prototype.currentRows = null;
 site.cms.modules.base.js.KeyValueSet.prototype.flush = function() {
@@ -1822,9 +2089,6 @@ js.Lib.window = null;
 js.Lib.alert = function(v) {
 	alert(js.Boot.__string_rec(v,""));
 }
-js.Lib.confirm = function(message) {
-	return confirm(message);
-}
 js.Lib.eval = function(code) {
 	return eval(code);
 }
@@ -1899,9 +2163,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e18 ) {
+		catch( $e21 ) {
 			{
-				var e = $e18;
+				var e = $e21;
 				{
 					return "???";
 				}
@@ -1958,9 +2222,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e19 ) {
+	catch( $e22 ) {
 		{
-			var e = $e19;
+			var e = $e22;
 			{
 				if(cl == null) return false;
 			}
@@ -2086,8 +2350,8 @@ IntHash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it20 = it;
-	while( $it20.hasNext() ) { var i = $it20.next();
+	{ var $it23 = it;
+	while( $it23.hasNext() ) { var i = $it23.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -2207,9 +2471,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e21 ) {
+	catch( $e24 ) {
 		{
-			var e = $e21;
+			var e = $e24;
 			{
 				
 				for(var i in this.h)
@@ -2252,8 +2516,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it22 = it;
-	while( $it22.hasNext() ) { var i = $it22.next();
+	{ var $it25 = it;
+	while( $it25.hasNext() ) { var i = $it25.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -2443,16 +2707,16 @@ js.Boot.__init();
 		try {
 			return new ActiveXObject("Msxml2.XMLHTTP");
 		}
-		catch( $e23 ) {
+		catch( $e26 ) {
 			{
-				var e = $e23;
+				var e = $e26;
 				{
 					try {
 						return new ActiveXObject("Microsoft.XMLHTTP");
 					}
-					catch( $e24 ) {
+					catch( $e27 ) {
 						{
-							var e1 = $e24;
+							var e1 = $e27;
 							{
 								throw "Unable to create XMLHttpRequest object.";
 							}
@@ -2461,11 +2725,11 @@ js.Boot.__init();
 				}
 			}
 		}
-	}:function($this) {
+	}:(function($this) {
 		var $r;
 		throw "Unable to create XMLHttpRequest object.";
 		return $r;
-	}(this)));
+	}(this))));
 }
 haxe.Unserializer.DEFAULT_RESOLVER = Type;
 haxe.Unserializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";

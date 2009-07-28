@@ -3,7 +3,7 @@
 	::end::
 	
 	<div id="datasetActionsWrapper">
-		<a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::"><img src="./res/cms/add.png" class="qTip" title="Add new item to list" /></a>
+		<a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::"><img src="./res/cms/add.png" class="qTip" title="Add new item to list" /></a>
 		::if !linkMode && showFiltering || showOrderBy:: | <a href="#" onClick="return(toggleFilterOrder());"><img class="qTip" src="./res/cms/find.png" title="Show/hide filteringer and ordering options." /></a>::end::
 	</div>
 	
@@ -80,8 +80,8 @@
 						::end::
 						
 						::set cols = cols+1::
-						<td><a class="qTip" title="Edit" href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::"><img src="./res/cms/pencil.png" /></a> | 
-							<a class="qTip" title="Duplicate" href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::"><img src="./res/cms/page_copy.png" /></a></td>
+						<td><a class="qTip" title="Edit" href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::"><img src="./res/cms/pencil.png" /></a> | 
+							<a class="qTip" title="Duplicate" href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::"><img src="./res/cms/page_copy.png" /></a></td>
 					</tr>
 				::end::
 			::else::

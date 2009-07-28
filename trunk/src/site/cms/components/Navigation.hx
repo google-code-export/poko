@@ -52,8 +52,15 @@ class Navigation extends Component
 	{
 		var requests = new Hash();
 		requests.set("Home", "Home");
-		requests.set("modules.base.Pages", "Pages");
-		requests.set("modules.base.Datasets", "Data");
+		
+		if (application.user.isAdmin() || application.user.isSuper()) {
+			requests.set("modules.base.Pages", "Pages");
+			requests.set("modules.base.Datasets", "Lists");			
+			requests.set("modules.base.SiteView", "Site View");
+		}else {
+			requests.set("modules.base.SiteView", "Site Editor");
+		}
+		
 		requests.set("modules.help.Help", "Help");
 		
 		//if (application.user.isAdmin() || application.user.isSuper()) {

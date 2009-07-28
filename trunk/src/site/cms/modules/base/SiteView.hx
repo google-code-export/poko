@@ -25,53 +25,60 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package site.cms.modules.base;
+import php.Lib;
+import poko.Application;
+import poko.TemploContext;
+import poko.js.JsBinding;
+import site.cms.modules.base.helper.MenuDef;
+import site.cms.templates.CmsTemplate;
+import site.cms.modules.base.Datasets;
 
-package site.cms.components;
-
-import poko.Component;
-import php.io.File;
-import php.io.FileInput;
-import php.Web;
-
-class LeftNavigation extends Component
+class SiteView extends DatasetBase
 {
-	public var header:String;
-	public var content:String;
-	public var footer:String;
-	
-	public var sections:Hash < List < Dynamic >> ;
-	public var sectionsIsSeperator:Hash < Bool >;
+	var jsBind:JsBinding;	
 	
 	public function new() 
 	{
 		super();
-		
-		sections = new Hash();
-		sectionsIsSeperator = new Hash();
 	}
 	
-	override public function main() {}
-	
-	public function addSection(name:String, ?isSeperator:Bool = false) 
+	override public function pre()
 	{
-		sections.set(name, new List());
-		sectionsIsSeperator.set(name, isSeperator);
+		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
+		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
+		
+		siteMode = true;
+		
+		jsBind = new JsBinding("site.cms.modules.base.js.JsSiteView");
+		
+		super.pre();
 	}
 	
-	public function addLink(section:String, title:String, link:String, ?indents:Int=0, ?external=false) 
+	
+	override public function main()
 	{
-		var indentsData = [];
-		indentsData[0] = "";
-		/*indentsData[1] = "&#x02EA;&nbsp;";
-		indentsData[2] = "&nbsp;&#x02EA;&nbsp;";
-		indentsData[3] = "&nbsp;&nbsp;&#x02EA;&nbsp;";
-		indentsData[4] = "&nbsp;&nbsp;&nbsp;&#x02EA;&nbsp;";*/
-		indentsData[1] = "<img src=\"./res/cms/tree_kink.png\" />";
-		indentsData[2] = "&nbsp;<img src=\"./res/cms/tree_kink.png\" />";
-		indentsData[3] = "&nbsp;&nbsp;<img src=\"./res/cms/tree_kink.png\" />";
-		indentsData[4] = "&nbsp;&nbsp;&nbsp;<img src=\"./res/cms/tree_kink.png\" />";
-		var ind = indentsData[indents];
+		super.main();
 		
-		sections.get(section).add( { title:title, link:link, external:external, indents:ind } );
+		if (!application.params.get("manage") || !application.user.isAdmin())
+		{
+			var str = "< Click to edit your site";
+			
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
+				str += TemploContext.parse("site/cms/modules/base/blocks/siteView.mtt");
+				
+			setContentOutput(str);
+		}else {
+			if (application.params.get('action') == "saveSiteView") {
+				var d = application.params.get('siteViewData');
+				application.db.update('_settings', {value: d}, "`key` ='siteView'");
+				application.messages.addMessage("Menu updated.");
+			}
+		}
+		
+		setupLeftNav();
+		return;
+		
+		// Managment is done in the definitions page
 	}
 }

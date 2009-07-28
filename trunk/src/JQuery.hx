@@ -16,8 +16,13 @@ extern class JQuery implements ArrayAccess<HtmlDom>
     public var length(default, null):Int;
 
 	// mine
+	public function sortable(options:Dynamic):JQuery;
+	public function disableSelection(?options:Dynamic):JQuery;
+	
 	public static function create(element:String, ?attributes:Dynamic, ?children:Dynamic):JQuery;
 	public static function wymeditors(instance:Int):Dynamic;
+	
+	public function live(type:String, fn:Event -> Void):Void;
 	
     /**
         Core
