@@ -47,6 +47,7 @@ class JsSiteView extends JsRequest
 			// setup adders
 			new JQuery("#addSeperatorButton").click(_t.addSeperator);
 			new JQuery("#addSectionButton").click(_t.addSection);
+			new JQuery("#addNullButton").click(_t.addNull);
 			
 			_t.flushSorter(null);
 		});		
@@ -59,7 +60,7 @@ class JsSiteView extends JsRequest
 			Lib.alert("Please enter a name.");
 			j[0].focus();
 		}else {
-			var s = "<li class=\"sectionHeading\"><p><span>" + j.val() + "</span> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p><ul class=\"connectedSortable\"></ul></li>";
+			var s = "<li class=\"sectionHeading\"><p><span>" + j.val() + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p><ul class=\"connectedSortable\"></ul></li>";
 			var j = new JQuery("#siteViewSection");
 			j.html(s + j.html());
 			j.val("");
@@ -79,6 +80,24 @@ class JsSiteView extends JsRequest
 		flushSorter(null);
 		e.preventDefault();
 	}
+	
+	private function addNull(e):Void
+	{
+		var j = new JQuery("#addNullInput");
+		if (!j.val()) {
+			Lib.alert("Please enter a name.");
+			j[0].focus();
+		}else {
+			var s = "<li><img src=\"./res/cms/site_list_null.png\" align=\"absmiddle\" /> <span class=\"listTreeIndent0\" data=\""+ Serializer.run({id:0, type:MenuItemType.NULL}) +"\" >";
+			s += j.val() + "</span> <a href=\"#\" class=\"editItemInner\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+			var j = new JQuery("#siteViewHiddenSection");
+			j.html(s + j.html());
+			
+			refreshBehaviour();
+			flushSorter(null);
+		}
+		e.preventDefault();
+	}	
 	
 	public function refreshBehaviour():Void
 	{
@@ -109,6 +128,14 @@ class JsSiteView extends JsRequest
 		// remove heading
 		new JQuery(".sectionHeading a.deleteItem").unbind("click", removeHeading);
 		new JQuery(".sectionHeading a.deleteItem").bind("click", null, removeHeading);
+		
+		// edit heading
+		new JQuery(".sectionHeading a.editItem").unbind("click", editHeading);
+		new JQuery(".sectionHeading a.editItem").bind("click", null, editHeading);
+		
+		// edit item
+		new JQuery("a.editItemInner").unbind("click", editItem);
+		new JQuery("a.editItemInner").bind("click", null, editItem);
 	}
 	
 	static function createSorter()
@@ -128,11 +155,19 @@ class JsSiteView extends JsRequest
 				s += "<li class=\"sectionSeperator\">seperator <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></li>";
 			}else{
 				var name = section.name;
-				s += "<li class=\"sectionHeading\"><p><span>" + section.name + "</span> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p>"; // start section
+				s += "<li class=\"sectionHeading\"><p><span>" + section.name + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p>"; // start section
 				s += "<ul class=\"connectedSortable\">"; // start list of items
 				for (item in m.items) {
 					if (item.heading == name) {
-						s += "<li><span class=\"listTreeIndent"+item.indent+"\" data=\""+Serializer.run({id:item.id, type:item.type})+"\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+						s += "<li>";
+						s += "<img src=\"./res/cms/";
+						s += switch(item.type) {
+							case MenuItemType.DATASET: "site_list_list.png";
+							case MenuItemType.PAGE: "site_list_page.png";
+							case MenuItemType.NULL: "site_list_null.png";
+						}
+						s += "\" align=\"absmiddle\" /> <span class=\"listTreeIndent" + item.indent + "\" data=\"" + Serializer.run( { id:item.id, type:item.type } ) + "\">";
+						s += item.name + "</span> <a href=\"#\" class=\"editItemInner\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
 					}
 				}
 				s += "</ul>"; //end list of items
@@ -151,7 +186,15 @@ class JsSiteView extends JsRequest
 		
 		s = "";
 		for (item in m.items) {
-			s += "<li><span data=\""+Serializer.run({id:item.id, type:item.type})+"\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+			s += "<li>";
+			s += "<img src=\"./res/cms/";
+			s += switch(item.type) {
+				case MenuItemType.DATASET: "site_list_list.png";
+				case MenuItemType.PAGE: "site_list_page.png";
+				case MenuItemType.NULL: "site_list_null.png";
+			}
+			s += "\" align=\"absmiddle\" /> ";
+			s += "<span data=\"" + Serializer.run( { id:item.id, type:item.type } ) + "\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
 		}
 		
 		// add
@@ -225,6 +268,24 @@ class JsSiteView extends JsRequest
 		flushSorter(null);
 		e.preventDefault();
 	}
+	
+	function editHeading(e:Event)
+	{
+		var t = new JQuery(e.currentTarget).parent().parent().find("p > span");
+		t.html(Lib.prompt("Name? Currently \""+t.html()+"\"."));
+		
+		flushSorter(null);
+		e.preventDefault();
+	}
+	
+	function editItem(e:Event)
+	{
+		var t = new JQuery(e.currentTarget).parent().find("span");
+		t.html(Lib.prompt("Name? Currently \"" + t.html() + "\"."));
+		
+		flushSorter(null);
+		e.preventDefault();
+	}	
 	
 	function removeHeading(e:Event)
 	{

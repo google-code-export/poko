@@ -57,4 +57,6 @@ typedef MenuItem = {
 enum MenuItemType {
 	PAGE;
 	DATASET;
+	NULL;
+	PAGE_ROLL;
 }

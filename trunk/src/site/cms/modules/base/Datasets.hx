@@ -186,6 +186,12 @@ class DatasetBase extends CmsTemplate
 								// add to printing list
 								siteView.addItem(item.id, item.type, item.name, item.heading, item.indent);
 							}
+						case MenuItemType.NULL:
+							// add to nav
+							leftNavigation.addLink(item.heading, item.name, null, item.indent);
+							
+							// add to printing list
+							siteView.addItem(item.id, item.type, item.name, item.heading, item.indent);
 					}
 				}
 			}

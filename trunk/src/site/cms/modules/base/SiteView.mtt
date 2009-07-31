@@ -104,6 +104,7 @@
 </style>
 
 <p>Add section: <input type="text" name="addSectionInput" value="" id="addSectionInput" /> <a href="#" id="addSectionButton"><img src="./res/cms/add.png" align="absmiddle" /></a></p>
+<p>Add null: <input type="text" name="addNullInput" value="" id="addNullInput" /> <a href="#" id="addNullButton"><img src="./res/cms/add.png" align="absmiddle" /></a></p>
 <p>Add seperator <a href="#" id="addSeperatorButton"><img src="./res/cms/add.png" align="absmiddle" /></a></p>
 <form name="" id="" action="" method="post">
 	<input type="hidden" name="request" value="cms.modules.base.SiteView" />

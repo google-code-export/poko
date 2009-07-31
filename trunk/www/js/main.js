@@ -25,13 +25,19 @@ site.cms.modules.base.helper.MenuDef.prototype.headings = null;
 site.cms.modules.base.helper.MenuDef.prototype.items = null;
 site.cms.modules.base.helper.MenuDef.prototype.numberOfSeperators = null;
 site.cms.modules.base.helper.MenuDef.prototype.__class__ = site.cms.modules.base.helper.MenuDef;
-site.cms.modules.base.helper.MenuItemType = { __ename__ : ["site","cms","modules","base","helper","MenuItemType"], __constructs__ : ["PAGE","DATASET"] }
+site.cms.modules.base.helper.MenuItemType = { __ename__ : ["site","cms","modules","base","helper","MenuItemType"], __constructs__ : ["PAGE","DATASET","NULL","PAGE_ROLL"] }
 site.cms.modules.base.helper.MenuItemType.DATASET = ["DATASET",1];
 site.cms.modules.base.helper.MenuItemType.DATASET.toString = $estr;
 site.cms.modules.base.helper.MenuItemType.DATASET.__enum__ = site.cms.modules.base.helper.MenuItemType;
+site.cms.modules.base.helper.MenuItemType.NULL = ["NULL",2];
+site.cms.modules.base.helper.MenuItemType.NULL.toString = $estr;
+site.cms.modules.base.helper.MenuItemType.NULL.__enum__ = site.cms.modules.base.helper.MenuItemType;
 site.cms.modules.base.helper.MenuItemType.PAGE = ["PAGE",0];
 site.cms.modules.base.helper.MenuItemType.PAGE.toString = $estr;
 site.cms.modules.base.helper.MenuItemType.PAGE.__enum__ = site.cms.modules.base.helper.MenuItemType;
+site.cms.modules.base.helper.MenuItemType.PAGE_ROLL = ["PAGE_ROLL",3];
+site.cms.modules.base.helper.MenuItemType.PAGE_ROLL.toString = $estr;
+site.cms.modules.base.helper.MenuItemType.PAGE_ROLL.__enum__ = site.cms.modules.base.helper.MenuItemType;
 poko = {}
 poko.js = {}
 poko.js.JsRequest = function(p) { if( p === $_ ) return; {
@@ -140,7 +146,7 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 			}
 			else {
 				var name = section.name;
-				s += "<li class=\"sectionHeading\"><p><span>" + section.name + "</span> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p>";
+				s += "<li class=\"sectionHeading\"><p><span>" + section.name + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p>";
 				s += "<ul class=\"connectedSortable\">";
 				{
 					var _g2 = 0, _g3 = m.items;
@@ -148,7 +154,28 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 						var item = _g3[_g2];
 						++_g2;
 						if(item.heading == name) {
-							s += "<li><span class=\"listTreeIndent" + item.indent + "\" data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+							s += "<li>";
+							s += "<img src=\"./res/cms/";
+							s += (function($this) {
+								var $r;
+								switch(item.type) {
+								case site.cms.modules.base.helper.MenuItemType.DATASET:{
+									$r = "site_list_list.png";
+								}break;
+								case site.cms.modules.base.helper.MenuItemType.PAGE:{
+									$r = "site_list_page.png";
+								}break;
+								case site.cms.modules.base.helper.MenuItemType.NULL:{
+									$r = "site_list_null.png";
+								}break;
+								default:{
+									$r = null;
+								}break;
+								}
+								return $r;
+							}(this));
+							s += "\" align=\"absmiddle\" /> <span class=\"listTreeIndent" + item.indent + "\" data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\">";
+							s += item.name + "</span> <a href=\"#\" class=\"editItemInner\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
 						}
 					}
 				}
@@ -175,11 +202,48 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 		while(_g < _g1.length) {
 			var item = _g1[_g];
 			++_g;
-			s += "<li><span data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+			s += "<li>";
+			s += "<img src=\"./res/cms/";
+			s += (function($this) {
+				var $r;
+				switch(item.type) {
+				case site.cms.modules.base.helper.MenuItemType.DATASET:{
+					$r = "site_list_list.png";
+				}break;
+				case site.cms.modules.base.helper.MenuItemType.PAGE:{
+					$r = "site_list_page.png";
+				}break;
+				case site.cms.modules.base.helper.MenuItemType.NULL:{
+					$r = "site_list_null.png";
+				}break;
+				default:{
+					$r = null;
+				}break;
+				}
+				return $r;
+			}(this));
+			s += "\" align=\"absmiddle\" /> ";
+			s += "<span data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
 		}
 	}
 	j = new JQuery("#siteViewHiddenSection");
 	j.html(s);
+}
+site.cms.modules.base.js.JsSiteView.prototype.addNull = function(e) {
+	var j = new JQuery("#addNullInput");
+	if(!j.val()) {
+		js.Lib.alert("Please enter a name.");
+		j[0].focus();
+	}
+	else {
+		var s = "<li><img src=\"./res/cms/site_list_null.png\" align=\"absmiddle\" /> <span class=\"listTreeIndent0\" data=\"" + haxe.Serializer.run({ id : 0, type : site.cms.modules.base.helper.MenuItemType.NULL}) + "\" >";
+		s += j.val() + "</span> <a href=\"#\" class=\"editItemInner\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+		var j1 = new JQuery("#siteViewHiddenSection");
+		j1.html(s + j1.html());
+		this.refreshBehaviour();
+		this.flushSorter(null);
+	}
+	e.preventDefault();
 }
 site.cms.modules.base.js.JsSiteView.prototype.addSection = function(e) {
 	var j = new JQuery("#addSectionInput");
@@ -188,7 +252,7 @@ site.cms.modules.base.js.JsSiteView.prototype.addSection = function(e) {
 		j[0].focus();
 	}
 	else {
-		var s = "<li class=\"sectionHeading\"><p><span>" + j.val() + "</span> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p><ul class=\"connectedSortable\"></ul></li>";
+		var s = "<li class=\"sectionHeading\"><p><span>" + j.val() + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p><ul class=\"connectedSortable\"></ul></li>";
 		var j1 = new JQuery("#siteViewSection");
 		j1.html(s + j1.html());
 		j1.val("");
@@ -202,6 +266,18 @@ site.cms.modules.base.js.JsSiteView.prototype.addSeperator = function(e) {
 	var j = new JQuery("#siteViewSection");
 	j.html(s + j.html());
 	this.refreshBehaviour();
+	this.flushSorter(null);
+	e.preventDefault();
+}
+site.cms.modules.base.js.JsSiteView.prototype.editHeading = function(e) {
+	var t = new JQuery(e.currentTarget).parent().parent().find("p > span");
+	t.html(js.Lib.prompt("Name? Currently \"" + t.html() + "\"."));
+	this.flushSorter(null);
+	e.preventDefault();
+}
+site.cms.modules.base.js.JsSiteView.prototype.editItem = function(e) {
+	var t = new JQuery(e.currentTarget).parent().find("span");
+	t.html(js.Lib.prompt("Name? Currently \"" + t.html() + "\"."));
 	this.flushSorter(null);
 	e.preventDefault();
 }
@@ -249,6 +325,7 @@ site.cms.modules.base.js.JsSiteView.prototype.main = function() {
 		_t.refreshBehaviour();
 		new JQuery("#addSeperatorButton").click($closure(_t,"addSeperator"));
 		new JQuery("#addSectionButton").click($closure(_t,"addSection"));
+		new JQuery("#addNullButton").click($closure(_t,"addNull"));
 		_t.flushSorter(null);
 	});
 }
@@ -322,6 +399,10 @@ site.cms.modules.base.js.JsSiteView.prototype.refreshBehaviour = function() {
 	new JQuery(".sectionSeperator a.deleteItem").bind("click",null,$closure(this,"removeSeperator"));
 	new JQuery(".sectionHeading a.deleteItem").unbind("click",$closure(this,"removeHeading"));
 	new JQuery(".sectionHeading a.deleteItem").bind("click",null,$closure(this,"removeHeading"));
+	new JQuery(".sectionHeading a.editItem").unbind("click",$closure(this,"editHeading"));
+	new JQuery(".sectionHeading a.editItem").bind("click",null,$closure(this,"editHeading"));
+	new JQuery("a.editItemInner").unbind("click",$closure(this,"editItem"));
+	new JQuery("a.editItemInner").bind("click",null,$closure(this,"editItem"));
 }
 site.cms.modules.base.js.JsSiteView.prototype.removeHeading = function(e) {
 	var t = new JQuery(e.currentTarget).parent().parent();
@@ -2088,6 +2169,9 @@ js.Lib.document = null;
 js.Lib.window = null;
 js.Lib.alert = function(v) {
 	alert(js.Boot.__string_rec(v,""));
+}
+js.Lib.prompt = function(v) {
+	return prompt(js.Boot.__string_rec(v,""));
 }
 js.Lib.eval = function(code) {
 	return eval(code);
