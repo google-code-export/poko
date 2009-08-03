@@ -45,6 +45,29 @@ class JsDatasetItem extends JsRequest
 		});
 	}
 	
+	public function showHideElements(elements:String, value:Bool, hideOnValue:Bool)
+	{
+		var els = elements.split(",");
+		for (el in els) {
+			var e = new JQuery("label[for=form1_" + el + "]").parent().parent();
+			value == hideOnValue ? e.hide() : e.show();
+		}
+	}
+	
+	public function setupShowHideElements(affector:String, elements:String, value:Bool, hideOnValue:Bool)
+	{
+		showHideElements(elements, value, hideOnValue);
+		
+		var _elements = elements;
+		var _hideOnValue = hideOnValue;
+		var _affector = affector;
+		var _t = this;
+		
+		var e = new JQuery("input[name=form1_" + affector + "]").change(function(e){
+			_t.showHideElements(_elements, new JQuery("input[name=form1_" + affector + "]:checked").val(), _hideOnValue);
+		});
+	}
+	
 	public function flushWymEditors()
 	{
 		var c = 0;

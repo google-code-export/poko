@@ -160,6 +160,10 @@ class DefinitionElement extends DefinitionsBase
 		yesno.add( { key:"Yes", value:"1" } );
 		yesno.add( { key:"No", value:"0" } );
 		
+		var truefalse = new List();
+		truefalse.add( { key:"True", value:"1" } );
+		truefalse.add( { key:"False", value:"0" } );		
+		
 		// for image text selectors
 		var imagefile = new List();
 		imagefile.add( { key:"Image", value:"1" } );
@@ -276,6 +280,8 @@ class DefinitionElement extends DefinitionsBase
 		
 		form.addElement(new Input( "def_bool_labelTrue", "Label 'true'", data.labelTrue), "properties");
 		form.addElement(new Input( "def_bool_labelFalse", "Label 'false'", data.labelFalse), "properties");
+		form.addElement(new Input( "def_bool_showHideFields", "Hide Field(s)", data.showHideFields), "properties");
+		form.addElement(new RadioGroup( "def_bool_showHideValue", "Hide on...", truefalse, data.showHideValue, "0", false), "properties");
 		
 		/*
 		form.addElement("def_image-file_setAspect", new RadioGroup( form, "Set Aspect", yesno, data.setAspect, "0", false));

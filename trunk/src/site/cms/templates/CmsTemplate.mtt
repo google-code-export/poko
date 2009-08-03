@@ -54,6 +54,6 @@
 		<div style="clear:both"></div>
 	</div>
 </body>
-::head.getJsCalls()::
+::raw head.getJsCalls()::
 </html>
 

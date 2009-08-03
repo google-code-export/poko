@@ -529,6 +529,8 @@ class DatasetItem extends DatasetBase
 					var el = new RadioGroup(element.name, label, options, value, "1", false);
 					el.description = element.properties.description;
 					form.addElement(el);
+					
+					jsBind.queueCall("setupShowHideElements", [el.name, element.properties.showHideFields , value, element.properties.showHideValue]);
 				
 				case "association":
 					var assocData = application.db.request("SELECT `" + element.properties.field + "` as value, "+ element.properties.fieldLabel +" as label FROM `" + element.properties.table + "`");

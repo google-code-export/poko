@@ -114,6 +114,29 @@ site.cms.modules.base.js.JsDatasetItem.prototype.main = function() {
 	});
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.properties = null;
+site.cms.modules.base.js.JsDatasetItem.prototype.setupShowHideElements = function(affector,elements,value,hideOnValue) {
+	this.showHideElements(elements,value,hideOnValue);
+	var _elements = elements;
+	var _hideOnValue = hideOnValue;
+	var _affector = affector;
+	var _t = this;
+	var e = new JQuery("input[name=form1_" + affector + "]").change(function(e) {
+		_t.showHideElements(_elements,new JQuery("input[name=form1_" + affector + "]:checked").val(),_hideOnValue);
+	});
+}
+site.cms.modules.base.js.JsDatasetItem.prototype.showHideElements = function(elements,value,hideOnValue) {
+	var els = elements.split(",");
+	{
+		var _g = 0;
+		while(_g < els.length) {
+			var el = els[_g];
+			++_g;
+			var e = new JQuery("label[for=form1_" + el + "]").parent().parent();
+			if(value == hideOnValue) e.hide();
+			else e.show();
+		}
+	}
+}
 site.cms.modules.base.js.JsDatasetItem.prototype.table = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.valueHolder = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.__class__ = site.cms.modules.base.js.JsDatasetItem;
