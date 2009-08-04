@@ -125,15 +125,17 @@ site.cms.modules.base.js.JsDatasetItem.prototype.setupShowHideElements = functio
 	});
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.showHideElements = function(elements,value,hideOnValue) {
-	var els = elements.split(",");
-	{
-		var _g = 0;
-		while(_g < els.length) {
-			var el = els[_g];
-			++_g;
-			var e = new JQuery("label[for=form1_" + el + "]").parent().parent();
-			if(value == hideOnValue) e.hide();
-			else e.show();
+	if(elements != null) {
+		var els = elements.split(",");
+		{
+			var _g = 0;
+			while(_g < els.length) {
+				var el = els[_g];
+				++_g;
+				var e = new JQuery("label[for=form1_" + el + "]").parent().parent();
+				if(value == hideOnValue) e.hide();
+				else e.show();
+			}
 		}
 	}
 }

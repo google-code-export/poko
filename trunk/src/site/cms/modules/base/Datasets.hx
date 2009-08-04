@@ -171,16 +171,16 @@ class DatasetBase extends CmsTemplate
 							}
 						case MenuItemType.PAGE:
 							if(Lambda.exists(pages, function(x){
-								return(x.id == item.id);
+								return(x.pid == item.id);
 							})) {
 								// add to nav
-								var link = "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id="+item.id+"&siteMode=true";
+								var link = "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + item.id + "&siteMode=true";
 								leftNavigation.addLink(item.heading, item.name, link, item.indent);
 								
 								// remove from pages list
 								pages = Lambda.filter(pages, function(x)
 								{
-									return x.id != item.id;
+									return x.pid != item.id;
 								});
 								
 								// add to printing list
@@ -202,7 +202,7 @@ class DatasetBase extends CmsTemplate
 				siteViewHidden.addItem(item.id, MenuItemType.DATASET, item.name);
 			}
 			for (item in pages) {
-				siteViewHidden.addItem(item.id, MenuItemType.PAGE, item.name);
+				siteViewHidden.addItem(item.pid, MenuItemType.PAGE, item.name);
 			}
 			
 			siteViewSerialized = Serializer.run(siteView);

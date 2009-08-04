@@ -47,10 +47,12 @@ class JsDatasetItem extends JsRequest
 	
 	public function showHideElements(elements:String, value:Bool, hideOnValue:Bool)
 	{
-		var els = elements.split(",");
-		for (el in els) {
-			var e = new JQuery("label[for=form1_" + el + "]").parent().parent();
-			value == hideOnValue ? e.hide() : e.show();
+		if(elements != null){
+			var els = elements.split(",");
+			for (el in els) {
+				var e = new JQuery("label[for=form1_" + el + "]").parent().parent();
+				value == hideOnValue ? e.hide() : e.show();
+			}
 		}
 	}
 	
