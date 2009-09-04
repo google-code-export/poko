@@ -123,7 +123,7 @@ class DatasetBase extends CmsTemplate
 				
 		} else if (siteMode) { 
 			
-			var pages = application.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+			var pages = application.db.request("SELECT *, p.id as id FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
 			var tables = application.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 			
 			var siteViewData:String = application.db.requestSingle("SELECT `value` FROM `_settings` WHERE `key`='siteView'").value;
