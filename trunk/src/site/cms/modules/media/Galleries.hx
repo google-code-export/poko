@@ -25,52 +25,53 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package site.cms;
+package site.cms.modules.media;
 
-#if php
-
-/* import  all CMS pages */
-
-import site.cms.Index;
-import site.cms.Home;
-
-import site.cms.modules.base.Datasets;
-import site.cms.modules.base.DatasetsLink;
-import site.cms.modules.base.Dataset;
-import site.cms.modules.base.DatasetItem;
-import site.cms.modules.base.Definitions;
-import site.cms.modules.base.Definition;
-import site.cms.modules.base.DefinitionElement;
-import site.cms.modules.base.Pages;
-import site.cms.modules.base.Users;
-import site.cms.modules.base.User;
-import site.cms.modules.base.Users_Groups;
-import site.cms.modules.base.Users_Group;
-import site.cms.modules.base.SiteView;
-
-import site.cms.modules.help.Help;
-
-import site.cms.services.Image;
-
+import php.FileSystem;
 import site.cms.modules.media.Index;
-import site.cms.modules.media.Gallery;
-import site.cms.modules.media.Galleries;
 
-#elseif js
 
-import site.cms.js.JsCommon;
-import site.cms.modules.base.js.JsKeyValueInput;
-import site.cms.modules.base.js.JsFileUpload;
-import site.cms.modules.base.js.JsDefinitionElement;
-import site.cms.modules.base.js.JsDatasetItem;
-import site.cms.modules.base.js.JsDataset;
-import site.cms.modules.base.js.JsDefinition;
-import site.cms.modules.base.js.JsSiteView;
-
-import site.cms.modules.media.js.JsGallery;
-
-import site.cms.js.JsTest;
-
-#end
-
-class ImportAll { }
+class Galleries extends MediaBase
+{
+	public var galleries:List<Dynamic>;
+	
+	override public function pre()
+	{
+		super.pre();
+		
+		if (application.params.get("action")) process();
+	}
+	
+	override public function main()
+	{
+		
+		galleries = new List();
+		var dir = FileSystem.readDirectory(imageRoot);
+		for (d in dir)
+		{
+			if (FileSystem.isDirectory(imageRoot + "/" +d) && d != "." && d != "..") 
+			{
+				galleries.add( { name:d } );
+			}
+		}
+			
+		setupLeftNav();
+	}
+	
+	private function process():Void
+	{
+		switch(application.params.get("action"))
+		{
+			case "add":
+				var dir = imageRoot + "/" + application.params.get("newGallery");
+				if (!FileSystem.exists(dir))
+				{
+					FileSystem.createDirectory(dir);
+					application.messages.addMessage("Gallery Added");
+				} else {
+					application.messages.addError("A Gallery of this name already exists");
+				}
+				
+		}
+	}
+}

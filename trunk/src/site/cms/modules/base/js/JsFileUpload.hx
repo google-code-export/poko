@@ -24,7 +24,7 @@ class JsFileUpload extends JsRequest
 		var img = cast d.find("a:last img")[0];
 		img.src = "./res/cms/add.png";		
 		d.find("a:last")[0].onclick = function(e) {
-			e.preventDefault();
+			untyped e.preventDefault();
 			_t.undeleteFile(file, display);
 		};
 		
@@ -42,7 +42,7 @@ class JsFileUpload extends JsRequest
 		var img = cast d.find("a:last img")[0];
 		img.src = "./res/cms/delete.png";		
 		d.find("a:last")[0].onclick = function(e) {
-			e.preventDefault();
+			untyped e.preventDefault();
 			_t.deleteFile(file, display);
 		};
 		

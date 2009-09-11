@@ -44,19 +44,56 @@ import site.services.Image;
 
 import site.Index;
 
-
+/*
 class Test {
 	
 	public function new() 
 	{
+		//Hash
+		var hash = new Hash();
+		hash.set("a", 1);
+		hash.set("b", 2);
+		for (item in hash.keys())
+			trace(item);
 		
+		for (item in hash)
+			trace(item);
+			
+		//HList
+		//_hx_list_iterator
+		var list = new List();
+		list.add("a");
+		list.add("b");
+		
+		for (item in list)
+			trace(item);
+		
+		
+		//_hx_array
+		//_hx_array_iterator
+		var array = ["a", "b"];
+		for (item in array)
+			trace(item);
+			
+		
+		//IntHash
+		var intHash = new IntHash();
+		intHash.set(1, "a");
+		intHash.set(2, "b");
+		for (item in intHash)
+			trace(item);
+
 	}
+	
+	
 	
 	public function toString()
 	{
 		return "toString on Test1";
 	}
 }
+*/
+
 
 class Main 
 {
@@ -65,6 +102,9 @@ class Main
 	public static function main() 
 	{	
 		PhpTools.setupTrace();
+		
+		
+	//	Type.createInstance(Type.resolveClass("Test"),[]);
 		
 		app = new Application();
 		

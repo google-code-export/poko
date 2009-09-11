@@ -25,52 +25,48 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package site.cms;
+package site.cms.modules.media;
 
-#if php
-
-/* import  all CMS pages */
-
-import site.cms.Index;
-import site.cms.Home;
-
-import site.cms.modules.base.Datasets;
-import site.cms.modules.base.DatasetsLink;
-import site.cms.modules.base.Dataset;
-import site.cms.modules.base.DatasetItem;
-import site.cms.modules.base.Definitions;
-import site.cms.modules.base.Definition;
-import site.cms.modules.base.DefinitionElement;
-import site.cms.modules.base.Pages;
-import site.cms.modules.base.Users;
-import site.cms.modules.base.User;
-import site.cms.modules.base.Users_Groups;
-import site.cms.modules.base.Users_Group;
-import site.cms.modules.base.SiteView;
-
-import site.cms.modules.help.Help;
-
-import site.cms.services.Image;
-
+import php.FileSystem;
+import poko.js.JsBinding;
 import site.cms.modules.media.Index;
-import site.cms.modules.media.Gallery;
-import site.cms.modules.media.Galleries;
 
-#elseif js
 
-import site.cms.js.JsCommon;
-import site.cms.modules.base.js.JsKeyValueInput;
-import site.cms.modules.base.js.JsFileUpload;
-import site.cms.modules.base.js.JsDefinitionElement;
-import site.cms.modules.base.js.JsDatasetItem;
-import site.cms.modules.base.js.JsDataset;
-import site.cms.modules.base.js.JsDefinition;
-import site.cms.modules.base.js.JsSiteView;
-
-import site.cms.modules.media.js.JsGallery;
-
-import site.cms.js.JsTest;
-
-#end
-
-class ImportAll { }
+class Gallery extends MediaBase
+{
+	public var gallery:String;
+	
+	public var jsBinding:JsBinding;
+	
+	override public function pre()
+	{
+		super.pre();
+		
+		head.css.add("css/cms/media.css");
+		
+		head.js.add("js/cms/media/swfobject.js");
+		head.js.add("js/cms/media/jquery.uploadify.v2.1.0.min.js");
+		
+		gallery = application.params.get("name");
+		
+		remoting.addObject("api", { getContent:getContent, deleteItem:deleteItem } );
+		
+		jsBinding = new JsBinding("site.cms.modules.media.js.JsGallery");
+		jsBinding.queueCall("init", [gallery]);
+	}
+	
+	override public function main()
+	{
+		setupLeftNav();
+	}
+	
+	public function getContent():List<Dynamic>
+	{
+		return Lambda.list(FileSystem.readDirectory(imageRoot + "/" + gallery));
+	}
+	
+	public function deleteItem(file:String)
+	{
+		FileSystem.deleteFile(imageRoot + "/" + gallery + "/" + file);
+	}
+}

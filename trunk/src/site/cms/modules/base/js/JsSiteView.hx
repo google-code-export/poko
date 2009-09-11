@@ -50,10 +50,10 @@ class JsSiteView extends JsRequest
 			new JQuery("#addNullButton").click(_t.addNull);
 			
 			_t.flushSorter(null);
-		});		
+		});
 	}
 	
-	private function addSection(e):Void
+	private function addSection(e:Event):Void
 	{
 		var j = new JQuery("#addSectionInput");
 		if (!j.val()) {
@@ -67,10 +67,10 @@ class JsSiteView extends JsRequest
 			refreshBehaviour();
 			flushSorter(null);
 		}
-		e.preventDefault();
+		untyped e.preventDefault();
 	}
 	
-	private function addSeperator(e):Void
+	private function addSeperator(e:Event):Void
 	{
 		var s = "<li class=\"sectionSeperator\">seperator <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></li>";
 		var j = new JQuery("#siteViewSection");
@@ -78,10 +78,10 @@ class JsSiteView extends JsRequest
 		
 		refreshBehaviour();
 		flushSorter(null);
-		e.preventDefault();
+		untyped e.preventDefault();
 	}
 	
-	private function addNull(e):Void
+	private function addNull(e:Event):Void
 	{
 		var j = new JQuery("#addNullInput");
 		if (!j.val()) {
@@ -96,7 +96,7 @@ class JsSiteView extends JsRequest
 			refreshBehaviour();
 			flushSorter(null);
 		}
-		e.preventDefault();
+		untyped e.preventDefault();
 	}	
 	
 	public function refreshBehaviour():Void
@@ -203,7 +203,7 @@ class JsSiteView extends JsRequest
 	}
 	
 	function minus(e:Event){
-		var t = new JQuery(e.currentTarget).parent().parent().find("span");
+		var t = new JQuery(untyped e.currentTarget).parent().parent().find("span");
 		var cC = 0;
 		if (t.hasClass("listTreeIndent1")) cC = 1;
 		if (t.hasClass("listTreeIndent2")) cC = 2;
@@ -220,11 +220,11 @@ class JsSiteView extends JsRequest
 		}
 		
 		flushSorter(null);
-		e.preventDefault();
+		untyped e.preventDefault();
 	}
 	
-	function plus(e){
-		var t = new JQuery(e.currentTarget).parent().parent().find("span");
+	function plus(e:Event){
+		var t = new JQuery(untyped e.currentTarget).parent().parent().find("span");
 		var cC = 0;
 		if (t.hasClass("listTreeIndent1")) cC = 1;
 		if (t.hasClass("listTreeIndent2")) cC = 2;
@@ -242,7 +242,7 @@ class JsSiteView extends JsRequest
 			case 4: t.addClass("listTreeIndent4");
 		}
 		flushSorter(null);
-		e.preventDefault();
+		untyped e.preventDefault();
 	}
 	
 	function setIndent(t:JQuery, indent:Int)
@@ -263,33 +263,33 @@ class JsSiteView extends JsRequest
 	
 	function removeSeperator(e:Event)
 	{
-		var t = new JQuery(e.currentTarget).parent();
+		var t = new JQuery(untyped e.currentTarget).parent();
 		t.remove();
 		flushSorter(null);
-		e.preventDefault();
+		untyped e.preventDefault();
 	}
 	
 	function editHeading(e:Event)
 	{
-		var t = new JQuery(e.currentTarget).parent().parent().find("p > span");
-		t.html(Lib.prompt("Name? Currently \""+t.html()+"\"."));
+		var t = new JQuery(untyped e.currentTarget).parent().parent().find("p > span");
+		t.html(untyped Lib.prompt("Name? Currently \""+t.html()+"\"."));
 		
 		flushSorter(null);
-		e.preventDefault();
+		untyped e.preventDefault();
 	}
 	
 	function editItem(e:Event)
 	{
-		var t = new JQuery(e.currentTarget).parent().find("span");
-		t.html(Lib.prompt("Name? Currently \"" + t.html() + "\"."));
+		var t = new JQuery(untyped e.currentTarget).parent().find("span");
+		t.html(untyped Lib.prompt("Name? Currently \"" + t.html() + "\"."));
 		
 		flushSorter(null);
-		e.preventDefault();
+		untyped e.preventDefault();
 	}	
 	
 	function removeHeading(e:Event)
 	{
-		var t = new JQuery(e.currentTarget).parent().parent();
+		var t = new JQuery(untyped e.currentTarget).parent().parent();
 		var items = t.find("li");
 		setIndent(items.find("span"), 0);
 		var s = "";
@@ -304,7 +304,7 @@ class JsSiteView extends JsRequest
 		
 		refreshBehaviour();
 		flushSorter(null);
-		e.preventDefault();
+		untyped e.preventDefault();
 	}
 
 	function flushSorter(e)

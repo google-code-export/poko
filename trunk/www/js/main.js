@@ -989,6 +989,9 @@ haxe.io.Bytes.prototype.toString = function() {
 	return this.readString(0,this.length);
 }
 haxe.io.Bytes.prototype.__class__ = haxe.io.Bytes;
+site.cms.ImportAll = function() { }
+site.cms.ImportAll.__name__ = ["site","cms","ImportAll"];
+site.cms.ImportAll.prototype.__class__ = site.cms.ImportAll;
 IntIter = function(min,max) { if( min === $_ ) return; {
 	this.min = min;
 	this.max = max;
@@ -2195,9 +2198,6 @@ js.Lib.window = null;
 js.Lib.alert = function(v) {
 	alert(js.Boot.__string_rec(v,""));
 }
-js.Lib.prompt = function(v) {
-	return prompt(js.Boot.__string_rec(v,""));
-}
 js.Lib.eval = function(code) {
 	return eval(code);
 }
@@ -2560,6 +2560,77 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.showElements = function(f
 }
 site.cms.modules.base.js.JsDefinitionElement.prototype.types = null;
 site.cms.modules.base.js.JsDefinitionElement.prototype.__class__ = site.cms.modules.base.js.JsDefinitionElement;
+site.cms.modules.media = {}
+site.cms.modules.media.js = {}
+site.cms.modules.media.js.JsGallery = function(p) { if( p === $_ ) return; {
+	poko.js.JsRequest.apply(this,[]);
+}}
+site.cms.modules.media.js.JsGallery.__name__ = ["site","cms","modules","media","js","JsGallery"];
+site.cms.modules.media.js.JsGallery.__super__ = poko.js.JsRequest;
+for(var k in poko.js.JsRequest.prototype ) site.cms.modules.media.js.JsGallery.prototype[k] = poko.js.JsRequest.prototype[k];
+site.cms.modules.media.js.JsGallery.prototype.cancelUploads = function() {
+	new JQuery("#uploadify").uploadifyClearQueue();
+	this.updateContent();
+}
+site.cms.modules.media.js.JsGallery.prototype["delete"] = function(el,file) {
+	el.parentNode.removeChild(el);
+	this.remoting.resolve("api").resolve("deleteItem").call([file]);
+}
+site.cms.modules.media.js.JsGallery.prototype.gallery = null;
+site.cms.modules.media.js.JsGallery.prototype.getPreview = function(item) {
+	var ext = item.substr(item.lastIndexOf(".") + 1);
+	return (function($this) {
+		var $r;
+		switch(ext.toUpperCase()) {
+		case "JPG":case "GIF":case "PNG":{
+			$r = JQuery.create("img",{ src : "?request=services.Image&preset=thumb&src=../media/galleries/" + $this.gallery + "/" + item});
+		}break;
+		default:{
+			$r = null;
+		}break;
+		}
+		return $r;
+	}(this));
+}
+site.cms.modules.media.js.JsGallery.prototype.main = function() {
+	this.gallery = this.application.params.get("name");
+	new JQuery("#uploadify").uploadify({ uploader : "res/cms/media/uploadify.swf", script : "res/cms/media/uploadify.php", cancelImg : "res/cms/media/cancel.png", auto : true, folder : "./res/media/galleries/" + this.gallery, multi : true, fileExt : "*.jpg;*.gif;*.png", onAllComplete : $closure(this,"updateContent")});
+	this.updateContent();
+}
+site.cms.modules.media.js.JsGallery.prototype.onContent = function(content) {
+	var container = new JQuery("#imageContent");
+	container.html("");
+	{ var $it24 = content.iterator();
+	while( $it24.hasNext() ) { var $t1 = $it24.next();
+	{
+		var item = [$t1];
+		var el = this.getPreview(item[0]);
+		if(el != null) {
+			var atts = { }
+			atts.imageName = item[0];
+			atts["class"] = "galleryItem";
+			var div = [JQuery.create("div",atts,[])];
+			atts = { }
+			atts["class"] = "gallerItemDelete";
+			atts.src = "res/cms/delete.png";
+			var ths = [this];
+			var del = JQuery.create("a",{ href : "#"},[JQuery.create("img",atts)]);
+			del.click(function(ths,item,div) {
+				return function(e) {
+					ths[0]["delete"](div[0][0],item[0]);
+				}
+			}(ths,item,div));
+			div[0].append(el);
+			div[0].append(del);
+			container.append(div[0]);
+		}
+	}
+	}}
+}
+site.cms.modules.media.js.JsGallery.prototype.updateContent = function() {
+	this.remoting.resolve("api").resolve("getContent").call([],$closure(this,"onContent"));
+}
+site.cms.modules.media.js.JsGallery.prototype.__class__ = site.cms.modules.media.js.JsGallery;
 poko.js.JsBinding = function(p) { if( p === $_ ) return; {
 	null;
 }}
@@ -2580,9 +2651,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e24 ) {
+	catch( $e25 ) {
 		{
-			var e = $e24;
+			var e = $e25;
 			{
 				
 				for(var i in this.h)
@@ -2625,8 +2696,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it25 = it;
-	while( $it25.hasNext() ) { var i = $it25.next();
+	{ var $it26 = it;
+	while( $it26.hasNext() ) { var i = $it26.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -2816,16 +2887,16 @@ js.Boot.__init();
 		try {
 			return new ActiveXObject("Msxml2.XMLHTTP");
 		}
-		catch( $e26 ) {
+		catch( $e27 ) {
 			{
-				var e = $e26;
+				var e = $e27;
 				{
 					try {
 						return new ActiveXObject("Microsoft.XMLHTTP");
 					}
-					catch( $e27 ) {
+					catch( $e28 ) {
 						{
-							var e1 = $e27;
+							var e1 = $e28;
 							{
 								throw "Unable to create XMLHttpRequest object.";
 							}

@@ -25,52 +25,46 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package site.cms;
+package site.cms.modules.media;
+import php.FileSystem;
+import poko.Application;
+import site.cms.templates.CmsTemplate;
 
-#if php
+class Index extends MediaBase
+{
 
-/* import  all CMS pages */
+	override public function main()
+	{
+		trace("Media");
+		
+		setupLeftNav();
+	}
 
-import site.cms.Index;
-import site.cms.Home;
+}
 
-import site.cms.modules.base.Datasets;
-import site.cms.modules.base.DatasetsLink;
-import site.cms.modules.base.Dataset;
-import site.cms.modules.base.DatasetItem;
-import site.cms.modules.base.Definitions;
-import site.cms.modules.base.Definition;
-import site.cms.modules.base.DefinitionElement;
-import site.cms.modules.base.Pages;
-import site.cms.modules.base.Users;
-import site.cms.modules.base.User;
-import site.cms.modules.base.Users_Groups;
-import site.cms.modules.base.Users_Group;
-import site.cms.modules.base.SiteView;
-
-import site.cms.modules.help.Help;
-
-import site.cms.services.Image;
-
-import site.cms.modules.media.Index;
-import site.cms.modules.media.Gallery;
-import site.cms.modules.media.Galleries;
-
-#elseif js
-
-import site.cms.js.JsCommon;
-import site.cms.modules.base.js.JsKeyValueInput;
-import site.cms.modules.base.js.JsFileUpload;
-import site.cms.modules.base.js.JsDefinitionElement;
-import site.cms.modules.base.js.JsDatasetItem;
-import site.cms.modules.base.js.JsDataset;
-import site.cms.modules.base.js.JsDefinition;
-import site.cms.modules.base.js.JsSiteView;
-
-import site.cms.modules.media.js.JsGallery;
-
-import site.cms.js.JsTest;
-
-#end
-
-class ImportAll { }
+class MediaBase extends CmsTemplate
+{
+	var imageRoot:String;
+	
+	override public function pre()
+	{
+		imageRoot = "./res/media/galleries";
+	}
+	
+	private function setupLeftNav():Void
+	{
+		leftNavigation.addSection("Galleries");
+		
+		var dir = FileSystem.readDirectory(imageRoot);
+		for (d in dir)
+		{
+			if (FileSystem.isDirectory(imageRoot + "/" +d) && d != "." && d != "..") 
+			{
+				leftNavigation.addLink("Galleries", d, "cms.modules.media.Gallery&name="+d);
+			}
+		}
+		
+		if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
+			leftNavigation.footer = "<br /><a href=\"?request=cms.modules.media.Galleries&manage=true\">Manage Galleries</a><br />";
+	}
+}

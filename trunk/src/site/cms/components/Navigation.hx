@@ -57,6 +57,7 @@ class Navigation extends Component
 			requests.set("modules.base.Pages", "Pages");
 			requests.set("modules.base.Datasets", "Lists");			
 			requests.set("modules.base.SiteView", "Site View");
+			requests.set("modules.media.Index", "Media");
 		}else {
 			requests.set("modules.base.SiteView", "Site Editor");
 		}
@@ -67,22 +68,22 @@ class Navigation extends Component
 			requests.set("modules.base.Users", "Users");
 		//}
 		
-		content = "<ul>";
+		content = "<ul>\n";
 
 		for (request in requests.keys())
 		{
 			
 			if (request == selected)
 			{
-				content += "<li>" + requests.get(request) + "</li>";
+				content += "<li>" + requests.get(request) + "</li>\n";
 			} else {
-				content += "<li><a href=\"?request=cms."+request+"\">"+requests.get(request)+"</a></li>";
+				content += "<li><a href=\"?request=cms."+request+"\">"+requests.get(request)+"</a></li>\n";
 			}
 		}
 		
-		content += "<li><a href=\"?request=cms.Index&logout=true\">logout</a></li>";
+		content += "<li><a href=\"?request=cms.Index&logout=true\">logout</a></li>\n";
 		
-		content += "</ul>";
+		content += "</ul>\n";
 	}
 	
 	public function setSelected(id:String)
