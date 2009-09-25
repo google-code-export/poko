@@ -46,5 +46,7 @@ class Basic extends DefaultTemplate
 		} else {
 			return value;
 		}
+		
+		Pages.
 	}
 }
