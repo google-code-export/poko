@@ -39,7 +39,7 @@ import poko.utils.PhpTools;
 import php.Web;
 import site.cms.modules.base.Definitions;
 import poko.form.Form;
-import site.cms.components.PopupURL;
+
 
 class Definition extends DefinitionsBase
 {	

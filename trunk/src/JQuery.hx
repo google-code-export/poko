@@ -24,9 +24,6 @@ extern class JQuery implements ArrayAccess<HtmlDom>
 	
 	public function live(type:String, fn:Event -> Void):Void;
 	
-	public function uploadify(settings:Dynamic):Void;
-	public function uploadifyClearQueue():Void;
-	
     /**
         Core
     **/

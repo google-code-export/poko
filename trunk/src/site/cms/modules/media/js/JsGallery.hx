@@ -17,7 +17,7 @@ class JsGallery extends JsRequest
 	{
 		gallery = application.params.get("name");
 		
-		new JQuery('#uploadify').uploadify({
+		untyped new JQuery('#uploadify').uploadify({
 			uploader  : 'res/cms/media/uploadify.swf',
 			script    : 'res/cms/media/uploadify.php',
 			cancelImg : 'res/cms/media/cancel.png',
@@ -85,7 +85,7 @@ class JsGallery extends JsRequest
 	
 	public function cancelUploads()
 	{
-		new JQuery('#uploadify').uploadifyClearQueue();
+		untyped new JQuery('#uploadify').uploadifyClearQueue();
 		
 		updateContent();
 	}

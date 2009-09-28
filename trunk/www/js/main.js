@@ -301,13 +301,13 @@ site.cms.modules.base.js.JsSiteView.prototype.addSeperator = function(e) {
 }
 site.cms.modules.base.js.JsSiteView.prototype.editHeading = function(e) {
 	var t = new JQuery(e.currentTarget).parent().parent().find("p > span");
-	t.html(js.Lib.prompt("Name? Currently \"" + t.html() + "\"."));
+	t.html(poko.js.JsUtils.prompt("Name? Currently \"" + t.html() + "\"."));
 	this.flushSorter(null);
 	e.preventDefault();
 }
 site.cms.modules.base.js.JsSiteView.prototype.editItem = function(e) {
 	var t = new JQuery(e.currentTarget).parent().find("span");
-	t.html(js.Lib.prompt("Name? Currently \"" + t.html() + "\"."));
+	t.html(poko.js.JsUtils.prompt("Name? Currently \"" + t.html() + "\"."));
 	this.flushSorter(null);
 	e.preventDefault();
 }
@@ -785,7 +785,7 @@ MainJS.__name__ = ["MainJS"];
 MainJS.app = null;
 MainJS.main = function() {
 	MainJS.app = new poko.js.JsApplication();
-	MainJS.app.serverUrl = "http://localhost/poko/";
+	MainJS.app.serverUrl = "http://localhost/fwork/";
 	js.Lib.window.onload = $closure(MainJS,"run");
 }
 MainJS.run = function(e) {
@@ -2193,6 +2193,14 @@ site.cms.js.JsTest.prototype.calltest = function(v1,v2,v3) {
 	haxe.Log.trace(v3,{ fileName : "JsTest.hx", lineNumber : 42, className : "site.cms.js.JsTest", methodName : "calltest"});
 }
 site.cms.js.JsTest.prototype.__class__ = site.cms.js.JsTest;
+poko.js.JsUtils = function(p) { if( p === $_ ) return; {
+	null;
+}}
+poko.js.JsUtils.__name__ = ["poko","js","JsUtils"];
+poko.js.JsUtils.prompt = function(v) {
+	return prompt(js.Boot.__string_rec(v,""));
+}
+poko.js.JsUtils.prototype.__class__ = poko.js.JsUtils;
 js = {}
 js.Lib = function() { }
 js.Lib.__name__ = ["js","Lib"];

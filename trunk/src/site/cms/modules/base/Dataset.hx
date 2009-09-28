@@ -30,6 +30,7 @@ package site.cms.modules.base;
 import haxe.Public;
 import php.Session;
 import poko.form.elements.Hidden;
+import poko.form.Formatter;
 import poko.js.JsBinding;
 import poko.form.elements.Input;
 import poko.form.elements.Button;
@@ -539,28 +540,33 @@ class Dataset extends DatasetBase
 	{
 		var data:Dynamic = Reflect.field(row, field);
 		var properties = definition.getElement(field).properties;
-		
-		return switch(properties.type)
+		if (properties.formatter != null && properties.formatter != "")
 		{
-			case "text": (data).substr(0,50) + (data.length > 50 ? "..." :  "");
-			case "richtext-tinymce": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
-			case "richtext-wym": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
-			case "image-file":
-				if (properties.isImage == "1"){
-					"<a target=\"_blank\" href=\"?request=cms.services.Image&src=" + data + "\"><img src=\"?request=cms.services.Image&preset=tiny&src=" + data + "\" /></a> <br/>";
-				}else {
-					if(data){
-						"<a target=\"_blank\" href=\"./res/uploads/" + data + "\" />file</a>";
+			var f:Formatter = Type.createInstance(Type.resolveClass(properties.formatter), []);
+			return f.format(data);
+		} else {
+			return switch(properties.type)
+			{
+				case "text": (data).substr(0,50) + (data.length > 50 ? "..." :  "");
+				case "richtext-tinymce": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
+				case "richtext-wym": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
+				case "image-file":
+					if (properties.isImage == "1"){
+						"<a target=\"_blank\" href=\"?request=cms.services.Image&src=" + data + "\"><img src=\"?request=cms.services.Image&preset=tiny&src=" + data + "\" /></a> <br/>";
 					}else {
-						"empty";
+						if(data){
+							"<a target=\"_blank\" href=\"./res/uploads/" + data + "\" />file</a>";
+						}else {
+							"empty";
+						}
 					}
-				}
-			case "bool": formatBool(cast data, properties);
-			case "date": formatDate(cast data);
-			case "keyvalue": "list of values";
-			case "association":
-				properties.showAsLabel == "1" ? associateExtras.get(field).get(cast data) : data;
-			default: data;
+				case "bool": formatBool(cast data, properties);
+				case "date": formatDate(cast data);
+				case "keyvalue": "list of values";
+				case "association":
+					properties.showAsLabel == "1" ? associateExtras.get(field).get(cast data) : data;
+				default: data;
+			}
 		}
 	}
 	public function formatBool(data:Bool, properties:Dynamic)

@@ -51,13 +51,13 @@ class Image extends Request
 	{
 		var src:String = application.params.get("src");
 		
-		
 		if (application.params.get("preset"))
 		{
 			
 			var image:ImageProcessor = new ImageProcessor(application.uploadFolder + "/" + src);
 			image.cacheFolder = application.uploadFolder+ "/cache";
 			image.format = ImageOutputFormat.JPG;
+			//image.forceNoCache = true;
 			
 			switch(application.params.get("preset"))
 			{
@@ -73,6 +73,8 @@ class Image extends Request
 					var w:Int = Std.parseInt(application.params.get("w"));
 					var h:Int = Std.parseInt(application.params.get("h"));
 					image.queueFitSize(w, h);
+				case "gallery":
+					image.queueFitSize(10, 10);
 			}
 			
 			var dateModifiedString = DateTools.format(image.dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';

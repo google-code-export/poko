@@ -38,7 +38,7 @@ class RadioGroup extends FormElement
 	public var verticle:Bool;
 	public var labelRight:Bool;
 	
-	public function new(name:String, label:String, data:List<Dynamic>, ?selected:String, defaultValue:String, ?verticle:Bool=true, ?labelRight:Bool=true) 
+	public function new(name:String, label:String, data:List<Dynamic>, ?selected:String, ?defaultValue:String, ?verticle:Bool=true, ?labelRight:Bool=true) 
 	{
 		super();
 		this.name = name;

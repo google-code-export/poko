@@ -153,7 +153,7 @@ class DefinitionElement extends DefinitionsBase
 		var data:Dynamic = meta.properties;
 		
 		// for type selector
-		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden"]);
+		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "enum", "hidden"]);
 		
 		// for bool selectors
 		var yesno = new List();
@@ -271,7 +271,14 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new Input( "def_text_regexError", "Regex Error message", data.regexError), "properties");
 		form.addElement(new Input( "def_text_regexDescription", "Regex Description", data.regexDescription), "properties");
 		form.addElement(new RadioGroup( "def_text_regexCaseInsensitive", "Regex Case Insensitive", yesno, data.regexCaseInsensitive, "0", false), "properties");
+		
+		var textFormatter:Input = new Input( "def_text_formatter", "Formatter Class", data.formatter);
+		textFormatter.useSizeValues = true;
+		textFormatter.width = 400;
+		form.addElement(textFormatter, "properties");
+		
 		form.addElement(new RadioGroup( "def_text_required", "Required", yesno, data.required, "0", false), "properties");
+		
 		
 		form.addElement(new Input( "def_number_min", "Min", data.min), "properties");
 		form.addElement(new Input( "def_number_max", "Max", data.max), "properties");
@@ -311,7 +318,7 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new Selectbox( "def_richtext-tinymce_mode", "Mode", rtf, data.mode, false,""), "properties");
 		form.addElement(new Input( "def_richtext-tinymce_width", "Width", data.width), "properties");
 		form.addElement(new Input( "def_richtext-tinymce_height", "Height", data.height), "properties");
-		form.addElement(new Input( "def_richtext-tinymce_content_css", "CSS file", data.content_css), "properties");
+		form.addElement(new Input( "def_richtext-tinymce_contentcss", "CSS file", data.contentcss), "properties");
 		form.addElement(new RadioGroup( "def_richtext-tinymce_required", "Required", yesno, data.required, "0", false), "properties");
 		
 		form.addElement(new Input( "def_richtext-wym_width", "Width", data.width), "properties");
@@ -391,6 +398,11 @@ class DefinitionElement extends DefinitionsBase
 		var assoc:Selectbox = new Selectbox("def_linkdisplay_table", "link Table", tableList, data.table);
 		form.addElement(assoc, "properties");
 		
+		var multiLinkFormatter:Input = new Input( "def_multilink_formatter", "Formatter Class", data.formatter);
+		multiLinkFormatter.useSizeValues = true;
+		multiLinkFormatter.width = 400;
+		
+		form.addElement(multiLinkFormatter, "properties");
 		
 		form.addFieldset("submit", new FieldSet("__submit", "__submit", false));
 		

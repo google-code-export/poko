@@ -32,6 +32,7 @@ import js.Lib;
 import js.XMLHttpRequest;
 import poko.js.JsRequest;
 import site.cms.modules.base.helper.MenuDef;
+import poko.js.JsUtils;
 
 class JsSiteView extends JsRequest
 {
@@ -50,7 +51,7 @@ class JsSiteView extends JsRequest
 			new JQuery("#addNullButton").click(_t.addNull);
 			
 			_t.flushSorter(null);
-		});
+		});		
 	}
 	
 	private function addSection(e:Event):Void
@@ -272,7 +273,7 @@ class JsSiteView extends JsRequest
 	function editHeading(e:Event)
 	{
 		var t = new JQuery(untyped e.currentTarget).parent().parent().find("p > span");
-		t.html(untyped Lib.prompt("Name? Currently \""+t.html()+"\"."));
+		t.html(untyped JsUtils.prompt("Name? Currently \""+t.html()+"\"."));
 		
 		flushSorter(null);
 		untyped e.preventDefault();
@@ -281,7 +282,7 @@ class JsSiteView extends JsRequest
 	function editItem(e:Event)
 	{
 		var t = new JQuery(untyped e.currentTarget).parent().find("span");
-		t.html(untyped Lib.prompt("Name? Currently \"" + t.html() + "\"."));
+		t.html(untyped JsUtils.prompt("Name? Currently \"" + t.html() + "\"."));
 		
 		flushSorter(null);
 		untyped e.preventDefault();

@@ -23,30 +23,62 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
-package site.examples;
-import poko.Request;
-import site.examples.templates.DefaultTemplate;
+package site.cms.common;
+import poko.Application;
+import haxe.Unserializer;
+import php.Lib;
 
-class Basic extends DefaultTemplate
+class Page 
 {
-	public var products:List<Dynamic>;
+	public var id:Int;
+	public var name:String;
+	public var data:Dynamic;
+	public var definition:Definition;
 	
-	override public function main()
+	public function new() {}
+	
+	public function loadById(id:Int)
 	{
-		products = application.db.request("SELECT * FROM `example_projects` WHERE `visible`=1");
+		var application = Application.instance;
+		var result = application.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE p.`id`=\"" + application.db.cnx.escape(Std.string(id)) + "\" AND p.`definitionid`=d.`id`");
+		init(result);
 	}
 	
-	public function trim(value:String, length)
+	public function loadByName(name:String)
 	{
-		if (value.length > length)
-		{
-			return value.substr(0, length-3) + "...";
-		} else {
-			return value;
-		}
+		var application = Application.instance;
+		var result = application.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE d.`name`=\"" + application.db.cnx.escape(name) + "\" AND p.`definitionid`=d.`id`");
+		init(result);
+	}
+	
+	private function init(result:Dynamic)
+	{
+		id = result.id;
+		name = result.name;
 		
-		Pages.
+		//try {
+			data = Unserializer.run(result.data);
+		/*}catch (e:Dynamic) { 
+			Lib.print("There has been an error Unserializing data for this page.");
+			result.data = {}
+		}*/
+		
+		definition = new Definition(result.definitionId);
+	}
+	
+	public static function getPageById(id):Page
+	{
+		var p = new Page();
+		p.loadById(id);
+		return p;
+	}
+	
+	public static function getPageByName(name:String):Page
+	{
+		var p = new Page();
+		p.loadByName(name);
+		return p;
 	}
 }

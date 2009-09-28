@@ -78,7 +78,7 @@ class TemploContext implements TemploRenderable, implements Dynamic
 		// prepare dynamic properties (send in from constructor)
 		var k = "";
 		var v:Dynamic = null;
-		untyped __php__("foreach($this->»dynamics as $k=> $v){ ");
+		untyped __php__("foreach($this->»dynamics as $k=> $v){ ");		
 				
 			if (Std.is(v, TemploRenderable)) 
 			{

@@ -37,6 +37,7 @@ import templo.Loader;
 
 class Form
 {
+	public var id:String;
 	public var name:String;
 	public var action:String;
 	public var method:FormMethod;
@@ -50,7 +51,7 @@ class Form
 	public function new(name:String, ?action:String, ?method:FormMethod) 
 	{
 		this.forcePopulate = false;
-		this.name = name;
+		this.id = this.name = name;
 		this.action = action;
 		this.method = (method == null) ? FormMethod.POST : method;
 		
@@ -136,7 +137,7 @@ class Form
 	
 	public function getOpenTag():String
 	{
-		return "<form name=\"" + name + "\" method=\""+ method +"\" action=\""+ action +"\" enctype=\"multipart/form-data\" >";
+		return "<form id=\""+id+"\" name=\"" + name + "\" method=\""+ method +"\" action=\""+ action +"\" enctype=\"multipart/form-data\" >";
 	}
 	
 	public function getCloseTag():String

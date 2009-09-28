@@ -30,6 +30,7 @@ package poko.form.elements;
 import poko.form.Form;
 import poko.form.FormElement;
 import php.Web;
+import poko.form.Formatter;
 
 class CheckboxGroup extends FormElement 
 {
@@ -38,6 +39,9 @@ class CheckboxGroup extends FormElement
 	public var labelLeft:Bool;
 	public var verticle:Bool;
 	public var labelRight:Bool;
+	
+	public var formatter:Formatter;
+	public var columns:Int;
 	
 	public function new(name:String, label:String, data:List<Dynamic>, ?selected:Array<String>, ?verticle:Bool=true, ?labelRight:Bool=true) 
 	{
@@ -48,6 +52,8 @@ class CheckboxGroup extends FormElement
 		this.value = selected != null ? selected : new Array();
 		this.verticle = verticle;
 		this.labelRight = labelRight;
+		
+		columns = 4;
 	}
 	
 	override public function populate()
@@ -77,17 +83,51 @@ class CheckboxGroup extends FormElement
 		}
 		
 		var c = 0;
-		if (data != null)
+		var array = Lambda.array(data);
+		if (array != null)
 		{
-			for (row in data)
+			var rowsPerColumn = Math.ceil(array.length / columns);
+			s = "<table><tr>";
+			for (i in 0...columns)
 			{
-				var checkbox = "<input type=\"checkbox\" name=\""+n+"[]\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (value != null ? Lambda.has(value, row.key+"") ? "checked":"":"") +" ></input>\n";
-				var label = "<label for=\"" + n+c + "\" >" + row.value  +"</label>";
+				s += "<td valign=\"top\">\n";
+				s += "<table>\n";
 				
-				s += labelRight ? checkbox + " "+label+" ": label+" "+checkbox+" ";
-				if (verticle) s += "<br />";
-				c++;
-			}	
+				for (j in 0...rowsPerColumn)
+				{
+					s += "<tr>";
+					
+					var row:Dynamic = array[c];
+					
+					var checkbox = "<input type=\"checkbox\" name=\""+n+"[]\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (value != null ? Lambda.has(value, row.key+"") ? "checked":"":"") +" ></input>\n";
+					var label;
+					
+					if (formatter != null)
+					{
+						label = "<label for=\"" + n + c + "\" >" + formatter.format(row.value)  +"</label>\n";
+					} else {
+						label = "<label for=\"" + n + c + "\" >" + row.value  +"</label>\n";
+					}
+					
+					if (labelRight)
+					{
+						s += "<td>" + checkbox + "</td>\n";
+						s += "<td>" + label + "</td>\n";
+					} else {
+						s += "<td>" + label + "</td>\n";
+						s += "<td>" + checkbox + "</td>\n";
+					}
+					s += "</tr>";
+					
+					c++;
+					
+					if (c >= array.length) break;
+				}
+				s += "</table>";
+				s += "</td>";
+			}
+			s += "</tr></table>\n";
+			
 		}
 		
 		return s;

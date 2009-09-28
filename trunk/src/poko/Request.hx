@@ -228,6 +228,7 @@ class HtmlHeader
 	public var publisher:String;
 	public var date:String;
 	public var favicon:String;
+	public var author:String;
 	
 	public var js:List<String>;
 	public var css:List<String>;

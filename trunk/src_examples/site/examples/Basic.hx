@@ -23,64 +23,30 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
- */
+ */ 
 
+package site.examples;
+import poko.Request;
+import site.examples.templates.DefaultTemplate;
 
-package poko.form.elements;
-
-import poko.form.Form;
-import poko.form.FormElement;
-import poko.form.Validator;
-import poko.form.validators.BoolValidator;
-import poko.form.Formatter;
-
-
-class Input extends FormElement
+class Basic extends DefaultTemplate
 {
-	public var password:Bool;
-	public var width:Int;
-	public var showLabelAsDefaultValue:Bool;
-	public var useSizeValues:Bool;
-	public var printRequired:Bool;
+	public var products:List<Dynamic>;
 	
-	public var formatter:Formatter;
-	
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attibutes:String="") 
+	override public function main()
 	{
-		super();
-		this.name = name;
-		this.label = label;
-		this.value = value;
-		this.required = required;
-		this.attributes = attibutes;
-		this.password = false;
-		
-		showLabelAsDefaultValue = false;
-		useSizeValues = false;
-		printRequired = true;
-		
-		width = 180;
+		products = application.db.request("SELECT * FROM `example_projects` WHERE `visible`=1");
 	}
 	
-	override public function render():String
+	public function trim(value:String, length)
 	{
-		var n = form.name + "_" +name;
-		var tType:String = password ? "password" : "text";
-		
-		if (showLabelAsDefaultValue && value == label){
-			addValidator(new BoolValidator(false, "Not valid"));
+		if (value.length > length)
+		{
+			return value.substr(0, length-3) + "...";
+		} else {
+			return value;
 		}
 		
-		if ((value == null || value == "") && showLabelAsDefaultValue) {
-			value = label;
-		}		
 		
-		var style = useSizeValues ? "style=\"width:"+width+"px\"" : "";
-		return "<input "+style+" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />" + (if(required && form.isSubmitted() && printRequired) " required");
-	}
-	
-	public function toString() :String
-	{
-		return render();
 	}
 }

@@ -7,9 +7,6 @@
 	</h3>
 ::end::
 
-
-::raw dbselector::
-
 ::raw form.getErrors()::
 
 ::raw form.getOpenTag()::

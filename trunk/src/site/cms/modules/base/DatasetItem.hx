@@ -35,7 +35,6 @@ import haxe.Md5;
 import site.cms.common.DefinitionElementMeta;
 import poko.form.elements.Button;
 import poko.form.elements.CheckboxGroup;
-import site.cms.components.PopupURL;
 import site.cms.modules.base.formElements.KeyValueInput;
 import poko.form.elements.DateSelector;
 import site.cms.modules.base.formElements.FileUpload;
@@ -79,8 +78,6 @@ class DatasetItem extends DatasetBase
 	
 	public var jsBind:JsBinding;
 	
-	public var dbselector:PopupURL;
-	
 	public function new() 
 	{
 		super();
@@ -115,6 +112,7 @@ class DatasetItem extends DatasetBase
 		id = Std.parseInt(application.params.get('id'));
 		dataset = Std.parseInt(application.params.get("dataset"));
 		isOrderingEnabled = false;
+		
 		
 		if (!pagesMode)
 		{
@@ -447,7 +445,8 @@ class DatasetItem extends DatasetBase
 					}
 					
 					// print out element.properties.regexDescription so we know what we need to input (if it exists)
-					
+					if (element.properties.formatter != null && element.properties.formatter != "") 
+						el.formatter = Type.createInstance(Type.resolveClass(element.properties.formatter), []);
 					el.description = element.properties.description;
 					form.addElement(el);
 					
@@ -501,7 +500,7 @@ class DatasetItem extends DatasetBase
 					if (element.properties.mode) el.mode = Type.createEnum(Type.resolveEnum("poko.form.elements.RichtextMode"), element.properties.mode);
 					if (element.properties.width != "") el.width = Std.parseInt(element.properties.width);
 					if (element.properties.height != "") el.height = Std.parseInt(element.properties.height);
-					if (element.properties.content_css != "" && element.properties.content_css != null) el.content_css = element.properties.content_css;
+					if (element.properties.contentcss != "" && element.properties.contentcss != null) el.content_css = element.properties.contentcss;
 					
 					el.description = element.properties.description;
 					form.addElement(el);
@@ -569,7 +568,8 @@ class DatasetItem extends DatasetBase
 							selectedData.push(Std.string(row.link));
 					}
 					var el = new CheckboxGroup(element.name, label, linkData, selectedData);
-					
+					if (element.properties.formatter != null && element.properties.formatter != "") 
+						el.formatter = Type.createInstance(Type.resolveClass(element.properties.formatter), []);
 					el.description = element.properties.description;
 					form.addElement(el);
 					
@@ -585,6 +585,22 @@ class DatasetItem extends DatasetBase
 					
 				case "linkdisplay":
 					var el = new LinkTable(element.name, label, element.properties.table, table, id, null, null, "class=\"resizableFrame\"");
+					el.description = element.properties.description;
+					form.addElement(el);
+					
+				case "enum":
+					var types = application.db.requestSingle("SHOW COLUMNS FROM `"+table+"` LIKE \""+element.properties.name+"\"");
+					
+					var s:String = Reflect.field(types, "Type");
+					var items = s.substr(6, s.length - 8).split("','");
+					
+					var data:List<Dynamic> = new List();
+					for (item in items)
+						data.add( { key:item, value:item } );
+					
+					if (value == null || value == "") value = items[0];
+					
+					var el = new RadioGroup(element.name, label, data, value);
 					el.description = element.properties.description;
 					form.addElement(el);
 			}

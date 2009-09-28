@@ -45,7 +45,8 @@ import site.services.Image;
 import site.Index;
 
 /*
-class Test {
+class Test 
+{
 	
 	public function new() 
 	{
@@ -68,13 +69,11 @@ class Test {
 		for (item in list)
 			trace(item);
 		
-		
 		//_hx_array
 		//_hx_array_iterator
 		var array = ["a", "b"];
 		for (item in array)
 			trace(item);
-			
 		
 		//IntHash
 		var intHash = new IntHash();
@@ -82,10 +81,8 @@ class Test {
 		intHash.set(2, "b");
 		for (item in intHash)
 			trace(item);
-
+		
 	}
-	
-	
 	
 	public function toString()
 	{
@@ -93,7 +90,6 @@ class Test {
 	}
 }
 */
-
 
 class Main 
 {
