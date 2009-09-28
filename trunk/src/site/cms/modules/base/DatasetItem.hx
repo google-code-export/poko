@@ -87,6 +87,8 @@ class DatasetItem extends DatasetBase
 	{
 		super.pre();
 		
+		trace("X");
+		
 		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
 		head.js.add("js/cms/jquery.qtip.min.js");

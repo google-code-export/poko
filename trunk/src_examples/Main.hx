@@ -35,6 +35,61 @@ import php.Lib;
 import php.Web;
 
 import site.cms.ImportAll;
+import site.examples.ImportAll;
+
+
+import site.services.Rss;
+import site.services.XmlData;
+import site.services.Image;
+
+import site.Index;
+
+/*
+class Test 
+{
+	
+	public function new() 
+	{
+		//Hash
+		var hash = new Hash();
+		hash.set("a", 1);
+		hash.set("b", 2);
+		for (item in hash.keys())
+			trace(item);
+		
+		for (item in hash)
+			trace(item);
+			
+		//HList
+		//_hx_list_iterator
+		var list = new List();
+		list.add("a");
+		list.add("b");
+		
+		for (item in list)
+			trace(item);
+		
+		//_hx_array
+		//_hx_array_iterator
+		var array = ["a", "b"];
+		for (item in array)
+			trace(item);
+		
+		//IntHash
+		var intHash = new IntHash();
+		intHash.set(1, "a");
+		intHash.set(2, "b");
+		for (item in intHash)
+			trace(item);
+		
+	}
+	
+	public function toString()
+	{
+		return "toString on Test1";
+	}
+}
+*/
 
 class Main 
 {
@@ -50,8 +105,11 @@ class Main
 		PhpTools.setupTrace();
 		
 		
+	//	Type.createInstance(Type.resolveClass("Test"),[]);
+		
 		app = new Application();
 		
+		//app.sitePath = "http://localhost/joshmurray_texstyle/SITE/www";
 		app.sitePath = "";
 		app.siteRoot = ".";
 		app.uploadFolder = app.siteRoot + "/res/uploads";
@@ -60,7 +118,8 @@ class Main
 		
 		app.skipAuthentication = false;		
 		app.debug = true;
-		app.sessionName = "alphastation_dobsons";
+		app.sessionName = "pokocms";
+			
 		
 		if (app.debug) 
 		{

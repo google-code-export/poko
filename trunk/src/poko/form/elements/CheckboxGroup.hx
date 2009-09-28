@@ -86,6 +86,7 @@ class CheckboxGroup extends FormElement
 		var array = Lambda.array(data);
 		if (array != null)
 		{
+			//trace("L" + array.length);
 			var rowsPerColumn = Math.ceil(array.length / columns);
 			s = "<table><tr>";
 			for (i in 0...columns)
@@ -95,6 +96,8 @@ class CheckboxGroup extends FormElement
 				
 				for (j in 0...rowsPerColumn)
 				{
+					if (c >= array.length) break;
+					
 					s += "<tr>";
 					
 					var row:Dynamic = array[c];
@@ -120,8 +123,6 @@ class CheckboxGroup extends FormElement
 					s += "</tr>";
 					
 					c++;
-					
-					if (c >= array.length) break;
 				}
 				s += "</table>";
 				s += "</td>";
