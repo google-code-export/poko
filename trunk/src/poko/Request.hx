@@ -164,6 +164,8 @@ class Request extends TemploContext
 		
 		pre();
 		
+		for (component in application.components) component.pre();
+		
 		if (!application.skipAuthentication && (authenticate && !auth()))
 		{
 			application.redirect("?request=cms.Index");
@@ -174,6 +176,8 @@ class Request extends TemploContext
 			if (!HttpConnection.handleRequest(remoting)) 
 			{
 				main();
+				
+				for (component in application.components) component.main();
 				
 				if (request_output == null) 
 				{

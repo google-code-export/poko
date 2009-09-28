@@ -55,6 +55,7 @@ import site.cms.services.Image;
 import site.cms.modules.media.Index;
 import site.cms.modules.media.Gallery;
 import site.cms.modules.media.Galleries;
+import site.cms.modules.media.MediaSelector;
 
 #elseif js
 

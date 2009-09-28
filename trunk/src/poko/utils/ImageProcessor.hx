@@ -28,7 +28,7 @@
 package poko.utils;
 
 import haxe.Md5;
-import hxphp.GD;
+import poko.utils.GD;
 import php.FileSystem;
 import php.io.File;
 import php.Lib;
@@ -40,7 +40,7 @@ class ImageProcessor
 	private static var revision = "0.1";
 	
 	private var fileName:String;
-	private var resource:GDImageResource;
+	public var resource:ImageResource;
 	
 	public var queue:List<Dynamic>;
 	
@@ -119,6 +119,10 @@ class ImageProcessor
 		queue.add( { type:ImageAction.ROTATE, CW:CW } );
 	}
 	
+	public function queueCustom(func:Void->Void, cacheIdentifier:String)
+	{
+		queue.add( { type:ImageAction.CUSTOM, func:func, cacheIdentifier:cacheIdentifier } );
+	}
 	
 	public function applyFitSize(maxWidth:Int, maxHeight:Int)
 	{
@@ -135,14 +139,12 @@ class ImageProcessor
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
 		
-		var newResource:GDImageResource = GD.imageCreateTrueColor(nw, nh);
+		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, 0, 0, nw, nh, ow, oh);
 		if (!success) throw("There was an error resizing the image");
 		
-		var old = resource;
 		resource = newResource;
-		GD.imageDestroy(old);
 	}
 	
 	public function applyCropToAspect(w:Float, h:Float)
@@ -162,26 +164,22 @@ class ImageProcessor
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
 		
-		var newResource:GDImageResource = GD.imageCreateTrueColor(nw, nh);
+		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, Std.int((ow - nw) / 2), Std.int((oh - nh) / 2), nw, nh, nw, nh);
 		if (!success) throw("There was an error cropping the image to aspect");
 		
-		var old = resource;
 		resource = newResource;
-		GD.imageDestroy(old);
 	}
 
 	public function applyCrop(x:Int, y:Int, width:Int, height:Int)
 	{		
-		var newResource:GDImageResource = GD.imageCreateTrueColor(width, height);
+		var newResource:ImageResource = GD.imageCreateTrueColor(width, height);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, x, y, width, height, width, height);
 		if (!success) throw("There was an error cropping the image to aspect");
 		
-		var old = resource;
 		resource = newResource;
-		GD.imageDestroy(old);
 	}
 	
 	public function applyResize(width:Int, height:Int)
@@ -189,14 +187,12 @@ class ImageProcessor
 		var ow:Int = GD.imageSX(resource);
 		var oh:Int = GD.imageSY(resource);
 		
-		var newResource:GDImageResource = GD.imageCreateTrueColor(width, height);
+		var newResource:ImageResource = GD.imageCreateTrueColor(width, height);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, 0, 0, width, height, ow, oh);
 		if (!success) throw("There was an error resizing the image");
 		
-		var old = resource;
 		resource = newResource;
-		GD.imageDestroy(old);
 	}
 	
 	public function applyScale(scaleX:Float, scaleY:Float)
@@ -208,19 +204,22 @@ class ImageProcessor
 		if (nw < 1) nw = 1;
 		if (nh < 1) nh = 1;
 		
-		var newResource:GDImageResource = GD.imageCreateTrueColor(nw, nh);
+		var newResource:ImageResource = GD.imageCreateTrueColor(nw, nh);
 		
 		var success = GD.imageCopyResampled(newResource, resource, 0, 0, 0, 0, nw, nh, ow, oh);
 		if (!success) throw("There was an error applying scale to the image");
 		
-		var old = resource;
 		resource = newResource;
-		GD.imageDestroy(old);
 	}
 	
 	public function applyRotation(angle:Float, ?CW:Bool = true, ?bgcolor:Int = 0, ?transparentBg:Bool=false )
 	{
 		resource = GD.imageRotate(resource, CW ? angle : angle *-1, bgcolor, transparentBg ? 1 : 0);
+	}
+	
+	public function applyCustom(func:ImageResource->Void, cacheIdentifier:String)
+	{
+		Reflect.callMethod(null, func, []);
 	}
 	
 	public function processQueue() 
@@ -235,6 +234,7 @@ class ImageProcessor
 				case ImageAction.SCALE: applyScale(action.scaleX, action.scaleY);
 				case ImageAction.CROP: applyCrop(action.x, action.y, action.width, action.height);
 				case ImageAction.ROTATE: applyRotation(action.angle, action.CW, action.bgcolor, action.transparent);
+				case ImageAction.CUSTOM: applyCustom(action.func, action.cacheIdentifier);
 			}
 		}
 		
@@ -264,6 +264,7 @@ class ImageProcessor
 		
 		s += "&" + stat.mtime + "&" + stat.ctime + "&" + revision;
 		
+		//trace(s);
 		var hash = Md5.encode(s);
 		dateModified = stat.mtime;
 		
@@ -321,6 +322,7 @@ class ImageProcessor
 		} 
 		else 
 		{
+			//trace(
 			if (!queue.isEmpty()) processQueue();
 			
 			return output();
@@ -369,6 +371,7 @@ enum ImageOutputFormat
 
 enum ImageAction
 {
+	CUSTOM;
 	FIT;
 	ASPECT;
 	RESIZE;

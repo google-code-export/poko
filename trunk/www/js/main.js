@@ -140,6 +140,11 @@ site.cms.modules.base.js.JsDatasetItem.prototype.showHideElements = function(ele
 	}
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.table = null;
+site.cms.modules.base.js.JsDatasetItem.prototype.updateImageFromMedia = function(elementId,gallery,image) {
+	haxe.Log.trace(elementId,{ fileName : "JsDatasetItem.hx", lineNumber : 90, className : "site.cms.modules.base.js.JsDatasetItem", methodName : "updateImageFromMedia"});
+	haxe.Log.trace(gallery,{ fileName : "JsDatasetItem.hx", lineNumber : 91, className : "site.cms.modules.base.js.JsDatasetItem", methodName : "updateImageFromMedia"});
+	haxe.Log.trace(image,{ fileName : "JsDatasetItem.hx", lineNumber : 92, className : "site.cms.modules.base.js.JsDatasetItem", methodName : "updateImageFromMedia"});
+}
 site.cms.modules.base.js.JsDatasetItem.prototype.valueHolder = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.__class__ = site.cms.modules.base.js.JsDatasetItem;
 site.cms.modules.base.js.JsSiteView = function(p) { if( p === $_ ) return; {
@@ -2739,6 +2744,9 @@ site.cms.modules.base.js.JsFileUpload.prototype.onResponse = function(data) {
 	else {
 		new JQuery("#" + data.display).html("<p>ERROR: " + data.error + "</p>");
 	}
+}
+site.cms.modules.base.js.JsFileUpload.prototype.test = function() {
+	haxe.Log.trace("XXX",{ fileName : "JsFileUpload.hx", lineNumber : 79, className : "site.cms.modules.base.js.JsFileUpload", methodName : "test"});
 }
 site.cms.modules.base.js.JsFileUpload.prototype.undeleteFile = function(file,display) {
 	var _t = this;

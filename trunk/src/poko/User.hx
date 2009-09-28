@@ -98,20 +98,28 @@ class User
 	
 	private function getFullGroupDetails():Void
 	{
-		var sql:String = "SELECT isAdmin, isSuper FROM _users_groups WHERE";
-		var pre:String = "";
-		for (s in groups) {
-			sql += pre + " stub='" + s + "'";
-			pre = " OR";
+		if (authenticated)
+		{
+			var sql:String = "SELECT isAdmin, isSuper FROM _users_groups WHERE";
+			var pre:String = "";
+			for (s in groups) {
+				sql += pre + " stub='" + s + "'";
+				pre = " OR";
+			}
+			
+			var res = Application.instance.db.request(sql);
+			
+			_isAdmin = false;
+			_isSuper = false;
+			for (a in res) {
+				if (a.isAdmin) _isAdmin = true;
+				if (a.isSuper) _isSuper = true;
+			}
 		}
-		
-		var res = Application.instance.db.request(sql);
-		
-		_isAdmin = false;
-		_isSuper = false;
-		for (a in res) {
-			if (a.isAdmin) _isAdmin = true;
-			if (a.isSuper) _isSuper = true;
-		}
+	}
+	
+	public function toString()
+	{
+		return "User";
 	}
 }

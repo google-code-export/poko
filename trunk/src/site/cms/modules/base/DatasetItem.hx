@@ -35,6 +35,7 @@ import haxe.Md5;
 import site.cms.common.DefinitionElementMeta;
 import poko.form.elements.Button;
 import poko.form.elements.CheckboxGroup;
+import site.cms.components.PopupURL;
 import site.cms.modules.base.formElements.KeyValueInput;
 import poko.form.elements.DateSelector;
 import site.cms.modules.base.formElements.FileUpload;
@@ -78,6 +79,8 @@ class DatasetItem extends DatasetBase
 	
 	public var jsBind:JsBinding;
 	
+	public var dbselector:PopupURL;
+	
 	public function new() 
 	{
 		super();
@@ -112,7 +115,6 @@ class DatasetItem extends DatasetBase
 		id = Std.parseInt(application.params.get('id'));
 		dataset = Std.parseInt(application.params.get("dataset"));
 		isOrderingEnabled = false;
-		
 		
 		if (!pagesMode)
 		{

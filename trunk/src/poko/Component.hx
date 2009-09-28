@@ -39,6 +39,7 @@ class Component extends TemploContext
 		template_file = StringTools.replace(Type.getClassName(Type.getClass(this)), ".", "/") + ".mtt";
 		
 		application = Application.instance;
+		application.components.add(this);
 	}
 	
 	public function setTemplate(file:String):Void
@@ -46,6 +47,7 @@ class Component extends TemploContext
 		template_file = Application.instance.packageRoot + "/" + file;
 	}
 	
+	public function pre(){}
 	public function main(){}
 	
 	public function setOutput(value)
@@ -55,8 +57,6 @@ class Component extends TemploContext
 	
 	override public function render():String
 	{
-		main();
-		
 		return output != null ? output : super.render();
 	}
 	

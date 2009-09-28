@@ -9,10 +9,12 @@ import poko.form.Form;
 import poko.form.FormElement;
 import poko.js.JsBinding;
 import poko.utils.PhpTools;
+import site.cms.components.PopupURL;
 
 class FileUpload extends FormElement
 {
 	private var jsBind:JsBinding;
+	private var popupURL:PopupURL;
 
 	public function new(name:String, label:String, ?value:String, ?required:Bool=false ) 
 	{
@@ -21,6 +23,8 @@ class FileUpload extends FormElement
 		this.label = label;
 		this.value = value;
 		this.required = required;
+		
+		popupURL = new PopupURL();
 		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsFileUpload");
 	}
@@ -48,7 +52,7 @@ class FileUpload extends FormElement
 		
 		if (value != "")
 		{
-			str += "<div id=\"fileUploadDisplay_"+name+"\">";
+			str += "<div id=\"fileUploadDisplay_"+name+"\" style='float:left'>";
 			var s:String = value;
 			var ext = s.substr(s.lastIndexOf(".")+1).toLowerCase();
 			if (ext == "jpg" || ext == "gif" || ext == "png")
@@ -66,7 +70,20 @@ class FileUpload extends FormElement
 			str += "</div>";
 		}
 		
+		str += "<div style='float:left' >";
+		str += '<input type="radio" /><label for="">upload</label>';
+		str += '<input type="radio" /><label for="">from library</label>';
+		str += '<br />';
 		str += "<input type=\"file\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " />";
+		str += "</div>";
+		
+		popupURL.id = "_mediaSelector_" + name;
+		popupURL.label = "library";
+		popupURL.contentUrl = "?request=cms.modules.media.MediaSelector&elementId=" + n;
+		popupURL.width = 700;
+		popupURL.height = 450;
+		
+		str += popupURL.render();
 		
 		return str;
 	}

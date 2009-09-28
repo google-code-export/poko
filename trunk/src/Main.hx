@@ -101,6 +101,11 @@ class Main
 	
 	public static function main() 
 	{	
+		init(false);
+	}
+	
+	public static function init(?phpMode:Bool=true)
+	{
 		PhpTools.setupTrace();
 		
 		
@@ -122,12 +127,12 @@ class Main
 		
 		if (app.debug) 
 		{
-			execute();
+			execute(phpMode);
 		} 
 		else 
 		{
 			try {
-				execute();	
+				execute(phpMode);	
 			}
 			catch (e:Dynamic){	
 				Lib.print("<span style='color:#ff0000'><b>Sorry the site has died.</b></span> <br/> Please report the error to: <b>" + app.errorContactEmail + "</b>");
@@ -135,7 +140,7 @@ class Main
 		}
 	}		
 	
-	public static function execute()
+	public static function execute(phpMode:Bool)
 	{
 		try {
 			switch(Web.getHostName())
@@ -143,7 +148,7 @@ class Main
 				case "staging.touchmypixel.com":
 					//app.db.connect("xxx", "xxx", "xxx", "xxx");
 				default:
-					app.db.connect("192.168.1.10", "poko", "root", "");
+					app.db.connect("192.168.1.80", "poko", "root", "");
 			}
 			
 			
@@ -159,6 +164,6 @@ class Main
 			else throw (e);
 		}
 		
-		app.execute();
+		if(!phpMode) app.execute();
 	}
 }

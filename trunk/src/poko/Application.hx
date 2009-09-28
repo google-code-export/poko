@@ -73,6 +73,8 @@ class Application
 	
 	public var errorContactEmail:String;
 	
+	public var components:List<Component>;
+	
 	public function new() 
 	{
 		/**
@@ -105,6 +107,8 @@ class Application
 		
 		db = new Db();
 		isDbRequired = true;
+		
+		components = new List();
 	}
 	
 	public function setupRequest():Void
@@ -148,6 +152,7 @@ class Application
 	private function setupSessionData():Void
 	{
 		Session.setName(sessionName);
+		
 		messages = Session.get("messages") ? Session.get("messages") : new Messages();
 		user = Session.get("user") ? Session.get("user") : new User();
 		user.update();

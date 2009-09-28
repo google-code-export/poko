@@ -84,4 +84,11 @@ class JsDatasetItem extends JsRequest
 		}
 		return(true);
 	}
+	
+	public function updateImageFromMedia(elementId, gallery, image)
+	{
+		trace(elementId);
+		trace(gallery);
+		trace(image);
+	}
 }

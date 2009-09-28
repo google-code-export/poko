@@ -73,4 +73,9 @@ class JsFileUpload extends JsRequest
 			new JQuery("#"+data.display).html("<p>ERROR: " + data.error + "</p>");
 		}
 	}
+	
+	public function test()
+	{
+		trace("XXX");
+	}
 }

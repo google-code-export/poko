@@ -35,8 +35,6 @@ class Index extends MediaBase
 
 	override public function main()
 	{
-		trace("Media");
-		
 		setupLeftNav();
 	}
 
