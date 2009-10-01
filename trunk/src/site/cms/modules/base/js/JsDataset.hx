@@ -101,8 +101,7 @@ class JsDataset extends JsRequest
 		
 		switch (response.type)
 		{
-			
-			case "association", "bool":
+			case "association", "bool", "enum":
 				Lib.document.getElementById("filter_assoc").style.display = "inline";
 				
 				var select:Select = cast Lib.document.getElementById("options_filterByAssoc");

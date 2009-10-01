@@ -197,7 +197,7 @@ class Dataset extends DatasetBase
 		if((currentFilterSettings.enabled || optionsForm.isSubmitted()) && filterByValue != null && filterByValue != "")
 		{
 			// Associative filter
-			if (definition.getElement(filterByValue).type == "association" || definition.getElement(filterByValue).type == "bool")
+			if (definition.getElement(filterByValue).type == "enum" || definition.getElement(filterByValue).type == "association" || definition.getElement(filterByValue).type == "bool")
 			{	
 				if (filterByAssocValue != "")
 					sql += "WHERE `" + filterByValue + "`='" + filterByAssocValue + "' ";
@@ -419,6 +419,22 @@ class Dataset extends DatasetBase
 					h.set("1", "true");
 					h.set("0", "false");
 				}
+				associateExtras.set(element.properties.name, h);
+			}
+			
+			if (element.properties.type == "enum")
+			{
+				var h:Hash<Dynamic> = new Hash();
+				
+				var types = application.db.requestSingle("SHOW COLUMNS FROM `"+ table +"` LIKE \""+element.properties.name+"\"");
+				var s:String = Reflect.field(types, "Type");
+				var items = s.substr(6, s.length - 8).split("','");
+				
+				for (item in items)
+				{
+					h.set(item, item);
+				}
+				
 				associateExtras.set(element.properties.name, h);
 			}
 		}
