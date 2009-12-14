@@ -1,0 +1,15 @@
+::"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"::
+<root>
+	<data>
+		::foreach row data::
+		<row>
+			::foreach key Reflect.fields(row) ::
+			::"<"+key+">"::
+				<![CDATA[::Reflect.field(row,key)::]]>
+			::"</"+key+">"::
+			::end::
+		</row>
+		::end::
+	</data>
+	<reponse>::response::</reponse>
+</root>

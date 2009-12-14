@@ -1,0 +1,31 @@
+::if showOnlyLibraries.length > 1::
+	::raw form.getPreview()::
+::end::
+
+::if allowViewThumb && allowViewList::
+	<div id="galleryViewType">View as <a href="?request=cms.modules.media.MediaSelector&viewType=thumbs&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">Thumbs</a> | <a href="?request=cms.modules.media.MediaSelector&viewType=list&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">List</a></div>
+::end::
+
+<div id="imageContent">
+	
+	::if currentView == "thumbs"::
+		::foreach item items::
+			<div class="galleryItem">
+				::raw controller.getItem(item)::
+			</div>
+		::end::
+		::if items.length == 0::
+			<div>No files</div>
+		::end::
+	::else::
+		<div class="galleryList">
+		::foreach item items::
+			<div class="galleryListItem">
+				::raw controller.getItem(item)::
+			</div>
+		::end::
+		</div>
+	::end::
+	
+</div>
+<div style="clear:both;"></div>

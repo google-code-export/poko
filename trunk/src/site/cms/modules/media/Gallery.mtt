@@ -1,0 +1,13 @@
+
+<h3>::gallery::</h3>
+	
+<div style="margin-bottom: 20px;">Upload files below. You can choose multiple files and once they are uploaded they will be automatically be displayed in the list below.</div>
+
+<div id="fileQueue"></div>
+<input type="file" name="uploadify" id="uploadify" />
+<p><a href="#" onClick="::raw jsBinding.getCall('cancelUploads',[])::">Cancel All Uploads</a></p>
+
+<hr />
+
+<div id="imageContent">
+</div>

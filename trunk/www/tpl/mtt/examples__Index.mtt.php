@@ -1,0 +1,5 @@
+<?php
+
+$this->buf .= 'Main ';
+
+?>

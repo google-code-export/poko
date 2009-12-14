@@ -1,0 +1,12 @@
+<h3>List Users</h3>
+<table>
+	<tr><td>Username</td><td>Name</td><td>Email</td><td>Action</td></tr>
+	::foreach u users ::
+		<tr>
+		<td>::u.username::</td>
+		<td>::u.name::</td>
+		<td>::u.email::</td>
+		<td><a href="?request=cms.modules.base.User&action=edit&id=::u.id::">Edit</a> | <a href="?request=cms.modules.base.Users&action=delete&id=::u.id::">Delete</a> </td>
+		</tr>
+	::end::
+</table>

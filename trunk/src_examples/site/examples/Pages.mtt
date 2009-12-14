@@ -1,0 +1,39 @@
+<h1>Pages</h1>
+
+<p>We cam access pages content via the cms.common.PageData class. Pages have a definition and data seperately. 
+You may choose to use the data without the definition (often this is only needed for the cms) by accessing a (Pagedata Object).data </p>
+
+<p>In this way, you can design a site in the fontend which is totally independant, and custom from the cms</p>
+
+<h3>Pages</h3>
+
+Using PageData.getPages() we can get a list of pages. Often you might want to create a cutom request for each page and access it manually however. 
+
+::raw pageNav::
+
+
+::if selectedPage != null::
+
+	<h2>Page: ::selectedPage.name::</h2>
+	
+	
+	<h3>Elements</h3>
+	
+	::if selectedPage.definition.elements.length > 0::
+		
+		::foreach el selectedPage.definition.elements::
+			<b>::el.name::</b>
+			<table class="greyTable">
+				<tr><td>name  </td> <td> ::el.name:: </td></tr>
+				<tr><td>name: </td> <td> ::el.type:: </td></tr>
+				<tr><td>data: </td> <td> ::controller.getData(el.name):: </td></tr>
+			</table>
+		::end::
+		
+	::else::
+		There are no defined elemtents for this page
+	::end::
+	
+	<h3>Raw Data</h3>
+	::selectedPage.data::
+::end::
