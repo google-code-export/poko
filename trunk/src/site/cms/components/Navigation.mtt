@@ -1,8 +1,0 @@
-<div id="heading">
-	<hr />
-	::raw content::
-	<div style="clear:both"></div>
-	<hr />
-</div>
-
-

@@ -1,1 +1,0 @@
-Some icons from the amazing Silk icon collection available at http://famfamfam.com/lab/icons/silk/ used under the Creative Commons Attribution 2.5 License.
