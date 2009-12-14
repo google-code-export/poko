@@ -25,14 +25,12 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 			$this->navigation->setSelected("Pages");
 		}
 		else {
-			if($this->siteMode) {
-				$this->navigation->pageHeading = "Site";
-				$this->navigation->setSelected("SiteView");
-			}
-			else {
-				$this->navigation->pageHeading = "Datasets";
-				$this->navigation->setSelected("Datasets");
-			}
+			$this->navigation->pageHeading = "Datasets";
+			$this->navigation->setSelected("Datasets");
+		}
+		if($this->siteMode) {
+			$this->navigation->pageHeading = "Site";
+			$this->navigation->setSelected("SiteView");
 		}
 	}
 	public function setupLeftNav() {

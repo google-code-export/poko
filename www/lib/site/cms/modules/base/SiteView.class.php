@@ -11,6 +11,7 @@ class site_cms_modules_base_SiteView extends site_cms_modules_base_DatasetBase {
 		$this->head->js->add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		$this->head->css->add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
 		$this->siteMode = true;
+		$this->navigation->setSelected("SiteView");
 		$this->jsBind = new poko_js_JsBinding("site.cms.modules.base.js.JsSiteView");
 	}
 	public function main() {

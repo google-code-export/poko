@@ -462,12 +462,12 @@ class DatasetItem extends DatasetBase
 			if (app.params.get(form.name + "_" + name + "_operation") == FileUpload.OPERATION_LIBRARY && libraryItemValue != null && libraryItemValue != "") {
 				// copy library item and use that!
 				
-				var imgRoot:String = "./res/media/galleries";
-				if (FileSystem.exists(imgRoot + "/" + libraryItemValue)) {
+				var imgRoot:String = "./res/media/galleries/";
+				if (FileSystem.exists(imgRoot + libraryItemValue)) {
 					
 					var copyToName = randomString + libraryItemValue.substr(libraryItemValue.lastIndexOf("/") + 1);
 					
-					File.copy(imgRoot + "/" + libraryItemValue, PokoCms.uploadFolder + "/" + copyToName);
+					File.copy(imgRoot + libraryItemValue, PokoCms.uploadFolder + copyToName);
 					data.set(name, copyToName);
 					nFilesAdded++;
 				}
@@ -476,7 +476,7 @@ class DatasetItem extends DatasetBase
 				// upload file	
 				if (info.get("error") == 0) 
 				{
-					PhpTools.moveFile(info.get("tmp_name"), PokoCms.uploadFolder + "/" + randomString + filename);
+					PhpTools.moveFile(info.get("tmp_name"), PokoCms.uploadFolder + randomString + filename);
 					data.set(name, randomString + filename);
 					nFilesAdded++;
 				}
@@ -531,7 +531,7 @@ class DatasetItem extends DatasetBase
 		// delete the files
 		for (f in filesToDelete) {
 			try {
-				FileSystem.deleteFile(PokoCms.uploadFolder + "/" + f);
+				FileSystem.deleteFile(PokoCms.uploadFolder + f);
 			}catch (e:Dynamic) {
 				//TO DO: need to get this warning working properly!
 				//messages.addError("Problem deleting file: " + f);
