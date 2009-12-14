@@ -7,5 +7,5 @@ package site.cms;
 
 class PokoCms 
 {
-	public static var uploadFolder:String = "";
+	public static var uploadFolder:String = "./res/uploads/";
 }

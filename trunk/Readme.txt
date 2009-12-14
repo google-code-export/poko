@@ -23,7 +23,6 @@ The views context (variables sent into the template system) is automatically pop
 This is a neko app which recurses the site folder to find .mtt or .php templates and copy (of compile) them to the www/tpl folder
 
 
-
 INSTALLATION 
 
 -install haxe 2.03 (haxe.org) 

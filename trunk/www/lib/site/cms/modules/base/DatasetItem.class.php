@@ -364,17 +364,17 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 			$randomString = haxe_Md5::encode(Date::now()->toString() . Math::random());
 			$libraryItemValue = $this->app->params->get($this->form->name . "_" . $name . "_libraryItemValue");
 			if(_hx_equal($this->app->params->get($this->form->name . "_" . $name . "_operation"), site_cms_modules_base_formElements_FileUpload::$OPERATION_LIBRARY) && $libraryItemValue !== null && $libraryItemValue != "") {
-				$imgRoot = "./res/media/galleries";
-				if(file_exists($imgRoot . "/" . $libraryItemValue)) {
+				$imgRoot = "./res/media/galleries/";
+				if(file_exists($imgRoot . $libraryItemValue)) {
 					$copyToName = $randomString . _hx_substr($libraryItemValue, _hx_last_index_of($libraryItemValue, "/", null) + 1, null);
-					php_io_File::copy($imgRoot . "/" . $libraryItemValue, site_cms_PokoCms::$uploadFolder . "/" . $copyToName);
+					php_io_File::copy($imgRoot . $libraryItemValue, site_cms_PokoCms::$uploadFolder . $copyToName);
 					$data->set($name, $copyToName);
 					$nFilesAdded++;
 				}
 			}
 			else {
 				if(_hx_equal($info->get("error"), 0)) {
-					poko_utils_PhpTools::moveFile($info->get("tmp_name"), site_cms_PokoCms::$uploadFolder . "/" . $randomString . $filename);
+					poko_utils_PhpTools::moveFile($info->get("tmp_name"), site_cms_PokoCms::$uploadFolder . $randomString . $filename);
 					$data->set($name, $randomString . $filename);
 					$nFilesAdded++;
 				}
@@ -442,7 +442,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		$f1 = $»it5->next();
 		{
 			try {
-				@unlink(site_cms_PokoCms::$uploadFolder . "/" . $f1);
+				@unlink(site_cms_PokoCms::$uploadFolder . $f1);
 			}catch(Exception $»e3) {
 			$_ex_3 = ($»e3 instanceof HException) ? $»e3->e : $»e3;
 			;

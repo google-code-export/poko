@@ -98,12 +98,13 @@ class DatasetBase extends CmsTemplate
 		{
 			navigation.pageHeading = "Pages";
 			navigation.setSelected("Pages");
-		} else if (siteMode) {
-			navigation.pageHeading = "Site"; 
-			navigation.setSelected("SiteView");				
-		}else {
+		} else  {
 			navigation.pageHeading = "Datasets"; 
 			navigation.setSelected("Datasets");
+		}
+		if (siteMode) {
+			navigation.pageHeading = "Site"; 
+			navigation.setSelected("SiteView");				
 		}
 	}
 	

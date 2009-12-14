@@ -52,6 +52,8 @@ class SiteView extends DatasetBase
 		
 		siteMode = true;
 		
+		navigation.setSelected("SiteView");
+		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsSiteView");
 	}
 	

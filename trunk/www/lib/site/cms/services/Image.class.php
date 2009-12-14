@@ -9,8 +9,8 @@ class site_cms_services_Image extends poko_controllers_Controller {
 	public function main() {
 		$src = $this->app->params->get("src");
 		if($this->app->params->get("preset")) {
-			$image = new poko_utils_ImageProcessor(site_cms_PokoCms::$uploadFolder . "/" . $src);
-			$image->cacheFolder = site_cms_PokoCms::$uploadFolder . "/cache";
+			$image = new poko_utils_ImageProcessor(site_cms_PokoCms::$uploadFolder . $src);
+			$image->cacheFolder = site_cms_PokoCms::$uploadFolder . "cache";
 			$image->format = poko_utils_ImageOutputFormat::$JPG;
 			switch($this->app->params->get("preset")) {
 			case "tiny":{
@@ -43,7 +43,7 @@ class site_cms_services_Image extends poko_controllers_Controller {
 			$this->setOutput($image->getOutput(null));
 		}
 		else {
-			$dateModified = php_FileSystem::stat(site_cms_PokoCms::$uploadFolder . "/" . $src)->mtime;
+			$dateModified = php_FileSystem::stat(site_cms_PokoCms::$uploadFolder . $src)->mtime;
 			$dateModifiedString2 = DateTools::format($dateModified, "%a, %d %b %Y %H:%M:%S") . " GMT";
 			header("Last-Modified" . ": " . $dateModifiedString2);
 			header("Expires" . ": " . DateTools::format(new Date($dateModified->getFullYear() + 1, $dateModified->getMonth(), $dateModified->getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") . " GMT");
@@ -51,8 +51,8 @@ class site_cms_services_Image extends poko_controllers_Controller {
 			header("ETag" . ": " . "\"" . haxe_Md5::encode($src) . "\"");
 			header("Pragma" . ": " . "");
 			header("content-type" . ": " . "image");
-			header("Content-Length" . ": " . filesize(site_cms_PokoCms::$uploadFolder . "/" . $src));
-			readfile(site_cms_PokoCms::$uploadFolder . "/" . $src);
+			header("Content-Length" . ": " . filesize(site_cms_PokoCms::$uploadFolder . $src));
+			readfile(site_cms_PokoCms::$uploadFolder . $src);
 			php_Sys::hexit(1);
 		}
 	}
