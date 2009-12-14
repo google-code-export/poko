@@ -1,0 +1,29 @@
+.pngFix {
+	behavior: url("css/iepngfix.php")
+}
+
+.yellowRule{
+	line-height: 1px;
+}
+
+/* yellow gradient */
+#homeJoinWrapper, #stockList table th, #collectionLeftMenu li.selectedCategory a, .collectionDetailsBox h3, .collectionItemDetailsTable th{
+	background-image: url(../res/yellow_gradient.gif);
+}
+
+/* black1 */
+#homeJoinBox, #stockList table, #collectionLeftMenu li.selectedCategory, .collectionDetailsBox, .collectionItemDetailsTable{
+	background-image: url(../res/bg_black1.gif);
+}
+
+#collectionMatrix table th.scopeCol{
+	background-image: url(../res/bg_black2.gif);
+}
+
+#collectionMatrix table th, #collectionMatrix table td{
+	background-image: url(../res/bg_black3.gif);
+}
+
+#storyStrategicAlliancesWrapper img{
+	margin-right: 15px;
+}

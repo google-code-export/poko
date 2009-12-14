@@ -1,0 +1,8 @@
+::if section == null::
+	<h3>You can change stuff here</h3>
+	<p>Set themes and such ...</p>
+::else::
+	<h3>::sectionTitle::</h3>
+	<p>Change your settings here.</p>
+	::raw form.getPreview()::
+::end::
