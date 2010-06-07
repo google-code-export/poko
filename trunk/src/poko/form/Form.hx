@@ -42,11 +42,13 @@ class Form
 	public var action:String;
 	public var method:FormMethod;
 	public var elements:List<FormElement>;
-	
+
 	public var fieldsets:Hash<FieldSet>;
 	
 	public var forcePopulate:Bool;
 	public var submitButton:FormElement;
+	
+	private var extraErrors:List<String>;
 	
 	public function new(name:String, ?action:String, ?method:FormMethod) 
 	{
@@ -56,6 +58,7 @@ class Form
 		this.method = (method == null) ? FormMethod.POST : method;
 		
 		elements = new List();
+		extraErrors = new List();
 		
 		fieldsets = new Hash();
 		addFieldset("__default", new FieldSet("__default", "Default", false));
@@ -154,14 +157,21 @@ class Form
 				valid = false;
 		
 		return valid;
+	}	
+	
+	public function addError(error:String)
+	{
+		extraErrors.add(error);
 	}
 	
-
 	public function getErrorsList():List<String>
 	{
 		isValid();
 		
 		var errors:List<String> = new List();
+		
+		for(e in extraErrors)
+			errors.add(e);
 		
 		for (element in getElements())
 			for (error in element.getErrors())
@@ -187,16 +197,15 @@ class Form
 	
 	public function getErrors():String
 	{
+		if (!isSubmitted())	
+			return "";
+				
 		var s:StringBuf = new StringBuf();
 		var errors = getErrorsList();
 		
-		/*
-		 * if (checkSubmitted)	
-			if (!isSubmitted()) errors = new List();
-		*/
 		if (errors.length > 0) 
 		{
-			s.add("<ul>");
+			s.add("<ul class=\"formErrors\" >");
 			for (error in errors)
 			{
 				s.add("<li>"+error+"</li>");

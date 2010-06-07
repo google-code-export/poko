@@ -41,7 +41,6 @@ class Config
 	{
 		var env = Sys.environment();
 		
-		
 		applicationPath = Web.getCwd();
 		
 		//indexFile

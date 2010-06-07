@@ -1,0 +1,70 @@
+a, a:visited
+{
+	color: ::colorLinkOnLight::;
+}
+
+#heading 
+{
+	height: ::sizeLogoHeight+ 70::px;	
+	background-image: url('::imageHeaderBg::');
+	background-position: bottom;
+}
+
+#heading #headingNavigation li a
+{
+	width: ::sizeButtonWidth::px;
+	height: ::sizeButtonHeight::px;
+	background: url('::imageHeaderButtonBgUp::') no-repeat;
+	text-align: center;
+	color: #fff;
+	margin-right: 5px;
+	font-size: 12px;
+	font-weight: bold;
+	padding-top: 5px;
+}
+
+#heading #headingNavigation li a:hover
+{
+	background: url('::imageHeaderButtonBgOver::') no-repeat;
+}
+
+#headingLogo
+{
+	background: url('::imageHeadingLogo::') 2px 20px no-repeat;
+	width: ::sizeLogoWidth::px;
+	height: ::sizeLogoHeight + 35::px;
+}
+
+#headingUserBox
+{
+	background: url('::imageHeadingLoginBg::') no-repeat;
+}
+#headingUserBox a
+{
+	color: ::colorLinkOnDark::;
+}
+
+#content h3
+{
+	background: url('::imageHeadingLong::') no-repeat;	
+}
+
+#leftNavigation h3
+{
+	background: url('::imageHeadingShort::') no-repeat;
+}
+
+#leftNavigation ul a:hover
+{
+	color: ::colorLinkOnLight::;
+}
+
+#leftNavigationFooter a
+{
+	background: ::colorNavigationLinkBgUp::;
+	color: ::colorNavigationLinkColor::;
+}
+#leftNavigationFooter a:hover
+{
+	background: ::colorNavigationLinkBgOver::;
+}

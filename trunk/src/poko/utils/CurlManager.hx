@@ -82,6 +82,12 @@ class CurlManager
 		return(Curl.execToOutput(resource));
 	}	
 	
+	public function getLastError()
+	{
+		if (currentUrl == null) throw new Exception("No URL defined");
+		return Curl.getLastError(resource);
+	}
+	
 	public function close()
 	{
 		currentUrl = null;

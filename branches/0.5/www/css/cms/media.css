@@ -1,0 +1,43 @@
+
+
+.galleryItem
+{
+	float:left;
+	width:100px;
+	height:100px;
+	border:1px solid #ccc;
+	padding:5px;
+	margin:5px;
+	position:relative;
+	text-align:center;
+}
+.galleryItem img
+{
+	cursor: pointer;
+}
+
+.galleryItem .gallerItemDelete
+{
+	position:absolute;
+	display:block;
+	left:5px;
+	bottom:5px;
+}
+
+#galleryViewType
+{
+	margin-bottom: 30px;
+}
+
+.galleryList
+{
+	border-top: 1px solid #ccc;
+}
+
+.galleryListItem
+{
+	width: 90%;
+	border-bottom: 1px solid #ccc;
+	padding: 3px;
+	cursor: pointer;
+}

@@ -16,6 +16,7 @@ package site;
 import site.examples.ImportAll;
 #end
 
+import php.Web;
 import site.Test;
 import site.cms.ImportAll;
 
@@ -25,14 +26,24 @@ class Config extends poko.system.Config
 	{
 		super();
 		
-		database_host = "192.168.1.80";
-		database_database = "poko";
-		database_user = "root";
-		database_password = "";
-		
-		sessionName = "poko_cms";
+		switch(Web.getHostName())
+		{
+			case "touchmypixel.com", "staging.touchmypixel.com":
+				database_host = "localhost";
+				database_database = "touchmyp_poko";
+				database_user = "touchmyp_poko";
+				database_password = "poko";
+				
+				sessionName = "poko_cms";
+			default:
+				database_host = "192.168.1.80";
+				database_database = "poko";
+				database_user = "root";
+				database_password = "";
+				
+				sessionName = "poko_cms";
+		}
 	}
-	
 }
 
 

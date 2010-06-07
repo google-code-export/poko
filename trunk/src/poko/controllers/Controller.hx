@@ -79,7 +79,8 @@ class Controller
 	
 	public function render():Void
 	{
-		Lib.print(view.render());
+		if (view.template != null)
+			Lib.print(view.render());
 	}
 	
 	public function setOutput(value)

@@ -31,6 +31,7 @@ package poko;
 #if php
 
 import haxe.Timer;
+import htemplate.Template;
 import poko.controllers.Controller;
 import php.Lib;
 import php.Session;
@@ -56,6 +57,11 @@ class Poko
 	public function new() 
 	{
 		//var time1 = Timer.stamp();
+		/*
+		var data = {one:"one", two:null}
+		var ht = new Template("my template {:two} ");
+		ht.execute(data);
+		*/
 		
 		instance = this;
 		
@@ -63,8 +69,16 @@ class Poko
 		
 		config = new Config();
 		
-		if(Session.getName() != config.sessionName) Session.setName(config.sessionName);
+		var v="";
+		if (Session.getName() != config.sessionName) 
+		{
+			v = "YAY";
+			
+			Session.setName(config.sessionName);
+		}
 		
+		Session.start();
+
 		params = Web.getParams();
 		
 		url = new Url(Web.getURI());
@@ -91,7 +105,8 @@ class Poko
 	
 	private function findControllerClass():String
 	{
-		var c:String = url.getSegments()[0] != "" ? url.getSegments()[0] : (params.get("request")!= null ? params.get("request") : config.defaultController);
+		var c:String = url.getSegments()[0] != "" ? url.getSegments()[0] : (params.get("request") != null ? params.get("request") : config.defaultController);
+
 		if (c.lastIndexOf(".") != -1)
 		{
 			c = c.substr(0, c.lastIndexOf(".")+1) + c.substr(c.lastIndexOf(".")+1,1).toUpperCase() + c.substr(c.lastIndexOf(".")+2);

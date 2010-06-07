@@ -644,7 +644,7 @@ class Dataset extends DatasetBase
 		} else {
 			return switch(properties.type)
 			{
-				case "text": (data).substr(0,50) + (data.length > 50 ? "..." :  "");
+				case "text": StringTools.htmlEscape((data).substr(0,50)) + (data.length > 50 ? "..." :  "");
 				case "richtext-tinymce": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
 				case "richtext-wym": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
 				case "image-file":

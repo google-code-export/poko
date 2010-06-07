@@ -42,9 +42,6 @@ import poko.views.View;
 class HtmlController extends Controller
 {
 	public var head:HtmlHeader;
-	public var js:List<String>;
-	public var css:List<String>;
-	public var cssPrint:List<String>;
 	
 	public var jsBindings:Hash<JsBinding>;
 	public var jsCalls:List<String>;
@@ -55,9 +52,6 @@ class HtmlController extends Controller
 	{
 		super();
 		
-		js = new List();
-		css = new List();
-		cssPrint = new List();
 		head = new HtmlHeader();
 		head.title = "haxe poko";
 		

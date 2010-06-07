@@ -1,0 +1,9 @@
+<?php
+
+$this->buf .= '<h3>Getting Started</h3>
+
+<p>
+	First thing to do is to create some database tables. 
+</p>';
+
+?>

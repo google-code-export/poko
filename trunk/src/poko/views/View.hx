@@ -47,10 +47,10 @@ class View implements Renderable
 	
 	public function new(?scope:Dynamic, ?type:ViewType, ?template:String, ?data:Dynamic)
 	{
-		if (type == null) type = ViewType.TEMPLO;
+		if (type == null) type = ViewType.PHP;
 		this.type = type;
 		this.template = template;
-		this.data = data;
+		this.data = data != null ? data : {};
 		this.scope = scope != null ? scope : Poko.instance.controller;
 		
 		rendered = false;
@@ -67,7 +67,7 @@ class View implements Renderable
 		{
 			case ViewType.PHP: cast new poko.views.renderers.Php(template);
 			case ViewType.TEMPLO: cast new poko.views.renderers.Templo(template);
-			case ViewType.HAXE: cast new poko.views.renderers.HaxeTemplate(template);
+			case ViewType.HTEMPLATE: cast new poko.views.renderers.HTemplate(template);
 		}
 		
 		/*
@@ -96,9 +96,11 @@ class View implements Renderable
 		
 		renderer.assign("application", Poko.instance);
 		renderer.assign("controller", Poko.instance.controller);
+		renderer.assign("resolveClass", Type.resolveClass);
 		
 		return renderCache = renderer.render();
 	}
+	
 	
 	/*public function renderWithData(data:Dynamic)
 	{
@@ -122,7 +124,8 @@ class View implements Renderable
 		
 		var c:Class<Dynamic> = skipTopLevel ? Type.getSuperClass(Type.getClass(controller)) : Type.getClass(controller);
 		
-		while (c != null) {
+		while (c != null) 
+		{
 			file = Std.string(c);
 			if (StringTools.startsWith(file, "site."))
 			{
@@ -130,6 +133,7 @@ class View implements Renderable
 				
 				var checkTemplo = "./tpl/mtt/" + file.replace("/", "__") + ".mtt.php";
 				var checkPhp = "./tpl/php/" + file + ".php";
+				var checkHTemplate = "./tpl/ht/" + file + ".ht";
 				
 				if (FileSystem.exists(checkTemplo))
 				{
@@ -144,6 +148,13 @@ class View implements Renderable
 					type = ViewType.PHP;
 					return;
 				}
+				
+				if (FileSystem.exists(checkHTemplate))
+				{
+					template = file + ".ht";
+					type = ViewType.HTEMPLATE;
+					return;
+				}
 			}
 			c = Type.getSuperClass(c);	
 		}
@@ -155,7 +166,7 @@ class View implements Renderable
 	{
 		return switch(type)
 		{
-			case ViewType.HAXE: "hmtt";
+			case ViewType.HTEMPLATE: "ht";
 			case ViewType.TEMPLO: "mtt";
 			case ViewType.PHP: "php";
 		}
@@ -176,5 +187,5 @@ class View implements Renderable
 enum ViewType {
 	PHP;
 	TEMPLO;
-	HAXE;
+	HTEMPLATE;
 }

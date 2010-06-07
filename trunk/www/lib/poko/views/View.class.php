@@ -8,7 +8,7 @@ class poko_views_View implements poko_views_Renderable{
 		}
 		$this->type = $type;
 		$this->template = $template;
-		$this->data = $data;
+		$this->data = ($data !== null ? $data : _hx_anonymous(array()));
 		$this->scope = ($scope !== null ? $scope : poko_Poko::$instance->controller);
 		$this->rendered = false;
 	}}
@@ -31,8 +31,8 @@ class poko_views_View implements poko_views_Renderable{
 			case poko_views_ViewType::\$TEMPLO:{
 				\$팿 = new poko_views_renderers_Templo(\$퍁his->template);
 			}break;
-			case poko_views_ViewType::\$HAXE:{
-				\$팿 = new poko_views_renderers_HaxeTemplate(\$퍁his->template);
+			case poko_views_ViewType::\$HTEMPLATE:{
+				\$팿 = new poko_views_renderers_HTemplate(\$퍁his->template);
 			}break;
 			default:{
 				\$팿 = null;
@@ -72,6 +72,7 @@ class poko_views_View implements poko_views_Renderable{
 		}
 		$this->renderer->assign("application", poko_Poko::$instance);
 		$this->renderer->assign("controller", poko_Poko::$instance->controller);
+		$this->renderer->assign("resolveClass", isset(Type::$resolveClass) ? Type::$resolveClass: array("Type", "resolveClass"));
 		return $this->renderCache = $this->renderer->render();
 	}
 	public function findTemplate($controller, $skipTopLevel) {
@@ -86,6 +87,7 @@ class poko_views_View implements poko_views_Renderable{
 				$file = str_replace(".", "/", _hx_substr($file, strlen("site."), null));
 				$checkTemplo = "./tpl/mtt/" . str_replace("/", "__", $file) . ".mtt.php";
 				$checkPhp = "./tpl/php/" . $file . ".php";
+				$checkHTemplate = "./tpl/ht/" . $file . ".ht";
 				if(file_exists($checkTemplo)) {
 					$this->template = $file . ".mtt";
 					$this->type = poko_views_ViewType::$TEMPLO;
@@ -96,16 +98,21 @@ class poko_views_View implements poko_views_Renderable{
 					$this->type = poko_views_ViewType::$PHP;
 					return;
 				}
+				if(file_exists($checkHTemplate)) {
+					$this->template = $file . ".ht";
+					$this->type = poko_views_ViewType::$HTEMPLATE;
+					return;
+				}
 			}
 			$c = Type::getSuperClass($c);
-			unset($checkTemplo,$checkPhp);
+			unset($checkTemplo,$checkPhp,$checkHTemplate);
 		}
 		$this->template = null;
 	}
 	public function getExt() {
 		return eval("if(isset(\$this)) \$퍁his =& \$this;switch(\$퍁his->type) {
-			case poko_views_ViewType::\$HAXE:{
-				\$팿 = \"hmtt\";
+			case poko_views_ViewType::\$HTEMPLATE:{
+				\$팿 = \"ht\";
 			}break;
 			case poko_views_ViewType::\$TEMPLO:{
 				\$팿 = \"mtt\";

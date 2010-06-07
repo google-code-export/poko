@@ -72,10 +72,11 @@ class MakeTemplates
 		
 		for (item in items)
 		{
-			switch(getExt(item))
+			var ext = getExt(item);
+			switch(ext)
 			{
 				case "mtt": tempoArgs.push(item);
-				case "php": copyPhpFile(item);
+				case "php", "ht": copyPhpFile(item,ext);
 			}
 		}
 		
@@ -85,10 +86,10 @@ class MakeTemplates
 		cleanUp();
 	}
 	
-	private function copyPhpFile(file):Void
+	private function copyPhpFile(file, ext):Void
 	{
 		var fromFile = file;
-		var toFile = to + "/php/" + clean(file);
+		var toFile = to + "/"+ext+"/" + clean(file);
 		var dir = toFile.substr(0, toFile.lastIndexOf("/"));
 		
 		createFolder(dir);
@@ -168,7 +169,7 @@ class MakeTemplates
 			}
 			else
 			{
-				var exts = ["php", "mtt"];
+				var exts = ["ht", "php", "mtt"];
 				if(Lambda.has(exts, getExt(item)))
 					items.push(s);
 			}
