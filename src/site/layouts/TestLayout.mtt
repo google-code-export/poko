@@ -1,8 +1,0 @@
-
-
-
-<b>HEADER</b>
-
-::raw controller.view.render() ::
-
-<b>FOOTER</b>

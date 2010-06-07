@@ -42,8 +42,8 @@ class DbStructure extends CmsPopup
 		
 		dbStructureSelector = new DbStructureSelector(false);
 		
-		var table = app.params.get("dbStructureSelector");
-		fields = app.db.request("SHOW FIELDS FROM `" + table + "`");
+		var table = application.params.get("dbStructureSelector");
+		fields = application.db.request("SHOW FIELDS FROM `" + table + "`");
 	}
 	
 }

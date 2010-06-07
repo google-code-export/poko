@@ -27,8 +27,8 @@
 
 package site.cms.modules.base;
 import php.Lib;
-import poko.Poko;
-import poko.views.renderers.Templo;
+import poko.Application;
+import poko.ViewContext;
 import poko.js.JsBinding;
 import site.cms.modules.base.helper.MenuDef;
 import site.cms.templates.CmsTemplate;
@@ -43,38 +43,36 @@ class SiteView extends DatasetBase
 		super();
 	}
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
-			
 		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
 		
 		siteMode = true;
 		
-		navigation.setSelected("SiteView");
-		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsSiteView");
+		
+		super.pre();
 	}
 	
 	override public function main()
 	{
 		super.main();
 		
-		if (!app.params.get("manage") || !user.isAdmin())
+		if (!application.params.get("manage") || !application.user.isAdmin())
 		{
 			var str = "";
 			
-			if (user.isAdmin() || user.isSuper())
-				str += Templo.parse("cms/modules/base/blocks/siteView.mtt");
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
+				str += ViewContext.parse("site/cms/modules/base/blocks/siteView.mtt");
 				
 			setContentOutput(str);
 		}else {
-			if (app.params.get('action') == "saveSiteView") {
-				var d = app.params.get('siteViewData');
+			if (application.params.get('action') == "saveSiteView") {
+				var d = application.params.get('siteViewData');
 				
-				app.db.update('_settings', {value: d}, "`key` ='siteView'");
-				messages.addMessage("Menu updated.");
+				application.db.update('_settings', {value: d}, "`key` ='siteView'");
+				application.messages.addMessage("Menu updated.");
 			}
 		}
 		

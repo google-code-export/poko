@@ -27,7 +27,7 @@
 
 package site.cms.modules.base;
 
-import poko.views.renderers.Templo;
+import poko.ViewContext;
 import php.Web;
 import site.cms.common.Tools;
 import site.cms.templates.CmsTemplate;
@@ -55,17 +55,17 @@ class Definitions extends DefinitionsBase
 		
 		pageLabel = pagesMode ? "Page" : "Dataset";
 		
-		if (app.params.get("manage") == null)
+		if (application.params.get("manage") == null)
 		{			
 			var str = "< Select a Dataset";
 			
-			str += Templo.parse("site/cms/modules/base/blocks/definitions.mtt");
+			str += ViewContext.parse("site/cms/modules/base/blocks/definitions.mtt");
 			
 			setContentOutput(str);
 		}
 		
 		var tables = Tools.getDBTables();
-		var defs = app.db.request("SELECT * FROM `_definitions` WHERE `isPage`='" + pagesMode +"' ORDER BY `order`");
+		var defs = application.db.request("SELECT * FROM `_definitions` WHERE `isPage`='" + pagesMode +"' ORDER BY `order`");
 		
 		unassigned = new List();
 		assigned = new List();
@@ -83,19 +83,19 @@ class Definitions extends DefinitionsBase
 	
 	private function process():Void
 	{
-		switch(app.params.get("action"))
+		switch(application.params.get("action"))
 		{
 			case "add":
 			
-				var nextId = app.db.requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" + pagesMode +"'").order;
+				var nextId = application.db.requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" + pagesMode +"'").order;
 				nextId++;
 				
-				app.db.insert("_definitions", { name:app.params.get("name"), isPage:pagesMode, order:nextId } );
+				application.db.insert("_definitions", { name:application.params.get("name"), isPage:pagesMode, order:nextId } );
 				
-				var defId = app.db.cnx.lastInsertId();
+				var defId = application.db.cnx.lastInsertId();
 				
 				if (pagesMode)
-					app.db.insert("_pages", { name:app.params.get("name"), definitionId:defId } );
+					application.db.insert("_pages", { name:application.params.get("name"), definitionId:defId } );
 				
 			case "update":
 				var deleteList = Web.getParamValues("delete");
@@ -105,9 +105,9 @@ class Definitions extends DefinitionsBase
 					{
 						if (deleteList[i] != null) 
 						{
-							var defId = app.db.cnx.quote(Std.string(i));
-							app.db.delete("_definitions", "`id`=" + defId);
-							app.db.delete("_pages", "`definitionId`=" + defId);
+							var defId = application.db.cnx.quote(Std.string(i));
+							application.db.delete("_definitions", "`id`=" + defId);
+							application.db.delete("_pages", "`definitionId`=" + defId);
 						}
 					}
 				}
@@ -115,22 +115,22 @@ class Definitions extends DefinitionsBase
 				var c = 0;
 				for (val in php.Web.getParamValues("order"))
 				{
-					if (val != null) app.db.update("_definitions", { order:val }, "`id`=" + c);
+					if (val != null) application.db.update("_definitions", { order:val }, "`id`=" + c);
 					c++;
 				}
 				
 				//RESORT ORD
 				c = 0;
-				var result = app.db.request("SELECT `id` as 'id' from `_definitions` WHERE `isPage`='"+pagesMode+"' ORDER BY `order`");
+				var result = application.db.request("SELECT `id` as 'id' from `_definitions` WHERE `isPage`='"+pagesMode+"' ORDER BY `order`");
 				for (item in result)
-					app.db.update("_definitions", {order:++c}, "`id`='" + item.id + "'");
+					application.db.update("_definitions", {order:++c}, "`id`='" + item.id + "'");
 				
 			case "define":
 			
-				var nextId = app.db.requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" + pagesMode +"'").order;
+				var nextId = application.db.requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" + pagesMode +"'").order;
 				nextId++;
-				var name = app.params.get("define");
-				app.db.insert("_definitions", { name:name, table:name, isPage:false, order:nextId } );
+				var name = application.params.get("define");
+				application.db.insert("_definitions", { name:name, table:name, isPage:false, order:nextId } );
 		}
 		
 	}
@@ -143,11 +143,11 @@ class DefinitionsBase extends CmsTemplate
 {
 	private var pagesMode:Bool;
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
+		super.pre();
 		
-		pagesMode = app.params.get("pagesMode") == "true";
+		pagesMode = application.params.get("pagesMode") == "true";
 		
 		if (pagesMode) navigation.setSelected("Pages"); else navigation.setSelected("Dataset");
 	}
@@ -170,7 +170,7 @@ class DefinitionsBase extends CmsTemplate
 			leftNavigation.footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 			leftNavigation.addSection("Pages");
 			
-			var pages = app.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+			var pages = application.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
 			
 			leftNavigation.addSection("Pages");
 			
@@ -179,7 +179,7 @@ class DefinitionsBase extends CmsTemplate
 		}
 		else 
 		{
-			var tables:List <Dynamic> = app.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
+			var tables:List <Dynamic> = application.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 			
 			// build the nav
 			leftNavigation.addSection("Datasets");
@@ -193,7 +193,7 @@ class DefinitionsBase extends CmsTemplate
 				}
 			}
 			
-			if (user.isAdmin() || user.isSuper())
+			if (application.user.isAdmin() || application.user.isSuper())
 				leftNavigation.footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true\">Manage</a>";
 		}
 	}

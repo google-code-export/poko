@@ -17,11 +17,11 @@ class site_cms_modules_base_helper_MenuDef {
 		$this->numberOfSeperators++;
 		$this->headings->push(_hx_anonymous(array("name" => "__sep" . $this->numberOfSeperators . "__", "isSeperator" => true)));
 	}
-	public function addItem($id, $type, $name, $heading, $indent, $listChildren, $linkChild) {
+	public function addItem($id, $type, $name, $heading, $indent, $listChildren) {
 		if($indent === null) {
 			$indent = 0;
 		}
-		$this->items->push(_hx_anonymous(array("id" => $id, "type" => $type, "name" => $name, "heading" => $heading, "indent" => $indent, "listChildren" => $listChildren, "linkChild" => $linkChild)));
+		$this->items->push(_hx_anonymous(array("id" => $id, "type" => $type, "name" => $name, "heading" => $heading, "indent" => $indent, "listChildren" => $listChildren)));
 	}
 	public function __call($m, $a) {
 		if(isset($this->$m) && is_callable($this->$m))

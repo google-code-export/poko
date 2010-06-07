@@ -1,23 +1,25 @@
 <?php
 
 class site_cms_modules_base_Settings extends site_cms_modules_base_SettingsBase {
+	public function __construct() {
+		if( !php_Boot::$skip_constructor ) {
+		parent::__construct();
+	}}
 	public $section;
 	public $sectionTitle;
 	public $form;
-	public function init() {
-		parent::init();
-		$this->section = $this->app->params->get("section");
+	public function pre() {
+		parent::pre();
+		$this->section = $this->application->params->get("section");
 		$this->sectionTitle = strtoupper(_hx_substr($this->section, 0, 1)) . _hx_substr($this->section, 1, strlen($this->section) - 1);
 	}
 	public function main() {
-		parent::main();
-		$this->setupLeftNav();
 		$this->form = new poko_form_Form("settingsUpdate", "?request=cms.modules.base.Settings&section=" . $this->section, poko_form_FormMethod::$POST);
 		switch($this->section) {
 		case "main":{
-			$data = $this->app->getDb()->requestSingle("SELECT * FROM _settings WHERE `key`='cmsTitle'");
+			$data = $this->application->db->requestSingle("SELECT * FROM _settings WHERE `key`='cmsTitle'");
 			$this->form->addElement(new poko_form_elements_Input("cmsTitle", "CMS Title", $data->value, true, null, null), null);
-			$data = $this->app->getDb()->requestSingle("SELECT * FROM _settings WHERE `key`='cmsLogo'");
+			$data = $this->application->db->requestSingle("SELECT * FROM _settings WHERE `key`='cmsLogo'");
 			$this->form->addElement(new poko_form_elements_FileUpload("cmsLogo", "CMS Logo", $data->value, false), null);
 			$this->form->setSubmitButton($this->form->addElement(new poko_form_elements_Button("submit", "Submit", null, null), "submit"));
 			if($this->form->isSubmitted()) {
@@ -50,12 +52,12 @@ class site_cms_modules_base_Settings extends site_cms_modules_base_SettingsBase 
 						$e->value = $n2;
 					}
 				}
-				$this->app->getDb()->update("_settings", _hx_anonymous(array("value" => $e->value)), "`key`='" . $e->name . "'");
+				$this->application->db->update("_settings", _hx_anonymous(array("value" => $e->value)), "`key`='" . $e->name . "'");
 			}
 			unset($»r2,$»r,$tmp,$n2,$n,$info);
 		}
 		}
-		$this->messages->addMessage("Settings saved.");
+		$this->application->messages->addMessage("Settings saved.");
 	}
 	public function __call($m, $a) {
 		if(isset($this->$m) && is_callable($this->$m))

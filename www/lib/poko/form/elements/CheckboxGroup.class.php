@@ -16,7 +16,7 @@ class poko_form_elements_CheckboxGroup extends poko_form_FormElement {
 		$this->value = ($selected !== null ? $selected : new _hx_array(array()));
 		$this->verticle = $verticle;
 		$this->labelRight = $labelRight;
-		$this->columns = 1;
+		$this->columns = 4;
 	}}
 	public $data;
 	public $selectMessage;

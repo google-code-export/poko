@@ -3,6 +3,6 @@
 	<p>Set themes and such ...</p>
 ::else::
 	<h3>::sectionTitle::</h3>
-	<p>Change your settings here.</p>
+	<p>::sectionDescription::</p>
 	::raw form.getPreview()::
 ::end::

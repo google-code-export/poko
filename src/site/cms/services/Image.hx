@@ -36,9 +36,9 @@ import php.io.Process;
 import php.Lib;
 import php.Sys;
 import php.Web;
-import poko.controllers.HtmlController;
+import poko.Request;
 
-class Image extends poko.controllers.Controller
+class Image extends Request
 {
 	public var data:Dynamic;
 	
@@ -49,29 +49,29 @@ class Image extends poko.controllers.Controller
 	
 	override public function main():Void
 	{
-		var src:String = app.params.get("src");
+		var src:String = application.params.get("src");
 		
-		if (app.params.get("preset"))
+		if (application.params.get("preset"))
 		{
 			
-			var image:ImageProcessor = new ImageProcessor(site.cms.PokoCms.uploadFolder + src);
-			image.cacheFolder = site.cms.PokoCms.uploadFolder+ "cache";
+			var image:ImageProcessor = new ImageProcessor(application.uploadFolder + "/" + src);
+			image.cacheFolder = application.uploadFolder+ "/cache";
 			image.format = ImageOutputFormat.JPG;
 			//image.forceNoCache = true;
 			
-			switch(app.params.get("preset"))
+			switch(application.params.get("preset"))
 			{
 				case "tiny":
 					image.queueFitSize(40, 40);
 				case "thumb":
 					image.queueFitSize(100, 100);
 				case "aspect": 
-					var w:Int = Std.parseInt(app.params.get("w"));
-					var h:Int = Std.parseInt(app.params.get("h"));
+					var w:Int = Std.parseInt(application.params.get("w"));
+					var h:Int = Std.parseInt(application.params.get("h"));
 					image.queueCropToAspect(w, h);
 				case "custom": 
-					var w:Int = Std.parseInt(app.params.get("w"));
-					var h:Int = Std.parseInt(app.params.get("h"));
+					var w:Int = Std.parseInt(application.params.get("w"));
+					var h:Int = Std.parseInt(application.params.get("h"));
 					image.queueFitSize(w, h);
 				case "gallery":
 					image.queueFitSize(10, 10);
@@ -89,7 +89,7 @@ class Image extends poko.controllers.Controller
 			setOutput(image.getOutput());
 			
 		}else {
-			var dateModified = FileSystem.stat(site.cms.PokoCms.uploadFolder + src).mtime;
+			var dateModified = FileSystem.stat(application.uploadFolder + "/" + src).mtime;
 			var dateModifiedString = DateTools.format(dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
 			Web.setHeader("Last-Modified", dateModifiedString);
 			Web.setHeader("Expires", DateTools.format(new Date(dateModified.getFullYear() + 1, dateModified.getMonth(), dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
@@ -100,11 +100,11 @@ class Image extends poko.controllers.Controller
 			Web.setHeader("content-type", "image");
 			
 			#if php
-				Web.setHeader("Content-Length", untyped __call__("filesize", site.cms.PokoCms.uploadFolder + src));
-				untyped __call__("readfile", site.cms.PokoCms.uploadFolder + src);
+				Web.setHeader("Content-Length", untyped __call__("filesize", application.uploadFolder + "/" + src));
+				untyped __call__("readfile", application.uploadFolder + "/" + src);
 				Sys.exit(1);
 			#else
-				var f = File.getContent(site.cms.PokoCms.uploadFolder + src);
+				var f = File.getContent(application.uploadFolder + "/" + src);
 				//Web.setHeader("Content-Length", f.length);
 				
 				setOutput(f);

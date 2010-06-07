@@ -28,7 +28,7 @@
 
 package site.cms.components;
 
-import poko.system.Component;
+import poko.Component;
 import php.io.File;
 import php.io.FileInput;
 import php.Web;
@@ -41,21 +41,16 @@ class LeftNavigation extends Component
 	
 	public var sections:Hash < List < Dynamic >> ;
 	public var sectionsIsSeperator:Hash < Bool >;
-
+	
 	public function new() 
 	{
 		super();
+		
 		sections = new Hash();
 		sectionsIsSeperator = new Hash();
 	}
 	
-	override public function init()
-	{	
-	}
-	
-	override public function main() 
-	{
-	}
+	override public function main() {}
 	
 	public function addSection(name:String, ?isSeperator:Bool = false) 
 	{

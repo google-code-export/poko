@@ -3,12 +3,7 @@
 class poko_js_JsBinding {
 	public function __construct($jsRequest) {
 		if( !php_Boot::$skip_constructor ) {
-		_hx_deref(eval("if(isset(\$this)) \$퍁his =& \$this;\$tmp = poko_Poko::\$instance->controller;
-			\$팿 = (Std::is(\$tmp, _hx_qtype(\"poko.controllers.HtmlController\")) ? \$tmp : eval(\"if(isset(\\\$this)) \\\$퍁his =& \\\$this;throw new HException(\\\"Class cast error\\\");
-				return \\\$팿2;
-			\"));
-			return \$팿;
-		"))->jsBindings->set($jsRequest, $this);
+		poko_Application::$instance->request->jsBindings->set($jsRequest, $this);
 		$this->jsRequest = $jsRequest;
 	}}
 	public $jsRequest;
@@ -22,20 +17,19 @@ class poko_js_JsBinding {
 		if($afterPageLoad === null) {
 			$afterPageLoad = true;
 		}
-		$controller = poko_Poko::$instance->controller;
 		$call = $this->getCall($method, $args);
 		if($afterPageLoad) {
-			$controller->jsCalls->add($call);
+			poko_Application::$instance->request->jsCalls->add($call);
 		}
 		else {
-			$controller->jsCalls->add($call);
+			poko_Application::$instance->request->jsCalls->add($call);
 		}
 	}
 	public function getRawCall($method) {
 		return $this . "." . $method;
 	}
 	public function toString() {
-		return "poko.js.JsPoko.instance.resolveRequest('" . $this->jsRequest . "')";
+		return "poko.js.JsApplication.instance.resolveRequest('" . $this->jsRequest . "')";
 	}
 	public function __call($m, $a) {
 		if(isset($this->$m) && is_callable($this->$m))

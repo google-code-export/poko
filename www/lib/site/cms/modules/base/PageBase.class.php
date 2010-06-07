@@ -6,13 +6,12 @@ class site_cms_modules_base_PageBase extends site_cms_templates_CmsTemplate {
 		parent::__construct();
 	}}
 	public $pages;
-	public function init() {
-		parent::init();
+	public function pre() {
 		$this->navigation->setSelected("Pages");
 	}
 	public function setupLeftNav() {
 		parent::main();
-		$this->pages = $this->app->getDb()->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+		$this->pages = $this->application->db->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
 		$this->leftNavigation->addSection("Pages", null);
 		$»it = $this->pages->iterator();
 		while($»it->hasNext()) {
@@ -22,7 +21,7 @@ class site_cms_modules_base_PageBase extends site_cms_templates_CmsTemplate {
 			;
 		}
 		}
-		if($this->user->isAdmin() || $this->user->isSuper()) {
+		if(poko_Application::$instance->user->isAdmin() || poko_Application::$instance->user->isSuper()) {
 			$this->leftNavigation->footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 		}
 	}

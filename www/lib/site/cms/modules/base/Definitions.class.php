@@ -13,13 +13,13 @@ class site_cms_modules_base_Definitions extends site_cms_modules_base_Definition
 		parent::main();
 		$this->process();
 		$this->pageLabel = ($this->pagesMode ? "Page" : "Dataset");
-		if($this->app->params->get("manage") === null) {
+		if($this->application->params->get("manage") === null) {
 			$str = "< Select a Dataset";
-			$str .= poko_views_renderers_Templo::parse("site/cms/modules/base/blocks/definitions.mtt", null);
+			$str .= poko_ViewContext::parse("site/cms/modules/base/blocks/definitions.mtt", null);
 			$this->setContentOutput($str);
 		}
 		$tables = site_cms_common_Tools::getDBTables();
-		$defs = $this->app->getDb()->request("SELECT * FROM `_definitions` WHERE `isPage`='" . $this->pagesMode . "' ORDER BY `order`");
+		$defs = $this->application->db->request("SELECT * FROM `_definitions` WHERE `isPage`='" . $this->pagesMode . "' ORDER BY `order`");
 		$this->unassigned = new HList();
 		$this->assigned = new HList();
 		$»it = $defs->iterator();
@@ -39,14 +39,14 @@ class site_cms_modules_base_Definitions extends site_cms_modules_base_Definition
 		$this->setupLeftNav();
 	}
 	public function process() {
-		switch($this->app->params->get("action")) {
+		switch($this->application->params->get("action")) {
 		case "add":{
-			$nextId = $this->app->getDb()->requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" . $this->pagesMode . "'")->order;
+			$nextId = $this->application->db->requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" . $this->pagesMode . "'")->order;
 			$nextId++;
-			$this->app->getDb()->insert("_definitions", _hx_anonymous(array("name" => $this->app->params->get("name"), "isPage" => $this->pagesMode, "order" => $nextId)));
-			$defId = $this->app->getDb()->cnx->lastInsertId();
+			$this->application->db->insert("_definitions", _hx_anonymous(array("name" => $this->application->params->get("name"), "isPage" => $this->pagesMode, "order" => $nextId)));
+			$defId = $this->application->db->cnx->lastInsertId();
 			if($this->pagesMode) {
-				$this->app->getDb()->insert("_pages", _hx_anonymous(array("name" => $this->app->params->get("name"), "definitionId" => $defId)));
+				$this->application->db->insert("_pages", _hx_anonymous(array("name" => $this->application->params->get("name"), "definitionId" => $defId)));
 			}
 		}break;
 		case "update":{
@@ -57,9 +57,9 @@ class site_cms_modules_base_Definitions extends site_cms_modules_base_Definition
 					while($_g1 < $_g) {
 						$i = $_g1++;
 						if($deleteList[$i] !== null) {
-							$defId2 = $this->app->getDb()->cnx->quote(Std::string($i));
-							$this->app->getDb()->delete("_definitions", "`id`=" . $defId2);
-							$this->app->getDb()->delete("_pages", "`definitionId`=" . $defId2);
+							$defId2 = $this->application->db->cnx->quote(Std::string($i));
+							$this->application->db->delete("_definitions", "`id`=" . $defId2);
+							$this->application->db->delete("_pages", "`definitionId`=" . $defId2);
 						}
 						unset($i,$defId2);
 					}
@@ -72,25 +72,25 @@ class site_cms_modules_base_Definitions extends site_cms_modules_base_Definition
 					$val = $_g12[$_g2];
 					++$_g2;
 					if($val !== null) {
-						$this->app->getDb()->update("_definitions", _hx_anonymous(array("order" => $val)), "`id`=" . $c);
+						$this->application->db->update("_definitions", _hx_anonymous(array("order" => $val)), "`id`=" . $c);
 					}
 					$c++;
 					unset($val);
 				}
 			}
 			$c = 0;
-			$result = $this->app->getDb()->request("SELECT `id` as 'id' from `_definitions` WHERE `isPage`='" . $this->pagesMode . "' ORDER BY `order`");
+			$result = $this->application->db->request("SELECT `id` as 'id' from `_definitions` WHERE `isPage`='" . $this->pagesMode . "' ORDER BY `order`");
 			$»it = $result->iterator();
 			while($»it->hasNext()) {
 			$item = $»it->next();
-			$this->app->getDb()->update("_definitions", _hx_anonymous(array("order" => ++$c)), "`id`='" . $item->id . "'");
+			$this->application->db->update("_definitions", _hx_anonymous(array("order" => ++$c)), "`id`='" . $item->id . "'");
 			}
 		}break;
 		case "define":{
-			$nextId2 = $this->app->getDb()->requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" . $this->pagesMode . "'")->order;
+			$nextId2 = $this->application->db->requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" . $this->pagesMode . "'")->order;
 			$nextId2++;
-			$name = $this->app->params->get("define");
-			$this->app->getDb()->insert("_definitions", _hx_anonymous(array("name" => $name, "table" => $name, "isPage" => false, "order" => $nextId2)));
+			$name = $this->application->params->get("define");
+			$this->application->db->insert("_definitions", _hx_anonymous(array("name" => $name, "table" => $name, "isPage" => false, "order" => $nextId2)));
 		}break;
 		}
 	}

@@ -6,28 +6,27 @@ class site_cms_modules_base_SiteView extends site_cms_modules_base_DatasetBase {
 		parent::__construct();
 	}}
 	public $jsBind;
-	public function init() {
-		parent::init();
+	public function pre() {
 		$this->head->js->add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		$this->head->css->add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
 		$this->siteMode = true;
-		$this->navigation->setSelected("SiteView");
 		$this->jsBind = new poko_js_JsBinding("site.cms.modules.base.js.JsSiteView");
+		parent::pre();
 	}
 	public function main() {
 		parent::main();
-		if(!$this->app->params->get("manage") || !$this->user->isAdmin()) {
+		if(!$this->application->params->get("manage") || !$this->application->user->isAdmin()) {
 			$str = "";
-			if($this->user->isAdmin() || $this->user->isSuper()) {
-				$str .= poko_views_renderers_Templo::parse("cms/modules/base/blocks/siteView.mtt", null);
+			if(poko_Application::$instance->user->isAdmin() || poko_Application::$instance->user->isSuper()) {
+				$str .= poko_ViewContext::parse("site/cms/modules/base/blocks/siteView.mtt", null);
 			}
 			$this->setContentOutput($str);
 		}
 		else {
-			if(_hx_equal($this->app->params->get("action"), "saveSiteView")) {
-				$d = $this->app->params->get("siteViewData");
-				$this->app->getDb()->update("_settings", _hx_anonymous(array("value" => $d)), "`key` ='siteView'");
-				$this->messages->addMessage("Menu updated.");
+			if(_hx_equal($this->application->params->get("action"), "saveSiteView")) {
+				$d = $this->application->params->get("siteViewData");
+				$this->application->db->update("_settings", _hx_anonymous(array("value" => $d)), "`key` ='siteView'");
+				$this->application->messages->addMessage("Menu updated.");
 			}
 		}
 		$this->setupLeftNav();

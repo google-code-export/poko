@@ -242,7 +242,7 @@ class poko_utils_ImageProcessor {
 		}
 		}
 		$stat = php_FileSystem::stat($this->fileName);
-		$s .= "&" . $stat->mtime . "&" . $stat->ctime . "&" . poko_utils_ImageProcessor::$revision . $this->quality;
+		$s .= "&" . $stat->mtime . "&" . $stat->ctime . "&" . poko_utils_ImageProcessor::$revision;
 		$hash = haxe_Md5::encode($s);
 		$this->dateModified = $stat->mtime;
 		return $hash;

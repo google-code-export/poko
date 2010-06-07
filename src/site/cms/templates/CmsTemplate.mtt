@@ -32,7 +32,7 @@
 			
 			<hr />
 
-			::if user.authenticated::
+			::if application.user.authenticated::
 			<ul id="headingUserBox">
 				<div id="headingUserBoxName">Hello <b>::userName::</b></div>
 				<div id="headingUserBoxLogout"><a href="?request=cms.Index&logout=true">logout</a></div>
@@ -45,40 +45,40 @@
 			
 		</div>
 
-		::if messages.getMessages().length > 0::
+		::if messages.length > 0::
 			<div class="messageBlock" id="messageMessages"><ul>
-				::foreach m messages.getMessages()::
+				::foreach m messages::
 					<li> ::raw m::</li>
 				::end::
 			</ul></div>
 		::end::
 		
-		::if messages.getWarnings().length > 0::
+		::if warnings.length > 0::
 			<div class="messageBlock" id="messageWarnings"><ul>
-				::foreach m messages.getWarnings()::
+				::foreach m warnings::
 					<li> ::raw m:: </li>
 				::end::
 			</ul></div>
 		::end::
 		
-		::if messages.getErrors().length > 0::
+		::if errors.length > 0::
 			<div class="messageBlock" id="messageErrors"><ul>
-				::foreach m messages.getErrors()::
+				::foreach m errors::
 					<li> ::raw m:: </li>
 				::end::
 			</ul></div>
 		::end::
 		
-		::if messages.getDebugs().length > 0::
+		::if debugs.length > 0::
 			<div class="messageBlock" id="messageDebugs"><ul>
-				::foreach m messages.getDebugs()::
+				::foreach m debugs::
 					<li> ::raw m:: </li>
 				::end::
 			</ul></div>
 		::end::			
 		
 		<div id="leftNavigation">::raw leftNavigation::</div>
-		<div id="content">::raw controller.view.render() ::</div>
+		<div id="content">::raw controller.getRequestContent()::</div>
 		
 		<div style="clear:both"></div>
 	</div>

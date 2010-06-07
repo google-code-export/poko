@@ -1,4 +1,4 @@
-FWORK 0.7 Release
+FWORK 0.5 Release
 ------------------
 
 There are two parts to the release:
@@ -7,30 +7,15 @@ There are two parts to the release:
 
 Poko is a mini-framework for hxphp websites found in src/poko. The framework is basically used to serve web requests. For example with the request "site.com?request=MyRequest" will search for a classfile named 'site.MyRequest' ('site' is appended to all requests).
 When a request is found (otherwise a 404 is called), events are called, notably main() will be called which should be the entry point for a page request.
-see touchmypixel.com for details.
-
-*Controllers
-Every Request must extend the poko.controllers.Controller class. 
-The HtmlController class is useful for requests which result in an XHTML page
-
-*Views 
-Controllers have a view property which defines how to display the request. Commonly the system searches for a file (.mtt or .php) in the same level 
-of heirachy as the controller, and uses that as the template. You can explicitly set the view.template if you wish.
-The content sent to the browser can be explicitly set via the view.setOutput or controller.setOutput
-The views context (variables sent into the template system) is automatically populated with properties of the controller
-
-*Make_Templates.n
-This is a neko app which recurses the site folder to find .mtt or .php templates and copy (of compile) them to the www/tpl folder
-
+see blog.touchmypixel.com for details.
 
 INSTALLATION 
 
 -install haxe 2.03 (haxe.org) 
--edit src/site/Config.hx  to setup databse
+-edit src/Main.hx  
+	change the db.connect(xxx) to connect to your MySql Database. 
 
-
-
-
+	
 ** POKO CMS **
 
 a flexible CMS build over poko framework
@@ -41,7 +26,7 @@ INSTALLATION
 -install haxe
 -install templo via typeing "haxelib install templo" at the command prompt
 - execute the 'poko 0.5.sql' on your database. 
-- set the database details in site/Config.hx
+- set the database details in src/Main.hx
 - compile
 - go to http://*yoursite*/*poko folder*/www - you can put 'cms' after this to be direct staight to the cms
 - login using:

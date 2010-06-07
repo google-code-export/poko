@@ -15,7 +15,7 @@ class JsGallery extends JsRequest
 	
 	override public function main()
 	{
-		gallery = app.params.get("name");
+		gallery = application.params.get("name");
 		
 		untyped new JQuery('#uploadify').uploadify({
 			uploader  : 'res/cms/media/uploadify.swf',

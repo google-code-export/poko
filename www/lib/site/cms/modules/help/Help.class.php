@@ -7,18 +7,18 @@ class site_cms_modules_help_Help extends site_cms_templates_CmsTemplate {
 	public function main() {
 		$topics = new Hash();
 		$developerTopics = new Hash();
-		if($this->user->isAdmin()) {
+		if($this->application->user->isAdmin()) {
 			$topics->set("manager_home", "Introduction");
 			$topics->set("manager_about_users", "About Users");
 		}
 		else {
-			if(!$this->user->isAdmin() && !$this->user->isSuper()) {
+			if(!$this->application->user->isAdmin() && !$this->application->user->isSuper()) {
 				$topics->set("user_home", "Introduction");
 			}
 		}
 		$topics->set("user_pages", "About Pages");
 		$topics->set("user_data", "About Data");
-		if($this->user->isSuper()) {
+		if($this->application->user->isSuper()) {
 			$developerTopics->set("developer_home", "Introduction");
 			$developerTopics->set("developer_basicConcepts", "Basic Concepts");
 			$developerTopics->set("developer_gettingStarted", "Getting started");
@@ -39,13 +39,13 @@ class site_cms_modules_help_Help extends site_cms_templates_CmsTemplate {
 		$key2 = $»it2->next();
 		$this->leftNavigation->addLink("Developer", $developerTopics->get($key2), "cms.modules.help.Help&topic=" . $key2, null, null);
 		}
-		$topic = $this->app->params->get("topic");
+		$topic = $this->application->params->get("topic");
 		if($topic === null) {
-			if($this->user->isSuper()) {
+			if($this->application->user->isSuper()) {
 				$topic = "developer_home";
 			}
 			else {
-				if($this->user->isAdmin()) {
+				if($this->application->user->isAdmin()) {
 					$topic = "manager_home";
 				}
 				else {
@@ -53,7 +53,7 @@ class site_cms_modules_help_Help extends site_cms_templates_CmsTemplate {
 				}
 			}
 		}
-		$this->view->setOutput("<div class=\"helpWrapper\">" . poko_views_renderers_Templo::parse("cms/modules/help/blocks/" . $topic . ".mtt", null) . "</div>");
+		$this->setContentOutput("<div class=\"helpWrapper\">" . poko_ViewContext::parse("site/cms/modules/help/blocks/" . $topic . ".mtt", null) . "</div>");
 	}
 	function __toString() { return 'site.cms.modules.help.Help'; }
 }

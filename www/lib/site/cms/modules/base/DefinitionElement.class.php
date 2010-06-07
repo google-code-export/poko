@@ -16,15 +16,16 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 	public $meta;
 	public $typeSelector;
 	public $jsBind;
-	public function init() {
-		parent::init();
+	public function pre() {
+		parent::pre();
 		$this->head->js->add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		$this->head->css->add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
 		$this->jsBind = new poko_js_JsBinding("site.cms.modules.base.js.JsDefinitionElement");
-		$this->remoting->addObject("api", _hx_anonymous(array("getListData" => isset($this->getListData) ? $this->getListData: array($this, "getListData"), "getListData2" => isset($this->getListData2) ? $this->getListData2: array($this, "getListData2"))), null);
+		$this->remoting->addObject("api", _hx_anonymous(array("getListData" => isset($this->getListData) ? $this->getListData: array($this, "getListData"))), null);
+		$this->remoting->addObject("api", _hx_anonymous(array("getListData2" => isset($this->getListData2) ? $this->getListData2: array($this, "getListData2"))), null);
 	}
 	public function getListData($table) {
-		$result = $this->app->getDb()->request("SHOW FIELDS FROM `" . $table . "`");
+		$result = $this->application->db->request("SHOW FIELDS FROM `" . $table . "`");
 		$arr = new _hx_array(array());
 		$»it = $result->iterator();
 		while($»it->hasNext()) {
@@ -35,7 +36,7 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 	}
 	public function getListData2($table, $table2) {
 		$out = new _hx_array(array());
-		$result = $this->app->getDb()->request("SHOW FIELDS FROM `" . $table . "`");
+		$result = $this->application->db->request("SHOW FIELDS FROM `" . $table . "`");
 		$arr = new _hx_array(array());
 		$»it = $result->iterator();
 		while($»it->hasNext()) {
@@ -43,7 +44,7 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		$arr->push($item->Field);
 		}
 		$out->push($arr);
-		$result = $this->app->getDb()->request("SHOW FIELDS FROM `" . $table2 . "`");
+		$result = $this->application->db->request("SHOW FIELDS FROM `" . $table2 . "`");
 		$arr = new _hx_array(array());
 		$»it2 = $result->iterator();
 		while($»it2->hasNext()) {
@@ -55,16 +56,16 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 	}
 	public function main() {
 		parent::main();
-		$this->definition = new site_cms_common_Definition($this->app->params->get("id"));
-		$this->meta = $this->definition->getElement($this->app->params->get("definition"));
+		$this->definition = new site_cms_common_Definition($this->application->params->get("id"));
+		$this->meta = $this->definition->getElement($this->application->params->get("definition"));
 		$this->setupForm();
 		if($this->form->isSubmitted()) {
 			$this->update();
 			if($this->pagesMode) {
-				php_Web::redirect("?request=cms.modules.base.Definition&id=" . $this->app->params->get("id") . "&pagesMode=true");
+				php_Web::redirect("?request=cms.modules.base.Definition&id=" . $this->application->params->get("id") . "&pagesMode=true");
 			}
 			else {
-				php_Web::redirect("?request=cms.modules.base.Definition&id=" . $this->app->params->get("id"));
+				php_Web::redirect("?request=cms.modules.base.Definition&id=" . $this->application->params->get("id"));
 			}
 		}
 		$this->setupForm();
@@ -93,14 +94,6 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		$imagefile = new HList();
 		$imagefile->add(_hx_anonymous(array("key" => "Image", "value" => "1")));
 		$imagefile->add(_hx_anonymous(array("key" => "File", "value" => "0")));
-		$uploadTypeList = new HList();
-		$uploadTypeList->add(_hx_anonymous(array("key" => "Both", "value" => "0")));
-		$uploadTypeList->add(_hx_anonymous(array("key" => "Upload", "value" => "1")));
-		$uploadTypeList->add(_hx_anonymous(array("key" => "Media Library", "value" => "2")));
-		$libraryView = new HList();
-		$libraryView->add(_hx_anonymous(array("key" => "Both", "value" => "0")));
-		$libraryView->add(_hx_anonymous(array("key" => "Thumbs", "value" => "1")));
-		$libraryView->add(_hx_anonymous(array("key" => "List", "value" => "2")));
 		$dataType = new HList();
 		$dataType->add(_hx_anonymous(array("key" => "VARCHAR", "value" => "varchar")));
 		$dataType->add(_hx_anonymous(array("key" => "TEXT", "value" => "text")));
@@ -109,15 +102,15 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		$dataType->add(_hx_anonymous(array("key" => "FLOAT", "value" => "float")));
 		$dataType->add(_hx_anonymous(array("key" => "DOUBLE", "value" => "double")));
 		$tableList = site_cms_common_Tools::getDBTables();
-		$tableList = Lambda::map($tableList, array(new _hx_lambda(array("data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "imagefile" => &$imagefile, "libraryView" => &$libraryView, "tableList" => &$tableList, "truefalse" => &$truefalse, "uploadTypeList" => &$uploadTypeList, "yesno" => &$yesno), null, array('table'), "{
+		$tableList = Lambda::map($tableList, array(new _hx_lambda(array("data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "imagefile" => &$imagefile, "tableList" => &$tableList, "truefalse" => &$truefalse, "yesno" => &$yesno), null, array('table'), "{
 			return _hx_anonymous(array(\"key\" => \$table, \"value\" => \$table));
 		}"), 'execute1'));
 		$selectedAssocTable = $data->table;
 		$assocFields = null;
 		if($selectedAssocTable !== null) {
 			try {
-				$assocFields = $this->app->getDb()->request("SHOW FIELDS FROM `" . $selectedAssocTable . "`");
-				$assocFields = Lambda::map($assocFields, array(new _hx_lambda(array("assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "imagefile" => &$imagefile, "libraryView" => &$libraryView, "selectedAssocTable" => &$selectedAssocTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "uploadTypeList" => &$uploadTypeList, "yesno" => &$yesno), null, array('field'), "{
+				$assocFields = $this->application->db->request("SHOW FIELDS FROM `" . $selectedAssocTable . "`");
+				$assocFields = Lambda::map($assocFields, array(new _hx_lambda(array("assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "imagefile" => &$imagefile, "selectedAssocTable" => &$selectedAssocTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "yesno" => &$yesno), null, array('field'), "{
 					return _hx_anonymous(array(\"key\" => \$field->Field, \"value\" => \$field->Field));
 				}"), 'execute1'));
 			}catch(Exception $»e) {
@@ -130,8 +123,8 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		}
 		$localFields = null;
 		try {
-			$localFields = $this->app->getDb()->request("SHOW FIELDS FROM `" . $this->definition->table . "`");
-			$localFields = Lambda::map($localFields, array(new _hx_lambda(array("_ex_" => &$_ex_, "assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "e" => &$e, "imagefile" => &$imagefile, "libraryView" => &$libraryView, "localFields" => &$localFields, "selectedAssocTable" => &$selectedAssocTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "uploadTypeList" => &$uploadTypeList, "yesno" => &$yesno, "»e" => &$»e), null, array('field'), "{
+			$localFields = $this->application->db->request("SHOW FIELDS FROM `" . $this->definition->table . "`");
+			$localFields = Lambda::map($localFields, array(new _hx_lambda(array("_ex_" => &$_ex_, "assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "e" => &$e, "imagefile" => &$imagefile, "localFields" => &$localFields, "selectedAssocTable" => &$selectedAssocTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "yesno" => &$yesno, "»e" => &$»e), null, array('field'), "{
 				return _hx_anonymous(array(\"key\" => \$field->Field, \"value\" => \$field->Field));
 			}"), 'execute1'));
 		}catch(Exception $»e2) {
@@ -145,8 +138,8 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		$multiFields = null;
 		if($selectedMultiTable !== null) {
 			try {
-				$multiFields = $this->app->getDb()->request("SHOW FIELDS FROM `" . $selectedMultiTable . "`");
-				$multiFields = Lambda::map($multiFields, array(new _hx_lambda(array("_ex_" => &$_ex_, "_ex_2" => &$_ex_2, "assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "e" => &$e, "e2" => &$e2, "imagefile" => &$imagefile, "libraryView" => &$libraryView, "localFields" => &$localFields, "multiFields" => &$multiFields, "selectedAssocTable" => &$selectedAssocTable, "selectedMultiTable" => &$selectedMultiTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "uploadTypeList" => &$uploadTypeList, "yesno" => &$yesno, "»e" => &$»e, "»e2" => &$»e2), null, array('field'), "{
+				$multiFields = $this->application->db->request("SHOW FIELDS FROM `" . $selectedMultiTable . "`");
+				$multiFields = Lambda::map($multiFields, array(new _hx_lambda(array("_ex_" => &$_ex_, "_ex_2" => &$_ex_2, "assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "e" => &$e, "e2" => &$e2, "imagefile" => &$imagefile, "localFields" => &$localFields, "multiFields" => &$multiFields, "selectedAssocTable" => &$selectedAssocTable, "selectedMultiTable" => &$selectedMultiTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "yesno" => &$yesno, "»e" => &$»e, "»e2" => &$»e2), null, array('field'), "{
 					return _hx_anonymous(array(\"key\" => \$field->Field, \"value\" => \$field->Field));
 				}"), 'execute1'));
 			}catch(Exception $»e3) {
@@ -161,8 +154,8 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		$multiLinkFields = null;
 		if($selectedMultilinkTable !== null) {
 			try {
-				$multiLinkFields = $this->app->getDb()->request("SHOW FIELDS FROM `" . $selectedMultilinkTable . "`");
-				$multiLinkFields = Lambda::map($multiLinkFields, array(new _hx_lambda(array("_ex_" => &$_ex_, "_ex_2" => &$_ex_2, "_ex_3" => &$_ex_3, "assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "e" => &$e, "e2" => &$e2, "e3" => &$e3, "imagefile" => &$imagefile, "libraryView" => &$libraryView, "localFields" => &$localFields, "multiFields" => &$multiFields, "multiLinkFields" => &$multiLinkFields, "selectedAssocTable" => &$selectedAssocTable, "selectedMultiTable" => &$selectedMultiTable, "selectedMultilinkTable" => &$selectedMultilinkTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "uploadTypeList" => &$uploadTypeList, "yesno" => &$yesno, "»e" => &$»e, "»e2" => &$»e2, "»e3" => &$»e3), null, array('field'), "{
+				$multiLinkFields = $this->application->db->request("SHOW FIELDS FROM `" . $selectedMultilinkTable . "`");
+				$multiLinkFields = Lambda::map($multiLinkFields, array(new _hx_lambda(array("_ex_" => &$_ex_, "_ex_2" => &$_ex_2, "_ex_3" => &$_ex_3, "assocFields" => &$assocFields, "data" => &$data, "dataType" => &$dataType, "datatypes" => &$datatypes, "e" => &$e, "e2" => &$e2, "e3" => &$e3, "imagefile" => &$imagefile, "localFields" => &$localFields, "multiFields" => &$multiFields, "multiLinkFields" => &$multiLinkFields, "selectedAssocTable" => &$selectedAssocTable, "selectedMultiTable" => &$selectedMultiTable, "selectedMultilinkTable" => &$selectedMultilinkTable, "tableList" => &$tableList, "truefalse" => &$truefalse, "yesno" => &$yesno, "»e" => &$»e, "»e2" => &$»e2, "»e3" => &$»e3), null, array('field'), "{
 					return _hx_anonymous(array(\"key\" => \$field->Field, \"value\" => \$field->Field));
 				}"), 'execute1'));
 			}catch(Exception $»e4) {
@@ -226,10 +219,6 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		$this->form->addElement(new poko_form_elements_RadioGroup("def_image-file_extMode", "Ext Mode", $charsModeOptions, $data->extMode, "ALLOW", false, null), "properties");
 		$this->form->addElement(new poko_form_elements_Input("def_image-file_minSize", "Min size (Kb)", $data->minSize, false, null, null), "properties");
 		$this->form->addElement(new poko_form_elements_Input("def_image-file_maxSize", "Max size (Kb)", $data->maxSize, false, null, null), "properties");
-		$this->form->addElement(new poko_form_elements_RadioGroup("def_image-file_uploadType", "Location", $uploadTypeList, $data->uploadType, "0", false, null), "properties");
-		$this->form->addElement(new poko_form_elements_Input("def_image-file_showOnlyLibraries", "Only Libraries", $data->showOnlyLibraries, false, null, null), "properties");
-		$this->form->addElement(new poko_form_elements_RadioGroup("def_image-file_libraryView", "Library View", $libraryView, $data->libraryView, "0", false, null), "properties");
-		$this->form->addElement(new poko_form_elements_RadioGroup("def_date_currentOnAdd", "Current date on add?", $yesno, $data->currentOnAdd, "0", false, null), "properties");
 		$this->form->addElement(new poko_form_elements_RadioGroup("def_date_restrictMin", "Restrict Min", $yesno, $data->restrictMin, "0", false, null), "properties");
 		$this->form->addElement(new poko_form_elements_Input("def_date_minOffset", "Min Offset (-months)", $data->minOffset, false, null, null), "properties");
 		$this->form->addElement(new poko_form_elements_RadioGroup("def_date_restrictMax", "Restrict Max", $yesno, $data->restrictMax, "0", false, null), "properties");
@@ -248,23 +237,6 @@ class site_cms_modules_base_DefinitionElement extends site_cms_modules_base_Defi
 		$this->form->addElement(new poko_form_elements_Input("def_richtext-wym_width", "Width", $data->width, null, null, null), "properties");
 		$this->form->addElement(new poko_form_elements_Input("def_richtext-wym_height", "Height", $data->height, null, null, null), "properties");
 		$this->form->addElement(new poko_form_elements_RadioGroup("def_richtext-wym_required", "Required", $yesno, $data->required, "0", false, null), "properties");
-		$this->form->addElement(new poko_form_elements_RadioGroup("def_richtext-wym_allowTables", "Allow Tables", $yesno, $data->allowTables, "0", false, null), "properties");
-		$this->form->addElement(new poko_form_elements_RadioGroup("def_richtext-wym_allowImages", "Allow Images", $yesno, $data->allowImages, "1", false, null), "properties");
-		$t = new poko_form_elements_TextArea("def_richtext-wym_editorStyles", "Editor Styles", $data->editorStyles, false, null, null);
-		$t->width = 500;
-		$t->height = 200;
-		$t->useSizeValues = true;
-		$this->form->addElement($t, "properties");
-		$t = new poko_form_elements_TextArea("def_richtext-wym_containersItems", "Containers", $data->containersItems, false, null, null);
-		$t->width = 500;
-		$t->height = 200;
-		$t->useSizeValues = true;
-		$this->form->addElement($t, "properties");
-		$t = new poko_form_elements_TextArea("def_richtext-wym_classesItems", "Classes", $data->classesItems, false, null, null);
-		$t->width = 500;
-		$t->height = 200;
-		$t->useSizeValues = true;
-		$this->form->addElement($t, "properties");
 		$this->form->addElement(new poko_form_elements_Input("def_keyvalue_minRows", "Min Rows", $data->minRows, null, null, null), "properties");
 		$this->form->addElement(new poko_form_elements_Input("def_keyvalue_maxRows", "Max Rows", $data->maxRows, null, null, null), "properties");
 		$this->form->addFieldset("key", new poko_form_FieldSet("def_keyvalue_keyFieldset", "Key", null));

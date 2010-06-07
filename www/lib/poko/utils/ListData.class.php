@@ -18,13 +18,18 @@ class poko_utils_ListData {
 		}
 		return ($data);
 	}
-	static $months_short;
-	static $months;
 	static function getMonths($short) {
 		if($short === null) {
 			$short = false;
 		}
-		return ($short ? poko_utils_ListData::arrayToList(poko_utils_ListData::$months_short, 1) : poko_utils_ListData::arrayToList(poko_utils_ListData::$months, 1));
+		$data = new HList();
+		if($short) {
+			$data = poko_utils_ListData::arrayToList(new _hx_array(array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")), 1);
+		}
+		else {
+			$data = poko_utils_ListData::arrayToList(new _hx_array(array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")), 1);
+		}
+		return ($data);
 	}
 	static function getYears($from, $to, $reverse) {
 		if($reverse === null) {
@@ -103,5 +108,3 @@ class poko_utils_ListData {
 	}
 	function __toString() { return 'poko.utils.ListData'; }
 }
-poko_utils_ListData::$months_short = new _hx_array(array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
-poko_utils_ListData::$months = new _hx_array(array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"));

@@ -27,13 +27,13 @@
 
 package site.cms.modules.base;
 
-import poko.Poko;
+import poko.Application;
 import poko.form.elements.Button;
 import poko.form.elements.Input;
 import poko.form.elements.Selectbox;
 import poko.form.Form;
 import poko.form.FormElement;
-import poko.controllers.HtmlController;
+import poko.Request;
 import site.cms.templates.CmsTemplate;
 import site.cms.modules.base.Datasets;
 
@@ -49,9 +49,9 @@ class DatasetsLink extends DatasetBase
 	
 	override public function main()
 	{	
-		tableName= app.params.get("tableName");
+		tableName= application.params.get("tableName");
 		
-		var info = app.db.requestSingle("SELECT t.*, d.`name` as 'definitionName' FROM `_datalink` t, `_definitions` d WHERE t.definitionId=d.id AND t.`tableName`=\"" + tableName + "\"");
+		var info = application.db.requestSingle("SELECT t.*, d.`name` as 'definitionName' FROM `_datalink` t, `_definitions` d WHERE t.definitionId=d.id AND t.`tableName`=\"" + tableName + "\"");
 			
 		// Setup form
 		form1= new Form("form1");
@@ -66,7 +66,7 @@ class DatasetsLink extends DatasetBase
 		
 		// fill in form data
 		var definitionsSelctor = form1.getElementTyped("definitionId", Selectbox);
-		definitionsSelctor.data = app.db.request("SELECT `name` as 'key', `id` as 'value' FROM _definitions WHERE isPage='0'");
+		definitionsSelctor.data = application.db.request("SELECT `name` as 'key', `id` as 'value' FROM _definitions WHERE isPage='0'");
 		
 		var indentSelctor = form1.getElementTyped("indents", Selectbox);
 		indentSelctor.addOption( { key:1, value:1 } );
@@ -79,11 +79,11 @@ class DatasetsLink extends DatasetBase
 	
 	private function process():Void
 	{
-		app.db.update("_datalink", form1.getData(), "`tableName`='" + tableName + "'");
+		application.db.update("_datalink", form1.getData(), "`tableName`='" + tableName + "'");
 		
-		messages.addMessage("DataLink '" + tableName + "' has been updated");
+		application.messages.addMessage("DataLink '" + tableName + "' has been updated");
 		
-		app.redirect("?request=cms.modules.base.Datasets&manage=true");
+		application.redirect("?request=cms.modules.base.Datasets&manage=true");
 	}
 	
 }

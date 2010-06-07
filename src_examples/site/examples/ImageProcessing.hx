@@ -26,11 +26,9 @@
  */ 
 
 package site.examples;
+import poko.Request;
 import site.cms.common.PageData;
 import site.examples.templates.DefaultTemplate;
-
-/* Force import of services.Image */
-import site.services.Image;
 
 class ImageProcessing extends DefaultTemplate
 {

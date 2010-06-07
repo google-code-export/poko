@@ -27,7 +27,7 @@
 
 package site.cms.common;
 
-import poko.Poko;
+import poko.Application;
 import haxe.Serializer;
 import haxe.Unserializer;
 
@@ -118,7 +118,7 @@ class Definition
 	
 	public function load()
 	{
-		var results = Poko.instance.db.requestSingle("SELECT * FROM `_definitions` WHERE `id`=\"" + id + "\"");
+		var results = Application.instance.db.requestSingle("SELECT * FROM `_definitions` WHERE `id`=\"" + id + "\"");
 		
 		if (results == null)
 			throw("failed to load definition: " + id);
@@ -141,14 +141,11 @@ class Definition
 		
 		autoOrderingField = "";
 		autoOrderingOrder = "ASC";
-		
-		
 		var autoOrdering:Array<String> = results.autoOrdering.split("|");
 		if (autoOrdering.length == 2) {
 			autoOrderingField = autoOrdering[0];
 			autoOrderingOrder = autoOrdering[1];
 		}
-
 		
 		try{
 			elements = Unserializer.run(results.elements);
@@ -184,12 +181,12 @@ class Definition
 		
 		data.autoOrdering = autoOrderingField + "|" + autoOrderingOrder;
 		
-		Poko.instance.db.update("_definitions", data, "`id`=\"" + id + "\"" );
+		Application.instance.db.update("_definitions", data, "`id`=\"" + id + "\"" );
 	}
 	
 	public static function tableToDefinitionId(table:String)
 	{
-		var res:Dynamic = Poko.instance.db.requestSingle("SELECT `id` FROM `_definitions` WHERE `table`='" + table + "'");
+		var res:Dynamic = Application.instance.db.requestSingle("SELECT `id` FROM `_definitions` WHERE `table`='" + table + "'");
 		return res.id;
 	}
 }

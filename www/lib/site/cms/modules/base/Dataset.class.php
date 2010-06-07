@@ -26,10 +26,10 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 	public $currentFilterSettings;
 	public $autoFilterValue;
 	public $autoFilterByAssocValue;
-	public function init() {
-		parent::init();
+	public function pre() {
+		parent::pre();
 		$this->head->js->add("js/cms/jquery.qtip.min.js");
-		$this->dataset = Std::parseInt($this->app->params->get("dataset"));
+		$this->dataset = Std::parseInt($this->application->params->get("dataset"));
 		$this->definition = new site_cms_common_Definition($this->dataset);
 		$this->table = $this->definition->table;
 		$this->label = $this->definition->name;
@@ -38,7 +38,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 		$this->remoting->addObject("api", _hx_anonymous(array("getFilterInfo" => isset($this->getFilterInfo) ? $this->getFilterInfo: array($this, "getFilterInfo"))), null);
 		if($this->linkMode) {
 			$this->head->css->add("css/cms/miniView.css");
-			$this->layoutView->template = "cms/templates/CmsTemplate_mini.mtt";
+			$this->template_file = "site/cms/templates/CmsTemplate_mini.mtt";
 		}
 	}
 	public function getFilterInfo($field) {
@@ -57,9 +57,9 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 		$this->orderField = $this->getOrderField();
 		$this->isOrderingEnabled = $this->orderField !== null;
 		$this->fields = $this->getFieldMatches();
-		$primaryData = $this->app->getDb()->request("SHOW COLUMNS FROM `" . $this->table . "` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
+		$primaryData = $this->application->db->request("SHOW COLUMNS FROM `" . $this->table . "` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 		if($primaryData->length < 1) {
-			$this->messages->addError("<b>'" . $this->table . "'</b> does not have a field set as both: <b>auto_increment</b> AND <b>primary key</b>");
+			$this->application->messages->addError("<b>'" . $this->table . "'</b> does not have a field set as both: <b>auto_increment</b> AND <b>primary key</b>");
 			$this->setupLeftNav();
 			$this->setContentOutput("cannot display dataset");
 			return;
@@ -68,7 +68,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 			$field = $primaryData->pop()->Field;
 			$this->definition->primaryKey = $field;
 		}
-		if($this->app->params->get("action")) {
+		if($this->application->params->get("action")) {
 			$this->process();
 		}
 		$this->getAssociationExtras();
@@ -85,16 +85,16 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 		$sql .= "FROM `" . $this->table . "` ";
 		$hasWhere = false;
 		$this->currentFilterSettings = site_cms_modules_base_FilterSettings::get($this->table);
-		if(_hx_equal($this->app->params->get("resetState"), "true") || $this->optionsForm->isSubmitted()) {
+		if(_hx_equal($this->application->params->get("resetState"), "true") || $this->optionsForm->isSubmitted()) {
 			$this->currentFilterSettings->clear();
 		}
 		$filterByValue = $this->optionsForm->getElement("filterBy")->value;
 		$filterByAssocValue = $this->optionsForm->getElement("filterByAssoc")->value;
 		$filterByOperatorValue = $this->optionsForm->getElement("filterByOperator")->value;
 		$filterByValueValue = $this->optionsForm->getElement("filterByValue")->value;
-		$this->autoFilterValue = (!_hx_equal($this->app->params->get("autofilterBy"), "") ? $this->app->params->get("autofilterBy") : null);
-		$this->autoFilterByAssocValue = (!_hx_equal($this->app->params->get("autofilterByAssoc"), "") ? $this->app->params->get("autofilterByAssoc") : null);
-		if($this->autoFilterValue !== null && $this->autoFilterByAssocValue !== null && $this->optionsForm->isSubmitted()) {
+		$this->autoFilterValue = (!_hx_equal($this->application->params->get("autofilterBy"), "") ? $this->application->params->get("autofilterBy") : null);
+		$this->autoFilterByAssocValue = (!_hx_equal($this->application->params->get("autofilterByAssoc"), "") ? $this->application->params->get("autofilterByAssoc") : null);
+		if($this->autoFilterValue !== null && $this->autoFilterByAssocValue !== null && !$this->optionsForm->isSubmitted()) {
 			$this->currentFilterSettings->enabled = false;
 			$sql .= "WHERE `" . $this->autoFilterValue . "`='" . $this->autoFilterByAssocValue . "' ";
 			$hasWhere = true;
@@ -121,16 +121,15 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 					$op = ($filterByOperatorValue == "~" ? "LIKE" : $filterByOperatorValue);
 					$val = ($filterByOperatorValue == "~" ? "%" . $filterByValueValue . "%" : $filterByValueValue);
 					$sql .= "WHERE `" . $filterByValue . "` " . $op . " '" . $val . "' ";
-					haxe_Log::trace($filterByValue . " " . $op . " " . $val, _hx_anonymous(array("fileName" => "Dataset.hx", "lineNumber" => 231, "className" => "site.cms.modules.base.Dataset", "methodName" => "main")));
 					$hasWhere = true;
 				}
 			}
 		}
 		if($this->linkMode) {
-			$this->linkToField = $this->app->params->get("linkToField");
-			$this->linkTo = $this->app->params->get("linkTo");
-			$this->linkValueField = $this->app->params->get("linkValueField");
-			$this->linkValue = Std::parseInt($this->app->params->get("linkValue"));
+			$this->linkToField = $this->application->params->get("linkToField");
+			$this->linkTo = $this->application->params->get("linkTo");
+			$this->linkValueField = $this->application->params->get("linkValueField");
+			$this->linkValue = Std::parseInt($this->application->params->get("linkValue"));
 			if(!$hasWhere) {
 				$sql .= " WHERE ";
 			}
@@ -156,12 +155,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 				$sql .= "ORDER BY `" . $orderByValue . "` " . $orderByDirectionValue;
 			}
 			else {
-				if($this->definition->autoOrderingField != "" && $this->definition->autoOrderingField !== null) {
-					$sql .= "ORDER BY `" . $this->definition->autoOrderingField . "` " . $this->definition->autoOrderingOrder;
-				}
-				else {
-					$sql .= "ORDER BY `" . $this->definition->primaryKey . "`";
-				}
+				$sql .= "ORDER BY `" . $this->definition->primaryKey . "`";
 			}
 		}
 		if($this->optionsForm->isSubmitted() && !_hx_equal($this->optionsForm->getElement("reset")->value, "true")) {
@@ -174,16 +168,16 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 			$this->currentFilterSettings->orderByDirection = $orderByDirectionValue;
 			$this->currentFilterSettings->save();
 		}
-		$this->data = $this->app->getDb()->request($sql);
+		$this->data = $this->application->db->request($sql);
 		$this->setupLeftNav();
 	}
 	public function process() {
-		if(_hx_equal($this->app->params->get("action"), "duplicate")) {
-			$id = $this->app->params->get("id");
+		if(_hx_equal($this->application->params->get("action"), "duplicate")) {
+			$id = $this->application->params->get("id");
 			if($id === null || _hx_equal($id, "")) {
 				return;
 			}
-			$data = $this->app->getDb()->requestSingle("SELECT * FROM `" . $this->table . "` WHERE " . $this->definition->primaryKey . "=" . $this->app->getDb()->cnx->quote(Std::string($id)));
+			$data = $this->application->db->requestSingle("SELECT * FROM `" . $this->table . "` WHERE " . $this->definition->primaryKey . "=" . $this->application->db->cnx->quote(Std::string($id)));
 			{
 				$_g = 0; $_g1 = $this->definition->elements;
 				while($_g < $_g1->length) {
@@ -200,7 +194,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 					unset($value,$prefix,$element);
 				}
 			}
-			$tableInfo = $this->app->getDb()->request("SHOW FIELDS FROM `" . $this->table . "`");
+			$tableInfo = $this->application->db->request("SHOW FIELDS FROM `" . $this->table . "`");
 			$pField = _hx_anonymous(array());
 			$»it = $tableInfo->iterator();
 			while($»it->hasNext()) {
@@ -217,12 +211,12 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 				Reflect::deleteField($data, $this->definition->primaryKey);
 			}
 			else {
-				$this->messages->addError("Duplicate only works on datasets with primary keys that are auto-increment ints.");
+				$this->application->messages->addError("Duplicate only works on datasets with primary keys that are auto-increment ints.");
 				return;
 			}
-			$this->app->getDb()->insert($this->table, $data);
-			$insertedId = $this->app->getDb()->cnx->lastInsertId();
-			if($this->app->getDb()->lastAffectedRows > 0) {
+			$this->application->db->insert($this->table, $data);
+			$insertedId = $this->application->db->cnx->lastInsertId();
+			if($this->application->db->lastAffectedRows > 0) {
 				$element2 = null;
 				{
 					$_g2 = 0; $_g12 = $this->definition->elements;
@@ -232,13 +226,13 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 						switch($element1->type) {
 						case "multilink":{
 							$p = $element1->properties;
-							$result = $this->app->getDb()->request("SELECT `" . $p->linkField1 . "`, `" . $p->linkField2 . "` FROM `" . $p->link . "` WHERE `" . $p->linkField1 . "`=" . $this->app->getDb()->cnx->quote(Std::string($id)));
+							$result = $this->application->db->request("SELECT `" . $p->linkField1 . "`, `" . $p->linkField2 . "` FROM `" . $p->link . "` WHERE `" . $p->linkField1 . "`=" . $this->application->db->cnx->quote(Std::string($id)));
 							$»it2 = $result->iterator();
 							while($»it2->hasNext()) {
 							$o = $»it2->next();
 							{
 								$o->{$p->linkField1} = $insertedId;
-								$this->app->getDb()->insert($p->link, $o);
+								$this->application->db->insert($p->link, $o);
 								;
 							}
 							}
@@ -251,19 +245,19 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 				$url .= "&dataset=" . $this->dataset;
 				$url .= "&id=" . $insertedId;
 				$url .= "&linkMode=" . (($this->linkMode ? "true" : "false"));
-				$url .= "&linkToField=" . $this->app->params->get("linkToField");
-				$url .= "&linkTo=" . $this->app->params->get("linkTo");
-				$url .= "&linkValueField=" . $this->app->params->get("linkValueField");
-				$url .= "&linkValue=" . $this->app->params->get("linkValue");
-				$url .= "&autofilterByAssoc=" . $this->app->params->get("autofilterByAssoc");
-				$url .= "&autofilterBy=" . $this->app->params->get("autofilterBy");
+				$url .= "&linkToField=" . $this->application->params->get("linkToField");
+				$url .= "&linkTo=" . $this->application->params->get("linkTo");
+				$url .= "&linkValueField=" . $this->application->params->get("linkValueField");
+				$url .= "&linkValue=" . $this->application->params->get("linkValue");
+				$url .= "&autofilterByAssoc=" . $this->application->params->get("autofilterByAssoc");
+				$url .= "&autofilterBy=" . $this->application->params->get("autofilterBy");
 				if($this->siteMode) {
 					$url .= "&siteMode=true";
 				}
-				$this->app->redirect($url);
+				$this->application->redirect($url);
 			}
 			else {
-				$this->messages->addError("Error duplicating item.");
+				$this->application->messages->addError("Error duplicating item.");
 			}
 		}
 		else {
@@ -271,11 +265,11 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 				$runSqlPerRow = false;
 				if(_hx_index_of($this->definition->postDeleteSql, "#", null) !== -1) {
 					$runSqlPerRow = true;
-					$this->messages->addDebug("Post-delete SQL running per row");
+					$this->application->messages->addDebug("Post-delete SQL running per row");
 				}
 				else {
 					if($this->definition->postDeleteSql !== null && $this->definition->postDeleteSql != "") {
-						$this->app->getDb()->request($this->definition->postDeleteSql);
+						$this->application->db->request($this->definition->postDeleteSql);
 					}
 				}
 				$numDeleted = 0;
@@ -296,19 +290,19 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 						}
 						$tData = new HList();
 						if($runSqlPerRow || $postProcedure !== null) {
-							$tData = $this->app->getDb()->requestSingle("SELECT * FROM `" . $this->table . "` WHERE `" . $this->definition->primaryKey . "`='" . $delId . "'");
+							$tData = $this->application->db->requestSingle("SELECT * FROM `" . $this->table . "` WHERE `" . $this->definition->primaryKey . "`='" . $delId . "'");
 						}
 						try {
-							$this->app->getDb()->delete($this->table, "`" . $this->definition->primaryKey . "`='" . $delId . "'");
+							$this->application->db->delete($this->table, "`" . $this->definition->primaryKey . "`='" . $delId . "'");
 							$numDeleted++;
 						}catch(Exception $»e) {
 						$_ex_ = ($»e instanceof HException) ? $»e->e : $»e;
 						;
 						{ $e = $_ex_;
 						{
-							$this->messages->addError("There was a problem deleting your data.");
+							$this->application->messages->addError("There was a problem deleting your data.");
 							if($runSqlPerRow) {
-								$this->messages->addWarning("Post-delete SQL not run as delete run completed.");
+								$this->application->messages->addWarning("Post-delete SQL not run as delete run completed.");
 							}
 							$runSqlPerRow = false;
 						}}}
@@ -324,13 +318,13 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 								}
 							}
 							try {
-								$this->app->getDb()->request($tSql);
+								$this->application->db->request($tSql);
 							}catch(Exception $»e2) {
 							$_ex_2 = ($»e2 instanceof HException) ? $»e2->e : $»e2;
 							;
 							{ $e2 = $_ex_2;
 							{
-								$this->messages->addError("Post-delete SQL had problems: " . $tSql);
+								$this->application->messages->addError("Post-delete SQL had problems: " . $tSql);
 							}}}
 						}
 						if($postProcedure !== null) {
@@ -339,7 +333,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 						unset($»e2,$»e,$tSql,$tField,$tData,$postProcedure,$e2,$e,$delId,$c,$_g32,$_g22,$_ex_2,$_ex_);
 					}
 				}
-				$this->messages->addMessage($numDeleted . " record(s) deleted.");
+				$this->application->messages->addMessage($numDeleted . " record(s) deleted.");
 			}
 			if($this->isOrderingEnabled) {
 				$c2 = 0;
@@ -351,21 +345,21 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 						if($orderId !== null) {
 							$d = _hx_anonymous(array());
 							$d->{$this->orderField} = $orderId;
-							$this->app->getDb()->update($this->table, $d, "`" . $this->definition->primaryKey . "`='" . $c2 . "'");
+							$this->application->db->update($this->table, $d, "`" . $this->definition->primaryKey . "`='" . $c2 . "'");
 						}
 						$c2++;
 						unset($orderId,$d);
 					}
 				}
 				$c2 = 0;
-				$res = $this->app->getDb()->request("SELECT `" . $this->definition->primaryKey . "` as 'id' from " . $this->table . " ORDER BY `" . $this->orderField . "`");
+				$res = $this->application->db->request("SELECT `" . $this->definition->primaryKey . "` as 'id' from " . $this->table . " ORDER BY `" . $this->orderField . "`");
 				$»it3 = $res->iterator();
 				while($»it3->hasNext()) {
 				$item = $»it3->next();
 				{
 					$d2 = _hx_anonymous(array());
 					$d2->{$this->orderField} = ++$c2;
-					$this->app->getDb()->update($this->table, $d2, "`" . $this->definition->primaryKey . "`='" . $item->id . "'");
+					$this->application->db->update($this->table, $d2, "`" . $this->definition->primaryKey . "`='" . $item->id . "'");
 					unset($d2);
 				}
 				}
@@ -382,7 +376,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 				++$_g;
 				if(_hx_equal($element1->properties->type, "association") && _hx_equal($element1->properties->showAsLabel, "1")) {
 					$sql = "SELECT " . $element1->properties->field . " AS id, " . $element1->properties->fieldLabel . " AS label FROM " . $element1->properties->table;
-					$result = $this->app->getDb()->request($sql);
+					$result = $this->application->db->request($sql);
 					$h = new Hash();
 					$»it = $result->iterator();
 					while($»it->hasNext()) {
@@ -405,7 +399,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 				}
 				if(_hx_equal($element1->properties->type, "enum")) {
 					$h3 = new Hash();
-					$types = $this->app->getDb()->requestSingle("SHOW COLUMNS FROM `" . $this->table . "` LIKE \"" . $element1->properties->name . "\"");
+					$types = $this->application->db->requestSingle("SHOW COLUMNS FROM `" . $this->table . "` LIKE \"" . $element1->properties->name . "\"");
 					$s = Reflect::field($types, "Type");
 					$items = _hx_explode("','", _hx_substr($s, 6, strlen($s) - 8));
 					{
@@ -507,7 +501,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 			}
 		}
 		$ths = $this;
-		$fields = $this->app->getDb()->request("SHOW FIELDS FROM `" . $this->table . "`");
+		$fields = $this->application->db->request("SHOW FIELDS FROM `" . $this->table . "`");
 		$fields = Lambda::map($fields, array(new _hx_lambda(array("_g" => &$_g, "_g1" => &$_g1, "definitionFields" => &$definitionFields, "element" => &$element, "fields" => &$fields, "ths" => &$ths), null, array('row'), "{
 			return \$row->Field;
 		}"), 'execute1'));
@@ -525,7 +519,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 				$val = $_g1[$_g];
 				++$_g;
 				if($val !== null) {
-					$this->app->getDb()->update("news", _hx_anonymous(array("order" => $val)), "`id`=" . $c);
+					$this->application->db->update("news", _hx_anonymous(array("order" => $val)), "`id`=" . $c);
 				}
 				$c++;
 				unset($val);
@@ -585,7 +579,7 @@ class site_cms_modules_base_Dataset extends site_cms_modules_base_DatasetBase {
 		if(!Std::is($d, _hx_qtype("Date"))) {
 			return null;
 		}
-		$months = Lambda::harray(poko_utils_ListData::arrayToList(poko_utils_ListData::$months, 1));
+		$months = Lambda::harray(poko_utils_ListData::getMonths(null));
 		return $d->getDate() . " " . _hx_array_get($months, $d->getMonth())->key . " " . $d->getFullYear();
 	}
 	public function __call($m, $a) {

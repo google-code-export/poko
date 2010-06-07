@@ -6,9 +6,9 @@ class site_cms_modules_media_Galleries extends site_cms_modules_media_MediaBase 
 		parent::__construct();
 	}}
 	public $galleries;
-	public function init() {
-		parent::init();
-		if($this->app->params->get("action")) {
+	public function pre() {
+		parent::pre();
+		if($this->application->params->get("action")) {
 			$this->process();
 		}
 	}
@@ -29,15 +29,15 @@ class site_cms_modules_media_Galleries extends site_cms_modules_media_MediaBase 
 		$this->setupLeftNav();
 	}
 	public function process() {
-		switch($this->app->params->get("action")) {
+		switch($this->application->params->get("action")) {
 		case "add":{
-			$dir = $this->imageRoot . "/" . $this->app->params->get("newGallery");
+			$dir = $this->imageRoot . "/" . $this->application->params->get("newGallery");
 			if(!file_exists($dir)) {
 				@mkdir($dir, 493);
-				$this->messages->addMessage("Gallery Added");
+				$this->application->messages->addMessage("Gallery Added");
 			}
 			else {
-				$this->messages->addError("A Gallery of this name already exists");
+				$this->application->messages->addError("A Gallery of this name already exists");
 			}
 		}break;
 		}

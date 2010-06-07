@@ -29,6 +29,7 @@ package site.examples;
 import poko.form.elements.Button;
 import poko.form.elements.Selectbox;
 import poko.form.Form;
+import poko.Request;
 import site.cms.common.PageData;
 import site.examples.components.Navigation;
 import site.examples.templates.DefaultTemplate;
@@ -50,7 +51,7 @@ class ComplexData extends DefaultTemplate
 		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));
 		form1.populateElements();
 		
-		var options = app.db.request("SELECT `id` as 'value', `name` as 'key' FROM example_projects");
+		var options = application.db.request("SELECT `id` as 'value', `name` as 'key' FROM example_projects");
 		
 		for(option in options)
 			form1.getElementTyped("project", Selectbox).addOption(option);
@@ -71,10 +72,10 @@ class ComplexData extends DefaultTemplate
 	{
 		showProject = true;
 		
-		projectData = app.db.requestSingle("SELECT * FROM `example_projects` p, `example_categories` c WHERE c.`id`=p.`category` AND p.`id`=\"" + projectId + "\"");
+		projectData = application.db.requestSingle("SELECT * FROM `example_projects` p, `example_categories` c WHERE c.`id`=p.`category` AND p.`id`=\"" + projectId + "\"");
 		
-		projectServices = app.db.request("SELECT * FROM `example_services` s, `example_projects_services` link WHERE link.`projectId`=" + projectId + " AND s.`id`=link.`serviceId`");
+		projectServices = application.db.request("SELECT * FROM `example_services` s, `example_projects_services` link WHERE link.`projectId`=" + projectId + " AND s.`id`=link.`serviceId`");
 		
-		projectImages = app.db.request("SELECT * FROM `example_images` WHERE `link_to`='example_projects' AND `link_value`=\""+projectId+"\"");
+		projectImages = application.db.request("SELECT * FROM `example_images` WHERE `link_to`='example_projects' AND `link_value`=\""+projectId+"\"");
 	}
 }

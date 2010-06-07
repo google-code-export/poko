@@ -76,7 +76,7 @@ class Input extends FormElement
 		}		
 		
 		var style = useSizeValues ? "style=\"width:"+width+"px\"" : "";
-		return "<input "+style+" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />" + (if(required && form.isSubmitted() && printRequired) " required");
+		return "<input " + style + " type=\"" + tType + "\" name=\"" + n + "\" id=\"" + n + "\" value=\"" +value + "\" class=\"" +cssClass+ "\" / > " + (if(required && form.isSubmitted() && printRequired) " required");
 	}
 	
 	public function toString() :String

@@ -8,6 +8,7 @@ import haxe.Serializer;
 import haxe.xml.Fast;
 import php.FileSystem;
 import php.io.File;
+import site.cms.common.CmsSettings;
 import site.cms.templates.CmsTemplate;
 import site.cms.modules.base.Settings;
 
@@ -25,7 +26,7 @@ class SettingsTheme extends SettingsBase
 	
 	override public function main()
 	{
-		currentTheme = settings.get("themeCurrent");
+		currentTheme = CmsSettings.i.themeCurrent;
 		
 		themes = new List();
 		if (FileSystem.isDirectory(themeDirectory))
@@ -39,7 +40,7 @@ class SettingsTheme extends SettingsBase
 		}
 		
 		// set current if we want ...
-		var setTheme = app.params.get("set");
+		var setTheme = application.params.get("set");
 		if (setTheme != null) {
 			if (Lambda.has(themes, setTheme)) {
 				currentTheme = setTheme;
@@ -52,11 +53,11 @@ class SettingsTheme extends SettingsBase
 					for (e in fast.elements) {
 						Reflect.setField(style, e.name, e.innerData);
 					}
-					app.db.update("_settings", { value:Serializer.run(style) }, "`key`='themeStyle'");
+					application.db.update("_settings", { value:Serializer.run(style) }, "`key`='themeStyle'");
 				}
 				
-				app.db.update("_settings", { value:setTheme }, "`key`='themeCurrent'");
-				messages.addMessage("Theme updated to '" + setTheme + "'");
+				application.db.update("_settings", { value:setTheme }, "`key`='themeCurrent'");
+				application.messages.addMessage("Theme updated to '" + setTheme + "'");
 								
 			}
 		}

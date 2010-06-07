@@ -46,28 +46,28 @@ class Users extends UsersBase
 	{			
 		super.main();
 		
-		action = app.params.get("action");
-		actionId = Std.parseInt(app.params.get("id"));
+		action = application.params.get("action");
+		actionId = Std.parseInt(application.params.get("id"));
 		
 		if (action == "delete") {
 			if (actionId == null) {
-				messages.addError("Trying to delete, no ID given.");
+				application.messages.addError("Trying to delete, no ID given.");
 			}else {
 				try{
-					app.db.delete("_users", "id=" + actionId);
+					application.db.delete("_users", "id=" + actionId);
 				}catch (e:Dynamic) {
-					messages.addError("Can't delete user.");
+					application.messages.addError("Can't delete user.");
 				}
-				if (app.db.lastAffectedRows > 0) {
-					messages.addMessage("User deleted.");
+				if (application.db.lastAffectedRows > 0) {
+					application.messages.addMessage("User deleted.");
 				}else {
-					messages.addWarning("No user to delete.");
+					application.messages.addWarning("No user to delete.");
 				}
 			}
 		}
 		
-		view.template = "cms/modules/base/Users.mtt";
-		users = app.db.request("SELECT * FROM _users");
+		setContentTemplate("cms/modules/base/Users.mtt");
+		users = application.db.request("SELECT * FROM _users");
 	}
 }
 
@@ -89,7 +89,7 @@ class UsersBase extends CmsTemplate
 		leftNavigation.addLink("Users", "List Users", "cms.modules.base.Users&action=list");
 		leftNavigation.addLink("Users", "Add User", "cms.modules.base.User&action=add");
 		
-		if(user.isSuper()){
+		if(application.user.isSuper()){
 			leftNavigation.addSection("Groups");
 			leftNavigation.addLink("Groups", "List Groups", "cms.modules.base.Users_Groups&action=list");
 			leftNavigation.addLink("Groups", "Add Group", "cms.modules.base.Users_Group&action=add");

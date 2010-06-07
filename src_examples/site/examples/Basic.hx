@@ -26,6 +26,7 @@
  */ 
 
 package site.examples;
+import poko.Request;
 import site.examples.templates.DefaultTemplate;
 
 class Basic extends DefaultTemplate
@@ -34,7 +35,7 @@ class Basic extends DefaultTemplate
 	
 	override public function main()
 	{
-		products = app.db.request("SELECT * FROM `example_projects` WHERE `visible`=1");
+		products = application.db.request("SELECT * FROM `example_projects` WHERE `visible`=1");
 	}
 	
 	public function trim(value:String, length)

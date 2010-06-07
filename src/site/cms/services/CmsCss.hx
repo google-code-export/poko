@@ -7,12 +7,10 @@ package site.cms.services;
 import haxe.Md5;
 import haxe.Unserializer;
 import php.Web;
-import poko.controllers.HtmlController;
+import poko.Request;
 import poko.utils.GD;
-import poko.controllers.Controller;
-import site.cms.CmsController;
 
-class CmsCss extends CmsController
+class CmsCss extends Request
 {
 	private var resPath:String;
 	
@@ -43,14 +41,14 @@ class CmsCss extends CmsController
 		
 	override public function main():Void
 	{	
-		var settingResPath = app.db.requestSingle("SELECT value FROM _settings WHERE `key`='themeCurrent'");
-		var settingLogo = app.db.requestSingle("SELECT value FROM _settings WHERE `key`='cmsLogo'");
-		var settingStyleData = app.db.requestSingle("SELECT value FROM _settings WHERE `key`='themeStyle'");
+		var settingResPath = application.db.requestSingle("SELECT value FROM _settings WHERE `key`='themeCurrent'");
+		var settingLogo = application.db.requestSingle("SELECT value FROM _settings WHERE `key`='cmsLogo'");
+		var settingStyleData = application.db.requestSingle("SELECT value FROM _settings WHERE `key`='themeStyle'");
 		var settingStyle:Dynamic = { error: true };
 		try{
 			settingStyle = Unserializer.run(settingStyleData.value);
 		}catch (e:Dynamic) {
-			messages.addWarning("Problem getting style information from the database.");
+			application.messages.addWarning("Problem getting style information from the database.");
 		}
 		
 		// path to assets

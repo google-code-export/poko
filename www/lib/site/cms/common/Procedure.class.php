@@ -3,9 +3,9 @@
 class site_cms_common_Procedure {
 	public function __construct() {
 		if( !php_Boot::$skip_constructor ) {
-		$this->poko = poko_Poko::$instance;
+		$this->application = poko_Application::$instance;
 	}}
-	public $poko;
+	public $application;
 	public function postCreate($table, $data, $id) {
 		return false;
 	}

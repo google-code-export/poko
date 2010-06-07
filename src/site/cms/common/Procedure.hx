@@ -4,15 +4,15 @@
  */
 
 package site.cms.common;
-import poko.Poko;
+import poko.Application;
 
 class Procedure
 {
-	public var poko:Poko;
+	public var application:Application;
 	
 	public function new()
 	{
-		poko = Poko.instance;
+		application = Application.instance;
 	}
 	public function postCreate(table:String, data:Dynamic, id:Dynamic):Bool{ return(false); }
 	public function postUpdate(table:String, oldData:Dynamic, newData:Dynamic):Bool { return(false); }

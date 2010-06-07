@@ -27,7 +27,7 @@
 
 package site.cms.modules.base.js;
 
-import poko.js.JsPoko;
+import poko.js.JsApplication;
 import poko.js.JsRequest;
 import js.Dom;
 import js.Lib;

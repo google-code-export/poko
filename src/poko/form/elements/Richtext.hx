@@ -28,7 +28,7 @@
 
 package poko.form.elements;
 
-import poko.Poko;
+import poko.Application;
 import poko.form.Form;
 import poko.form.FormElement;
 

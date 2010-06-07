@@ -1,18 +1,18 @@
 <?php
 
-class site_cms_services_Image extends poko_controllers_Controller {
+class site_cms_services_Image extends poko_Request {
 	public function __construct() {
 		if( !php_Boot::$skip_constructor ) {
 		parent::__construct();
 	}}
 	public $data;
 	public function main() {
-		$src = $this->app->params->get("src");
-		if($this->app->params->get("preset")) {
-			$image = new poko_utils_ImageProcessor(site_cms_PokoCms::$uploadFolder . $src);
-			$image->cacheFolder = site_cms_PokoCms::$uploadFolder . "cache";
+		$src = $this->application->params->get("src");
+		if($this->application->params->get("preset")) {
+			$image = new poko_utils_ImageProcessor($this->application->uploadFolder . "/" . $src);
+			$image->cacheFolder = $this->application->uploadFolder . "/cache";
 			$image->format = poko_utils_ImageOutputFormat::$JPG;
-			switch($this->app->params->get("preset")) {
+			switch($this->application->params->get("preset")) {
 			case "tiny":{
 				$image->queueFitSize(40, 40);
 			}break;
@@ -20,13 +20,13 @@ class site_cms_services_Image extends poko_controllers_Controller {
 				$image->queueFitSize(100, 100);
 			}break;
 			case "aspect":{
-				$w = Std::parseInt($this->app->params->get("w"));
-				$h = Std::parseInt($this->app->params->get("h"));
+				$w = Std::parseInt($this->application->params->get("w"));
+				$h = Std::parseInt($this->application->params->get("h"));
 				$image->queueCropToAspect($w, $h);
 			}break;
 			case "custom":{
-				$w2 = Std::parseInt($this->app->params->get("w"));
-				$h2 = Std::parseInt($this->app->params->get("h"));
+				$w2 = Std::parseInt($this->application->params->get("w"));
+				$h2 = Std::parseInt($this->application->params->get("h"));
 				$image->queueFitSize($w2, $h2);
 			}break;
 			case "gallery":{
@@ -43,7 +43,7 @@ class site_cms_services_Image extends poko_controllers_Controller {
 			$this->setOutput($image->getOutput(null));
 		}
 		else {
-			$dateModified = php_FileSystem::stat(site_cms_PokoCms::$uploadFolder . $src)->mtime;
+			$dateModified = php_FileSystem::stat($this->application->uploadFolder . "/" . $src)->mtime;
 			$dateModifiedString2 = DateTools::format($dateModified, "%a, %d %b %Y %H:%M:%S") . " GMT";
 			header("Last-Modified" . ": " . $dateModifiedString2);
 			header("Expires" . ": " . DateTools::format(new Date($dateModified->getFullYear() + 1, $dateModified->getMonth(), $dateModified->getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") . " GMT");
@@ -51,8 +51,8 @@ class site_cms_services_Image extends poko_controllers_Controller {
 			header("ETag" . ": " . "\"" . haxe_Md5::encode($src) . "\"");
 			header("Pragma" . ": " . "");
 			header("content-type" . ": " . "image");
-			header("Content-Length" . ": " . filesize(site_cms_PokoCms::$uploadFolder . $src));
-			readfile(site_cms_PokoCms::$uploadFolder . $src);
+			header("Content-Length" . ": " . filesize($this->application->uploadFolder . "/" . $src));
+			readfile($this->application->uploadFolder . "/" . $src);
 			php_Sys::hexit(1);
 		}
 	}

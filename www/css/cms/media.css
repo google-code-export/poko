@@ -11,8 +11,7 @@
 	position:relative;
 	text-align:center;
 }
-
-.galleryItem img:hover
+.galleryItem img
 {
 	cursor: pointer;
 }
@@ -23,4 +22,22 @@
 	display:block;
 	left:5px;
 	bottom:5px;
+}
+
+#galleryViewType
+{
+	margin-bottom: 30px;
+}
+
+.galleryList
+{
+	border-top: 1px solid #ccc;
+}
+
+.galleryListItem
+{
+	width: 90%;
+	border-bottom: 1px solid #ccc;
+	padding: 3px;
+	cursor: pointer;
 }

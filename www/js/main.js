@@ -44,7 +44,7 @@ poko.js.JsRequest = function(p) { if( p === $_ ) return; {
 	null;
 }}
 poko.js.JsRequest.__name__ = ["poko","js","JsRequest"];
-poko.js.JsRequest.prototype.app = null;
+poko.js.JsRequest.prototype.application = null;
 poko.js.JsRequest.prototype.call = function(method,args) {
 	var func = Reflect.field(this,method);
 	if(func == null) {
@@ -58,7 +58,7 @@ poko.js.JsRequest.prototype.call = function(method,args) {
 			var f = _g1[_g];
 			++_g;
 			var field = Reflect.field(a,f);
-			if(Std["is"](field,poko.js.JsBinding)) a[f] = this.app.resolveRequest(field.jsRequest);
+			if(Std["is"](field,poko.js.JsBinding)) a[f] = this.application.resolveRequest(field.jsRequest);
 		}
 	}
 	func.apply(this,a);
@@ -73,7 +73,7 @@ poko.js.JsRequest.prototype.getRawCall = function(str) {
 	return this.getThis() + "." + str;
 }
 poko.js.JsRequest.prototype.getThis = function() {
-	return "app.js.JsPoko.instance.resolveRequest('" + Type.getClassName(Type.getClass(this)) + "')";
+	return "poko.js.JsApplication.instance.resolveRequest('" + Type.getClassName(Type.getClass(this)) + "')";
 }
 poko.js.JsRequest.prototype.init = function() {
 	this.remoting = haxe.remoting.HttpAsyncConnection.urlConnect(js.Lib.window.location.href);
@@ -532,10 +532,10 @@ StringTools.urlDecode = function(s) {
 	return decodeURIComponent(s.split("+").join(" "));
 }
 StringTools.htmlEscape = function(s) {
-	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;").split("'").join("&#039;").split("\"").join("&quot;");
 }
 StringTools.htmlUnescape = function(s) {
-	return s.split("&gt;").join(">").split("&lt;").join("<").split("&amp;").join("&");
+	return s.split("&gt;").join(">").split("&lt;").join("<").split("&amp;").join("&").split("&#039;").join("'").split("&quot;").join("\"");
 }
 StringTools.startsWith = function(s,start) {
 	return (s.length >= start.length && s.substr(0,start.length) == start);
@@ -814,6 +814,18 @@ haxe.Log.clear = function() {
 	js.Boot.__clear_trace();
 }
 haxe.Log.prototype.__class__ = haxe.Log;
+MainJS = function() { }
+MainJS.__name__ = ["MainJS"];
+MainJS.app = null;
+MainJS.main = function() {
+	MainJS.app = new poko.js.JsApplication();
+	MainJS.app.serverUrl = "http://localhost/fwork/";
+	js.Lib.window.onload = $closure(MainJS,"run");
+}
+MainJS.run = function(e) {
+	MainJS.app.run();
+}
+MainJS.prototype.__class__ = MainJS;
 StringBuf = function(p) { if( p === $_ ) return; {
 	this.b = new Array();
 }}
@@ -832,19 +844,65 @@ StringBuf.prototype.toString = function() {
 	return this.b.join("");
 }
 StringBuf.prototype.__class__ = StringBuf;
-poko.js.JsConfig = function(p) { if( p === $_ ) return; {
-	null;
+poko.js.JsApplication = function(p) { if( p === $_ ) return; {
+	poko.js.JsApplication.instance = this;
+	this.requests = new Hash();
+	this.requestBuffer = new List();
+	this.serverUrl = "";
+	poko.js.JsApplication.setupLog();
+	this.parseParams();
 }}
-poko.js.JsConfig.__name__ = ["poko","js","JsConfig"];
-poko.js.JsConfig.prototype.serverUrl = null;
-poko.js.JsConfig.prototype.__class__ = poko.js.JsConfig;
-site.Config = function(p) { if( p === $_ ) return; {
-	poko.js.JsConfig.apply(this,[]);
-}}
-site.Config.__name__ = ["site","Config"];
-site.Config.__super__ = poko.js.JsConfig;
-for(var k in poko.js.JsConfig.prototype ) site.Config.prototype[k] = poko.js.JsConfig.prototype[k];
-site.Config.prototype.__class__ = site.Config;
+poko.js.JsApplication.__name__ = ["poko","js","JsApplication"];
+poko.js.JsApplication.instance = null;
+poko.js.JsApplication.setupLog = function() {
+	haxe.Log.trace = $closure(poko.js.JsApplication,"log");
+}
+poko.js.JsApplication.log = function(v,pos) {
+	var console = Reflect.field(js.Lib.window,"console");
+	console.log("%s:%s: %o \n",pos.fileName,pos.lineNumber,v);
+}
+poko.js.JsApplication.prototype.addRequest = function(req) {
+	var r = this.setupRequest(req);
+	if(r != null) this.requests.set(req,r);
+	return r;
+}
+poko.js.JsApplication.prototype.params = null;
+poko.js.JsApplication.prototype.parseParams = function() {
+	if(this.params == null) this.params = new Hash();
+	var parts = js.Lib.window.location.search.substr(1).split("&");
+	{
+		var _g = 0;
+		while(_g < parts.length) {
+			var part = parts[_g];
+			++_g;
+			var p = part.split("=");
+			this.params.set(p[0],p[1]);
+		}
+	}
+}
+poko.js.JsApplication.prototype.requestBuffer = null;
+poko.js.JsApplication.prototype.requests = null;
+poko.js.JsApplication.prototype.resolveRequest = function(req) {
+	return this.requests.get(req);
+}
+poko.js.JsApplication.prototype.run = function() {
+	{ var $it6 = this.requests.iterator();
+	while( $it6.hasNext() ) { var req = $it6.next();
+	req.main();
+	}}
+}
+poko.js.JsApplication.prototype.serverUrl = null;
+poko.js.JsApplication.prototype.setupRequest = function(req) {
+	var request = null;
+	var c = Type.resolveClass(req);
+	if(c != null) {
+		request = Type.createInstance(c,[]);
+		request.application = this;
+		request.init();
+	}
+	return request;
+}
+poko.js.JsApplication.prototype.__class__ = poko.js.JsApplication;
 haxe.io = {}
 haxe.io.Bytes = function(length,b) { if( length === $_ ) return; {
 	this.length = length;
@@ -970,18 +1028,6 @@ haxe.io.Bytes.prototype.toString = function() {
 	return this.readString(0,this.length);
 }
 haxe.io.Bytes.prototype.__class__ = haxe.io.Bytes;
-poko.Poko = function() { }
-poko.Poko.__name__ = ["poko","Poko"];
-poko.Poko.app = null;
-poko.Poko.main = function() {
-	poko.Poko.app = new poko.js.JsPoko();
-	poko.Poko.app.serverUrl = "http://localhost/fwork/";
-	js.Lib.window.onload = $closure(poko.Poko,"run");
-}
-poko.Poko.run = function(e) {
-	poko.Poko.app.run();
-}
-poko.Poko.prototype.__class__ = poko.Poko;
 site.cms.ImportAll = function() { }
 site.cms.ImportAll.__name__ = ["site","cms","ImportAll"];
 site.cms.ImportAll.prototype.__class__ = site.cms.ImportAll;
@@ -1038,9 +1084,9 @@ haxe.remoting.HttpAsyncConnection.prototype.call = function(params,onResult) {
 			var s1 = new haxe.Unserializer(response.substr(3));
 			ret = s1.unserialize();
 		}
-		catch( $e6 ) {
+		catch( $e7 ) {
 			{
-				var err = $e6;
+				var err = $e7;
 				{
 					ret = null;
 					ok = false;
@@ -1115,9 +1161,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e7 ) {
+	catch( $e8 ) {
 		{
-			var e = $e7;
+			var e = $e8;
 			{
 				cl = null;
 			}
@@ -1131,9 +1177,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e8 ) {
+	catch( $e9 ) {
 		{
-			var err = $e8;
+			var err = $e9;
 			{
 				e = null;
 			}
@@ -1227,9 +1273,9 @@ Type.enumEq = function(a,b) {
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
 	}
-	catch( $e9 ) {
+	catch( $e10 ) {
 		{
-			var e = $e9;
+			var e = $e10;
 			{
 				return false;
 			}
@@ -1527,182 +1573,6 @@ haxe.Unserializer.prototype.unserializeObject = function(o) {
 	this.pos++;
 }
 haxe.Unserializer.prototype.__class__ = haxe.Unserializer;
-poko.js.JsPoko = function(p) { if( p === $_ ) return; {
-	poko.js.JsPoko.instance = this;
-	this.config = new site.Config();
-	this.requests = new Hash();
-	this.requestBuffer = new List();
-	this.serverUrl = "";
-	poko.js.JsPoko.setupLog();
-	this.parseParams();
-}}
-poko.js.JsPoko.__name__ = ["poko","js","JsPoko"];
-poko.js.JsPoko.instance = null;
-poko.js.JsPoko.setupLog = function() {
-	haxe.Log.trace = $closure(poko.js.JsPoko,"log");
-}
-poko.js.JsPoko.log = function(v,pos) {
-	var console = Reflect.field(js.Lib.window,"console");
-	console.log("%s:%s: %o \n",pos.fileName,pos.lineNumber,v);
-}
-poko.js.JsPoko.prototype.addRequest = function(req) {
-	var r = this.setupRequest(req);
-	if(r != null) this.requests.set(req,r);
-	return r;
-}
-poko.js.JsPoko.prototype.config = null;
-poko.js.JsPoko.prototype.params = null;
-poko.js.JsPoko.prototype.parseParams = function() {
-	if(this.params == null) this.params = new Hash();
-	var parts = js.Lib.window.location.search.substr(1).split("&");
-	{
-		var _g = 0;
-		while(_g < parts.length) {
-			var part = parts[_g];
-			++_g;
-			var p = part.split("=");
-			this.params.set(p[0],p[1]);
-		}
-	}
-}
-poko.js.JsPoko.prototype.requestBuffer = null;
-poko.js.JsPoko.prototype.requests = null;
-poko.js.JsPoko.prototype.resolveRequest = function(req) {
-	return this.requests.get(req);
-}
-poko.js.JsPoko.prototype.run = function() {
-	{ var $it10 = this.requests.iterator();
-	while( $it10.hasNext() ) { var req = $it10.next();
-	req.main();
-	}}
-}
-poko.js.JsPoko.prototype.serverUrl = null;
-poko.js.JsPoko.prototype.setupRequest = function(req) {
-	var request = null;
-	var c = Type.resolveClass(req);
-	if(c != null) {
-		request = Type.createInstance(c,[]);
-		request.app = this;
-		request.init();
-	}
-	return request;
-}
-poko.js.JsPoko.prototype.__class__ = poko.js.JsPoko;
-List = function(p) { if( p === $_ ) return; {
-	this.length = 0;
-}}
-List.__name__ = ["List"];
-List.prototype.add = function(item) {
-	var x = [item];
-	if(this.h == null) this.h = x;
-	else this.q[1] = x;
-	this.q = x;
-	this.length++;
-}
-List.prototype.clear = function() {
-	this.h = null;
-	this.q = null;
-	this.length = 0;
-}
-List.prototype.filter = function(f) {
-	var l2 = new List();
-	var l = this.h;
-	while(l != null) {
-		var v = l[0];
-		l = l[1];
-		if(f(v)) l2.add(v);
-	}
-	return l2;
-}
-List.prototype.first = function() {
-	return (this.h == null?null:this.h[0]);
-}
-List.prototype.h = null;
-List.prototype.isEmpty = function() {
-	return (this.h == null);
-}
-List.prototype.iterator = function() {
-	return { h : this.h, hasNext : function() {
-		return (this.h != null);
-	}, next : function() {
-		if(this.h == null) return null;
-		var x = this.h[0];
-		this.h = this.h[1];
-		return x;
-	}}
-}
-List.prototype.join = function(sep) {
-	var s = new StringBuf();
-	var first = true;
-	var l = this.h;
-	while(l != null) {
-		if(first) first = false;
-		else s.b[s.b.length] = sep;
-		s.b[s.b.length] = l[0];
-		l = l[1];
-	}
-	return s.b.join("");
-}
-List.prototype.last = function() {
-	return (this.q == null?null:this.q[0]);
-}
-List.prototype.length = null;
-List.prototype.map = function(f) {
-	var b = new List();
-	var l = this.h;
-	while(l != null) {
-		var v = l[0];
-		l = l[1];
-		b.add(f(v));
-	}
-	return b;
-}
-List.prototype.pop = function() {
-	if(this.h == null) return null;
-	var x = this.h[0];
-	this.h = this.h[1];
-	if(this.h == null) this.q = null;
-	this.length--;
-	return x;
-}
-List.prototype.push = function(item) {
-	var x = [item,this.h];
-	this.h = x;
-	if(this.q == null) this.q = x;
-	this.length++;
-}
-List.prototype.q = null;
-List.prototype.remove = function(v) {
-	var prev = null;
-	var l = this.h;
-	while(l != null) {
-		if(l[0] == v) {
-			if(prev == null) this.h = l[1];
-			else prev[1] = l[1];
-			if(this.q == l) this.q = prev;
-			this.length--;
-			return true;
-		}
-		prev = l;
-		l = l[1];
-	}
-	return false;
-}
-List.prototype.toString = function() {
-	var s = new StringBuf();
-	var first = true;
-	var l = this.h;
-	s.b[s.b.length] = "{";
-	while(l != null) {
-		if(first) first = false;
-		else s.b[s.b.length] = ", ";
-		s.b[s.b.length] = Std.string(l[0]);
-		l = l[1];
-	}
-	s.b[s.b.length] = "}";
-	return s.b.join("");
-}
-List.prototype.__class__ = List;
 haxe.Serializer = function(p) { if( p === $_ ) return; {
 	this.buf = new StringBuf();
 	this.cache = new Array();
@@ -1956,6 +1826,121 @@ haxe.Serializer.prototype.toString = function() {
 haxe.Serializer.prototype.useCache = null;
 haxe.Serializer.prototype.useEnumIndex = null;
 haxe.Serializer.prototype.__class__ = haxe.Serializer;
+List = function(p) { if( p === $_ ) return; {
+	this.length = 0;
+}}
+List.__name__ = ["List"];
+List.prototype.add = function(item) {
+	var x = [item];
+	if(this.h == null) this.h = x;
+	else this.q[1] = x;
+	this.q = x;
+	this.length++;
+}
+List.prototype.clear = function() {
+	this.h = null;
+	this.q = null;
+	this.length = 0;
+}
+List.prototype.filter = function(f) {
+	var l2 = new List();
+	var l = this.h;
+	while(l != null) {
+		var v = l[0];
+		l = l[1];
+		if(f(v)) l2.add(v);
+	}
+	return l2;
+}
+List.prototype.first = function() {
+	return (this.h == null?null:this.h[0]);
+}
+List.prototype.h = null;
+List.prototype.isEmpty = function() {
+	return (this.h == null);
+}
+List.prototype.iterator = function() {
+	return { h : this.h, hasNext : function() {
+		return (this.h != null);
+	}, next : function() {
+		if(this.h == null) return null;
+		var x = this.h[0];
+		this.h = this.h[1];
+		return x;
+	}}
+}
+List.prototype.join = function(sep) {
+	var s = new StringBuf();
+	var first = true;
+	var l = this.h;
+	while(l != null) {
+		if(first) first = false;
+		else s.b[s.b.length] = sep;
+		s.b[s.b.length] = l[0];
+		l = l[1];
+	}
+	return s.b.join("");
+}
+List.prototype.last = function() {
+	return (this.q == null?null:this.q[0]);
+}
+List.prototype.length = null;
+List.prototype.map = function(f) {
+	var b = new List();
+	var l = this.h;
+	while(l != null) {
+		var v = l[0];
+		l = l[1];
+		b.add(f(v));
+	}
+	return b;
+}
+List.prototype.pop = function() {
+	if(this.h == null) return null;
+	var x = this.h[0];
+	this.h = this.h[1];
+	if(this.h == null) this.q = null;
+	this.length--;
+	return x;
+}
+List.prototype.push = function(item) {
+	var x = [item,this.h];
+	this.h = x;
+	if(this.q == null) this.q = x;
+	this.length++;
+}
+List.prototype.q = null;
+List.prototype.remove = function(v) {
+	var prev = null;
+	var l = this.h;
+	while(l != null) {
+		if(l[0] == v) {
+			if(prev == null) this.h = l[1];
+			else prev[1] = l[1];
+			if(this.q == l) this.q = prev;
+			this.length--;
+			return true;
+		}
+		prev = l;
+		l = l[1];
+	}
+	return false;
+}
+List.prototype.toString = function() {
+	var s = new StringBuf();
+	var first = true;
+	var l = this.h;
+	s.b[s.b.length] = "{";
+	while(l != null) {
+		if(first) first = false;
+		else s.b[s.b.length] = ", ";
+		s.b[s.b.length] = Std.string(l[0]);
+		l = l[1];
+	}
+	s.b[s.b.length] = "}";
+	return s.b.join("");
+}
+List.prototype.__class__ = List;
 haxe.Http = function(url) { if( url === $_ ) return; {
 	this.url = url;
 	this.headers = new Hash();
@@ -2720,7 +2705,7 @@ site.cms.modules.media.js.JsGallery.prototype.getPreview = function(item) {
 	}(this));
 }
 site.cms.modules.media.js.JsGallery.prototype.main = function() {
-	this.gallery = this.app.params.get("name");
+	this.gallery = this.application.params.get("name");
 	new JQuery("#uploadify").uploadify({ uploader : "res/cms/media/uploadify.swf", script : "res/cms/media/uploadify.php", cancelImg : "res/cms/media/cancel.png", auto : true, folder : "./res/media/galleries/" + this.gallery, multi : true, fileExt : "*.jpg;*.gif;*.png", onAllComplete : $closure(this,"updateContent")});
 	this.updateContent();
 }
@@ -3052,4 +3037,4 @@ haxe.Serializer.USE_ENUM_INDEX = false;
 haxe.Serializer.BASE64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789%:";
 js.Lib.onerror = null;
 site.cms.modules.base.js.JsFileUpload.filesToDelete = new Hash();
-$Main.init = poko.Poko.main();
+$Main.init = MainJS.main();

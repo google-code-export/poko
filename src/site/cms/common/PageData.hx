@@ -26,7 +26,7 @@
  */
 
 package site.cms.common;
-import poko.Poko;
+import poko.Application;
 import haxe.Unserializer;
 import php.Lib;
 
@@ -41,15 +41,15 @@ class PageData
 	
 	public function loadById(id:Int)
 	{
-		var app = Poko.instance;
-		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE p.`id`=\"" + app.db.cnx.escape(Std.string(id)) + "\" AND p.`definitionid`=d.`id`");
+		var application = Application.instance;
+		var result = application.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE p.`id`=\"" + application.db.cnx.escape(Std.string(id)) + "\" AND p.`definitionid`=d.`id`");
 		init(result);
 	}
 	
 	public function loadByName(name:String)
 	{
-		var app = Poko.instance;
-		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE d.`name`=\"" + app.db.cnx.escape(name) + "\" AND p.`definitionid`=d.`id`");
+		var application = Application.instance;
+		var result = application.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE d.`name`=\"" + application.db.cnx.escape(name) + "\" AND p.`definitionid`=d.`id`");
 		init(result);
 	}
 	
@@ -83,7 +83,7 @@ class PageData
 	
 	public static function getPageNames():List<Dynamic>
 	{
-		var result = Poko.instance.db.request("SELECT `name` FROM `_definitions` WHERE `isPage`='1' ORDER BY `order`");
+		var result = Application.instance.db.request("SELECT `name` FROM `_definitions` WHERE `isPage`='1' ORDER BY `order`");
 		result = Lambda.map(result, function(item) {
 			return Reflect.field(item, "name");
 		});
@@ -91,7 +91,7 @@ class PageData
 	}
 	public static function getPages():List<PageData>
 	{
-		var result = Poko.instance.db.request("SELECT `name` FROM `_definitions` WHERE `isPage`='1' ORDER BY `order`");
+		var result = Application.instance.db.request("SELECT `name` FROM `_definitions` WHERE `isPage`='1' ORDER BY `order`");
 		var pages = new List();
 		for (row in result)
 			pages.add(getPageByName(row.name));

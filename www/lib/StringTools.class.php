@@ -9,7 +9,7 @@ class StringTools {
 		return urldecode($s);
 	}
 	static function htmlEscape($s) {
-		return _hx_explode(">", _hx_explode("<", _hx_explode("&", $s)->join("&amp;"))->join("&lt;"))->join("&gt;");
+		return htmlspecialchars($s);
 	}
 	static function htmlUnescape($s) {
 		return htmlspecialchars_decode($s);

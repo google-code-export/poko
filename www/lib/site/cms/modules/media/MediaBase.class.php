@@ -6,8 +6,7 @@ class site_cms_modules_media_MediaBase extends site_cms_templates_CmsTemplate {
 		parent::__construct();
 	}}
 	public $imageRoot;
-	public function init() {
-		parent::init();
+	public function pre() {
 		$this->imageRoot = "./res/media/galleries";
 	}
 	public function setupLeftNav() {
@@ -24,7 +23,7 @@ class site_cms_modules_media_MediaBase extends site_cms_templates_CmsTemplate {
 				unset($d);
 			}
 		}
-		if($this->user->isAdmin() || $this->user->isSuper()) {
+		if(poko_Application::$instance->user->isAdmin() || poko_Application::$instance->user->isSuper()) {
 			$this->leftNavigation->footer = "<a href=\"?request=cms.modules.media.Galleries&manage=true\">Manage Galleries</a>";
 		}
 	}

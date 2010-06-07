@@ -62,7 +62,6 @@ class TextArea extends Input
 		var style = useSizeValues ? "style=\"width:" + width + "px; height:" + height + "px;\"" : "";
 		
 		s += "<textarea " + style + " name=\"" + n + "\" id=\"" + n + "\" " + attributes + " >" + value + "</textarea>";
-		
 		return s;
 	}
 	

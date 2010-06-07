@@ -1,6 +1,6 @@
 
-haxe -cp src -php www -main poko.Poko -lib templo -lib hscript
+haxe -cp src -php www -main Main -lib templo -lib hscript
 
-haxe -cp src -js www/js/main.js -main poko.Poko
+haxe -cp src -js www/js/main.js -main MainJS
 
-neko makeTemplates.n -from src/site -to www/tpl
+neko MakeTemplates.n -from src -to www\tpl -removePath src

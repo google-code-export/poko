@@ -54,9 +54,4 @@ class Curl
 	{
 		return untyped __call__("curl_getinfo", resource, untyped __php__(option));
 	}
-	
-	public static inline function getLastError(resource:String):String
-	{
-		return untyped __call__("curl_error", resource);
-	}	
 }

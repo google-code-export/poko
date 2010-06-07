@@ -17,8 +17,6 @@ import site.cms.templates.CmsTemplate;
 
 class MediaSelector extends CmsPopup
 {
-	
-	
 	public var elementId:String;
 	public var form:Form;
 	public var selector:Selectbox;
@@ -42,32 +40,61 @@ class MediaSelector extends CmsPopup
 	public var allowViewThumb:Bool;
 	public var allowViewList:Bool;
 	
-	override public function init()
+	public var showJavaUploader:Bool;
+	
+	public var ftpUrl:String;
+	public var ftpUsername:String;
+	public var ftpPassword:String;
+	public var ftpDirectory:String;
+	
+	public var currentUrl:String;
+	private var uploadComplete:Bool;
+	
+	override public function pre()
 	{
-		if (app.params.get("showOnlyLibraries") != null && app.params.get("showOnlyLibraries") != "") {
-			showOnlyLibraries = app.params.get("showOnlyLibraries").split(":");
+		if (application.params.get("showOnlyLibraries") != null && application.params.get("showOnlyLibraries") != "") {
+			showOnlyLibraries = application.params.get("showOnlyLibraries").split(":");
 		}else {
 			showOnlyLibraries = [];
 		}
 		
-		gallery = app.params.get("form1_galleryList");
+		elementId = application.params.get("elementId");
+		
+		gallery = application.params.get("form1_galleryList");
 		if (showOnlyLibraries.length == 1) gallery = showOnlyLibraries[0];
 		if (gallery == null) gallery = Session.get('mediaGalleryLastGallery');
 		if (gallery != null) Session.set('mediaGalleryLastGallery', gallery);
 		
-		allowViewThumb = (app.params.get("libraryViewThumb") == "1");
-		allowViewList = (app.params.get("libraryViewList") == "1");
+		allowViewThumb = (application.params.get("libraryViewThumb") == "1");
+		allowViewList = (application.params.get("libraryViewList") == "1");
+		
+		showJavaUploader = (application.params.get("showJavaUploader") == "1");
+		uploadComplete = (application.params.get("uploadComplete") == "1");
+		
+		var ftpData = (application.params.get('ftpD') != null) ? Session.get(application.params.get('ftpD')) : Session.get("mediaGalleryLastFtpDetails");
+		Session.set("mediaGalleryLastFtpDetails", ftpData);
+		if(ftpData != null){
+			ftpUrl = ftpData.ftpUrl;
+			ftpUsername = ftpData.ftpUsername;
+			ftpPassword = ftpData.ftpPassword;
+			ftpDirectory = ftpData.ftpDirectory;
+		}
+		
+		if (showJavaUploader) head.js.add('js/cms/jfileupload/jFileUploadInject.js');
+			
+		currentUrl = "?request=cms.modules.media.MediaSelector&elementId=" + elementId + "&showOnlyLibraries=" + showOnlyLibraries.join(":");
+		currentUrl += "&libraryViewThumb=" + allowViewThumb + "&libraryViewList=" + allowViewList;
+		currentUrl += "&showJavaUploader=" + showJavaUploader;
 	}
 	
 	override public function main()
 	{	
-		elementId = app.params.get("elementId");
 		from = FROM_CMS;
-		if (app.params.get("from") != null) from = app.params.get("from");
+		if (application.params.get("from") != null) from = application.params.get("from");
 		
-		if (app.params.get("viewType") != null)
+		if (application.params.get("viewType") != null)
 		{
-			currentView = app.params.get("viewType");
+			currentView = application.params.get("viewType");
 		}else {
 			if (Session.get("mediaGalleryCurrentView") != null) {
 				currentView = Session.get("mediaGalleryCurrentView");

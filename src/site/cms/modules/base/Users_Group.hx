@@ -52,8 +52,8 @@ class Users_Group extends UsersBase
 	
 	override public function main():Void
 	{	
-		action = app.params.get("action");
-		actionId = Std.parseInt(app.params.get("id"));
+		action = application.params.get("action");
+		actionId = Std.parseInt(application.params.get("id"));
 		
 		if (action != "edit" && action != "add") action = "add";
 		heading = (action == "edit") ? "Edit Group" : "Add Group";
@@ -79,14 +79,14 @@ class Users_Group extends UsersBase
 						for(s in a)
 							Reflect.setField(d, s, '1');
 					}
-					app.db.insert("_users_groups", d);
+					application.db.insert("_users_groups", d);
 				}catch (e:Dynamic) {
-					messages.addError("Database error.");
+					application.messages.addError("Database error.");
 				}
-				if (app.db.lastAffectedRows < 1) {
-					messages.addError("Problem adding group.");
+				if (application.db.lastAffectedRows < 1) {
+					application.messages.addError("Problem adding group.");
 				}else {
-					messages.addMessage("Group added. <a href=\"?request=cms.modules.base.Users_Group&action=edit&id="+app.db.cnx.lastInsertId()+"\">edit</a>");
+					application.messages.addMessage("Group added. <a href=\"?request=cms.modules.base.Users_Group&action=edit&id="+application.db.cnx.lastInsertId()+"\">edit</a>");
 					form1.clearData();
 				}
 			case "edit":
@@ -99,14 +99,14 @@ class Users_Group extends UsersBase
 						for(s in a)
 							Reflect.setField(d, s, '1');
 					}
-					app.db.update("_users_groups", d, "id=" + form1.getElement("actionId").value);
+					application.db.update("_users_groups", d, "id=" + form1.getElement("actionId").value);
 				}catch (e:Dynamic) {
-					messages.addError("Database error.");
+					application.messages.addError("Database error.");
 				}
-				if (app.db.lastAffectedRows < 1) {
-					messages.addWarning("Nothing changed.");
+				if (application.db.lastAffectedRows < 1) {
+					application.messages.addWarning("Nothing changed.");
 				}else {
-					messages.addMessage("Group updated.");
+					application.messages.addMessage("Group updated.");
 				}
 		}
 	}
@@ -117,7 +117,7 @@ class Users_Group extends UsersBase
 		var permissionsListSelected:Array<String> = new Array();
 		
 		if (action == "edit") {
-			groupInfo = app.db.requestSingle("SELECT * FROM `_users_groups` WHERE `id`=" + actionId);
+			groupInfo = application.db.requestSingle("SELECT * FROM `_users_groups` WHERE `id`=" + actionId);
 			if (groupInfo.isAdmin) permissionsListSelected.push('isAdmin');
 			if (groupInfo.isSuper) permissionsListSelected.push('isSuper');
 		}

@@ -5,7 +5,7 @@
 
 package site.cms;
 
-import poko.controllers.HtmlController;
+import poko.Request;
 import haxe.Md5;
 import php.Lib;
 import php.Session;
@@ -23,7 +23,6 @@ class Index extends CmsTemplate
 	public function new() 
 	{
 		super();
-		
 		authenticate = false;
 		message = inputUsername = "";
 	}
@@ -31,33 +30,34 @@ class Index extends CmsTemplate
 	override public function main() 
 	{
 		//navigation = null;
+		authenticate = false;
 		
-		if (app.params.get("logout") == "true")
+		if (application.params.get("logout") == "true")
 		{
-			user.unauthenticate();
+			application.user.unauthenticate();
 		}
 		
-		if (user.authenticated) 
+		if (application.user.authenticated) 
 		{ 
-			app.redirect("?request=cms.modules.base.SiteView"); 
+			Web.redirect("?request=cms.modules.base.SiteView"); 
 		}
 		
-		if (app.params.get("submitted") != null) 
+		if (application.params.get("submitted") != null) 
 		{
-			var username = app.db.cnx.quote(app.params.get("username"));
-			var password = app.db.cnx.quote(Md5.encode(app.params.get("password")));
+			var username = application.db.cnx.quote(application.params.get("username"));
+			var password = application.db.cnx.quote(Md5.encode(application.params.get("password")));
 			
-			if (app.db.count("_users", "`username`=" + username + " AND `password`=" + password) > 0)
+			if (application.db.count("_users", "`username`=" + username + " AND `password`=" + password) > 0)
 			{
-				user.authenticate(username);
+				application.user.authenticate(username);
 				Web.redirect(Web.getURI() + "?request=cms.modules.base.SiteView");
 			} else {
 				message = "Incorrect user or password";
 			}	
 		}
 		
-		if (app.params.get("username") != null) 
-			inputUsername = app.params.get("username");
+		if (application.params.get("username") != null) 
+			inputUsername = application.params.get("username");
 	}
 	
 }

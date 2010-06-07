@@ -29,11 +29,11 @@ package site.cms.modules.base;
 
 import php.FileSystem;
 import php.io.File;
-import poko.form.elements.RichtextWym;
+import site.cms.modules.base.formElements.RichtextWym;
 import poko.form.validators.DateValidator;
 import poko.js.JsBinding;
 import haxe.Md5;
-import poko.controllers.HtmlController;
+import poko.Request;
 import site.cms.common.DefinitionElementMeta;
 import poko.form.elements.Button;
 import poko.form.elements.CheckboxGroup;
@@ -60,7 +60,6 @@ import php.Web;
 import haxe.Unserializer;
 import haxe.Serializer;
 import site.cms.modules.base.formElements.LinkTable;
-import site.cms.PokoCms;
 
 import site.cms.modules.base.Datasets;
 import site.cms.common.Definition;
@@ -92,9 +91,9 @@ class DatasetItem extends DatasetBase
 		super();
 	}
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
+		super.pre();
 		
 		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
@@ -109,13 +108,13 @@ class DatasetItem extends DatasetBase
 		jsBind = new JsBinding("site.cms.modules.base.js.JsDatasetItem");
 		remoting.addObject("api", { deleteFile:deleteFile } );
 		
-		singleInstanceEdit = app.params.get('singleInstanceEdit');
+		singleInstanceEdit = application.params.get('singleInstanceEdit');
 		
 		// change layout for link view
 		if (linkMode)
 		{
 			head.css.add("css/cms/miniView.css");
-			view.template = "cms/templates/CmsTemplate_mini.mtt";
+			this.template_file = "site/cms/templates/CmsTemplate_mini.mtt";
 		}
 	}
 	
@@ -123,8 +122,8 @@ class DatasetItem extends DatasetBase
 	{
 		data = { };
 		
-		id = Std.parseInt(app.params.get('id'));
-		dataset = Std.parseInt(app.params.get("dataset"));
+		id = Std.parseInt(application.params.get('id'));
+		dataset = Std.parseInt(application.params.get("dataset"));
 		isOrderingEnabled = false;
 				
 		if (!pagesMode)
@@ -134,19 +133,19 @@ class DatasetItem extends DatasetBase
 			definition = new Definition(dataset);
 			label = definition.name;
 			table = definition.table;
-			data = app.db.requestSingle("SELECT * FROM `" + table + "` WHERE `id`=" + app.db.cnx.quote(Std.string(id)));
+			data = application.db.requestSingle("SELECT * FROM `" + table + "` WHERE `id`=" + application.db.cnx.quote(Std.string(id)));
 			
 			orderField = getOrderField();
 			isOrderingEnabled = orderField != null;
 			
-			autoFilterValue = app.params.get("autofilterBy") != "" ? app.params.get("autofilterBy") : null;
-			autoFilterByAssocValue = app.params.get("autofilterByAssoc") != "" ? app.params.get("autofilterByAssoc") : null;
+			autoFilterValue = application.params.get("autofilterBy") != "" ? application.params.get("autofilterBy") : null;
+			autoFilterByAssocValue = application.params.get("autofilterByAssoc") != "" ? application.params.get("autofilterByAssoc") : null;
 			
 		} else {
 			
 			// Pages mode
 			
-			var result = app.db.requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" + app.db.cnx.quote(Std.string(id)));
+			var result = application.db.requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" + application.db.cnx.quote(Std.string(id)));
 			label = page = result.name;
 			
 			data = result.data != "" ? cast Unserializer.run(result.data) : {};
@@ -167,17 +166,17 @@ class DatasetItem extends DatasetBase
 	
 	public function deleteFile(filename:String, display:String)
 	{
-		id = Std.parseInt(app.params.get('id'));
-		dataset = Std.parseInt(app.params.get("dataset"));
+		id = Std.parseInt(application.params.get('id'));
+		dataset = Std.parseInt(application.params.get("dataset"));
 		definition = new Definition(dataset);
 		table = definition.table;
 		
 		try {
 			var d:Hash<String> = new Hash();
 			d.set(display.substr(18), "");
-			var result = app.db.update(table, d, "id="+id);
+			var result = application.db.update(table, d, "id="+id);
 			return {
-				success: FileSystem.deleteFile(PokoCms.uploadFolder + "/" + filename) && result,
+				success: FileSystem.deleteFile(application.uploadFolder + "/" + filename) && result,
 				display: display,
 				error: null
 			};
@@ -213,25 +212,25 @@ class DatasetItem extends DatasetBase
 			case "add":
 				if (isOrderingEnabled)
 				{
-					var result = app.db.requestSingle("SELECT MAX(`" + orderField + "`) as 'order' FROM `"+table+"`");
+					var result = application.db.requestSingle("SELECT MAX(`" + orderField + "`) as 'order' FROM `"+table+"`");
 					Reflect.setField(data, orderField, Std.string(result.order + 1));
 				}
 				
 				// do update
 				var doPost = true;
 				try{
-					app.db.insert(table, data);
-					id = app.db.cnx.lastInsertId();
+					application.db.insert(table, data);
+					id = application.db.cnx.lastInsertId();
 				}catch (e:Dynamic) {
 					doPost = false;
-					messages.addError("Update failed. Not running post commands or procedures.");
+					application.messages.addError("Update failed. Not running post commands or procedures.");
 				}
 				
 				if (doPost) {
 					// add the ID to SQL, have to get primary key first
-					//var primaryData = app.db.request("SHOW COLUMNS FROM `"+table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
+					//var primaryData = application.db.request("SHOW COLUMNS FROM `"+table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 					//if (primaryData.length > 0)
-					var primaryKey = app.db.getPrimaryKey(table);
+					var primaryKey = application.db.getPrimaryKey(table);
 					if (primaryKey != null)
 					{
 						//var primaryKey = primaryData.pop().Field;
@@ -244,13 +243,13 @@ class DatasetItem extends DatasetBase
 								tSql = StringTools.replace(tSql, "#" + tField + "#", Reflect.field(data, tField));
 							}
 							try {
-								app.db.query(tSql);
+								application.db.query(tSql);
 							}catch (e:Dynamic) {
-								messages.addError("Post-create SQL had problems: " + tSql);
+								application.messages.addError("Post-create SQL had problems: " + tSql);
 							}
 						}						
 					} else {
-						messages.addError("Could not get the primary key from newly created record. Post-SQL not run.");
+						application.messages.addError("Could not get the primary key from newly created record. Post-SQL not run.");
 					}
 					
 					// run post procedure
@@ -260,18 +259,18 @@ class DatasetItem extends DatasetBase
 				if (pagesMode)
 				{
 					var sdata = Serializer.run(data);
-					app.db.update("_pages", {data:sdata}, "`id`=" + app.db.cnx.quote(Std.string(id)));
+					application.db.update("_pages", {data:sdata}, "`id`=" + application.db.cnx.quote(Std.string(id)));
 				} else {
 					// get old data before update
-					var oldData:Dynamic = app.db.requestSingle("SELECT * FROM `"+table+"` WHERE `id`=" + app.db.cnx.quote(Std.string(id)));
+					var oldData:Dynamic = application.db.requestSingle("SELECT * FROM `"+table+"` WHERE `id`=" + application.db.cnx.quote(Std.string(id)));
 					
 					// do update
 					var doPost = true;
 					try{
-						app.db.update(table, data, "`id`=" + app.db.cnx.quote(Std.string(id)));
+						application.db.update(table, data, "`id`=" + application.db.cnx.quote(Std.string(id)));
 					}catch (e:Dynamic) {
 						doPost = false;
-						messages.addError("Update failed. Not running post commands or procedures.");
+						application.messages.addError("Update failed. Not running post commands or procedures.");
 					}
 					
 					if(doPost){
@@ -285,9 +284,9 @@ class DatasetItem extends DatasetBase
 								tSql = StringTools.replace(tSql, "*" + tField + "*", Reflect.field(data, tField));
 							}
 							try {
-								app.db.query(tSql);
+								application.db.query(tSql);
 							}catch (e:Dynamic) {
-								messages.addError("Post-delete SQL had problems: " + tSql);
+								application.messages.addError("Post-delete SQL had problems: " + tSql);
 							}
 						}
 					
@@ -304,7 +303,7 @@ class DatasetItem extends DatasetBase
 			if (element.type == "multilink")
 			{
 				// delete existing links
-				app.db.delete(element.properties.link, "`" + element.properties.linkField1 + "`=" + app.db.cnx.quote(Std.string(id)));
+				application.db.delete(element.properties.link, "`" + element.properties.linkField1 + "`=" + application.db.cnx.quote(Std.string(id)));
 				
 				// insert new links
 				for (check in cast(Reflect.field(data, element.name), Array<Dynamic>))
@@ -313,7 +312,7 @@ class DatasetItem extends DatasetBase
 					Reflect.setField(d, element.properties.linkField1, id);
 					Reflect.setField(d, element.properties.linkField2, check);
 					
-					app.db.insert(element.properties.link, d); 
+					application.db.insert(element.properties.link, d); 
 				}
 			}
 			
@@ -323,24 +322,24 @@ class DatasetItem extends DatasetBase
 				var updateKeyValue = Reflect.field(data, element.properties.updateKey);
 				
 				// get primary key
-				var primaryKey = app.db.getPrimaryKey(table);
+				var primaryKey = application.db.getPrimaryKey(table);
 				if (primaryKey != null && updateKeyValue != null)
 				{
 					// get the value
-					var result = app.db.requestSingle("SELECT `"+element.properties.updateTo+"` AS `__v` FROM `"+element.properties.table+"` WHERE `" + primaryKey + "`='"+updateKeyValue+"'");
+					var result = application.db.requestSingle("SELECT `"+element.properties.updateTo+"` AS `__v` FROM `"+element.properties.table+"` WHERE `" + primaryKey + "`='"+updateKeyValue+"'");
 					
 					// update usign the values ...
 					var tData = { };
 					try {
 						Reflect.setField(tData, element.name, result.__v);
-						app.db.update(table, tData, "`id`=" + app.db.cnx.quote(Std.string(id)));	
+						application.db.update(table, tData, "`id`=" + application.db.cnx.quote(Std.string(id)));	
 					} catch (e:Dynamic)
 					{
-						messages.addError("There is an error in your 'post-sql-value' setup for field: " + element.name);
+						application.messages.addError("There is an error in your 'post-sql-value' setup for field: " + element.name);
 					}
 									
 				} else {
-					messages.addWarning("There was a problem updating your post SQL field because there was no primary key for the target table.");
+					application.messages.addWarning("There was a problem updating your post SQL field because there was no primary key for the target table.");
 				}
 			}
 			
@@ -351,41 +350,41 @@ class DatasetItem extends DatasetBase
 					var tData = {};
 					Reflect.setField(tData, element.name, Date.now());
 					try {
-						app.db.update(table, tData, "`id`=" + app.db.cnx.quote(Std.string(id)));	
+						application.db.update(table, tData, "`id`=" + application.db.cnx.quote(Std.string(id)));	
 					} catch (e:Dynamic){
-							messages.addError("There is an error updating the time for element: " + element.name);
+							application.messages.addError("There is an error updating the time for element: " + element.name);
 					}
 				}*/
 			}
 		}
 		
-		messages.addMessage((pagesMode ? "Page" : "Record") + " " + (form.getElement("__action").value == "add" ? "added." : "updated."));
+		application.messages.addMessage((pagesMode ? "Page" : "Record") + " " + (form.getElement("__action").value == "add" ? "added." : "updated."));
 		
 		if (!pagesMode && !singleInstanceEdit) 
 		{
 			var url = "?request=cms.modules.base.Dataset";
 			url += "&dataset=" + dataset;
 			url += "&linkMode=" + (linkMode ? "true" : "false");
-			url += "&linkToField=" + app.params.get("linkToField");
-			url += "&linkTo=" + app.params.get("linkTo");
-			url += "&linkValueField=" + app.params.get("linkValueField");
-			url += "&linkValue=" + app.params.get("linkValue");
-			url += "&autofilterByAssoc=" + app.params.get("autofilterByAssoc");
-			url += "&autofilterBy=" + app.params.get("autofilterBy");
+			url += "&linkToField=" + application.params.get("linkToField");
+			url += "&linkTo=" + application.params.get("linkTo");
+			url += "&linkValueField=" + application.params.get("linkValueField");
+			url += "&linkValue=" + application.params.get("linkValue");
+			url += "&autofilterByAssoc=" + application.params.get("autofilterByAssoc");
+			url += "&autofilterBy=" + application.params.get("autofilterBy");
 			if (siteMode) url += "&siteMode=true";
-			app.redirect(url);
+			application.redirect(url);
 		}else if(pagesMode){
 			var url = "?request=cms.modules.base.DatasetItem";
 			url += "&pagesMode=true&action=edit&id=" + id;
 			if (siteMode) url += "&siteMode=true";
-			app.redirect(url);
+			application.redirect(url);
 		}else {
 			//singleInstanceEdit
 			var url = "?request=cms.modules.base.DatasetItem";
 			url += "&dataset=" + dataset;
 			url += "&id=" + id;
-			url += "&autofilterByAssoc=" + app.params.get("autofilterByAssoc");
-			url += "&autofilterBy=" + app.params.get("autofilterBy");
+			url += "&autofilterByAssoc=" + application.params.get("autofilterByAssoc");
+			url += "&autofilterBy=" + application.params.get("autofilterBy");
 			url += "&siteMode=true";
 			url += "&singleInstanceEdit=true";
 		}
@@ -402,7 +401,7 @@ class DatasetItem extends DatasetBase
 	private function getElementMatches():List<DefinitionElementMeta>
 	{
 		// get fields
-		var fields = app.db.request("SHOW FIELDS FROM `" + table + "`");
+		var fields = application.db.request("SHOW FIELDS FROM `" + table + "`");
 		fields = Lambda.map(fields, function(row:Dynamic) {	
 			return row.Field;
 		});
@@ -425,7 +424,7 @@ class DatasetItem extends DatasetBase
 		// setup the data for deleting files ...
 		var filesToDelete:List<String> = new List();
 		var fieldsToWipe:List<String> = new List();
-		var safeId = app.db.cnx.quote(Std.string(id));
+		var safeId = application.db.cnx.quote(Std.string(id));
 		
 		var nFilesReplaced:Int = 0;
 		var nFilesAdded:Int = 0;
@@ -456,27 +455,29 @@ class DatasetItem extends DatasetBase
 			var filename = info.get("name");
 			var randomString = Md5.encode(Date.now().toString()+Math.random());
 			
-			var libraryItemValue:String = app.params.get(form.name + "_" + name + "_libraryItemValue");
+			var libraryItemValue:String = application.params.get(form.name + "_" + name + "_libraryItemValue");
 			
 			// do we use the upload or do we use library images?
-			if (app.params.get(form.name + "_" + name + "_operation") == FileUpload.OPERATION_LIBRARY && libraryItemValue != null && libraryItemValue != "") {
+			if (application.params.get(form.name + "_" + name + "_operation") == FileUpload.OPERATION_LIBRARY && libraryItemValue != null && libraryItemValue != "") {
 				// copy library item and use that!
 				
-				var imgRoot:String = "./res/media/galleries/";
-				if (FileSystem.exists(imgRoot + libraryItemValue)) {
+				var imgRoot:String = "./res/media/galleries";
+				if (FileSystem.exists(imgRoot + "/" + libraryItemValue)) {
 					
 					var copyToName = randomString + libraryItemValue.substr(libraryItemValue.lastIndexOf("/") + 1);
 					
-					File.copy(imgRoot + libraryItemValue, PokoCms.uploadFolder + copyToName);
+					File.copy(imgRoot + "/" + libraryItemValue, application.uploadFolder + "/" + copyToName);
 					data.set(name, copyToName);
 					nFilesAdded++;
+				}else {
+					application.messages.addError("Problem finding library file to copy: "+imgRoot + "/" + libraryItemValue);
 				}
 				
 			}else {
 				// upload file	
 				if (info.get("error") == 0) 
 				{
-					PhpTools.moveFile(info.get("tmp_name"), PokoCms.uploadFolder + randomString + filename);
+					PhpTools.moveFile(info.get("tmp_name"), application.uploadFolder + "/" + randomString + filename);
 					data.set(name, randomString + filename);
 					nFilesAdded++;
 				}
@@ -501,7 +502,7 @@ class DatasetItem extends DatasetBase
 			sql = sql.substr(0, sql.length - 1);
 			sql += " FROM " + table + " WHERE id=" + safeId;
 			if(c > 0){
-				var result = app.db.requestSingle(sql);
+				var result = application.db.requestSingle(sql);
 				for (i in Reflect.fields(result)) {
 					filesToDelete.add(Reflect.field(result, i));
 					nFilesAdded--;
@@ -511,7 +512,7 @@ class DatasetItem extends DatasetBase
 		// pages mode
 		}else {
 			// delete files linked to pages?
-			var r = app.db.requestSingle("SELECT data FROM _pages WHERE `id`=" + safeId);
+			var r = application.db.requestSingle("SELECT data FROM _pages WHERE `id`=" + safeId);
 			try {
 				var d = Unserializer.run(r.data);
 				for (k in data.keys())
@@ -524,17 +525,17 @@ class DatasetItem extends DatasetBase
 					}
 				}
 			}catch (e:Dynamic) {
-				messages.addError("There may have been a problem updating your page.");
+				application.messages.addError("There may have been a problem updating your page.");
 			}
 		}
 		
 		// delete the files
 		for (f in filesToDelete) {
 			try {
-				FileSystem.deleteFile(PokoCms.uploadFolder + f);
+				FileSystem.deleteFile(application.uploadFolder + "/" + f);
 			}catch (e:Dynamic) {
 				//TO DO: need to get this warning working properly!
-				//messages.addError("Problem deleting file: " + f);
+				//application.messages.addError("Problem deleting file: " + f);
 			}
 		}
 		
@@ -551,13 +552,13 @@ class DatasetItem extends DatasetBase
 		
 		// update database
 		if (nFilesAdded > 0 || nFilesReplaced > 0 || nFilesDeleted > 0){
-			messages.addMessage("Files: " + nFilesAdded + " added, " + nFilesReplaced + " replaced and " + nFilesDeleted + " deleted.");
+			application.messages.addMessage("Files: " + nFilesAdded + " added, " + nFilesReplaced + " replaced and " + nFilesDeleted + " deleted.");
 		}
 		return data;
 		
 		/*
 		if (!pagesMode) {
-			app.db.update(table, data, "`id`=" + safeId);
+			application.db.update(table, data, "`id`=" + safeId);
 		} else {
 			var d:Dynamic = form.getData();
 			for(k in data.keys()){
@@ -565,7 +566,7 @@ class DatasetItem extends DatasetBase
 			}
 		
 			var sdata = Serializer.run(d);
-			app.db.update("_pages", { data:sdata }, "`id`=" + safeId);
+			application.db.update("_pages", { data:sdata }, "`id`=" + safeId);
 		}
 		*/
 	}
@@ -578,7 +579,7 @@ class DatasetItem extends DatasetBase
 	private function setupForm():Void
 	{
 		form = new Form("form1");
-		form.addElement(new Hidden( "__action", app.params.get("action")));
+		form.addElement(new Hidden( "__action", application.params.get("action")));
 		
 		var elements = pagesMode ? Lambda.list(definition.elements) : getElementMatches();
 		
@@ -658,14 +659,20 @@ class DatasetItem extends DatasetBase
 					el.libraryViewThumb = (element.properties.libraryView == "0" || element.properties.libraryView == "1");
 					el.libraryViewList = (element.properties.libraryView == "0" || element.properties.libraryView == "2");
 					
+					el.showJavaUploader = (element.properties.showJavaUploader != "0");
+					el.ftpUrl = element.properties.ftpUrl;
+					el.ftpUsername = element.properties.ftpUsername;
+					el.ftpPassword = element.properties.ftpPassword;
+					el.ftpDirectory = element.properties.ftpDirectory;
+					
 					var t = StringTools.trim(element.properties.showOnlyLibraries);
-					if (t != "") el.showOnlyLibraries = t.split(":");		
+					if (t != "") el.showOnlyLibraries = t.split(":");
 					
 					form.addElement(el);
 					
 				case "date":
 					var d:Date = (value != "" && value != null) ? cast value : Date.now();	
-					if (element.properties.currentOnAdd == "1" && (form.getElement("__action").value == "add" || app.params.get("action") == "add"))
+					if (element.properties.currentOnAdd == "1" && (form.getElement("__action").value == "add" || application.params.get("action") == "add"))
 						d = Date.now();
 									
 					var el = new DateSelector(element.name, label, d, element.properties.required);
@@ -694,8 +701,12 @@ class DatasetItem extends DatasetBase
 					
 					if (element.properties.width != "") el.width = Std.parseInt(element.properties.width);
 					if (element.properties.height != "") el.height = Std.parseInt(element.properties.height);
-					if (element.properties.allowImages != "") el.allowImages = element.properties.allowImages;
 					if (element.properties.allowTables != "") el.allowTables = element.properties.allowTables;
+					
+					if (element.properties.allowImages != "") el.allowImages = element.properties.allowImages;
+					el.useFtp = (element.properties.useFtp == "1");
+					if (element.properties.ftpDirectory != "") el.ftpDirectory = element.properties.ftpDirectory;
+					
 					if (element.properties.editorStyles != "") el.editorStyles = element.properties.editorStyles;
 					el.containersItems = (element.properties.containersItems != "" && element.properties.containersItems != null) ? element.properties.containersItems : "{'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'}";
 					el.classesItems = (element.properties.classesItems != "" && element.properties.classesItems != null) ? element.properties.classesItems : "";
@@ -728,7 +739,7 @@ class DatasetItem extends DatasetBase
 						fieldLabelSelect = "("+element.properties.fieldSql+")";
 					}
 				
-					var assocData = app.db.request("SELECT `" + element.properties.field + "` as value, "+ fieldLabelSelect +" as label FROM `" + element.properties.table + "`");
+					var assocData = application.db.request("SELECT `" + element.properties.field + "` as value, "+ fieldLabelSelect +" as label FROM `" + element.properties.table + "`");
 					assocData = Lambda.map(assocData, function(value) {
 						return { key:value.label, value:value.value };
 					});
@@ -747,18 +758,18 @@ class DatasetItem extends DatasetBase
 					sql += "       `" + element.properties.fieldLabel + "` as 'value' 	";
 					sql += "  FROM `" + element.properties.table + "`					";
 
-					var linkData = app.db.request(sql);
+					var linkData = application.db.request(sql);
 					
 					var selectedData = new Array();
 					
-					if (app.params.get("action") != "add")
+					if (application.params.get("action") != "add")
 					{
 						var sql = "";
 						sql += "SELECT `" + element.properties.linkField2 + "` as 'link' 	";
 						sql += "  FROM `" + element.properties.link + "`";
-						sql += " WHERE `" + element.properties.linkField1 + "`=" + app.db.cnx.quote(Std.string(id));
+						sql += " WHERE `" + element.properties.linkField1 + "`=" + application.db.cnx.quote(Std.string(id));
 						
-						var result = app.db.request(sql);
+						var result = application.db.request(sql);
 						
 						for (row in result)
 							selectedData.push(Std.string(row.link));
@@ -795,18 +806,18 @@ class DatasetItem extends DatasetBase
 		
 		if (linkMode)
 		{
-			form.addElement(new Hidden(app.params.get("linkToField"), app.params.get("linkTo")));
-			form.addElement(new Hidden(app.params.get("linkValueField"), app.params.get("linkValue")));
+			form.addElement(new Hidden(application.params.get("linkToField"), application.params.get("linkTo")));
+			form.addElement(new Hidden(application.params.get("linkValueField"), application.params.get("linkValue")));
 		}
-		if (app.params.get("siteMode") == "true")
+		if (application.params.get("siteMode") == "true")
 			form.addElement(new Hidden("siteMode", "true"));
 		
-		var aF = app.params.get("autofilterBy");
+		var aF = application.params.get("autofilterBy");
 		if (aF != null && aF != "") form.addElement(new Hidden("autofilterBy", aF));
-		var aFA = app.params.get("autofilterByAssoc");
+		var aFA = application.params.get("autofilterByAssoc");
 		if (aFA != null && aFA != "") form.addElement(new Hidden("autofilterByAssoc", aFA));
 		
-		var submitButton = new Button( "__submit", app.params.get("action") == "add" ? "Add" : "Update", null, ButtonType.SUBMIT);
+		var submitButton = new Button( "__submit", application.params.get("action") == "add" ? "Add" : "Update", null, ButtonType.SUBMIT);
 		
 		var keyValJsBinding = jsBindings.get("site.cms.modules.base.js.JsKeyValueInput"); 
 		if (keyValJsBinding != null){
@@ -817,7 +828,7 @@ class DatasetItem extends DatasetBase
 		
 		form.addElement(submitButton);
 		
-		if (app.params.get("action") == "add" && linkMode) {
+		if (application.params.get("action") == "add" && linkMode) {
 			var cancelButton = new Button("__cancel", "Cancel", "Cancel", ButtonType.BUTTON);
 			form.addElement(cancelButton);
 		}

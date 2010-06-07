@@ -26,8 +26,8 @@
  */
 
 package site.cms.modules.base;
-import poko.Poko;
-import poko.views.renderers.Templo;
+import poko.Application;
+import poko.ViewContext;
 import poko.js.JsBinding;
 import site.cms.templates.CmsTemplate;
 
@@ -40,16 +40,21 @@ class Pages extends PageBase
 		super();
 	}
 	
+	override public function pre()
+	{		
+	}
+	
+	
 	override public function main()
 	{
 		super.main();
 		
-		if (!app.params.get("manage"))
+		if (!application.params.get("manage"))
 		{
 			var str = "";
 			
-			if (user.isAdmin() || user.isSuper())
-				str += Templo.parse("cms/modules/base/blocks/pages.mtt");
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
+				str += ViewContext.parse("site/cms/modules/base/blocks/pages.mtt");
 				
 			setContentOutput(str);
 			
@@ -66,10 +71,8 @@ class PageBase extends CmsTemplate
 {
 	public var pages:List<Dynamic>;
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
-		
 		navigation.setSelected("Pages");
 	}
 	
@@ -77,7 +80,7 @@ class PageBase extends CmsTemplate
 	{	
 		super.main();
 		
-		pages = app.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`" );
+		pages = application.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`" );
 		
 		leftNavigation.addSection("Pages");
 		
@@ -86,7 +89,7 @@ class PageBase extends CmsTemplate
 			leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id="+page.pid, page.indents);
 		}
 		
-		if (user.isAdmin() || user.isSuper())
+		if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
 			leftNavigation.footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 	}
 	

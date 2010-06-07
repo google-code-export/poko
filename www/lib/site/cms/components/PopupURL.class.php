@@ -1,6 +1,6 @@
 <?php
 
-class site_cms_components_PopupURL extends poko_system_Component {
+class site_cms_components_PopupURL extends poko_Component {
 	public function __construct($id, $label, $contentUrl, $width, $height) {
 		if( !php_Boot::$skip_constructor ) {
 		if($height === null) {
@@ -15,9 +15,9 @@ class site_cms_components_PopupURL extends poko_system_Component {
 		$this->contentUrl = $contentUrl;
 		$this->width = $width;
 		$this->height = $height;
-		$controller = poko_Poko::$instance->controller;
-		$controller->head->js->add("js/cms/jqModal.js");
-		$controller->head->css->add("css/cms/jqModal.css");
+		$application = poko_Application::$instance;
+		$application->request->head->js->add("js/cms/jqModal.js");
+		$application->request->head->css->add("css/cms/jqModal.css");
 	}}
 	public $width;
 	public $height;

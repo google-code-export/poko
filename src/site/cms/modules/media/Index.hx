@@ -27,7 +27,7 @@
 
 package site.cms.modules.media;
 import php.FileSystem;
-import poko.Poko;
+import poko.Application;
 import site.cms.templates.CmsTemplate;
 
 class Index extends MediaBase
@@ -35,8 +35,6 @@ class Index extends MediaBase
 
 	override public function main()
 	{
-		super.main();
-		
 		setupLeftNav();
 	}
 
@@ -46,10 +44,8 @@ class MediaBase extends CmsTemplate
 {
 	var imageRoot:String;
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
-		
 		imageRoot = "./res/media/galleries";
 	}
 	
@@ -66,7 +62,7 @@ class MediaBase extends CmsTemplate
 			}
 		}
 		
-		if (user.isAdmin() || user.isSuper())
+		if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
 			leftNavigation.footer = "<a href=\"?request=cms.modules.media.Galleries&manage=true\">Manage Galleries</a>";
 	}
 }

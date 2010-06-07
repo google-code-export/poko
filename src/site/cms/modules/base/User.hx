@@ -54,8 +54,8 @@ class User extends UsersBase
 	
 	override public function main():Void
 	{	
-		action = app.params.get("action");
-		actionId = Std.parseInt(app.params.get("id"));
+		action = application.params.get("action");
+		actionId = Std.parseInt(application.params.get("id"));
 		
 		if (action != "edit" && action != "add") action = "add";
 		heading = (action == "edit") ? "Edit User" : "Add User";
@@ -72,7 +72,7 @@ class User extends UsersBase
 		{
 			case "add":
 				var d:Dynamic = form1.getData();
-				var exists = app.db.exists("_users", "`username`=\""+d.username+"\"");
+				var exists = application.db.exists("_users", "`username`=\""+d.username+"\"");
 				
 				if(!exists){
 					try {	
@@ -81,19 +81,19 @@ class User extends UsersBase
 						d.groups = a;
 						d.password = Md5.encode(d.password);
 						d.added = Date.now();
-						app.db.insert("_users", d);
+						application.db.insert("_users", d);
 					}catch (e:Dynamic) {
-						//if (app.debug) throw(e);
-						messages.addError("Database error.");
+						if (application.debug) throw(e);
+						application.messages.addError("Database error.");
 					}
-					if (app.db.lastAffectedRows < 1) {
-						messages.addError("Problem adding user.");
+					if (application.db.lastAffectedRows < 1) {
+						application.messages.addError("Problem adding user.");
 					}else {
-						messages.addMessage("User added. <a href=\"?request=cms.modules.base.User&action=edit&id=" + app.db.cnx.lastInsertId() + "\">edit</a>");
+						application.messages.addMessage("User added. <a href=\"?request=cms.modules.base.User&action=edit&id=" + application.db.cnx.lastInsertId() + "\">edit</a>");
 						form1.clearData();
 					}
 				} else {
-					messages.addError("User '"+d.username+"' aready exists");
+					application.messages.addError("User '"+d.username+"' aready exists");
 				}
 			case "edit":
 				var d:Dynamic = form1.getData();
@@ -102,23 +102,23 @@ class User extends UsersBase
 					var s = Web.getParamValues(form1.name + "_groups");
 					var a = (s != null) ? s.join(",") : "";
 					d.groups = a;
-					var oldPassword = app.db.requestSingle("SELECT password FROM `_users` WHERE id=" + actionId).password;
+					var oldPassword = application.db.requestSingle("SELECT password FROM `_users` WHERE id=" + actionId).password;
 					if (d.password != oldPassword)
 						d.password = Md5.encode(d.password);
 					
-					app.db.update("_users", d, "id="+form1.getElement("actionId").value);
+					application.db.update("_users", d, "id="+form1.getElement("actionId").value);
 				}catch (e:Dynamic) {
-					if (app.db.exists("_users", "`username`=\"" + d.username + "\""))
+					if (application.db.exists("_users", "`username`=\"" + d.username + "\""))
 					{
-						messages.addError("Another user '"+d.username+"' already exists");
+						application.messages.addError("Another user '"+d.username+"' already exists");
 					} else {
-						messages.addError("Database error.");
+						application.messages.addError("Database error.");
 					}
 				}
-				if (app.db.lastAffectedRows < 1) {
-					messages.addWarning("Nothing changed.");
+				if (application.db.lastAffectedRows < 1) {
+					application.messages.addWarning("Nothing changed.");
 				}else {
-					messages.addMessage("User updated.");
+					application.messages.addMessage("User updated.");
 				}
 		}
 	}
@@ -131,17 +131,17 @@ class User extends UsersBase
 		var groups:List<Dynamic>;
 		var sql:String;
 		
-		if (!user.isSuper()) {
+		if (!application.user.isSuper()) {
 			sql = "SELECT `stub` AS 'key', `name` AS 'value' FROM _users_groups WHERE isAdmin=0 AND isSuper=0";
-			groups = app.db.request(sql);
+			groups = application.db.request(sql);
 		}else {
 			// super, they can do anything!
 			sql = "SELECT `stub` AS 'key', `name` AS 'value' FROM _users_groups";
-			groups = app.db.request(sql);
+			groups = application.db.request(sql);
 		}
 		
 		if (action == "edit") {
-			userInfo = app.db.requestSingle("SELECT * FROM `_users` WHERE `id`=" + actionId);
+			userInfo = application.db.requestSingle("SELECT * FROM `_users` WHERE `id`=" + actionId);
 			groupsSelected = userInfo.groups.split(",");
 		}
 		

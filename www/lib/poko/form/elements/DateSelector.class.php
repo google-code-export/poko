@@ -12,7 +12,7 @@ class poko_form_elements_DateSelector extends poko_form_FormElement {
 		parent::__construct();
 		$this->name = $name;
 		$this->label = $label;
-		$this->value = _hx_substr(Std::string($value), 0, 10);
+		$this->value = $value;
 		$this->required = $required;
 		$this->attributes = $attibutes;
 		$this->maxOffset = null;

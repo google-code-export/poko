@@ -27,10 +27,8 @@
 
 package site.cms.components;
 
-import haxe.Stack;
-import poko.system.Component;
+import poko.Component;
 import php.Web;
-import site.cms.CmsController;
 
 class Navigation extends Component
 {
@@ -39,14 +37,16 @@ class Navigation extends Component
 	private var selected:String;
 	public var userName:String;
 	
-	override public function init()
+	public function new() 
 	{
-		var name:String = app.params.get("request");
+		super();
+		
+		var name:String = application.params.get("request");
 		name = name.substr(name.lastIndexOf(".") + 1);
 		
 		pageHeading = "page";
 		
-		//setSelected(name);
+		setSelected(name);
 	}
 	
 	override public function main() 
@@ -54,11 +54,9 @@ class Navigation extends Component
 		var requests = new Hash();
 		//requests.set("Home", "Home");
 		
-		var cmsController:CmsController = cast app.controller;
+		if(application.user.authenticated){
 		
-		if(cmsController.user.authenticated){
-		
-			if (cmsController.user.isAdmin() || cmsController.user.isSuper()) {
+			if (application.user.isAdmin() || application.user.isSuper()) {
 				requests.set("modules.base.Pages", "Pages");
 				requests.set("modules.base.Datasets", "Data");			
 				requests.set("modules.base.SiteView", "Site View");
@@ -70,7 +68,7 @@ class Navigation extends Component
 			
 			requests.set("modules.help.Help", "Help");
 			
-			if (cmsController.user.isAdmin() || cmsController.user.isSuper()) {
+			if (application.user.isAdmin() || application.user.isSuper()) {
 				requests.set("modules.base.Users", "Users");
 			}
 			
@@ -78,8 +76,7 @@ class Navigation extends Component
 
 			for (request in requests.keys())
 			{
-				var parts = request.split(".");
-				if (parts[parts.length-1] == selected)
+				if ("cms."+request == application.params.get("request"))
 				{
 					content += "<li><a href=\"?request=cms."+request+"\" class=\"navigation_selected\">" + requests.get(request) + "</a></li>\n";
 				} else {
@@ -89,7 +86,7 @@ class Navigation extends Component
 			
 			content += "</ul>\n";
 			
-			userName = cmsController.user.name;
+			userName = application.user.name;
 		}else {
 			content = null;
 		}

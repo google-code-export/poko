@@ -1,26 +1,24 @@
 <?php
 
-class site_cms_components_Navigation extends poko_system_Component {
+class site_cms_components_Navigation extends poko_Component {
 	public function __construct() {
 		if( !php_Boot::$skip_constructor ) {
 		parent::__construct();
+		$name = $this->application->params->get("request");
+		$name = _hx_substr($name, _hx_last_index_of($name, ".", null) + 1, null);
+		$this->pageHeading = "page";
+		$this->setSelected($name);
 	}}
 	public $pageHeading;
 	public $content;
 	public $selected;
 	public $userName;
-	public function init() {
-		$name = $this->app->params->get("request");
-		$name = _hx_substr($name, _hx_last_index_of($name, ".", null) + 1, null);
-		$this->pageHeading = "page";
-	}
 	public function main() {
 		$requests = new Hash();
-		$cmsController = $this->app->controller;
-		if($cmsController->user->authenticated) {
-			if($cmsController->user->isAdmin() || $cmsController->user->isSuper()) {
+		if($this->application->user->authenticated) {
+			if($this->application->user->isAdmin() || $this->application->user->isSuper()) {
 				$requests->set("modules.base.Pages", "Pages");
-				$requests->set("modules.base.Datasets", "Data");
+				$requests->set("modules.base.Datasets", "Lists");
 				$requests->set("modules.base.SiteView", "Site View");
 				$requests->set("modules.media.Index", "Media");
 				$requests->set("modules.base.Settings", "Settings");
@@ -29,7 +27,7 @@ class site_cms_components_Navigation extends poko_system_Component {
 				$requests->set("modules.base.SiteView", "Site Map");
 			}
 			$requests->set("modules.help.Help", "Help");
-			if($cmsController->user->isAdmin() || $cmsController->user->isSuper()) {
+			if($this->application->user->isAdmin() || $this->application->user->isSuper()) {
 				$requests->set("modules.base.Users", "Users");
 			}
 			$this->content = "<ul id=\"headingNavigation\">\x0A";
@@ -37,18 +35,17 @@ class site_cms_components_Navigation extends poko_system_Component {
 			while($»it->hasNext()) {
 			$request = $»it->next();
 			{
-				$parts = _hx_explode(".", $request);
-				if($parts[$parts->length - 1] == $this->selected) {
-					$this->content .= "<li><a href=\"?request=cms." . $request . "\" class=\"navigation_selected\">" . $requests->get($request) . "</a></li>\x0A";
+				if($request == $this->selected) {
+					$this->content .= "<li>" . $requests->get($request) . "</li>\x0A";
 				}
 				else {
 					$this->content .= "<li><a href=\"?request=cms." . $request . "\">" . $requests->get($request) . "</a></li>\x0A";
 				}
-				unset($parts);
+				;
 			}
 			}
 			$this->content .= "</ul>\x0A";
-			$this->userName = $cmsController->user->name;
+			$this->userName = $this->application->user->name;
 		}
 		else {
 			$this->content = null;

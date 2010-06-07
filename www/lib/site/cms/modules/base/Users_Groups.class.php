@@ -11,31 +11,31 @@ class site_cms_modules_base_Users_Groups extends site_cms_modules_base_UsersBase
 	public $actionId;
 	public function main() {
 		parent::main();
-		$this->action = $this->app->params->get("action");
-		$this->actionId = Std::parseInt($this->app->params->get("id"));
+		$this->action = $this->application->params->get("action");
+		$this->actionId = Std::parseInt($this->application->params->get("id"));
 		if($this->action == "delete") {
 			if($this->actionId === null) {
-				$this->messages->addError("Trying to delete group, no ID given.");
+				$this->application->messages->addError("Trying to delete group, no ID given.");
 			}
 			else {
 				try {
-					$this->app->getDb()->delete("_users_groups", "id=" . $this->actionId);
+					$this->application->db->delete("_users_groups", "id=" . $this->actionId);
 				}catch(Exception $»e) {
 				$_ex_ = ($»e instanceof HException) ? $»e->e : $»e;
 				;
 				{ $e = $_ex_;
 				{
-					$this->messages->addError("Can't delete group.");
+					$this->application->messages->addError("Can't delete group.");
 				}}}
-				if($this->app->getDb()->lastAffectedRows > 0) {
-					$this->messages->addMessage("Group deleted.");
+				if($this->application->db->lastAffectedRows > 0) {
+					$this->application->messages->addMessage("Group deleted.");
 				}
 				else {
-					$this->messages->addWarning("No group to delete.");
+					$this->application->messages->addWarning("No group to delete.");
 				}
 			}
 		}
-		$this->groups = $this->app->getDb()->request("SELECT * FROM _users_groups");
+		$this->groups = $this->application->db->request("SELECT * FROM _users_groups");
 	}
 	public function __call($m, $a) {
 		if(isset($this->$m) && is_callable($this->$m))

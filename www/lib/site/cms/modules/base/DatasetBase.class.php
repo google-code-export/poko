@@ -12,30 +12,31 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 	public $siteViewHidden;
 	public $siteViewSerialized;
 	public $siteViewHiddenSerialized;
-	public function init() {
-		parent::init();
-		if($this->app->params->get("manage") !== null) {
+	public function pre() {
+		if($this->application->params->get("manage") !== null) {
 			$this->authenticationRequired = new _hx_array(array("cms_admin", "cms_manager"));
 		}
-		$this->linkMode = _hx_equal($this->app->params->get("linkMode"), "true");
-		$this->pagesMode = _hx_equal($this->app->params->get("pagesMode"), "true");
-		$this->siteMode = _hx_equal($this->app->params->get("siteMode"), "true") || $this->siteMode;
+		$this->linkMode = _hx_equal($this->application->params->get("linkMode"), "true");
+		$this->pagesMode = _hx_equal($this->application->params->get("pagesMode"), "true");
+		$this->siteMode = _hx_equal($this->application->params->get("siteMode"), "true") || $this->siteMode;
 		if($this->pagesMode) {
 			$this->navigation->pageHeading = "Pages";
 			$this->navigation->setSelected("Pages");
 		}
 		else {
-			$this->navigation->pageHeading = "Datasets";
-			$this->navigation->setSelected("Datasets");
-		}
-		if($this->siteMode) {
-			$this->navigation->pageHeading = "Site";
-			$this->navigation->setSelected("SiteView");
+			if($this->siteMode) {
+				$this->navigation->pageHeading = "Site";
+				$this->navigation->setSelected("SiteView");
+			}
+			else {
+				$this->navigation->pageHeading = "Datasets";
+				$this->navigation->setSelected("Datasets");
+			}
 		}
 	}
 	public function setupLeftNav() {
 		if($this->pagesMode && !$this->siteMode) {
-			$pages = $this->app->getDb()->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+			$pages = $this->application->db->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
 			$this->leftNavigation->addSection("Pages", null);
 			$»it = $pages->iterator();
 			while($»it->hasNext()) {
@@ -45,15 +46,15 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 				;
 			}
 			}
-			if($this->user->isAdmin() || $this->user->isSuper()) {
+			if(poko_Application::$instance->user->isAdmin() || poko_Application::$instance->user->isSuper()) {
 				$this->leftNavigation->footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 			}
 		}
 		else {
 			if($this->siteMode) {
-				$pages2 = $this->app->getDb()->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
-				$tables = $this->app->getDb()->request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
-				$siteViewData = $this->app->getDb()->requestSingle("SELECT `value` FROM `_settings` WHERE `key`='siteView'")->value;
+				$pages2 = $this->application->db->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+				$tables = $this->application->db->request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
+				$siteViewData = $this->application->db->requestSingle("SELECT `value` FROM `_settings` WHERE `key`='siteView'")->value;
 				$menu = new site_cms_modules_base_helper_MenuDef(null, null);
 				$this->siteView = new site_cms_modules_base_helper_MenuDef(null, null);
 				try {
@@ -102,11 +103,11 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 										$el = $def->getElement($item->listChildren);
 										if($el->type == "association") {
 											$p = $el->properties;
-											$primaryData = $this->app->getDb()->request("SHOW COLUMNS FROM `" . $p->table . "` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
+											$primaryData = $this->application->db->request("SHOW COLUMNS FROM `" . $p->table . "` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 											if($primaryData->length > 0) {
 												$primaryKey = $primaryData->pop()->Field;
 												$sql = "SELECT `" . $primaryKey . "` AS 'k', `" . $p->name . "` AS 'v' FROM `" . $p->table . "`";
-												$result = $this->app->getDb()->request($sql);
+												$result = $this->application->db->request($sql);
 												$tIndent = $item->indent + 1;
 												$»it2 = $result->iterator();
 												while($»it2->hasNext()) {
@@ -122,7 +123,7 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 									$tables = Lambda::filter($tables, array(new _hx_lambda(array("_ex_" => &$_ex_, "_g" => &$_g, "_g1" => &$_g1, "_g12" => &$_g12, "_g2" => &$_g2, "def" => &$def, "e" => &$e, "el" => &$el, "heading" => &$heading, "item" => &$item, "link" => &$link, "menu" => &$menu, "p" => &$p, "page" => &$page, "pages" => &$pages, "pages2" => &$pages2, "primaryData" => &$primaryData, "primaryKey" => &$primaryKey, "result" => &$result, "row" => &$row, "siteViewData" => &$siteViewData, "sql" => &$sql, "tIndent" => &$tIndent, "tables" => &$tables, "»e" => &$»e, "»it" => &$»it, "»it2" => &$»it2), null, array('x'), "{
 										return \$x->id !== \$item->id;
 									}"), 'execute1'));
-									$this->siteView->addItem($item->id, $item->type, $item->name, $item->heading, $item->indent, $item->listChildren, null);
+									$this->siteView->addItem($item->id, $item->type, $item->name, $item->heading, $item->indent, $item->listChildren);
 								}
 							}break;
 							case site_cms_modules_base_helper_MenuItemType::$PAGE:{
@@ -134,22 +135,15 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 									$pages2 = Lambda::filter($pages2, array(new _hx_lambda(array("_ex_" => &$_ex_, "_g" => &$_g, "_g1" => &$_g1, "_g12" => &$_g12, "_g2" => &$_g2, "def" => &$def, "e" => &$e, "el" => &$el, "heading" => &$heading, "item" => &$item, "link" => &$link, "link2" => &$link2, "menu" => &$menu, "p" => &$p, "page" => &$page, "pages" => &$pages, "pages2" => &$pages2, "primaryData" => &$primaryData, "primaryKey" => &$primaryKey, "result" => &$result, "row" => &$row, "siteViewData" => &$siteViewData, "sql" => &$sql, "tIndent" => &$tIndent, "tables" => &$tables, "»e" => &$»e, "»it" => &$»it, "»it2" => &$»it2), null, array('x'), "{
 										return \$x->pid !== \$item->id;
 									}"), 'execute1'));
-									$this->siteView->addItem($item->id, $item->type, $item->name, $item->heading, $item->indent, $item->listChildren, null);
+									$this->siteView->addItem($item->id, $item->type, $item->name, $item->heading, $item->indent, $item->listChildren);
 								}
 							}break;
 							case site_cms_modules_base_helper_MenuItemType::$NULL:{
-								if(_hx_field($item, "linkChild") !== null) {
-									$link3 = "cms.modules.base.DatasetItem&action=edit&siteMode=true&singleInstanceEdit=true&dataset=" . $item->linkChild->dataset . "&id=" . $item->linkChild->id . "";
-									$this->leftNavigation->addLink($item->heading, $item->name, $link3, $item->indent, null);
-									$this->siteView->addItem($item->id, $item->type, $item->name, $item->heading, $item->indent, null, $item->linkChild);
-								}
-								else {
-									$this->leftNavigation->addLink($item->heading, $item->name, null, $item->indent, null);
-									$this->siteView->addItem($item->id, $item->type, $item->name, $item->heading, $item->indent, null, null);
-								}
+								$this->leftNavigation->addLink($item->heading, $item->name, null, $item->indent, null);
+								$this->siteView->addItem($item->id, $item->type, $item->name, $item->heading, $item->indent, null);
 							}break;
 							}
-							unset($»it2,$tIndent,$sql,$row,$result,$primaryKey,$primaryData,$p,$link3,$link2,$link,$item,$el,$def);
+							unset($»it2,$tIndent,$sql,$row,$result,$primaryKey,$primaryData,$p,$link2,$link,$item,$el,$def);
 						}
 					}
 				}
@@ -158,7 +152,7 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 				while($»it3->hasNext()) {
 				$item2 = $»it3->next();
 				{
-					$this->siteViewHidden->addItem($item2->id, site_cms_modules_base_helper_MenuItemType::$DATASET, $item2->name, null, null, null, null);
+					$this->siteViewHidden->addItem($item2->id, site_cms_modules_base_helper_MenuItemType::$DATASET, $item2->name, null, null, null);
 					;
 				}
 				}
@@ -166,18 +160,18 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 				while($»it4->hasNext()) {
 				$item3 = $»it4->next();
 				{
-					$this->siteViewHidden->addItem($item3->pid, site_cms_modules_base_helper_MenuItemType::$PAGE, $item3->name, null, null, null, null);
+					$this->siteViewHidden->addItem($item3->pid, site_cms_modules_base_helper_MenuItemType::$PAGE, $item3->name, null, null, null);
 					;
 				}
 				}
 				$this->siteViewSerialized = haxe_Serializer::run($this->siteView);
 				$this->siteViewHiddenSerialized = haxe_Serializer::run($this->siteViewHidden);
-				if($this->user->isAdmin() || $this->user->isSuper()) {
+				if(poko_Application::$instance->user->isAdmin() || poko_Application::$instance->user->isSuper()) {
 					$this->leftNavigation->footer = "<a href=\"?request=cms.modules.base.SiteView&manage=true\">Manage Menu</a>";
 				}
 			}
 			else {
-				$tables2 = $this->app->getDb()->request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
+				$tables2 = $this->application->db->request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 				$this->leftNavigation->addSection("Datasets", null);
 				$»it5 = $tables2->iterator();
 				while($»it5->hasNext()) {
@@ -190,7 +184,7 @@ class site_cms_modules_base_DatasetBase extends site_cms_templates_CmsTemplate {
 					unset($name);
 				}
 				}
-				if($this->user->isAdmin() || $this->user->isSuper()) {
+				if(poko_Application::$instance->user->isAdmin() || poko_Application::$instance->user->isSuper()) {
 					$this->leftNavigation->footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true\">Manage Lists</a>";
 				}
 			}

@@ -20,10 +20,6 @@ class site_cms_common_Definition {
 	public $postProcedure;
 	public $showFiltering;
 	public $showOrdering;
-	public $helpItem;
-	public $helpList;
-	public $autoOrderingField;
-	public $autoOrderingOrder;
 	public function getElement($name) {
 		{
 			$_g = 0; $_g1 = $this->elements;
@@ -93,7 +89,7 @@ class site_cms_common_Definition {
 		$this->load();
 	}
 	public function load() {
-		$results = poko_Poko::$instance->getDb()->requestSingle("SELECT * FROM `_definitions` WHERE `id`=\"" . $this->id . "\"");
+		$results = poko_Application::$instance->db->requestSingle("SELECT * FROM `_definitions` WHERE `id`=\"" . $this->id . "\"");
 		if($results === null) {
 			throw new HException(("failed to load definition: " . $this->id));
 		}
@@ -107,15 +103,6 @@ class site_cms_common_Definition {
 		$this->postProcedure = $results->postProcedure;
 		$this->showFiltering = $results->showFiltering;
 		$this->showOrdering = $results->showOrdering;
-		$this->helpItem = $results->help;
-		$this->helpList = $results->help_list;
-		$this->autoOrderingField = "";
-		$this->autoOrderingOrder = "ASC";
-		$autoOrdering = _hx_string_call($results->autoOrdering, "split", array("|"));
-		if($autoOrdering->length === 2) {
-			$this->autoOrderingField = $autoOrdering[0];
-			$this->autoOrderingOrder = $autoOrdering[1];
-		}
 		try {
 			$this->elements = haxe_Unserializer::run($results->elements);
 		}catch(Exception $»e) {
@@ -141,10 +128,7 @@ class site_cms_common_Definition {
 		$data->postEditSql = $this->postEditSql;
 		$data->postDeleteSql = $this->postDeleteSql;
 		$data->postProcedure = $this->postProcedure;
-		$data->help = $this->helpItem;
-		$data->help_list = $this->helpList;
-		$data->autoOrdering = $this->autoOrderingField . "|" . $this->autoOrderingOrder;
-		poko_Poko::$instance->getDb()->update("_definitions", $data, "`id`=\"" . $this->id . "\"");
+		poko_Application::$instance->db->update("_definitions", $data, "`id`=\"" . $this->id . "\"");
 	}
 	public function __call($m, $a) {
 		if(isset($this->$m) && is_callable($this->$m))
@@ -155,7 +139,7 @@ class site_cms_common_Definition {
 			throw new HException('Unable to call «'.$m.'»');
 	}
 	static function tableToDefinitionId($table) {
-		$res = poko_Poko::$instance->getDb()->requestSingle("SELECT `id` FROM `_definitions` WHERE `table`='" . $table . "'");
+		$res = poko_Application::$instance->db->requestSingle("SELECT `id` FROM `_definitions` WHERE `table`='" . $table . "'");
 		return $res->id;
 	}
 	function __toString() { return 'site.cms.common.Definition'; }

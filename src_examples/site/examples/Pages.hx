@@ -26,6 +26,7 @@
  */ 
 
 package site.examples;
+import poko.Request;
 import site.cms.common.PageData;
 import site.examples.components.Navigation;
 import site.examples.templates.DefaultTemplate;
@@ -42,13 +43,13 @@ class Pages extends DefaultTemplate
 		pages = PageData.getPages();
 		
 		pageNav = new Navigation();
-		pageNav.selected = app.params.get("page");
+		pageNav.selected = application.params.get("page");
 		
 		for (page in pages)
 		{
-			pageNav.addLink(page.definition.name, app.params.get("request"), { page:page.definition.name } );
+			pageNav.addLink(page.definition.name, application.params.get("request"), { page:page.definition.name } );
 			
-			if (page.name == app.params.get("page"))
+			if (page.name == application.params.get("page"))
 				selectedPage = page;
 		}
 		

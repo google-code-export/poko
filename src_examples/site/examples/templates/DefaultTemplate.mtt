@@ -21,7 +21,7 @@
 		<h1> EXAMPLES </h1>
 		::raw navigation::
 			<!-- START PAGE CONTENT -->
-			::raw controller.view.render() ::
+			::use request_content_file::::end::
 			<!-- END PAGE CONTENT -->
 	</div>
 </body>

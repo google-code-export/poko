@@ -10,25 +10,26 @@ class site_cms_Index extends site_cms_templates_CmsTemplate {
 	public $message;
 	public $inputUsername;
 	public function main() {
-		if(_hx_equal($this->app->params->get("logout"), "true")) {
-			$this->user->unauthenticate();
+		$this->authenticate = false;
+		if(_hx_equal($this->application->params->get("logout"), "true")) {
+			$this->application->user->unauthenticate();
 		}
-		if($this->user->authenticated) {
-			$this->app->redirect("?request=cms.modules.base.SiteView");
+		if($this->application->user->authenticated) {
+			php_Web::redirect("?request=cms.modules.base.SiteView");
 		}
-		if($this->app->params->get("submitted") !== null) {
-			$username = $this->app->getDb()->cnx->quote($this->app->params->get("username"));
-			$password = $this->app->getDb()->cnx->quote(haxe_Md5::encode($this->app->params->get("password")));
-			if($this->app->getDb()->count("_users", "`username`=" . $username . " AND `password`=" . $password) > 0) {
-				$this->user->authenticate($username);
+		if($this->application->params->get("submitted") !== null) {
+			$username = $this->application->db->cnx->quote($this->application->params->get("username"));
+			$password = $this->application->db->cnx->quote(haxe_Md5::encode($this->application->params->get("password")));
+			if($this->application->db->count("_users", "`username`=" . $username . " AND `password`=" . $password) > 0) {
+				$this->application->user->authenticate($username);
 				php_Web::redirect(php_Web::getURI() . "?request=cms.modules.base.SiteView");
 			}
 			else {
 				$this->message = "Incorrect user or password";
 			}
 		}
-		if($this->app->params->get("username") !== null) {
-			$this->inputUsername = $this->app->params->get("username");
+		if($this->application->params->get("username") !== null) {
+			$this->inputUsername = $this->application->params->get("username");
 		}
 	}
 	public function __call($m, $a) {

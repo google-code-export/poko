@@ -5,15 +5,17 @@
 
 package site.cms.templates;
 
-import poko.controllers.HtmlController;
-import site.cms.CmsController;
-import site.cms.common.Messages;
+import poko.Request;
+import poko.utils.Messages;
 import site.cms.components.LeftNavigation;
 import site.cms.components.Navigation;
-import poko.controllers.Controller;
 
-class CmsPopup extends CmsController
+class CmsPopup extends Request
 {
+	public var messages:List<Message>;
+	public var warnings:List<Message>;
+	public var errors:List<Message>;
+	
 	public function new() 
 	{
 		super();
@@ -39,12 +41,12 @@ class CmsPopup extends CmsController
 		//additionalJsRequests.add("site.cms.js.JsCommon");
 	}
 	
-	override public function post()
+	override public function preRender()
 	{
-		/*messages = messages.getMessages();
-		warnings = messages.getWarnings();
-		errors = messages.getErrors();
-		*/
-		messages.clearAll();		
+		messages = application.messages.getMessages();
+		warnings = application.messages.getWarnings();
+		errors = application.messages.getErrors();
+		
+		application.messages.clearAll();		
 	}
 }

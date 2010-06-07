@@ -79,9 +79,9 @@ class DefinitionElement extends DefinitionsBase
 	
 	/** remoting */
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
+		super.pre();
 		
 		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");		
@@ -93,7 +93,7 @@ class DefinitionElement extends DefinitionsBase
 	
 	public function getListData(table):Array<String>
 	{
-		var result = app.db.request("SHOW FIELDS FROM `" + table + "`");
+		var result = application.db.request("SHOW FIELDS FROM `" + table + "`");
 		var arr = [];
 		for (item in result)
 			arr.push(item.Field);
@@ -105,13 +105,13 @@ class DefinitionElement extends DefinitionsBase
 	{
 		var out = [];
 		
-		var result = app.db.request("SHOW FIELDS FROM `" + table + "`");
+		var result = application.db.request("SHOW FIELDS FROM `" + table + "`");
 		var arr = [];
 		for (item in result)
 			arr.push(item.Field);
 		out.push(arr);
 		
-		result = app.db.request("SHOW FIELDS FROM `" + table2 + "`");
+		result = application.db.request("SHOW FIELDS FROM `" + table2 + "`");
 		arr = [];
 		for (item in result)
 			arr.push(item.Field);
@@ -127,9 +127,9 @@ class DefinitionElement extends DefinitionsBase
 	{
 		super.main();
 		
-		definition = new Definition(app.params.get("id"));
+		definition = new Definition(application.params.get("id"));
 		
-		meta = definition.getElement(app.params.get("definition"));
+		meta = definition.getElement(application.params.get("definition"));
 		
 		setupForm();
 		
@@ -138,9 +138,9 @@ class DefinitionElement extends DefinitionsBase
 			update();
 			if (pagesMode)
 			{
-				Web.redirect("?request=cms.modules.base.Definition&id=" + app.params.get("id") + "&pagesMode=true");
+				Web.redirect("?request=cms.modules.base.Definition&id=" + application.params.get("id") + "&pagesMode=true");
 			} else {
-				Web.redirect("?request=cms.modules.base.Definition&id=" + app.params.get("id"));
+				Web.redirect("?request=cms.modules.base.Definition&id=" + application.params.get("id"));
 			}
 			//Sys.exit(1);
 		}
@@ -220,7 +220,7 @@ class DefinitionElement extends DefinitionsBase
 		if (selectedAssocTable != null)
 		{
 			try {
-				assocFields = app.db.request("SHOW FIELDS FROM `" + selectedAssocTable + "`");
+				assocFields = application.db.request("SHOW FIELDS FROM `" + selectedAssocTable + "`");
 				assocFields = Lambda.map(assocFields, function(field) {
 					return { key:field.Field, value:field.Field };
 				});
@@ -231,7 +231,7 @@ class DefinitionElement extends DefinitionsBase
 		
 		var localFields:List<Dynamic> = null;
 		try {
-			localFields = app.db.request("SHOW FIELDS FROM `" + definition.table + "`");
+			localFields = application.db.request("SHOW FIELDS FROM `" + definition.table + "`");
 			localFields = Lambda.map(localFields, function(field) {
 				return { key:field.Field, value:field.Field };
 			});
@@ -244,7 +244,7 @@ class DefinitionElement extends DefinitionsBase
 		if (selectedMultiTable != null)
 		{
 			try {
-				multiFields = app.db.request("SHOW FIELDS FROM `" + selectedMultiTable + "`");
+				multiFields = application.db.request("SHOW FIELDS FROM `" + selectedMultiTable + "`");
 				multiFields = Lambda.map(multiFields, function(field) {
 					return { key:field.Field, value:field.Field };
 				});
@@ -258,7 +258,7 @@ class DefinitionElement extends DefinitionsBase
 		if (selectedMultilinkTable != null)
 		{
 			try {
-				multiLinkFields = app.db.request("SHOW FIELDS FROM `" + selectedMultilinkTable + "`");
+				multiLinkFields = application.db.request("SHOW FIELDS FROM `" + selectedMultilinkTable + "`");
 				multiLinkFields = Lambda.map(multiLinkFields, function(field) {
 					return { key:field.Field, value:field.Field };
 				});
@@ -343,6 +343,12 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new Input( "def_image-file_showOnlyLibraries", "Only Libraries", data.showOnlyLibraries, false), "properties");
 		form.addElement(new RadioGroup( "def_image-file_libraryView", "Library View", libraryView, data.libraryView, "0", false), "properties");
 		
+		form.addElement(new RadioGroup( "def_image-file_showJavaUploader", "Java Uploader?", yesno, data.showJavaUploader, "0", false), "properties");
+		form.addElement(new Input( "def_image-file_ftpUrl", "FTP Url", data.ftpUrl, false), "properties");
+		form.addElement(new Input( "def_image-file_ftpUsername", "FTP Username", data.ftpUsername, false), "properties");
+		form.addElement(new Input( "def_image-file_ftpPassword", "FTP Password", data.ftpPassword, false), "properties");
+		form.addElement(new Input( "def_image-file_ftpDirectory", "FTP Directory", data.ftpDirectory, false), "properties");
+		
 		//form.addElement("def_date_selector", new DateSelector( form, "Select Date", Date.now()));
 		form.addElement(new RadioGroup( "def_date_currentOnAdd", "Current date on add?", yesno, data.currentOnAdd, "0", false), "properties");
 		form.addElement(new RadioGroup( "def_date_restrictMin", "Restrict Min", yesno, data.restrictMin, "0", false), "properties");
@@ -367,7 +373,11 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new Input( "def_richtext-wym_height", "Height", data.height), "properties");
 		form.addElement(new RadioGroup( "def_richtext-wym_required", "Required", yesno, data.required, "0", false), "properties");
 		form.addElement(new RadioGroup( "def_richtext-wym_allowTables", "Allow Tables", yesno, data.allowTables, "0", false), "properties");
+		
 		form.addElement(new RadioGroup( "def_richtext-wym_allowImages", "Allow Images", yesno, data.allowImages, "1", false), "properties");
+		form.addElement(new RadioGroup( "def_richtext-wym_useFtp", "Use FTP?", yesno, data.useFtp, "1", false), "properties");
+		form.addElement(new Input( "def_richtext-wym_ftpDirectory", "FTP directory", data.ftpDirectory), "properties");
+		
 		var t = new TextArea("def_richtext-wym_editorStyles", "Editor Styles", data.editorStyles, false, null);
 		t.width = 500;
 		t.height = 200;

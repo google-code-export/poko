@@ -26,20 +26,14 @@
  */ 
 
 package site.examples;
+import poko.Request;
 import site.examples.templates.DefaultTemplate;
 
 class Index extends DefaultTemplate
 {
-	public function new()
-	{
-		super();
-	}
-	
 	override public function main()
 	{
-		super.main();
 		
-		trace(layoutView.template);
 	}
-
+	
 }

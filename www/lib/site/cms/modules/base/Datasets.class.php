@@ -7,10 +7,10 @@ class site_cms_modules_base_Datasets extends site_cms_modules_base_DatasetBase {
 	}}
 	public $data;
 	public function main() {
-		if($this->app->params->get("manage") === null) {
+		if($this->application->params->get("manage") === null) {
 			$str = "";
-			if($this->user->isAdmin() || $this->user->isSuper()) {
-				$str .= poko_views_renderers_Templo::parse("cms/modules/base/blocks/datasets.mtt", _hx_anonymous(array()));
+			if(poko_Application::$instance->user->isAdmin() || poko_Application::$instance->user->isSuper()) {
+				$str .= poko_ViewContext::parse("site/cms/modules/base/blocks/datasets.mtt", _hx_anonymous(array()));
 			}
 			$this->setContentOutput($str);
 			$this->setupLeftNav();

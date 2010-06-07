@@ -5,7 +5,6 @@
 	::if !sectionsIsSeperator.get(section)::
 		<h3>::section::</h3>
 		<ul>
-			
 		::foreach item sections.get(section)::
 			::if item.link != null::
 				<li><a href="?request=::item.link::">::raw item.indents::::raw item.title:: </a></li>
@@ -13,7 +12,6 @@
 				<li>::raw item.indents::::raw item.title::</li>
 			::end::
 		::end::
-
 		
 		</ul>
 	::else::

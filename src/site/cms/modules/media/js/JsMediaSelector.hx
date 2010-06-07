@@ -20,9 +20,11 @@ class JsMediaSelector extends JsRequest
 	{
 		new JQuery("#form1_submit").hide();
 		var gallerySelector:Select = cast Lib.document.getElementById("form1_galleryList");
-		gallerySelector.onchange = function(e) {
-			var f:Form = cast Lib.document.getElementById("form1");
-			f.submit();
+		if(gallerySelector != null){
+			gallerySelector.onchange = function(e) {
+				var f:Form = cast Lib.document.getElementById("form1");
+				f.submit();
+			}
 		}
 		if (Lib.window.opener != null) wymOpener = Lib.window.opener;
 	}

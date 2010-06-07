@@ -161,10 +161,6 @@ class poko_form_Form {
 		$element = $»it->next();
 		$s->b .= "\x09" . $element->getPreview() . "\x0A";
 		}
-		if($this->submitButton !== null) {
-			$this->submitButton->form = $this;
-			$s->b .= $this->submitButton->getPreview();
-		}
 		$s->b .= "</table>\x0A";
 		$s->b .= $this->getCloseTag();
 		return $s->b;

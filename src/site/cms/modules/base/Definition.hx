@@ -54,11 +54,11 @@ class Definition extends DefinitionsBase
 	
 	public var jsBind:JsBinding;
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
+		super.pre();
 		
-		id = app.params.get("id");
+		id = application.params.get("id");
 		definition = new site.cms.common.Definition(id);
 		
 		//
@@ -95,11 +95,11 @@ class Definition extends DefinitionsBase
 			try{
 				d.autoOrdering = form1.getElement('orderByField').value + "|" + form1.getElement('orderByDirection').value;
 			}catch(e:Dynamic){}
-			app.db.update("_definitions", d, "`id`=" + id);
+			application.db.update("_definitions", d, "`id`=" + id);
 		}
 			
 	
-		if (app.params.get("action"))
+		if (application.params.get("action"))
 			process();
 			
 		setupForm1();
@@ -115,7 +115,7 @@ class Definition extends DefinitionsBase
 		} 
 		else 
 		{	
-			var fields = app.db.request("SHOW FIELDS FROM `" + definition.table + "`");
+			var fields = application.db.request("SHOW FIELDS FROM `" + definition.table + "`");
 			var defined = new List();
 			for (field in fields)
 			{
@@ -141,11 +141,11 @@ class Definition extends DefinitionsBase
 	
 	private function process():Void
 	{
-		switch(app.params.get("action"))
+		switch(application.params.get("action"))
 		{
 			// Used in pagesMode
 			case "addElement":
-				var name = app.params.get("elementName");
+				var name = application.params.get("elementName");
 				var type = "hidden";
 				
 				if (name == "") {
@@ -189,14 +189,14 @@ class Definition extends DefinitionsBase
 			
 			// Used in !pagesMode	
 			case "define":
-				var define = app.params.get("define");
+				var define = application.params.get("define");
 				var el = definition.addElement(define);
 				el.type = "read-only";
 				el.showInList = true;
 				definition.save();
-				app.redirect("?request=cms.modules.base.DefinitionElement&id=" + id + "&definition=" + define + "&pagesMode=false");
+				application.redirect("?request=cms.modules.base.DefinitionElement&id=" + id + "&definition=" + define + "&pagesMode=false");
 			case "addExtra":
-				switch(app.params.get("extra"))
+				switch(application.params.get("extra"))
 				{
 					case "linkdisplay":
 						var lastlink = null; 
@@ -233,7 +233,7 @@ class Definition extends DefinitionsBase
 	
 	private function setupForm1():Void
 	{
-		var generalInfo = app.db.requestSingle("SELECT * FROM `_definitions` WHERE `id`=" + id);
+		var generalInfo = application.db.requestSingle("SELECT * FROM `_definitions` WHERE `id`=" + id);
 		
 		var tOrder:Array<String> = generalInfo.autoOrdering.split("|");
 		var orderBy = "";
@@ -258,7 +258,7 @@ class Definition extends DefinitionsBase
 		form1.addElement(new Selectbox("indents", "Indents", null, generalInfo.indents, false, "- none -" ));
 		
 		if (!pagesMode) {
-			var result = app.db.request("SHOW FIELDS FROM `" + definition.table + "`");
+			var result = application.db.request("SHOW FIELDS FROM `" + definition.table + "`");
 			var fields = new List();
 			for(f in result) fields.add({key: f.Field, value: f.Field});
 			var s:Selectbox = new Selectbox("orderByField", "Order By", fields, orderBy);

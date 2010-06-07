@@ -35,11 +35,11 @@ class Galleries extends MediaBase
 {
 	public var galleries:List<Dynamic>;
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
+		super.pre();
 		
-		if (app.params.get("action")) process();
+		if (application.params.get("action")) process();
 	}
 	
 	override public function main()
@@ -60,16 +60,16 @@ class Galleries extends MediaBase
 	
 	private function process():Void
 	{
-		switch(app.params.get("action"))
+		switch(application.params.get("action"))
 		{
 			case "add":
-				var dir = imageRoot + "/" + app.params.get("newGallery");
+				var dir = imageRoot + "/" + application.params.get("newGallery");
 				if (!FileSystem.exists(dir))
 				{
 					FileSystem.createDirectory(dir);
-					messages.addMessage("Gallery Added");
+					application.messages.addMessage("Gallery Added");
 				} else {
-					messages.addError("A Gallery of this name already exists");
+					application.messages.addError("A Gallery of this name already exists");
 				}
 				
 		}

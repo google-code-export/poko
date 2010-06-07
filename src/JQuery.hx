@@ -1,6 +1,6 @@
 import js.Dom;
 
-extern class JQuery implements ArrayAccess<HtmlDom>, implements Dynamic
+extern class JQuery implements ArrayAccess<HtmlDom>
 {
     public static function __init__():Void {
         untyped __js__("var JQuery = window.jQuery");

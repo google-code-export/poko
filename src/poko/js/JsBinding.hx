@@ -29,8 +29,7 @@ package poko.js;
 
 #if php
 
-import poko.controllers.HtmlController;
-import poko.Poko;
+import poko.Application;
 import haxe.Serializer;
 
 class JsBinding
@@ -39,7 +38,7 @@ class JsBinding
 	
 	public function new(jsRequest:String)
 	{
-		cast(Poko.instance.controller,HtmlController).jsBindings.set(jsRequest, this);
+		Application.instance.request.jsBindings.set(jsRequest, this);
 		this.jsRequest = jsRequest;
 	}
 	
@@ -53,14 +52,13 @@ class JsBinding
 	
 	public function queueCall(method:String, args:Array<Dynamic>, ?afterPageLoad=true):Void
 	{
-		var controller:HtmlController = cast Poko.instance.controller;
 		var call = getCall(method, args);
 		if (afterPageLoad)
 		{
-			controller.jsCalls.add(call);
+			Application.instance.request.jsCalls.add(call);
 		} else {
 			// TODO make early JS call (after header - before body)
-			controller.jsCalls.add(call);
+			Application.instance.request.jsCalls.add(call);
 		}
 	}
 	
@@ -71,7 +69,7 @@ class JsBinding
 	
 	public function toString():String
 	{
-		return "poko.js.JsPoko.instance.resolveRequest('" + jsRequest + "')";
+		return "poko.js.JsApplication.instance.resolveRequest('" + jsRequest + "')";
 	}
 }
 

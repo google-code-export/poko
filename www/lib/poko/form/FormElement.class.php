@@ -17,7 +17,6 @@ class poko_form_FormElement {
 	public $attributes;
 	public $active;
 	public $validators;
-	public $cssClass;
 	public function isValid() {
 		$this->errors->clear();
 		if(_hx_equal($this->value, "") && $this->required) {
@@ -57,7 +56,7 @@ class poko_form_FormElement {
 	}
 	public function populate() {
 		$n = $this->form->name . "_" . $this->name;
-		$v = poko_Poko::$instance->params->get($n);
+		$v = poko_Application::$instance->params->get($n);
 		if($v !== null) {
 			$this->value = $v;
 		}

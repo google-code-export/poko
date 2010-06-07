@@ -25,7 +25,7 @@ class site_cms_modules_base_SettingsTheme extends site_cms_modules_base_Settings
 				}
 			}
 		}
-		$setTheme = $this->app->params->get("set");
+		$setTheme = $this->application->params->get("set");
 		if($setTheme !== null) {
 			if(Lambda::has($this->themes, $setTheme, null)) {
 				$this->currentTheme = $setTheme;
@@ -41,10 +41,10 @@ class site_cms_modules_base_SettingsTheme extends site_cms_modules_base_Settings
 						;
 					}
 					}
-					$this->app->getDb()->update("_settings", _hx_anonymous(array("value" => haxe_Serializer::run($style))), "`key`='themeStyle'");
+					$this->application->db->update("_settings", _hx_anonymous(array("value" => haxe_Serializer::run($style))), "`key`='themeStyle'");
 				}
-				$this->app->getDb()->update("_settings", _hx_anonymous(array("value" => $setTheme)), "`key`='themeCurrent'");
-				$this->messages->addMessage("Theme updated to '" . $setTheme . "'");
+				$this->application->db->update("_settings", _hx_anonymous(array("value" => $setTheme)), "`key`='themeCurrent'");
+				$this->application->messages->addMessage("Theme updated to '" . $setTheme . "'");
 			}
 		}
 	}

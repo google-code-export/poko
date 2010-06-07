@@ -45,26 +45,26 @@ class Users_Groups extends UsersBase
 	{
 		super.main();
 		
-		action = app.params.get("action");
-		actionId = Std.parseInt(app.params.get("id"));
+		action = application.params.get("action");
+		actionId = Std.parseInt(application.params.get("id"));
 		
 		if (action == "delete") {
 			if (actionId == null) {
-				messages.addError("Trying to delete group, no ID given.");
+				application.messages.addError("Trying to delete group, no ID given.");
 			}else {
 				try{
-					app.db.delete("_users_groups", "id=" + actionId);
+					application.db.delete("_users_groups", "id=" + actionId);
 				}catch (e:Dynamic) {
-					messages.addError("Can't delete group.");
+					application.messages.addError("Can't delete group.");
 				}
-				if (app.db.lastAffectedRows > 0) {
-					messages.addMessage("Group deleted.");
+				if (application.db.lastAffectedRows > 0) {
+					application.messages.addMessage("Group deleted.");
 				}else {
-					messages.addWarning("No group to delete.");
+					application.messages.addWarning("No group to delete.");
 				}
 			}
 		}
 		
-		groups = app.db.request("SELECT * FROM _users_groups");
+		groups = application.db.request("SELECT * FROM _users_groups");
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-class site_cms_components_LeftNavigation extends poko_system_Component {
+class site_cms_components_LeftNavigation extends poko_Component {
 	public function __construct() {
 		if( !php_Boot::$skip_constructor ) {
 		parent::__construct();
@@ -12,9 +12,6 @@ class site_cms_components_LeftNavigation extends poko_system_Component {
 	public $footer;
 	public $sections;
 	public $sectionsIsSeperator;
-	public function init() {
-		;
-	}
 	public function main() {
 		;
 	}

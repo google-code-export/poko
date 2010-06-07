@@ -38,16 +38,16 @@ class Gallery extends MediaBase
 	
 	public var jsBinding:JsBinding;
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
+		super.pre();
 		
 		head.css.add("css/cms/media.css");
 		
 		head.js.add("js/cms/media/swfobject.js");
 		head.js.add("js/cms/media/jquery.uploadify.v2.1.0.min.js");
 		
-		gallery = app.params.get("name");
+		gallery = application.params.get("name");
 		
 		remoting.addObject("api", { getContent:getContent, deleteItem:deleteItem } );
 		

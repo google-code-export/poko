@@ -20,8 +20,7 @@
 	<div id="haxe:trace"></div>
 	<div id="container">
 		
-		
-		::if messages.getMessages().length > 0::
+		::if messages.length > 0::
 			<div class="messageBlock" id="messageMessages"><ul>
 				::foreach m messages::
 					<li> ::raw m::</li>
@@ -29,7 +28,7 @@
 			</ul></div>
 		::end::
 		
-		::if messages.getWarnings().length > 0::
+		::if warnings.length > 0::
 			<div class="messageBlock" id="messageWarnings"><ul>
 				::foreach m warnings::
 					<li> ::raw m:: </li>
@@ -37,7 +36,7 @@
 			</ul></div>
 		::end::
 		
-		::if messages.getErrors().length > 0::
+		::if errors.length > 0::
 			<div class="messageBlock" id="messageErrors"><ul>
 				::foreach m errors::
 					<li> ::raw m:: </li>
@@ -45,15 +44,7 @@
 			</ul></div>
 		::end::
 		
-		::if messages.getDebugs().length > 0::
-			<div class="messageBlock" id="messageDebugs"><ul>
-				::foreach m debugs::
-					<li> ::raw m:: </li>
-				::end::
-			</ul></div>
-		::end::		
-		
-		<div id="content">::raw controller.getView()::</div>
+		<div id="content">::raw controller.getRequestContent()::</div>
 		
 		<div style="clear:both"></div>
 	</div>

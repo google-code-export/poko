@@ -5,11 +5,11 @@ class site_cms_common_Tools {
 		;
 	}
 	static function getDBTables() {
-		$application = poko_Poko::$instance;
-		$tables = poko_Poko::$instance->getDb()->request("SHOW TABLES");
+		$application = poko_Application::$instance;
+		$tables = $application->db->request("SHOW TABLES");
 		$app = $application;
 		$tables = Lambda::map($tables, array(new _hx_lambda(array("app" => &$app, "application" => &$application, "tables" => &$tables), null, array('table'), "{
-			return Reflect::field(\$table, \"Tables_in_\" . \$app->getDb()->database);
+			return Reflect::field(\$table, \"Tables_in_\" . \$app->db->database);
 		}"), 'execute1'));
 		$tables = Lambda::filter($tables, array(new _hx_lambda(array("app" => &$app, "application" => &$application, "tables" => &$tables), null, array('table'), "{
 			return _hx_string_call(\$table, \"substr\", array(0, 1)) != \"_\";

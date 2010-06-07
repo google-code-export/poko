@@ -26,7 +26,7 @@
  */
 
 package site.examples.components;
-import poko.system.Component;
+import poko.Component;
 
 class Navigation extends Component
 {
@@ -40,7 +40,10 @@ class Navigation extends Component
 		navItems = new List();
 	}
 	
-	override public function main(){}
+	override public function main()
+	{
+		
+	}
 	
 	public function setSelectedByRequest(req)
 	{

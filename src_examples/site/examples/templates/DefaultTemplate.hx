@@ -27,17 +27,20 @@
 
 package site.examples.templates;
 
-import poko.controllers.HtmlController;
+import poko.Request;
 import site.examples.components.Navigation;
 
-class DefaultTemplate extends HtmlController
+class DefaultTemplate extends Request
 {	
 	public var navigation:Navigation;
 	
+	public function new() 
+	{
+		super();
+	}
+	
 	override public function init()
 	{
-		super.init();
-		
 		head.title = "haXe poko examples site";
 		
 		//app.defaultJS.add("js/firebug-lite.js");
@@ -55,6 +58,6 @@ class DefaultTemplate extends HtmlController
 		navigation.addLink("Image Processing", "examples.ImageProcessing");
 		navigation.addLink("Complex Data", 		"examples.ComplexData");
 		
-		navigation.setSelectedByRequest(app.params.get('request'));
+		navigation.setSelectedByRequest(application.params.get('request'));
 	}
 }

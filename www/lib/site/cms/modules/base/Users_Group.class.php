@@ -12,8 +12,8 @@ class site_cms_modules_base_Users_Group extends site_cms_modules_base_UsersBase 
 	public $form1;
 	public $heading;
 	public function main() {
-		$this->action = $this->app->params->get("action");
-		$this->actionId = Std::parseInt($this->app->params->get("id"));
+		$this->action = $this->application->params->get("action");
+		$this->actionId = Std::parseInt($this->application->params->get("id"));
 		if($this->action != "edit" && $this->action != "add") {
 			$this->action = "add";
 		}
@@ -43,19 +43,19 @@ class site_cms_modules_base_Users_Group extends site_cms_modules_base_UsersBase 
 						}
 					}
 				}
-				$this->app->getDb()->insert("_users_groups", $d);
+				$this->application->db->insert("_users_groups", $d);
 			}catch(Exception $»e) {
 			$_ex_ = ($»e instanceof HException) ? $»e->e : $»e;
 			;
 			{ $e = $_ex_;
 			{
-				$this->messages->addError("Database error.");
+				$this->application->messages->addError("Database error.");
 			}}}
-			if($this->app->getDb()->lastAffectedRows < 1) {
-				$this->messages->addError("Problem adding group.");
+			if($this->application->db->lastAffectedRows < 1) {
+				$this->application->messages->addError("Problem adding group.");
 			}
 			else {
-				$this->messages->addMessage("Group added. <a href=\"?request=cms.modules.base.Users_Group&action=edit&id=" . $this->app->getDb()->cnx->lastInsertId() . "\">edit</a>");
+				$this->application->messages->addMessage("Group added. <a href=\"?request=cms.modules.base.Users_Group&action=edit&id=" . $this->application->db->cnx->lastInsertId() . "\">edit</a>");
 				$this->form1->clearData();
 			}
 		}break;
@@ -76,19 +76,19 @@ class site_cms_modules_base_Users_Group extends site_cms_modules_base_UsersBase 
 						}
 					}
 				}
-				$this->app->getDb()->update("_users_groups", $d2, "id=" . $this->form1->getElement("actionId")->value);
+				$this->application->db->update("_users_groups", $d2, "id=" . $this->form1->getElement("actionId")->value);
 			}catch(Exception $»e2) {
 			$_ex_2 = ($»e2 instanceof HException) ? $»e2->e : $»e2;
 			;
 			{ $e2 = $_ex_2;
 			{
-				$this->messages->addError("Database error.");
+				$this->application->messages->addError("Database error.");
 			}}}
-			if($this->app->getDb()->lastAffectedRows < 1) {
-				$this->messages->addWarning("Nothing changed.");
+			if($this->application->db->lastAffectedRows < 1) {
+				$this->application->messages->addWarning("Nothing changed.");
 			}
 			else {
-				$this->messages->addMessage("Group updated.");
+				$this->application->messages->addMessage("Group updated.");
 			}
 		}break;
 		}
@@ -97,7 +97,7 @@ class site_cms_modules_base_Users_Group extends site_cms_modules_base_UsersBase 
 		$groupInfo = _hx_anonymous(array());
 		$permissionsListSelected = new _hx_array(array());
 		if($this->action == "edit") {
-			$groupInfo = $this->app->getDb()->requestSingle("SELECT * FROM `_users_groups` WHERE `id`=" . $this->actionId);
+			$groupInfo = $this->application->db->requestSingle("SELECT * FROM `_users_groups` WHERE `id`=" . $this->actionId);
 			if($groupInfo->isAdmin) {
 				$permissionsListSelected->push("isAdmin");
 			}

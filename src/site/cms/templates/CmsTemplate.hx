@@ -5,27 +5,35 @@
 
 package site.cms.templates;
 
-import poko.controllers.HtmlController;
-import site.cms.CmsController;
-import site.cms.common.Messages;
+import poko.Request;
+import poko.utils.Messages;
+import site.cms.common.CmsSettings;
 import site.cms.components.LeftNavigation;
 import site.cms.components.Navigation;
 
-class CmsTemplate extends CmsController
+class CmsTemplate extends Request
 {
 	public var navigation:Navigation;
 	public var leftNavigation:LeftNavigation;
+	public var messages:List<Message>;
+	public var warnings:List<Message>;
+	public var errors:List<Message>;
+	public var debugs:List<Message>;
+	public var userName:String;
 	
-	override public function init() 
+	public function new() 
 	{
-		super.init();
-		
+		super();
+
 		navigation = new Navigation();
 		leftNavigation = new LeftNavigation();
 		
 		authenticate = true;
-		
-		settings = new Hash();
+	}
+	
+	override public function init() 
+	{
+		super.init();
 		
 		head.css.add("css/fixes/reset.css");
 		head.css.add("css/fixes/fonts.css");
@@ -39,21 +47,25 @@ class CmsTemplate extends CmsController
 		//additionalJsRequests.add("site.cms.js.JsCommon");
 		
 		// get the settings
-		var request:List<Dynamic> = app.db.request("SELECT * FROM _settings");
-		for (i in request)
-		{
-			settings.set(i.key, i.value);
-		}
+		CmsSettings.load(application.db);
 		
-		head.title = settings.get("cmsTitle");
+		head.title = CmsSettings.i.cmsTitle;
 		
-		userName = user.name;
+		userName = application.user.name;
+	}
+	
+	override public function preRender()
+	{
+		messages = application.messages.getMessages();
+		warnings = application.messages.getWarnings();
+		errors = application.messages.getErrors();
+		debugs = application.messages.getDebugs();
+				
+		application.messages.clearAll();
 	}
 	
 	override public function post()
 	{
-		super.post();
-		
-		messages.clearAll();
+		CmsSettings.save(application.db);
 	}
 }

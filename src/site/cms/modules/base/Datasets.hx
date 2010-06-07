@@ -30,13 +30,14 @@ package site.cms.modules.base;
 import haxe.Serializer;
 import haxe.Unserializer;
 import php.Exception;
-import poko.Poko;
+import poko.Application;
 import poko.form.elements.Button;
 import poko.form.elements.Input;
 import poko.form.elements.Selectbox;
 import poko.form.Form;
 import poko.form.FormElement;
-import poko.controllers.HtmlController;
+import poko.Request;
+import poko.ViewContext;
 import php.Web;
 import site.cms.common.Tools;
 import site.cms.modules.base.helper.MenuDef;
@@ -53,12 +54,12 @@ class Datasets extends DatasetBase
 	
 	override public function main()
 	{
-		if (app.params.get("manage") == null)
+		if (application.params.get("manage") == null)
 		{
 			var str = "";
 			
-			if (user.isAdmin() || user.isSuper())
-				str += poko.views.renderers.Templo.parse("cms/modules/base/blocks/datasets.mtt",{});
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
+				str += ViewContext.parse("site/cms/modules/base/blocks/datasets.mtt",{});
 			
 			setContentOutput(str);
 			
@@ -82,29 +83,26 @@ class DatasetBase extends CmsTemplate
 	public var siteViewSerialized:String;
 	public var siteViewHiddenSerialized:String;
 	
-	override public function init()
+	override public function pre()
 	{
-		super.init();
-		
-		if (app.params.get("manage") != null) {
+		if (application.params.get("manage") != null) {
 			authenticationRequired = ["cms_admin", "cms_manager"];
 		}
 		
-		linkMode = app.params.get("linkMode") == "true";
-		pagesMode = app.params.get("pagesMode") == "true";
-		siteMode = app.params.get("siteMode") == "true" || siteMode;
+		linkMode = application.params.get("linkMode") == "true";
+		pagesMode = application.params.get("pagesMode") == "true";
+		siteMode = application.params.get("siteMode") == "true" || siteMode;
 		
 		if (pagesMode) 
 		{
 			navigation.pageHeading = "Pages";
 			navigation.setSelected("Pages");
-		} else  {
-			navigation.pageHeading = "Datasets"; 
-			navigation.setSelected("Datasets");
-		}
-		if (siteMode) {
+		} else if (siteMode) {
 			navigation.pageHeading = "Site"; 
 			navigation.setSelected("SiteView");				
+		}else{
+			navigation.pageHeading = "Datasets"; 
+			navigation.setSelected("Datasets");
 		}
 	}
 	
@@ -112,7 +110,7 @@ class DatasetBase extends CmsTemplate
 	{
 		if (pagesMode && !siteMode) 
 		{
-			var pages = app.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+			var pages = application.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
 			
 			leftNavigation.addSection("Pages");
 
@@ -120,15 +118,15 @@ class DatasetBase extends CmsTemplate
 				leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents);
 			}
 			
-			if (user.isAdmin() || user.isSuper())
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
 				leftNavigation.footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 				
 		} else if (siteMode) { 
 			
-			var pages = app.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
-			var tables = app.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
+			var pages = application.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+			var tables = application.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 			
-			var siteViewData:String = app.db.requestSingle("SELECT `value` FROM `_settings` WHERE `key`='siteView'").value;
+			var siteViewData:String = application.db.requestSingle("SELECT `value` FROM `_settings` WHERE `key`='siteView'").value;
 			var menu:MenuDef = new MenuDef();
 	
 			siteView = new MenuDef();
@@ -163,16 +161,15 @@ class DatasetBase extends CmsTemplate
 								leftNavigation.addLink(item.heading, item.name, link, item.indent);
 								if (item.listChildren != null) {
 									// get dataset
-									
 									var def:site.cms.common.Definition = new site.cms.common.Definition(item.id);
 									var el = def.getElement(item.listChildren);
 									if (el.type == "association") {
 										var p = el.properties;
-										var primaryData = app.db.request("SHOW COLUMNS FROM `"+p.table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
+										var primaryData = application.db.request("SHOW COLUMNS FROM `"+p.table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 										if (primaryData.length > 0) {
 											var primaryKey = primaryData.pop().Field;
 											var sql = "SELECT `" + primaryKey + "` AS 'k', `" + p.name + "` AS 'v' FROM `" + p.table + "`";
-											var result = app.db.request(sql);
+											var result = application.db.request(sql);
 											var tIndent = item.indent + 1;
 											for (row in result)
 											{
@@ -237,12 +234,12 @@ class DatasetBase extends CmsTemplate
 			siteViewSerialized = Serializer.run(siteView);
 			siteViewHiddenSerialized = Serializer.run(siteViewHidden);
 			
-			if (user.isAdmin() || user.isSuper())
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
 				leftNavigation.footer = "<a href=\"?request=cms.modules.base.SiteView&manage=true\">Manage Menu</a>";
 			
 		}else {
 			
-			var tables:List <Dynamic> = app.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
+			var tables:List <Dynamic> = application.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 			
 			// build the nav
 			leftNavigation.addSection("Datasets");
@@ -256,7 +253,7 @@ class DatasetBase extends CmsTemplate
 				}
 			}
 			
-			if (user.isAdmin() || user.isSuper())
+			if (Application.instance.user.isAdmin() || Application.instance.user.isSuper())
 				leftNavigation.footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true\">Manage Lists</a>";
 		}
 	}

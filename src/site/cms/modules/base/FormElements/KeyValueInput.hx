@@ -27,7 +27,7 @@
 
 package site.cms.modules.base.formElements;
 
-import poko.Poko;
+import poko.Application;
 import poko.form.Form;
 import poko.form.FormElement;
 import poko.form.Validator;

@@ -1,6 +1,6 @@
 <?php
 
-class site_cms_services_CmsCss extends site_cms_CmsController {
+class site_cms_services_CmsCss extends poko_Request {
 	public function __construct() {
 		if( !php_Boot::$skip_constructor ) {
 		parent::__construct();
@@ -24,9 +24,9 @@ class site_cms_services_CmsCss extends site_cms_CmsController {
 	public $colorNavigationLinkBgOver;
 	public $colorNavigationLinkColor;
 	public function main() {
-		$settingResPath = $this->app->getDb()->requestSingle("SELECT value FROM _settings WHERE `key`='themeCurrent'");
-		$settingLogo = $this->app->getDb()->requestSingle("SELECT value FROM _settings WHERE `key`='cmsLogo'");
-		$settingStyleData = $this->app->getDb()->requestSingle("SELECT value FROM _settings WHERE `key`='themeStyle'");
+		$settingResPath = $this->application->db->requestSingle("SELECT value FROM _settings WHERE `key`='themeCurrent'");
+		$settingLogo = $this->application->db->requestSingle("SELECT value FROM _settings WHERE `key`='cmsLogo'");
+		$settingStyleData = $this->application->db->requestSingle("SELECT value FROM _settings WHERE `key`='themeStyle'");
 		$settingStyle = _hx_anonymous(array("error" => true));
 		try {
 			$settingStyle = haxe_Unserializer::run($settingStyleData->value);
@@ -35,7 +35,7 @@ class site_cms_services_CmsCss extends site_cms_CmsController {
 		;
 		{ $e = $_ex_;
 		{
-			$this->messages->addWarning("Problem getting style information from the database.");
+			$this->application->messages->addWarning("Problem getting style information from the database.");
 		}}}
 		$this->resPath = "./res/cms/theme/" . $settingResPath->value . "/";
 		$this->imageHeadingLogo = "./res/cms/" . $settingLogo->value;
@@ -66,14 +66,6 @@ class site_cms_services_CmsCss extends site_cms_CmsController {
 		$imgSize1 = poko_utils_GD::getImageSize($this->imageHeaderButtonBgUp, null);
 		$this->sizeButtonWidth = $imgSize1->width;
 		$this->sizeButtonHeight = $imgSize1->height;
-		$hash = haxe_Md5::encode(Std::string($this->sizeButtonHeight) . Std::string($this->sizeButtonWidth) . Std::string($this->sizeLogoHeight) . Std::string($this->sizeLogoWidth) . $this->imageHeaderBg . $this->imageHeaderButtonBgUp . $this->imageHeaderButtonBgOver . $this->imageHeadingShort . $this->imageHeadingMedium . $this->imageHeadingLong . $this->imageHeadingLoginBg . $this->imageHeadingLogo . $this->colorLinkOnDark . $this->colorLinkOnLight . $this->colorNavigationLinkBgUp . $this->colorNavigationLinkBgOver . $this->colorNavigationLinkColor);
-		$dateModified = Date::now();
-		$dateModifiedString = DateTools::format($dateModified, "%a, %d %b %Y %H:%M:%S") . " GMT";
-		header("Last-Modified" . ": " . $dateModifiedString);
-		header("Expires" . ": " . DateTools::format(new Date($dateModified->getFullYear() + 1, $dateModified->getMonth(), $dateModified->getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") . " GMT");
-		header("Cache-Control" . ": " . "public, max-age=31536000");
-		header("ETag" . ": " . "\"" . $hash . "\"");
-		header("Pragma" . ": " . "");
 		header("content-type" . ": " . "text/css");
 	}
 	public function __call($m, $a) {

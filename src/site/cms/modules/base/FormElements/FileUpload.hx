@@ -5,7 +5,8 @@
 
 package site.cms.modules.base.formElements;
 
-import poko.Poko;
+import php.Session;
+import poko.Application;
 import poko.form.Form;
 import poko.form.FormElement;
 import poko.js.JsBinding;
@@ -27,6 +28,12 @@ class FileUpload extends FormElement
 	public var libraryViewList:Bool;
 	
 	public var showOnlyLibraries:Array<String>;
+	
+	public var showJavaUploader:Bool;
+	public var ftpUrl:String;
+	public var ftpUsername:String;
+	public var ftpPassword:String;
+	public var ftpDirectory:String;
 
 	public function new(name:String, label:String, ?value:String, ?required:Bool=false ) 
 	{
@@ -46,6 +53,12 @@ class FileUpload extends FormElement
 		libraryViewThumb = true;
 		libraryViewList = true;
 		showOnlyLibraries = new Array();
+		
+		showJavaUploader = false;
+		ftpUrl = "";
+		ftpUsername = "";
+		ftpPassword = "";
+		ftpDirectory = "";
 	}
 		
 	override public function populate()
@@ -98,14 +111,26 @@ class FileUpload extends FormElement
 		popupURL.id = n + "_mediaSelectorPopup";
 		popupURL.label = "library";
 		popupURL.contentUrl = "?request=cms.modules.media.MediaSelector&elementId=" + n + "&showOnlyLibraries=" + showOnlyLibraries.join(":");
-		popupURL.contentUrl += "&libraryViewThumb="+libraryViewThumb+"&libraryViewList="+libraryViewList;
+		popupURL.contentUrl += "&libraryViewThumb=" + libraryViewThumb + "&libraryViewList=" + libraryViewList;
+		popupURL.contentUrl += "&showJavaUploader=" + showJavaUploader;
+		
+		var ftpData = {
+			ftpUrl: ftpUrl,
+			ftpUsername: ftpUsername,
+			ftpPassword: ftpPassword,
+			ftpDirectory: ftpDirectory
+		}
+		var ftpContentName = "ftpD_" + name + "_" + Math.random();
+		Session.set(ftpContentName, ftpData);
+		
+		popupURL.contentUrl += "&ftpD=" + ftpContentName;
 		popupURL.width = 700;
 		popupURL.height = 450;
 			
 		str += '<input type="hidden" name="' + n + '_libraryItemValue" id="' + n + '_libraryItemValue" value="" />';
 		str += '<div class="cmsComponentFileImageEdit">';
-			if(showUpload) str += '<div class="cmsComponentFileImageEditUpload"><input checked type="radio" id="' + n + '_cmsComponentFileImageEditOperationUpload" name="' + n + '_operation" value="'+ OPERATION_UPLOAD +'" /> <input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' onClick="document.getElementById(\'' + n + '_cmsComponentFileImageEditOperationUpload\').checked = true;" /></div>';
-			if(showLibrary) str += '<div class="cmsComponentFileImageEditLibrary"><input type="radio" id="' + n + '_cmsComponentFileImageEditOperationLibrary" name="' + n + '_operation" value="' + OPERATION_LIBRARY +'" /> ' + popupURL.render() + '<span id="' + n + '_libraryItemDisplay" class="cmsComponentFileImageEditLibraryDisplay"></span>';
+		str += '<div class="cmsComponentFileImageEditUpload" style="'+(showUpload == false ? 'display:none;' : '')+'"><input checked type="radio" id="' + n + '_cmsComponentFileImageEditOperationUpload" name="' + n + '_operation" value="'+ OPERATION_UPLOAD +'" /> <input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' onClick="document.getElementById(\'' + n + '_cmsComponentFileImageEditOperationUpload\').checked = true;" /></div>';
+		str += '<div class="cmsComponentFileImageEditLibrary" style="'+(showLibrary == false ? 'display:none;':'')+'"><input type="radio" id="' + n + '_cmsComponentFileImageEditOperationLibrary" name="' + n + '_operation" value="' + OPERATION_LIBRARY +'" /> ' + popupURL.render() + '<span id="' + n + '_libraryItemDisplay" class="cmsComponentFileImageEditLibraryDisplay"></span>';
 		str += "</div>";
 		
 		return str;

@@ -26,11 +26,10 @@
  */
 
 package site.cms.components;
-import poko.Poko;
-import poko.system.Component;
+import poko.Application;
+import poko.Component;
 import poko.form.elements.Button;
 import poko.form.elements.Selectbox;
-import site.cms.CmsController;
 import site.cms.common.Tools;
 import poko.form.Form;
 
@@ -51,10 +50,10 @@ class PopupURL extends Component
 		this.width = width;
 		this.height = height;
 		
-		var controller:CmsController = cast Poko.instance.controller;
+		var application = Application.instance;
 		
-		controller.head.js.add("js/cms/jqModal.js");
-		controller.head.css.add("css/cms/jqModal.css");
+		application.request.head.js.add("js/cms/jqModal.js");
+		application.request.head.css.add("css/cms/jqModal.css");
 	}
 	
 }

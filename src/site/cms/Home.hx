@@ -1,12 +1,14 @@
 
 package site.cms;
 
-import poko.controllers.HtmlController;
+import poko.Request;
 import site.cms.templates.CmsTemplate;
-import site.components.TestComponent;
 
 class Home extends CmsTemplate
 {
+	public var test:String;
+	private var data:List<Dynamic>;
+	
 	public function new() 
 	{
 		super();

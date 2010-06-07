@@ -6,6 +6,10 @@
 	<div id="galleryViewType">View as <a href="?request=cms.modules.media.MediaSelector&viewType=thumbs&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">Thumbs</a> | <a href="?request=cms.modules.media.MediaSelector&viewType=list&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">List</a></div>
 ::end::
 
+::if uploadComplete::
+<div class="galleryUploadComplete">Upload complete</div>
+::end::
+
 <div id="imageContent">
 	
 	::if currentView == "thumbs"::
@@ -29,3 +33,12 @@
 	
 </div>
 <div style="clear:both;"></div>
+
+::if showJavaUploader::
+<div style="width: 250px; position: absolute; top: 50px; left: 410px;">
+	<script>
+		jFileUploadInject.insert(null, 250, 250, "./js/cms/jfileupload/", "::ftpUrl::", "::ftpUsername::", "::ftpPassword::", "::ftpDirectory::", "::currentUrl::&uploadComplete=1");
+	</script>
+</div>
+<div style="clear:both;"></div>
+::end::

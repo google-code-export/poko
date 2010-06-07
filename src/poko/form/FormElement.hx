@@ -27,7 +27,7 @@
 
 package poko.form;
 
-import poko.Poko;
+import poko.Application;
 import poko.js.JsBinding;
 import poko.utils.PhpTools;
 import php.Web;
@@ -56,9 +56,6 @@ class FormElement
 	public function isValid():Bool
 	{
 		errors.clear();
-		
-		if (active == false)
-			return true;
 		
 		if (value == "" && required) 
 		{
@@ -94,13 +91,13 @@ class FormElement
 	
 	public function bindEvent(event:String, method:String, params:Array<Dynamic>, ?isMethodGlobal:Bool=false) 
 	{
-		//Poko.instance.request.jsBindings.add(new JsBinding(form.name + "_" + name, event, method, params, isMethodGlobal));
+		//Application.instance.request.jsBindings.add(new JsBinding(form.name + "_" + name, event, method, params, isMethodGlobal));
 	}
 	
 	public function populate():Void
 	{
 		var n = form.name + "_" + name;
-		var v = Poko.instance.params.get(n);
+		var v = Application.instance.params.get(n);
 		
 		if (v != null) value = v;
 	}

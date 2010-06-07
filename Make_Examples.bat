@@ -1,9 +1,8 @@
 
+haxe -cp src -cp src_examples -php www -main Main -lib templo
 
-haxe -cp src -cp src_examples -php www -main poko.Poko -lib templo -D poko_examples
+haxe -cp src -cp src_examples -js www/js/main.js -main MainJS
 
-haxe -cp src -cp src_examples -js www/js/main.js -main poko.Poko -D poko_examples
+neko MakeTemplates.n -from src -to www\tpl -removePath src
 
-neko makeTemplates.n -from src/site -to www/tpl
-
-neko MakeTemplates.n -from src_examples/site -to www\tpl
+neko MakeTemplates.n -from src_examples -to www\tpl -removePath src_examples

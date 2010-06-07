@@ -18,9 +18,8 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 	public $jsBind;
 	public $autoFilterValue;
 	public $autoFilterByAssocValue;
-	public $singleInstanceEdit;
-	public function init() {
-		parent::init();
+	public function pre() {
+		parent::pre();
 		$this->head->js->add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		$this->head->css->add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
 		$this->head->js->add("js/cms/jquery.qtip.min.js");
@@ -30,29 +29,28 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		$this->head->js->add("js/cms/wym_editor_browse.js");
 		$this->jsBind = new poko_js_JsBinding("site.cms.modules.base.js.JsDatasetItem");
 		$this->remoting->addObject("api", _hx_anonymous(array("deleteFile" => isset($this->deleteFile) ? $this->deleteFile: array($this, "deleteFile"))), null);
-		$this->singleInstanceEdit = $this->app->params->get("singleInstanceEdit");
 		if($this->linkMode) {
 			$this->head->css->add("css/cms/miniView.css");
-			$this->view->template = "cms/templates/CmsTemplate_mini.mtt";
+			$this->template_file = "site/cms/templates/CmsTemplate_mini.mtt";
 		}
 	}
 	public function main() {
 		$this->data = _hx_anonymous(array());
-		$this->id = Std::parseInt($this->app->params->get("id"));
-		$this->dataset = Std::parseInt($this->app->params->get("dataset"));
+		$this->id = Std::parseInt($this->application->params->get("id"));
+		$this->dataset = Std::parseInt($this->application->params->get("dataset"));
 		$this->isOrderingEnabled = false;
 		if(!$this->pagesMode) {
 			$this->definition = new site_cms_common_Definition($this->dataset);
 			$this->label = $this->definition->name;
 			$this->table = $this->definition->table;
-			$this->data = $this->app->getDb()->requestSingle("SELECT * FROM `" . $this->table . "` WHERE `id`=" . $this->app->getDb()->cnx->quote(Std::string($this->id)));
+			$this->data = $this->application->db->requestSingle("SELECT * FROM `" . $this->table . "` WHERE `id`=" . $this->application->db->cnx->quote(Std::string($this->id)));
 			$this->orderField = $this->getOrderField();
 			$this->isOrderingEnabled = $this->orderField !== null;
-			$this->autoFilterValue = (!_hx_equal($this->app->params->get("autofilterBy"), "") ? $this->app->params->get("autofilterBy") : null);
-			$this->autoFilterByAssocValue = (!_hx_equal($this->app->params->get("autofilterByAssoc"), "") ? $this->app->params->get("autofilterByAssoc") : null);
+			$this->autoFilterValue = (!_hx_equal($this->application->params->get("autofilterBy"), "") ? $this->application->params->get("autofilterBy") : null);
+			$this->autoFilterByAssocValue = (!_hx_equal($this->application->params->get("autofilterByAssoc"), "") ? $this->application->params->get("autofilterByAssoc") : null);
 		}
 		else {
-			$result = $this->app->getDb()->requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" . $this->app->getDb()->cnx->quote(Std::string($this->id)));
+			$result = $this->application->db->requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" . $this->application->db->cnx->quote(Std::string($this->id)));
 			$this->label = $this->page = $result->name;
 			$this->data = ($result->data != "" ? haxe_Unserializer::run($result->data) : _hx_anonymous(array()));
 			$this->definition = new site_cms_common_Definition($result->definitionId);
@@ -66,15 +64,15 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		$this->setupLeftNav();
 	}
 	public function deleteFile($filename, $display) {
-		$this->id = Std::parseInt($this->app->params->get("id"));
-		$this->dataset = Std::parseInt($this->app->params->get("dataset"));
+		$this->id = Std::parseInt($this->application->params->get("id"));
+		$this->dataset = Std::parseInt($this->application->params->get("dataset"));
 		$this->definition = new site_cms_common_Definition($this->dataset);
 		$this->table = $this->definition->table;
 		try {
 			$d = new Hash();
 			$d->set(_hx_substr($display, 18, null), "");
-			$result = $this->app->getDb()->update($this->table, $d, "id=" . $this->id);
-			return _hx_anonymous(array("success" => @unlink(site_cms_PokoCms::$uploadFolder . "/" . $filename) && $result, "display" => $display, "error" => null));
+			$result = $this->application->db->update($this->table, $d, "id=" . $this->id);
+			return _hx_anonymous(array("success" => @unlink($this->application->uploadFolder . "/" . $filename) && $result, "display" => $display, "error" => null));
 		}catch(Exception $»e) {
 		$_ex_ = ($»e instanceof HException) ? $»e->e : $»e;
 		;
@@ -107,23 +105,23 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		switch($this->form->getElement("__action")->value) {
 		case "add":{
 			if($this->isOrderingEnabled) {
-				$result = $this->app->getDb()->requestSingle("SELECT MAX(`" . $this->orderField . "`) as 'order' FROM `" . $this->table . "`");
+				$result = $this->application->db->requestSingle("SELECT MAX(`" . $this->orderField . "`) as 'order' FROM `" . $this->table . "`");
 				$data->{$this->orderField} = Std::string($result->order + 1);
 			}
 			$doPost = true;
 			try {
-				$this->app->getDb()->insert($this->table, $data);
-				$this->id = $this->app->getDb()->cnx->lastInsertId();
+				$this->application->db->insert($this->table, $data);
+				$this->id = $this->application->db->cnx->lastInsertId();
 			}catch(Exception $»e) {
 			$_ex_ = ($»e instanceof HException) ? $»e->e : $»e;
 			;
 			{ $e = $_ex_;
 			{
 				$doPost = false;
-				$this->messages->addError("Update failed. Not running post commands or procedures.");
+				$this->application->messages->addError("Update failed. Not running post commands or procedures.");
 			}}}
 			if($doPost) {
-				$primaryKey = $this->app->getDb()->getPrimaryKey($this->table);
+				$primaryKey = $this->application->db->getPrimaryKey($this->table);
 				if($primaryKey !== null) {
 					$data->{$primaryKey} = $this->id;
 					if($this->definition->postCreateSql !== null && $this->definition->postCreateSql != "") {
@@ -138,18 +136,18 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 							}
 						}
 						try {
-							$this->app->getDb()->query($tSql);
+							$this->application->db->query($tSql);
 						}catch(Exception $»e2) {
 						$_ex_2 = ($»e2 instanceof HException) ? $»e2->e : $»e2;
 						;
 						{ $e2 = $_ex_2;
 						{
-							$this->messages->addError("Post-create SQL had problems: " . $tSql);
+							$this->application->messages->addError("Post-create SQL had problems: " . $tSql);
 						}}}
 					}
 				}
 				else {
-					$this->messages->addError("Could not get the primary key from newly created record. Post-SQL not run.");
+					$this->application->messages->addError("Could not get the primary key from newly created record. Post-SQL not run.");
 				}
 				if($postProcedure !== null) {
 					$postProcedure->postCreate($this->table, $data, $this->id);
@@ -159,20 +157,20 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		case "edit":{
 			if($this->pagesMode) {
 				$sdata = haxe_Serializer::run($data);
-				$this->app->getDb()->update("_pages", _hx_anonymous(array("data" => $sdata)), "`id`=" . $this->app->getDb()->cnx->quote(Std::string($this->id)));
+				$this->application->db->update("_pages", _hx_anonymous(array("data" => $sdata)), "`id`=" . $this->application->db->cnx->quote(Std::string($this->id)));
 			}
 			else {
-				$oldData = $this->app->getDb()->requestSingle("SELECT * FROM `" . $this->table . "` WHERE `id`=" . $this->app->getDb()->cnx->quote(Std::string($this->id)));
+				$oldData = $this->application->db->requestSingle("SELECT * FROM `" . $this->table . "` WHERE `id`=" . $this->application->db->cnx->quote(Std::string($this->id)));
 				$doPost2 = true;
 				try {
-					$this->app->getDb()->update($this->table, $data, "`id`=" . $this->app->getDb()->cnx->quote(Std::string($this->id)));
+					$this->application->db->update($this->table, $data, "`id`=" . $this->application->db->cnx->quote(Std::string($this->id)));
 				}catch(Exception $»e3) {
 				$_ex_3 = ($»e3 instanceof HException) ? $»e3->e : $»e3;
 				;
 				{ $e3 = $_ex_3;
 				{
 					$doPost2 = false;
-					$this->messages->addError("Update failed. Not running post commands or procedures.");
+					$this->application->messages->addError("Update failed. Not running post commands or procedures.");
 				}}}
 				if($doPost2) {
 					if($this->definition->postEditSql !== null && $this->definition->postEditSql != "") {
@@ -196,13 +194,13 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 							}
 						}
 						try {
-							$this->app->getDb()->query($tSql2);
+							$this->application->db->query($tSql2);
 						}catch(Exception $»e4) {
 						$_ex_4 = ($»e4 instanceof HException) ? $»e4->e : $»e4;
 						;
 						{ $e4 = $_ex_4;
 						{
-							$this->messages->addError("Post-delete SQL had problems: " . $tSql2);
+							$this->application->messages->addError("Post-delete SQL had problems: " . $tSql2);
 						}}}
 					}
 					if($postProcedure !== null) {
@@ -218,7 +216,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		$element = $»it2->next();
 		{
 			if($element->type == "multilink") {
-				$this->app->getDb()->delete($element->properties->link, "`" . $element->properties->linkField1 . "`=" . $this->app->getDb()->cnx->quote(Std::string($this->id)));
+				$this->application->db->delete($element->properties->link, "`" . $element->properties->linkField1 . "`=" . $this->application->db->cnx->quote(Std::string($this->id)));
 				{
 					$_g4 = 0; $_g14 = eval("if(isset(\$this)) \$»this =& \$this;\$tmp = Reflect::field(\$data, \$element->name);
 						\$»r = (Std::is(\$tmp, _hx_qtype(\"Array\")) ? \$tmp : eval(\"if(isset(\\\$this)) \\\$»this =& \\\$this;throw new HException(\\\"Class cast error\\\");
@@ -232,72 +230,50 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 						$d = _hx_anonymous(array());
 						$d->{$element->properties->linkField1} = $this->id;
 						$d->{$element->properties->linkField2} = $check;
-						$this->app->getDb()->insert($element->properties->link, $d);
+						$this->application->db->insert($element->properties->link, $d);
 						unset($d,$check);
 					}
 				}
 			}
 			if($element->type == "post-sql-value") {
 				$updateKeyValue = Reflect::field($data, $element->properties->updateKey);
-				$primaryKey2 = $this->app->getDb()->getPrimaryKey($this->table);
+				$primaryKey2 = $this->application->db->getPrimaryKey($this->table);
 				if($primaryKey2 !== null && $updateKeyValue !== null) {
-					$result2 = $this->app->getDb()->requestSingle("SELECT `" . $element->properties->updateTo . "` AS `__v` FROM `" . $element->properties->table . "` WHERE `" . $primaryKey2 . "`='" . $updateKeyValue . "'");
+					$result2 = $this->application->db->requestSingle("SELECT `" . $element->properties->updateTo . "` AS `__v` FROM `" . $element->properties->table . "` WHERE `" . $primaryKey2 . "`='" . $updateKeyValue . "'");
 					$tData = _hx_anonymous(array());
-					try {
-						$tData->{$element->name} = $result2->__v;
-						$this->app->getDb()->update($this->table, $tData, "`id`=" . $this->app->getDb()->cnx->quote(Std::string($this->id)));
-					}catch(Exception $»e5) {
-					$_ex_5 = ($»e5 instanceof HException) ? $»e5->e : $»e5;
-					;
-					{ $e5 = $_ex_5;
-					{
-						$this->messages->addError("There is an error in your 'post-sql-value' setup for field: " . $element->name);
-					}}}
+					$tData->{$element->name} = $result2->__v;
+					$this->application->db->update($this->table, $tData, "`id`=" . $this->application->db->cnx->quote(Std::string($this->id)));
 				}
 				else {
-					$this->messages->addWarning("There was a problem updating your post SQL field because there was no primary key for the target table.");
+					$this->application->messages->addWarning("There was a problem updating your post SQL field because there was no primary key for the target table.");
 				}
 			}
-			if($element->type == "date") {
-				;
-			}
-			unset($»r2,$»r,$»e5,$updateKeyValue,$tmp,$tData,$result2,$primaryKey2,$e5,$d,$check,$_g4,$_g14,$_ex_5);
+			unset($»r2,$»r,$updateKeyValue,$tmp,$tData,$result2,$primaryKey2,$d,$check,$_g4,$_g14);
 		}
 		}
-		$this->messages->addMessage((($this->pagesMode ? "Page" : "Record")) . " " . ((_hx_equal($this->form->getElement("__action")->value, "add") ? "added." : "updated.")));
-		if(!$this->pagesMode && !$this->singleInstanceEdit) {
+		$this->application->messages->addMessage((($this->pagesMode ? "Page" : "Record")) . " " . ((_hx_equal($this->form->getElement("__action")->value, "add") ? "added." : "updated.")));
+		if(!$this->pagesMode) {
 			$url = "?request=cms.modules.base.Dataset";
 			$url .= "&dataset=" . $this->dataset;
 			$url .= "&linkMode=" . (($this->linkMode ? "true" : "false"));
-			$url .= "&linkToField=" . $this->app->params->get("linkToField");
-			$url .= "&linkTo=" . $this->app->params->get("linkTo");
-			$url .= "&linkValueField=" . $this->app->params->get("linkValueField");
-			$url .= "&linkValue=" . $this->app->params->get("linkValue");
-			$url .= "&autofilterByAssoc=" . $this->app->params->get("autofilterByAssoc");
-			$url .= "&autofilterBy=" . $this->app->params->get("autofilterBy");
+			$url .= "&linkToField=" . $this->application->params->get("linkToField");
+			$url .= "&linkTo=" . $this->application->params->get("linkTo");
+			$url .= "&linkValueField=" . $this->application->params->get("linkValueField");
+			$url .= "&linkValue=" . $this->application->params->get("linkValue");
+			$url .= "&autofilterByAssoc=" . $this->application->params->get("autofilterByAssoc");
+			$url .= "&autofilterBy=" . $this->application->params->get("autofilterBy");
 			if($this->siteMode) {
 				$url .= "&siteMode=true";
 			}
-			$this->app->redirect($url);
+			$this->application->redirect($url);
 		}
 		else {
-			if($this->pagesMode) {
-				$url2 = "?request=cms.modules.base.DatasetItem";
-				$url2 .= "&pagesMode=true&action=edit&id=" . $this->id;
-				if($this->siteMode) {
-					$url2 .= "&siteMode=true";
-				}
-				$this->app->redirect($url2);
+			$url2 = "?request=cms.modules.base.DatasetItem";
+			$url2 .= "&pagesMode=true&action=edit&id=" . $this->id;
+			if($this->siteMode) {
+				$url2 .= "&siteMode=true";
 			}
-			else {
-				$url3 = "?request=cms.modules.base.DatasetItem";
-				$url3 .= "&dataset=" . $this->dataset;
-				$url3 .= "&id=" . $this->id;
-				$url3 .= "&autofilterByAssoc=" . $this->app->params->get("autofilterByAssoc");
-				$url3 .= "&autofilterBy=" . $this->app->params->get("autofilterBy");
-				$url3 .= "&siteMode=true";
-				$url3 .= "&singleInstanceEdit=true";
-			}
+			$this->application->redirect($url2);
 		}
 	}
 	public function getOrderField() {
@@ -315,7 +291,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		return null;
 	}
 	public function getElementMatches() {
-		$fields = $this->app->getDb()->request("SHOW FIELDS FROM `" . $this->table . "`");
+		$fields = $this->application->db->request("SHOW FIELDS FROM `" . $this->table . "`");
 		$fields = Lambda::map($fields, array(new _hx_lambda(array("fields" => &$fields), null, array('row'), "{
 			return \$row->Field;
 		}"), 'execute1'));
@@ -328,7 +304,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 	public function uploadFiles() {
 		$filesToDelete = new HList();
 		$fieldsToWipe = new HList();
-		$safeId = $this->app->getDb()->cnx->quote(Std::string($this->id));
+		$safeId = $this->application->db->cnx->quote(Std::string($this->id));
 		$nFilesReplaced = 0;
 		$nFilesAdded = 0;
 		$nFilesDeleted = 0;
@@ -362,19 +338,19 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 			$name = _hx_substr($file, strlen($this->form->name) + 1, null);
 			$filename = $info->get("name");
 			$randomString = haxe_Md5::encode(Date::now()->toString() . Math::random());
-			$libraryItemValue = $this->app->params->get($this->form->name . "_" . $name . "_libraryItemValue");
-			if(_hx_equal($this->app->params->get($this->form->name . "_" . $name . "_operation"), site_cms_modules_base_formElements_FileUpload::$OPERATION_LIBRARY) && $libraryItemValue !== null && $libraryItemValue != "") {
-				$imgRoot = "./res/media/galleries/";
-				if(file_exists($imgRoot . $libraryItemValue)) {
+			$libraryItemValue = $this->application->params->get($this->form->name . "_" . $name . "_libraryItemValue");
+			if(_hx_equal($this->application->params->get($this->form->name . "_" . $name . "_operation"), site_cms_modules_base_formElements_FileUpload::$OPERATION_LIBRARY) && $libraryItemValue !== null && $libraryItemValue != "") {
+				$imgRoot = "./res/media/galleries";
+				if(file_exists($imgRoot . "/" . $libraryItemValue)) {
 					$copyToName = $randomString . _hx_substr($libraryItemValue, _hx_last_index_of($libraryItemValue, "/", null) + 1, null);
-					php_io_File::copy($imgRoot . $libraryItemValue, site_cms_PokoCms::$uploadFolder . $copyToName);
+					php_io_File::copy($imgRoot . "/" . $libraryItemValue, $this->application->uploadFolder . "/" . $copyToName);
 					$data->set($name, $copyToName);
 					$nFilesAdded++;
 				}
 			}
 			else {
 				if(_hx_equal($info->get("error"), 0)) {
-					poko_utils_PhpTools::moveFile($info->get("tmp_name"), site_cms_PokoCms::$uploadFolder . $randomString . $filename);
+					poko_utils_PhpTools::moveFile($info->get("tmp_name"), $this->application->uploadFolder . "/" . $randomString . $filename);
 					$data->set($name, $randomString . $filename);
 					$nFilesAdded++;
 				}
@@ -399,7 +375,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 			$sql = _hx_substr($sql, 0, strlen($sql) - 1);
 			$sql .= " FROM " . $this->table . " WHERE id=" . $safeId;
 			if($c > 0) {
-				$result = $this->app->getDb()->requestSingle($sql);
+				$result = $this->application->db->requestSingle($sql);
 				{
 					$_g = 0; $_g1 = Reflect::fields($result);
 					while($_g < $_g1->length) {
@@ -414,7 +390,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 			}
 		}
 		else {
-			$r = $this->app->getDb()->requestSingle("SELECT data FROM _pages WHERE `id`=" . $safeId);
+			$r = $this->application->db->requestSingle("SELECT data FROM _pages WHERE `id`=" . $safeId);
 			try {
 				$d = haxe_Unserializer::run($r->data);
 				$»it4 = $data->keys();
@@ -434,7 +410,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 			;
 			{ $e2 = $_ex_2;
 			{
-				$this->messages->addError("There may have been a problem updating your page.");
+				$this->application->messages->addError("There may have been a problem updating your page.");
 			}}}
 		}
 		$»it5 = $filesToDelete->iterator();
@@ -442,7 +418,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		$f1 = $»it5->next();
 		{
 			try {
-				@unlink(site_cms_PokoCms::$uploadFolder . $f1);
+				@unlink($this->application->uploadFolder . "/" . $f1);
 			}catch(Exception $»e3) {
 			$_ex_3 = ($»e3 instanceof HException) ? $»e3->e : $»e3;
 			;
@@ -469,7 +445,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 		}
 		}
 		if($nFilesAdded > 0 || $nFilesReplaced > 0 || $nFilesDeleted > 0) {
-			$this->messages->addMessage("Files: " . $nFilesAdded . " added, " . $nFilesReplaced . " replaced and " . $nFilesDeleted . " deleted.");
+			$this->application->messages->addMessage("Files: " . $nFilesAdded . " added, " . $nFilesReplaced . " replaced and " . $nFilesDeleted . " deleted.");
 		}
 		return $data;
 	}
@@ -478,7 +454,6 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 	}
 	public function setupForm() {
 		$this->form = new poko_form_Form("form1", null, null);
-		$this->form->addElement(new poko_form_elements_Hidden("__action", $this->app->params->get("action"), null, null, null), null);
 		$elements = ($this->pagesMode ? Lambda::hlist($this->definition->elements) : $this->getElementMatches());
 		$element = null;
 		$»it = $elements->iterator();
@@ -556,21 +531,10 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 						$el3->description .= "Max Size: " . $element1->properties->maxSize . "Kb";
 					}
 				}
-				$el3->showUpload = (_hx_equal($element1->properties->uploadType, "0") || _hx_equal($element1->properties->uploadType, "1"));
-				$el3->showLibrary = (_hx_equal($element1->properties->uploadType, "0") || _hx_equal($element1->properties->uploadType, "2"));
-				$el3->libraryViewThumb = (_hx_equal($element1->properties->libraryView, "0") || _hx_equal($element1->properties->libraryView, "1"));
-				$el3->libraryViewList = (_hx_equal($element1->properties->libraryView, "0") || _hx_equal($element1->properties->libraryView, "2"));
-				$t = trim($element1->properties->showOnlyLibraries);
-				if($t != "") {
-					$el3->showOnlyLibraries = _hx_explode(":", $t);
-				}
 				$this->form->addElement($el3, null);
 			}break;
 			case "date":{
-				$d = (($value != "" && $value !== null) ? $value : Date::now());
-				if(_hx_equal($element1->properties->currentOnAdd, "1") && (_hx_equal($this->form->getElement("__action")->value, "add") || _hx_equal($this->app->params->get("action"), "add"))) {
-					$d = Date::now();
-				}
+				$d = ($value != "" ? $value : Date::now());
 				$el4 = new poko_form_elements_DateSelector($element1->name, $label, $d, $element1->properties->required, null, null);
 				if(_hx_equal($element1->properties->restrictMin, "1")) {
 					$el4->minOffset = $element1->properties->minOffset;
@@ -607,17 +571,6 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 				if(!_hx_equal($element1->properties->height, "")) {
 					$el6->height = Std::parseInt($element1->properties->height);
 				}
-				if(!_hx_equal($element1->properties->allowImages, "")) {
-					$el6->allowImages = $element1->properties->allowImages;
-				}
-				if(!_hx_equal($element1->properties->allowTables, "")) {
-					$el6->allowTables = $element1->properties->allowTables;
-				}
-				if(!_hx_equal($element1->properties->editorStyles, "")) {
-					$el6->editorStyles = $element1->properties->editorStyles;
-				}
-				$el6->containersItems = ((!_hx_equal($element1->properties->containersItems, "") && _hx_field($element1->properties, "containersItems") !== null) ? $element1->properties->containersItems : "{'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'}");
-				$el6->classesItems = ((!_hx_equal($element1->properties->classesItems, "") && _hx_field($element1->properties, "classesItems") !== null) ? $element1->properties->classesItems : "");
 				$el6->description = $element1->properties->description;
 				$this->form->addElement($el6, null);
 			}break;
@@ -642,8 +595,8 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 				if(_hx_field($element1->properties, "fieldSql") !== null && !_hx_equal($element1->properties->fieldSql, "")) {
 					$fieldLabelSelect = "(" . $element1->properties->fieldSql . ")";
 				}
-				$assocData = $this->app->getDb()->request("SELECT `" . $element1->properties->field . "` as value, " . $fieldLabelSelect . " as label FROM `" . $element1->properties->table . "`");
-				$assocData = Lambda::map($assocData, array(new _hx_lambda(array("_g" => &$_g, "a" => &$a, "assocData" => &$assocData, "d" => &$d, "el" => &$el, "el2" => &$el2, "el3" => &$el3, "el4" => &$el4, "el5" => &$el5, "el6" => &$el6, "el7" => &$el7, "el8" => &$el8, "element" => &$element, "element1" => &$element1, "elements" => &$elements, "falseLable" => &$falseLable, "fieldLabelSelect" => &$fieldLabelSelect, "i" => &$i, "label" => &$label, "options" => &$options, "reg" => &$reg, "t" => &$t, "trueLable" => &$trueLable, "value" => &$value, "»it" => &$»it), null, array('value1'), "{
+				$assocData = $this->application->db->request("SELECT `" . $element1->properties->field . "` as value, " . $fieldLabelSelect . " as label FROM `" . $element1->properties->table . "`");
+				$assocData = Lambda::map($assocData, array(new _hx_lambda(array("_g" => &$_g, "a" => &$a, "assocData" => &$assocData, "d" => &$d, "el" => &$el, "el2" => &$el2, "el3" => &$el3, "el4" => &$el4, "el5" => &$el5, "el6" => &$el6, "el7" => &$el7, "el8" => &$el8, "element" => &$element, "element1" => &$element1, "elements" => &$elements, "falseLable" => &$falseLable, "fieldLabelSelect" => &$fieldLabelSelect, "i" => &$i, "label" => &$label, "options" => &$options, "reg" => &$reg, "trueLable" => &$trueLable, "value" => &$value, "»it" => &$»it), null, array('value1'), "{
 					return _hx_anonymous(array(\"key\" => \$value1->label, \"value\" => \$value1->value));
 				}"), 'execute1'));
 				if($this->autoFilterValue == $element1->name) {
@@ -658,14 +611,14 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 				$sql .= "SELECT `" . $element1->properties->field . "` as 'key', \x09\x09";
 				$sql .= "       `" . $element1->properties->fieldLabel . "` as 'value' \x09";
 				$sql .= "  FROM `" . $element1->properties->table . "`\x09\x09\x09\x09\x09";
-				$linkData = $this->app->getDb()->request($sql);
+				$linkData = $this->application->db->request($sql);
 				$selectedData = new _hx_array(array());
-				if(!_hx_equal($this->app->params->get("action"), "add")) {
+				if(!_hx_equal($this->application->params->get("action"), "add")) {
 					$sql1 = "";
 					$sql1 .= "SELECT `" . $element1->properties->linkField2 . "` as 'link' \x09";
 					$sql1 .= "  FROM `" . $element1->properties->link . "`";
-					$sql1 .= " WHERE `" . $element1->properties->linkField1 . "`=" . $this->app->getDb()->cnx->quote(Std::string($this->id));
-					$result = $this->app->getDb()->request($sql1);
+					$sql1 .= " WHERE `" . $element1->properties->linkField1 . "`=" . $this->application->db->cnx->quote(Std::string($this->id));
+					$result = $this->application->db->request($sql1);
 					$»it2 = $result->iterator();
 					while($»it2->hasNext()) {
 					$row = $»it2->next();
@@ -700,31 +653,27 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 				$el12->description = $element1->properties->description;
 				$this->form->addElement($el12, null);
 			}break;
-			case "post-add-current-time":{
-				$el13 = new poko_form_elements_Readonly($element1->name, $label, $value, $element1->properties->required, null, null);
-				$el13->description = $element1->properties->description;
-				$this->form->addElement($el13, null);
-			}break;
 			}
-			unset($»it2,$value,$trueLable,$t,$sql1,$sql,$selectedData,$row,$result,$reg,$options,$linkData,$label,$i,$fieldLabelSelect,$falseLable,$el9,$el8,$el7,$el6,$el5,$el4,$el3,$el2,$el13,$el12,$el11,$el10,$el,$d,$assocData,$a,$_g);
+			unset($»it2,$value,$trueLable,$sql1,$sql,$selectedData,$row,$result,$reg,$options,$linkData,$label,$i,$fieldLabelSelect,$falseLable,$el9,$el8,$el7,$el6,$el5,$el4,$el3,$el2,$el12,$el11,$el10,$el,$d,$assocData,$a,$_g);
 		}
 		}
 		if($this->linkMode) {
-			$this->form->addElement(new poko_form_elements_Hidden($this->app->params->get("linkToField"), $this->app->params->get("linkTo"), null, null, null), null);
-			$this->form->addElement(new poko_form_elements_Hidden($this->app->params->get("linkValueField"), $this->app->params->get("linkValue"), null, null, null), null);
+			$this->form->addElement(new poko_form_elements_Hidden($this->application->params->get("linkToField"), $this->application->params->get("linkTo"), null, null, null), null);
+			$this->form->addElement(new poko_form_elements_Hidden($this->application->params->get("linkValueField"), $this->application->params->get("linkValue"), null, null, null), null);
 		}
-		if(_hx_equal($this->app->params->get("siteMode"), "true")) {
+		if(_hx_equal($this->application->params->get("siteMode"), "true")) {
 			$this->form->addElement(new poko_form_elements_Hidden("siteMode", "true", null, null, null), null);
 		}
-		$aF = $this->app->params->get("autofilterBy");
+		$aF = $this->application->params->get("autofilterBy");
 		if($aF !== null && !_hx_equal($aF, "")) {
 			$this->form->addElement(new poko_form_elements_Hidden("autofilterBy", $aF, null, null, null), null);
 		}
-		$aFA = $this->app->params->get("autofilterByAssoc");
+		$aFA = $this->application->params->get("autofilterByAssoc");
 		if($aFA !== null && !_hx_equal($aFA, "")) {
 			$this->form->addElement(new poko_form_elements_Hidden("autofilterByAssoc", $aFA, null, null, null), null);
 		}
-		$submitButton = new poko_form_elements_Button("__submit", (_hx_equal($this->app->params->get("action"), "add") ? "Add" : "Update"), null, poko_form_elements_ButtonType::$SUBMIT);
+		$this->form->addElement(new poko_form_elements_Hidden("__action", $this->application->params->get("action"), null, null, null), null);
+		$submitButton = new poko_form_elements_Button("__submit", (_hx_equal($this->application->params->get("action"), "add") ? "Add" : "Update"), null, poko_form_elements_ButtonType::$SUBMIT);
 		$keyValJsBinding = $this->jsBindings->get("site.cms.modules.base.js.JsKeyValueInput");
 		if($keyValJsBinding !== null) {
 			$submitButton->attributes = "onClick=\"" . $this->jsBind->getCall("flushWymEditors", new _hx_array(array())) . "; return(" . $keyValJsBinding->getCall("flushKeyValueInputs", new _hx_array(array())) . ");\"";
@@ -733,7 +682,7 @@ class site_cms_modules_base_DatasetItem extends site_cms_modules_base_DatasetBas
 			$submitButton->attributes = "onClick=\"return(" . $this->jsBind->getCall("flushWymEditors", new _hx_array(array())) . ");\"";
 		}
 		$this->form->addElement($submitButton, null);
-		if(_hx_equal($this->app->params->get("action"), "add") && $this->linkMode) {
+		if(_hx_equal($this->application->params->get("action"), "add") && $this->linkMode) {
 			$cancelButton = new poko_form_elements_Button("__cancel", "Cancel", "Cancel", poko_form_elements_ButtonType::$BUTTON);
 			$this->form->addElement($cancelButton, null);
 		}

@@ -6,9 +6,9 @@ class site_cms_modules_base_DefinitionsBase extends site_cms_templates_CmsTempla
 		parent::__construct();
 	}}
 	public $pagesMode;
-	public function init() {
-		parent::init();
-		$this->pagesMode = _hx_equal($this->app->params->get("pagesMode"), "true");
+	public function pre() {
+		parent::pre();
+		$this->pagesMode = _hx_equal($this->application->params->get("pagesMode"), "true");
 		if($this->pagesMode) {
 			$this->navigation->setSelected("Pages");
 		}
@@ -27,7 +27,7 @@ class site_cms_modules_base_DefinitionsBase extends site_cms_templates_CmsTempla
 		if($this->pagesMode) {
 			$this->leftNavigation->footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 			$this->leftNavigation->addSection("Pages", null);
-			$pages = $this->app->getDb()->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
+			$pages = $this->application->db->request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
 			$this->leftNavigation->addSection("Pages", null);
 			$»it = $pages->iterator();
 			while($»it->hasNext()) {
@@ -36,7 +36,7 @@ class site_cms_modules_base_DefinitionsBase extends site_cms_templates_CmsTempla
 			}
 		}
 		else {
-			$tables = $this->app->getDb()->request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
+			$tables = $this->application->db->request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 			$this->leftNavigation->addSection("Datasets", null);
 			$def = _hx_qtype("site.cms.modules.base.Definition");
 			$»it2 = $tables->iterator();
@@ -50,7 +50,7 @@ class site_cms_modules_base_DefinitionsBase extends site_cms_templates_CmsTempla
 				unset($name);
 			}
 			}
-			if($this->user->isAdmin() || $this->user->isSuper()) {
+			if($this->application->user->isAdmin() || $this->application->user->isSuper()) {
 				$this->leftNavigation->footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true\">Manage</a>";
 			}
 		}

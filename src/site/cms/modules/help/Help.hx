@@ -26,7 +26,7 @@
  */
 
 package site.cms.modules.help;
-import poko.views.renderers.Templo;
+import poko.ViewContext;
 import site.cms.templates.CmsTemplate;
 
 class Help extends CmsTemplate
@@ -38,10 +38,10 @@ class Help extends CmsTemplate
 		var developerTopics = new Hash();
 		
 		// admin, manager
-		if (user.isAdmin()) {
+		if (application.user.isAdmin()) {
 			topics.set("manager_home", "Introduction");
 			topics.set("manager_about_users", "About Users");
-		}else if (!user.isAdmin() && !user.isSuper()) {
+		}else if (!application.user.isAdmin() && !application.user.isSuper()) {
 			topics.set("user_home", "Introduction");
 		}
 		
@@ -50,7 +50,7 @@ class Help extends CmsTemplate
 		topics.set("user_data", "About Data");
 		
 		// super user, developer
-		if (user.isSuper())
+		if (application.user.isSuper())
 		{
 			developerTopics.set("developer_home", "Introduction");
 			developerTopics.set("developer_basicConcepts", "Basic Concepts");
@@ -72,17 +72,16 @@ class Help extends CmsTemplate
 		for (key in developerTopics.keys())
 			leftNavigation.addLink("Developer", developerTopics.get(key), "cms.modules.help.Help&topic="+key);
 		
-		var topic = app.params.get("topic");
+		var topic = application.params.get("topic");
 		if (topic == null) {
-			if (user.isSuper()) {
+			if (application.user.isSuper()) {
 				topic = "developer_home";
-			}else if (user.isAdmin()) {
+			}else if (application.user.isAdmin()) {
 				topic = "manager_home";
 			}else {
 				topic = "user_home";
 			}
 		}
-		
-		view.setOutput("<div class=\"helpWrapper\">"+Templo.parse("cms/modules/help/blocks/"+topic+".mtt")+"</div>");
+		setContentOutput("<div class=\"helpWrapper\">"+ViewContext.parse("site/cms/modules/help/blocks/"+topic+".mtt")+"</div>");
 	}
 }

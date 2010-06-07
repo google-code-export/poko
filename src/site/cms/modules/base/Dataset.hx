@@ -42,7 +42,7 @@ import haxe.Unserializer;
 import php.io.File;
 import php.Sys;
 import site.cms.common.Definition;
-import poko.controllers.HtmlController;
+import poko.Request;
 import poko.utils.ListData;
 import site.cms.common.DefinitionElementMeta;
 import site.cms.common.Procedure;
@@ -82,13 +82,13 @@ class Dataset extends DatasetBase
 		super();
 	}
 	
-	override public function init():Void
+	override public function pre():Void
 	{	
-		super.init();
+		super.pre();
 		
 		head.js.add("js/cms/jquery.qtip.min.js");
 		
-		dataset = Std.parseInt(app.params.get("dataset"));
+		dataset = Std.parseInt(application.params.get("dataset"));
 		definition = new Definition(dataset);
 
 		table = definition.table;
@@ -104,7 +104,7 @@ class Dataset extends DatasetBase
 		if (linkMode)
 		{
 			head.css.add("css/cms/miniView.css");
-			layoutView.template = "cms/templates/CmsTemplate_mini.mtt";
+			this.template_file = "site/cms/templates/CmsTemplate_mini.mtt";
 		}
 	}
 	
@@ -138,10 +138,10 @@ class Dataset extends DatasetBase
 		fields = getFieldMatches();
 	
 		// get primary key
-		var primaryData = app.db.request("SHOW COLUMNS FROM `"+table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
+		var primaryData = application.db.request("SHOW COLUMNS FROM `"+table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 		if (primaryData.length < 1)
 		{
-			messages.addError("<b>'"+table+"'</b> does not have a field set as both: <b>auto_increment</b> AND <b>primary key</b>");
+			application.messages.addError("<b>'"+table+"'</b> does not have a field set as both: <b>auto_increment</b> AND <b>primary key</b>");
 			setupLeftNav();
 			setContentOutput("cannot display dataset");
 			return;
@@ -150,7 +150,7 @@ class Dataset extends DatasetBase
 			definition.primaryKey = field;
 		}
 		
-		if (app.params.get("action")) process();
+		if (application.params.get("action")) process();
 		
 		getAssociationExtras();
 		setupOptionsForm();
@@ -173,7 +173,7 @@ class Dataset extends DatasetBase
 		var hasWhere = false;
 		
 		currentFilterSettings = FilterSettings.get(table);
-		if (app.params.get("resetState") == "true" || optionsForm.isSubmitted())
+		if (application.params.get("resetState") == "true" || optionsForm.isSubmitted())
 			currentFilterSettings.clear();
 			
 		//--------------------------------------------------------		
@@ -185,8 +185,8 @@ class Dataset extends DatasetBase
 		var filterByOperatorValue = optionsForm.getElement('filterByOperator').value;
 		var filterByValueValue = optionsForm.getElement('filterByValue').value;
 		
-		autoFilterValue = app.params.get("autofilterBy") != "" ? app.params.get("autofilterBy") : null;
-		autoFilterByAssocValue = app.params.get("autofilterByAssoc") != "" ? app.params.get("autofilterByAssoc") : null;
+		autoFilterValue = application.params.get("autofilterBy") != "" ? application.params.get("autofilterBy") : null;
+		autoFilterByAssocValue = application.params.get("autofilterByAssoc") != "" ? application.params.get("autofilterByAssoc") : null;
 		if (autoFilterValue != null && autoFilterByAssocValue != null && optionsForm.isSubmitted()) {
 			currentFilterSettings.enabled = false;
 			sql += "WHERE `" + autoFilterValue + "`='" + autoFilterByAssocValue + "' ";
@@ -240,10 +240,10 @@ class Dataset extends DatasetBase
 		// Only display a section of data for linking
 		if (linkMode)
 		{
-			linkToField = app.params.get("linkToField");
-			linkTo = app.params.get("linkTo");
-			linkValueField= app.params.get("linkValueField");
-			linkValue= Std.parseInt(app.params.get("linkValue"));
+			linkToField = application.params.get("linkToField");
+			linkTo = application.params.get("linkTo");
+			linkValueField= application.params.get("linkValueField");
+			linkValue= Std.parseInt(application.params.get("linkValue"));
 			
 			if(!hasWhere)
 				sql += " WHERE ";
@@ -304,7 +304,7 @@ class Dataset extends DatasetBase
 			currentFilterSettings.save();
 		}
 		
-		data = app.db.request(sql);	
+		data = application.db.request(sql);	
 		
 		setupLeftNav();
 	}
@@ -313,12 +313,12 @@ class Dataset extends DatasetBase
 	private function process():Void
 	{
 		// duplicate if that's what we're doing?!
-		if (app.params.get("action") == "duplicate") {
-			var id = app.params.get("id");
+		if (application.params.get("action") == "duplicate") {
+			var id = application.params.get("id");
 			if (id == null || id == "")
 				return;
 			
-			var data = app.db.requestSingle("SELECT * FROM `"+table+"` WHERE " + definition.primaryKey + "=" + app.db.cnx.quote(Std.string(id)));
+			var data = application.db.requestSingle("SELECT * FROM `"+table+"` WHERE " + definition.primaryKey + "=" + application.db.cnx.quote(Std.string(id)));
 
 			// pre duplication field stuff
 			for (element in definition.elements) {
@@ -333,7 +333,7 @@ class Dataset extends DatasetBase
 			}
 			
 			// we have to do special stuff to make a new primary key unless it's an auto increment int field
-			var tableInfo = app.db.request("SHOW FIELDS FROM `" + table + "`");
+			var tableInfo = application.db.request("SHOW FIELDS FROM `" + table + "`");
 			
 			var pField:Dynamic = {};
 			for (f in tableInfo) {
@@ -346,14 +346,14 @@ class Dataset extends DatasetBase
 			if(pField.Type.indexOf("int") == 0 && pField.Extra == "auto_increment"){
 				Reflect.deleteField(data, definition.primaryKey);
 			}else{
-				messages.addError("Duplicate only works on datasets with primary keys that are auto-increment ints.");
+				application.messages.addError("Duplicate only works on datasets with primary keys that are auto-increment ints.");
 				return;
 			}
 			
-			app.db.insert(table, data);
-			var insertedId = app.db.cnx.lastInsertId();
+			application.db.insert(table, data);
+			var insertedId = application.db.cnx.lastInsertId();
 			
-			if (app.db.lastAffectedRows > 0) {
+			if (application.db.lastAffectedRows > 0) {
 				var element:DefinitionElementMeta;
 				
 				// post duplication field stuff
@@ -362,10 +362,10 @@ class Dataset extends DatasetBase
 						case "multilink":
 							// add the multilinks
 							var p = element.properties;
-							var result = app.db.request("SELECT `" + p.linkField1 + "`, `" + p.linkField2 + "` FROM `" + p.link + "` WHERE `" + p.linkField1 + "`=" + app.db.cnx.quote(Std.string(id)));
+							var result = application.db.request("SELECT `" + p.linkField1 + "`, `" + p.linkField2 + "` FROM `" + p.link + "` WHERE `" + p.linkField1 + "`=" + application.db.cnx.quote(Std.string(id)));
 							for (o in result) {
 								Reflect.setField(o, p.linkField1, insertedId);
-								app.db.insert(p.link, o);
+								application.db.insert(p.link, o);
 							}
 					}
 				}
@@ -375,17 +375,17 @@ class Dataset extends DatasetBase
 				url += "&dataset=" + dataset;
 				url += "&id=" + insertedId;
 				url += "&linkMode=" + (linkMode ? "true" : "false");
-				url += "&linkToField=" + app.params.get("linkToField");
-				url += "&linkTo=" + app.params.get("linkTo");
-				url += "&linkValueField=" + app.params.get("linkValueField");
-				url += "&linkValue=" + app.params.get("linkValue");
-				url += "&autofilterByAssoc=" + app.params.get("autofilterByAssoc");
-				url += "&autofilterBy=" + app.params.get("autofilterBy");
+				url += "&linkToField=" + application.params.get("linkToField");
+				url += "&linkTo=" + application.params.get("linkTo");
+				url += "&linkValueField=" + application.params.get("linkValueField");
+				url += "&linkValue=" + application.params.get("linkValue");
+				url += "&autofilterByAssoc=" + application.params.get("autofilterByAssoc");
+				url += "&autofilterBy=" + application.params.get("autofilterBy");
 				if (siteMode) url += "&siteMode=true";
-				app.redirect(url);
+				application.redirect(url);
 				
 			}else {
-				messages.addError("Error duplicating item.");
+				application.messages.addError("Error duplicating item.");
 			}
 		}else {
 			// delete
@@ -395,9 +395,9 @@ class Dataset extends DatasetBase
 				var runSqlPerRow:Bool = false;
 				if (definition.postDeleteSql.indexOf("#") != -1){
 					runSqlPerRow = true;
-					messages.addDebug("Post-delete SQL running per row");
+					application.messages.addDebug("Post-delete SQL running per row");
 				}else if (definition.postDeleteSql != null && definition.postDeleteSql != ""){
-					app.db.request(definition.postDeleteSql);
+					application.db.request(definition.postDeleteSql);
 				}
 
 				var numDeleted = 0;
@@ -418,16 +418,16 @@ class Dataset extends DatasetBase
 					// pre-fetch the deleted data
 					var tData = new List();
 					if(runSqlPerRow || postProcedure != null){
-						tData = app.db.requestSingle("SELECT * FROM `" + table + "` WHERE `" + definition.primaryKey + "`='" + delId + "'");
+						tData = application.db.requestSingle("SELECT * FROM `" + table + "` WHERE `" + definition.primaryKey + "`='" + delId + "'");
 					}
 					
 					// delete our row
 					try{
-						app.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");
+						application.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");
 						numDeleted++;
 					}catch (e:Dynamic) {
-						messages.addError("There was a problem deleting your data.");
-						if (runSqlPerRow) messages.addWarning("Post-delete SQL not run as delete run completed.");
+						application.messages.addError("There was a problem deleting your data.");
+						if (runSqlPerRow) application.messages.addWarning("Post-delete SQL not run as delete run completed.");
 						runSqlPerRow = false;
 					}
 					
@@ -438,16 +438,16 @@ class Dataset extends DatasetBase
 							tSql = StringTools.replace(tSql, "#" + tField + "#", Reflect.field(tData, tField));
 						}
 						try {
-							app.db.request(tSql);
+							application.db.request(tSql);
 						}catch (e:Dynamic) {
-							messages.addError("Post-delete SQL had problems: " + tSql);
+							application.messages.addError("Post-delete SQL had problems: " + tSql);
 						}
 					}
 					
 					// do post procedure
 					if(postProcedure != null) postProcedure.postDelete(table, tData);
 				}
-				messages.addMessage(numDeleted+" record(s) deleted.");
+				application.messages.addMessage(numDeleted+" record(s) deleted.");
 			}	
 			
 			// ordering
@@ -460,18 +460,18 @@ class Dataset extends DatasetBase
 						
 						var d:Dynamic = { };
 						Reflect.setField(d, orderField, orderId);
-						app.db.update(table, d, "`"+definition.primaryKey+"`='"+c+"'");
+						application.db.update(table, d, "`"+definition.primaryKey+"`='"+c+"'");
 					}
 					c++;
 				}
 				
 				c = 0;
-				var res = app.db.request("SELECT `" + definition.primaryKey + "` as 'id' from " + table + " ORDER BY `" + orderField + "`");
+				var res = application.db.request("SELECT `" + definition.primaryKey + "` as 'id' from " + table + " ORDER BY `" + orderField + "`");
 				for (item in res)
 				{
 					var d:Dynamic = { };
 					Reflect.setField(d, orderField, ++c);
-					app.db.update(table, d, "`" + definition.primaryKey + "`='" + item.id + "'");
+					application.db.update(table, d, "`" + definition.primaryKey + "`='" + item.id + "'");
 				}
 			}			
 		}
@@ -485,7 +485,7 @@ class Dataset extends DatasetBase
 		for (element in definition.elements) {
 			if (element.properties.type == "association" && element.properties.showAsLabel == "1") {
 				var sql = "SELECT " + element.properties.field + " AS id, "+element.properties.fieldLabel + " AS label FROM " + element.properties.table;
-				var result = app.db.request(sql);
+				var result = application.db.request(sql);
 				var h:Hash<Dynamic> = new Hash();
 				for (e in result)
 					h.set(Std.string(e.id), e.label);
@@ -507,7 +507,7 @@ class Dataset extends DatasetBase
 			{
 				var h:Hash<Dynamic> = new Hash();
 				
-				var types = app.db.requestSingle("SHOW COLUMNS FROM `"+ table +"` LIKE \""+element.properties.name+"\"");
+				var types = application.db.requestSingle("SHOW COLUMNS FROM `"+ table +"` LIKE \""+element.properties.name+"\"");
 				var s:String = Reflect.field(types, "Type");
 				var items = s.substr(6, s.length - 8).split("','");
 				
@@ -609,7 +609,7 @@ class Dataset extends DatasetBase
 		var ths = this;
 		
 		// get fields
-		var fields = app.db.request("SHOW FIELDS FROM `" + table + "`");
+		var fields = application.db.request("SHOW FIELDS FROM `" + table + "`");
 		fields = Lambda.map(fields, function(row:Dynamic) {	
 			return row.Field;
 		});
@@ -628,7 +628,7 @@ class Dataset extends DatasetBase
 		var c = 0;
 		for (val in php.Web.getParamValues("orderNum"))
 		{
-			if (val != null) app.db.update("news", { order:val }, "`id`=" + c);
+			if (val != null) application.db.update("news", { order:val }, "`id`=" + c);
 			c++;
 		}
 	}
@@ -644,7 +644,7 @@ class Dataset extends DatasetBase
 		} else {
 			return switch(properties.type)
 			{
-				case "text": StringTools.htmlEscape((data).substr(0,50)) + (data.length > 50 ? "..." :  "");
+				case "text": (data).substr(0,50) + (data.length > 50 ? "..." :  "");
 				case "richtext-tinymce": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
 				case "richtext-wym": StringTools.htmlEscape(data.substr(0, 50)) + ((data.length > 50) ? "..." : "");
 				case "image-file":
