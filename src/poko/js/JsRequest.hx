@@ -74,7 +74,7 @@ class JsRequest
 	/** Methods for getting string representations of calls to this request object */
 	public function getThis():String
 	{
-		return "app.js.JsPoko.instance.resolveRequest('" + Type.getClassName(Type.getClass(this)) + "')";
+		return "poko.js.JsPoko.instance.resolveRequest('" + Type.getClassName(Type.getClass(this)) + "')";
 	}
 	
 	/** get a string of JS ready to make call */
@@ -92,6 +92,7 @@ class JsRequest
 		return getThis() + "." + str;
 	}
 	
+	//Called after page onLoad
 	public function main()
 	{
 	}

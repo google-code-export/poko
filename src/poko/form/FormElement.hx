@@ -57,6 +57,9 @@ class FormElement
 	{
 		errors.clear();
 		
+		if (active == false)
+			return true;
+		
 		if (value == "" && required) 
 		{
 			errors.add("please fill in: '" + name + "'");

@@ -62,7 +62,7 @@ class Selectbox extends FormElement
 		if (data != null)
 		{	
 			for (row in data) {
-				s += "<option value=\"" + Std.string(row.value) + "\" " + (Std.string(row.value) == Std.string(value) ? "selected":"") + ">" + Std.string(row.key) + "</option>";
+				s += "<option value=\"" + Std.string(row.key) + "\" " + (Std.string(row.key) == Std.string(value) ? "selected":"") + ">" + Std.string(row.value) + "</option>";
 			}
 		}
 		s += "</select>";
@@ -70,7 +70,12 @@ class Selectbox extends FormElement
 		return s;
 	}
 	
-	public function addOption(keyVal:Dynamic)
+	public inline function add(key:String, value:Dynamic)
+	{
+		addOption( { key:key, value:value } );
+	}
+	
+	public inline function addOption(keyVal:Dynamic)
 	{
 		data.add(keyVal);
 	}

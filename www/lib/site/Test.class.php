@@ -1,6 +1,6 @@
 <?php
 
-class site_Test extends site_layouts_TestLayout {
+class site_Test extends poko_controllers_HtmlController {
 	public function __construct() {
 		if( !php_Boot::$skip_constructor ) {
 		parent::__construct();
@@ -8,9 +8,11 @@ class site_Test extends site_layouts_TestLayout {
 	public $test;
 	public $comp;
 	public $poo;
+	public $arr;
 	public function init() {
 		$this->poo = "sss";
 		$this->test = "mmm";
+		$this->arr = new _hx_array(array("one", "two", "threree"));
 		$this->comp = new site_components_TestComponent("test comp");
 	}
 	public function post() {

@@ -24,7 +24,7 @@
     <option mainClass="poko.Poko" />
     <option override="False" />
     <option verbose="False" />
-    <option additional="-lib templo" />
+    <option additional="-lib templo&#xA;-lib hscript" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

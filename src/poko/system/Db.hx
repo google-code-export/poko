@@ -142,7 +142,8 @@ class Db
 		sql += ")";
 		
 		lastQuery = sql;
-		var request = cnx.request(sql);
+		var request = cnx.request(sql); 
+		
 		lastAffectedRows = request.length;
 		
 		return true;
