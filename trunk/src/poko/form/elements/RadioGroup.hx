@@ -35,8 +35,8 @@ class RadioGroup extends FormElement
 	public var data:List<KeyVal>;
 	public var selectMessage:String;
 	public var labelLeft:Bool;
-	public var verticle:Bool;
 	public var labelRight:Bool;
+	public var verticle:Bool;
 	
 	public function new(name:String, label:String, ?data:List<KeyVal>, ?selected:String, ?defaultValue:String, ?verticle:Bool=true, ?labelRight:Bool=true) 
 	{
