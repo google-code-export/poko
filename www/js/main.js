@@ -1,9 +1,9 @@
 $estr = function() { return js.Boot.__string_rec(this,''); }
-site = {}
-site.cms = {}
-site.cms.modules = {}
-site.cms.modules.base = {}
-site.cms.modules.base.helper = {}
+if(typeof site=='undefined') site = {}
+if(!site.cms) site.cms = {}
+if(!site.cms.modules) site.cms.modules = {}
+if(!site.cms.modules.base) site.cms.modules.base = {}
+if(!site.cms.modules.base.helper) site.cms.modules.base.helper = {}
 site.cms.modules.base.helper.MenuDef = function(headings,items) { if( headings === $_ ) return; {
 	this.headings = (headings != null?headings:new Array());
 	this.items = (items != null?items:new Array());
@@ -19,7 +19,7 @@ site.cms.modules.base.helper.MenuDef.prototype.addItem = function(id,type,name,h
 }
 site.cms.modules.base.helper.MenuDef.prototype.addSeperator = function() {
 	this.numberOfSeperators++;
-	this.headings.push({ name : "__sep" + this.numberOfSeperators + "__", isSeperator : true});
+	this.headings.push({ name : ("__sep" + this.numberOfSeperators) + "__", isSeperator : true});
 }
 site.cms.modules.base.helper.MenuDef.prototype.headings = null;
 site.cms.modules.base.helper.MenuDef.prototype.items = null;
@@ -38,8 +38,8 @@ site.cms.modules.base.helper.MenuItemType.PAGE.__enum__ = site.cms.modules.base.
 site.cms.modules.base.helper.MenuItemType.PAGE_ROLL = ["PAGE_ROLL",3];
 site.cms.modules.base.helper.MenuItemType.PAGE_ROLL.toString = $estr;
 site.cms.modules.base.helper.MenuItemType.PAGE_ROLL.__enum__ = site.cms.modules.base.helper.MenuItemType;
-poko = {}
-poko.js = {}
+if(typeof poko=='undefined') poko = {}
+if(!poko.js) poko.js = {}
 poko.js.JsRequest = function(p) { if( p === $_ ) return; {
 	null;
 }}
@@ -64,16 +64,16 @@ poko.js.JsRequest.prototype.call = function(method,args) {
 	func.apply(this,a);
 }
 poko.js.JsRequest.prototype.getCall = function(method,args) {
-	var str = this.getThis() + ".call('" + method + "', ";
-	str += "'" + haxe.Serializer.run(args) + "'";
+	var str = ((this.getThis() + ".call('") + method) + "', ";
+	str += ("'" + haxe.Serializer.run(args)) + "'";
 	str += ")";
 	return str;
 }
 poko.js.JsRequest.prototype.getRawCall = function(str) {
-	return this.getThis() + "." + str;
+	return (this.getThis() + ".") + str;
 }
 poko.js.JsRequest.prototype.getThis = function() {
-	return "app.js.JsPoko.instance.resolveRequest('" + Type.getClassName(Type.getClass(this)) + "')";
+	return ("poko.js.JsPoko.instance.resolveRequest('" + Type.getClassName(Type.getClass(this))) + "')";
 }
 poko.js.JsRequest.prototype.init = function() {
 	this.remoting = haxe.remoting.HttpAsyncConnection.urlConnect(js.Lib.window.location.href);
@@ -86,7 +86,7 @@ poko.js.JsRequest.prototype.main = function() {
 }
 poko.js.JsRequest.prototype.remoting = null;
 poko.js.JsRequest.prototype.__class__ = poko.js.JsRequest;
-site.cms.modules.base.js = {}
+if(!site.cms.modules.base.js) site.cms.modules.base.js = {}
 site.cms.modules.base.js.JsDatasetItem = function(p) { if( p === $_ ) return; {
 	poko.js.JsRequest.apply(this,[]);
 }}
@@ -120,8 +120,8 @@ site.cms.modules.base.js.JsDatasetItem.prototype.setupShowHideElements = functio
 	var _hideOnValue = hideOnValue;
 	var _affector = affector;
 	var _t = this;
-	var e = new JQuery("input[name=form1_" + affector + "]").change(function(e) {
-		_t.showHideElements(_elements,new JQuery("input[name=form1_" + affector + "]:checked").val(),_hideOnValue);
+	var e = new JQuery(("input[name=form1_" + affector) + "]").change(function(e) {
+		_t.showHideElements(_elements,new JQuery(("input[name=form1_" + affector) + "]:checked").val(),_hideOnValue);
 	});
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.showHideElements = function(elements,value,hideOnValue) {
@@ -132,7 +132,7 @@ site.cms.modules.base.js.JsDatasetItem.prototype.showHideElements = function(ele
 			while(_g < els.length) {
 				var el = els[_g];
 				++_g;
-				var e = new JQuery("label[for=form1_" + el + "]").parent().parent();
+				var e = new JQuery(("label[for=form1_" + el) + "]").parent().parent();
 				if(value == hideOnValue) e.hide();
 				else e.show();
 			}
@@ -141,13 +141,13 @@ site.cms.modules.base.js.JsDatasetItem.prototype.showHideElements = function(ele
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.table = null;
 site.cms.modules.base.js.JsDatasetItem.prototype.updateItemFromMedia = function(elementId,gallery,image) {
-	var itemValue = new JQuery("#" + elementId + "_libraryItemValue");
-	var itemDisplay = new JQuery("#" + elementId + "_libraryItemDisplay");
+	var itemValue = new JQuery(("#" + elementId) + "_libraryItemValue");
+	var itemDisplay = new JQuery(("#" + elementId) + "_libraryItemDisplay");
 	var itemRadio = js.Lib.document.getElementById(elementId + "_cmsComponentFileImageEditOperationLibrary");
-	itemValue.val(gallery + "/" + image);
-	itemDisplay.html("<em>" + gallery + ": " + image + "</em>");
+	itemValue.val((gallery + "/") + image);
+	itemDisplay.html(((("<em>" + gallery) + ": ") + image) + "</em>");
 	itemRadio.checked = true;
-	var i = new JQuery("#" + elementId + "_mediaSelectorPopup_jqmModalWindow");
+	var i = new JQuery(("#" + elementId) + "_mediaSelectorPopup_jqmModalWindow");
 	i.jqmHide();
 }
 site.cms.modules.base.js.JsDatasetItem.prototype.valueHolder = null;
@@ -181,7 +181,7 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 			}
 			else {
 				var name = section.name;
-				s += "<li class=\"sectionHeading\"><p><span>" + section.name + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p>";
+				s += ("<li class=\"sectionHeading\"><p><span>" + section.name) + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p>";
 				s += "<ul class=\"connectedSortable\">";
 				{
 					var _g2 = 0, _g3 = m.items;
@@ -209,9 +209,9 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 								}
 								return $r;
 							}(this));
-							s += "\" align=\"absmiddle\" /> <span class=\"listTreeIndent" + item.indent + "\" data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\" prop=\"";
+							s += ((("\" align=\"absmiddle\" /> <span class=\"listTreeIndent" + item.indent) + "\" data=\"") + haxe.Serializer.run({ id : item.id, type : item.type})) + "\" prop=\"";
 							if(item.listChildren != null) s += "filter," + item.listChildren;
-							if(item.linkChild != null) s += "link," + item.linkChild.dataset + "," + item.linkChild.id;
+							if(item.linkChild != null) s += (("link," + item.linkChild.dataset) + ",") + item.linkChild.id;
 							s += "\" >";
 							s += item.name + "</span> <a href=\"#\" class=\"editItemInner\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"propertiesItemInner\"><img src=\"./res/cms/bullet_wrench.png\" align=\"absmiddle\" /></a> <div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
 						}
@@ -261,7 +261,7 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 				return $r;
 			}(this));
 			s += "\" align=\"absmiddle\" /> ";
-			s += "<span prop=\"\" data=\"" + haxe.Serializer.run({ id : item.id, type : item.type}) + "\">" + item.name + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
+			s += ((("<span prop=\"\" data=\"" + haxe.Serializer.run({ id : item.id, type : item.type})) + "\">") + item.name) + "</span><div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
 		}
 	}
 	j = new JQuery("#siteViewHiddenSection");
@@ -274,7 +274,7 @@ site.cms.modules.base.js.JsSiteView.prototype.addNull = function(e) {
 		j[0].focus();
 	}
 	else {
-		var s = "<li><img src=\"./res/cms/site_list_null.png\" align=\"absmiddle\" /> <span class=\"listTreeIndent0\" data=\"" + haxe.Serializer.run({ id : 0, type : site.cms.modules.base.helper.MenuItemType.NULL}) + "\" >";
+		var s = ("<li><img src=\"./res/cms/site_list_null.png\" align=\"absmiddle\" /> <span class=\"listTreeIndent0\" data=\"" + haxe.Serializer.run({ id : 0, type : site.cms.modules.base.helper.MenuItemType.NULL})) + "\" >";
 		s += j.val() + "</span> <a href=\"#\" class=\"editItemInner\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <div class=\"connectedSortableMover\"><a href=\"#\">-</a> <a href=\"#\">+</a></div></li>";
 		var j1 = new JQuery("#siteViewHiddenSection");
 		j1.html(s + j1.html());
@@ -290,7 +290,7 @@ site.cms.modules.base.js.JsSiteView.prototype.addSection = function(e) {
 		j[0].focus();
 	}
 	else {
-		var s = "<li class=\"sectionHeading\"><p><span>" + j.val() + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p><ul class=\"connectedSortable\"></ul></li>";
+		var s = ("<li class=\"sectionHeading\"><p><span>" + j.val()) + "</span> <a href=\"#\" class=\"editItem\"><img src=\"./res/cms/pencil.png\" align=\"absmiddle\" /></a> <a href=\"#\" class=\"deleteItem\"><img src=\"./res/cms/delete.png\" align=\"absmiddle\" /></a></p><ul class=\"connectedSortable\"></ul></li>";
 		var j1 = new JQuery("#siteViewSection");
 		j1.html(s + j1.html());
 		j1.val("");
@@ -309,13 +309,13 @@ site.cms.modules.base.js.JsSiteView.prototype.addSeperator = function(e) {
 }
 site.cms.modules.base.js.JsSiteView.prototype.editHeading = function(e) {
 	var t = new JQuery(e.currentTarget).parent().parent().find("p > span");
-	t.html(poko.js.JsUtils.prompt("Name? Currently \"" + t.html() + "\"."));
+	t.html(poko.js.JsUtils.prompt(("Name? Currently \"" + t.html()) + "\"."));
 	this.flushSorter(null);
 	e.preventDefault();
 }
 site.cms.modules.base.js.JsSiteView.prototype.editItem = function(e) {
 	var t = new JQuery(e.currentTarget).parent().find("span");
-	var v = poko.js.JsUtils.prompt("Name? Currently \"" + t.html() + "\".");
+	var v = poko.js.JsUtils.prompt(("Name? Currently \"" + t.html()) + "\".");
 	if(v != "" && v != null) t.html(v);
 	this.flushSorter(null);
 	e.preventDefault();
@@ -442,7 +442,7 @@ site.cms.modules.base.js.JsSiteView.prototype.plus = function(e) {
 }
 site.cms.modules.base.js.JsSiteView.prototype.propertiesItem = function(e) {
 	var t = new JQuery(e.currentTarget).parent().find("span");
-	var v = poko.js.JsUtils.prompt("Properties? Currently \"" + t.attr("prop") + "\".");
+	var v = poko.js.JsUtils.prompt(("Properties? Currently \"" + t.attr("prop")) + "\".");
 	if(v != "" && v != null) t.attr("prop",v);
 	this.flushSorter(null);
 	e.preventDefault();
@@ -477,7 +477,7 @@ site.cms.modules.base.js.JsSiteView.prototype.removeHeading = function(e) {
 		var _g1 = 0, _g = items.length;
 		while(_g1 < _g) {
 			var n = _g1++;
-			s += "<li>" + items[n].innerHTML + "</li>";
+			s += ("<li>" + items[n].innerHTML) + "</li>";
 		}
 	}
 	var j = new JQuery("#siteViewHiddenSection");
@@ -515,8 +515,8 @@ site.cms.modules.base.js.JsSiteView.prototype.setIndent = function(t,indent) {
 	this.flushSorter(null);
 }
 site.cms.modules.base.js.JsSiteView.prototype.__class__ = site.cms.modules.base.js.JsSiteView;
-haxe = {}
-haxe.remoting = {}
+if(typeof haxe=='undefined') haxe = {}
+if(!haxe.remoting) haxe.remoting = {}
 haxe.remoting.AsyncConnection = function() { }
 haxe.remoting.AsyncConnection.__name__ = ["haxe","remoting","AsyncConnection"];
 haxe.remoting.AsyncConnection.prototype.call = null;
@@ -561,7 +561,7 @@ StringTools.ltrim = function(s) {
 StringTools.rtrim = function(s) {
 	var l = s.length;
 	var r = 0;
-	while(r < l && StringTools.isSpace(s,l - r - 1)) {
+	while(r < l && StringTools.isSpace(s,(l - r) - 1)) {
 		r++;
 	}
 	if(r > 0) {
@@ -788,7 +788,7 @@ site.cms.modules.base.js.JsDataset.prototype.onGetFilterInfo = function(response
 		{ var $it5 = options.keys();
 		while( $it5.hasNext() ) { var option = $it5.next();
 		{
-			select.innerHTML += "<option value=\"" + option + "\">" + options.get(option) + "</option>";
+			select.innerHTML += ((("<option value=\"" + option) + "\">") + options.get(option)) + "</option>";
 		}
 		}}
 	}break;
@@ -845,7 +845,7 @@ site.Config.__name__ = ["site","Config"];
 site.Config.__super__ = poko.js.JsConfig;
 for(var k in poko.js.JsConfig.prototype ) site.Config.prototype[k] = poko.js.JsConfig.prototype[k];
 site.Config.prototype.__class__ = site.Config;
-haxe.io = {}
+if(!haxe.io) haxe.io = {}
 haxe.io.Bytes = function(length,b) { if( length === $_ ) return; {
 	this.length = length;
 	this.b = b;
@@ -1034,7 +1034,7 @@ haxe.remoting.HttpAsyncConnection.prototype.call = function(params,onResult) {
 		var ok = true;
 		var ret;
 		try {
-			if(response.substr(0,3) != "hxr") throw "Invalid response : '" + response + "'";
+			if(response.substr(0,3) != "hxr") throw ("Invalid response : '" + response) + "'";
 			var s1 = new haxe.Unserializer(response.substr(3));
 			ret = s1.unserialize();
 		}
@@ -1154,10 +1154,10 @@ Type.createEnum = function(e,constr,params) {
 	var f = Reflect.field(e,constr);
 	if(f == null) throw "No such constructor " + constr;
 	if(Reflect.isFunction(f)) {
-		if(params == null) throw "Constructor " + constr + " need parameters";
+		if(params == null) throw ("Constructor " + constr) + " need parameters";
 		return f.apply(e,params);
 	}
-	if(params != null && params.length != 0) throw "Constructor " + constr + " does not need parameters";
+	if(params != null && params.length != 0) throw ("Constructor " + constr) + " does not need parameters";
 	return f;
 }
 Type.createEnumIndex = function(e,index,params) {
@@ -1365,7 +1365,7 @@ haxe.Unserializer.prototype.unserialize = function() {
 			if(c == 117) {
 				this.pos++;
 				var n = this.readDigits();
-				a[a.length + n - 1] = null;
+				a[(a.length + n) - 1] = null;
 			}
 			else a.push(this.unserialize());
 		}
@@ -1412,7 +1412,7 @@ haxe.Unserializer.prototype.unserialize = function() {
 		this.pos++;
 		var index = this.readDigits();
 		var tag = Type.getEnumConstructs(edecl)[index];
-		if(tag == null) throw "Unknown enum index " + name + "@" + index;
+		if(tag == null) throw (("Unknown enum index " + name) + "@") + index;
 		return this.unserializeEnum(edecl,tag);
 	}break;
 	case 108:{
@@ -1495,11 +1495,11 @@ haxe.Unserializer.prototype.unserialize = function() {
 	}break;
 	}
 	this.pos--;
-	throw ("Invalid char " + this.buf.charAt(this.pos) + " at position " + this.pos);
+	throw ((("Invalid char " + this.buf.charAt(this.pos)) + " at position ") + this.pos);
 }
 haxe.Unserializer.prototype.unserializeEnum = function(edecl,tag) {
 	var constr = Reflect.field(edecl,tag);
-	if(constr == null) throw "Unknown enum tag " + Type.getEnumName(edecl) + "." + tag;
+	if(constr == null) throw (("Unknown enum tag " + Type.getEnumName(edecl)) + ".") + tag;
 	if(this.buf.cca(this.pos++) != 58) throw "Invalid enum format";
 	var nargs = this.readDigits();
 	if(nargs == 0) {
@@ -1838,12 +1838,12 @@ haxe.Serializer.prototype.serialize = function(v) {
 				var b1 = v1.b[i++];
 				var b2 = v1.b[i++];
 				var b3 = v1.b[i++];
-				chars += b64.charAt(b1 >> 2) + b64.charAt(((b1 << 4) | (b2 >> 4)) & 63) + b64.charAt(((b2 << 2) | (b3 >> 6)) & 63) + b64.charAt(b3 & 63);
+				chars += ((b64.charAt(b1 >> 2) + b64.charAt(((b1 << 4) | (b2 >> 4)) & 63)) + b64.charAt(((b2 << 2) | (b3 >> 6)) & 63)) + b64.charAt(b3 & 63);
 			}
 			if(i == max) {
 				var b1 = v1.b[i++];
 				var b2 = v1.b[i++];
-				chars += b64.charAt(b1 >> 2) + b64.charAt(((b1 << 4) | (b2 >> 4)) & 63) + b64.charAt((b2 << 2) & 63);
+				chars += (b64.charAt(b1 >> 2) + b64.charAt(((b1 << 4) | (b2 >> 4)) & 63)) + b64.charAt((b2 << 2) & 63);
 			}
 			else if(i == max + 1) {
 				var b1 = v1.b[i++];
@@ -2025,7 +2025,7 @@ haxe.Http.prototype.request = function(post) {
 		}break;
 		}
 	}
-	r.onreadystatechange = onreadystatechange;
+	if(this.async) r.onreadystatechange = onreadystatechange;
 	var uri = this.postData;
 	if(uri != null) post = true;
 	else { var $it15 = this.params.keys();
@@ -2033,14 +2033,14 @@ haxe.Http.prototype.request = function(post) {
 	{
 		if(uri == null) uri = "";
 		else uri += "&";
-		uri += StringTools.urlDecode(p) + "=" + StringTools.urlEncode(this.params.get(p));
+		uri += (StringTools.urlDecode(p) + "=") + StringTools.urlEncode(this.params.get(p));
 	}
 	}}
 	try {
 		if(post) r.open("POST",this.url,this.async);
 		else if(uri != null) {
 			var question = this.url.split("?").length <= 1;
-			r.open("GET",this.url + ((question?"?":"&")) + uri,this.async);
+			r.open("GET",(this.url + ((question?"?":"&"))) + uri,this.async);
 			uri = null;
 		}
 		else r.open("GET",this.url,this.async);
@@ -2134,11 +2134,11 @@ site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueV
 	if(valueValue == null) valueValue = "";
 	if(keyValue == null) keyValue = "";
 	if(this.maxRows > 0 && this.currentRows == this.maxRows) {
-		js.Lib.alert("Only " + this.maxRows + " allowed.");
+		js.Lib.alert(("Only " + this.maxRows) + " allowed.");
 		return false;
 	}
-	var keyElement = (this.properties.keyIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.keyHeight + "px; width:" + this.properties.keyWidth + "px;"},[keyValue]):JQuery.create("input",{ type : "text", value : keyValue, style : "width:" + this.properties.keyWidth + "px;"},[]));
-	var valueElement = (this.properties.valueIsMultiline == "1"?JQuery.create("textarea",{ style : "height:" + this.properties.valueHeight + "px; width:" + this.properties.valueWidth + "px;"},[valueValue]):JQuery.create("input",{ type : "text", value : valueValue, style : "width:" + this.properties.valueWidth + "px;"},[]));
+	var keyElement = (this.properties.keyIsMultiline == "1"?JQuery.create("textarea",{ style : ((("height:" + this.properties.keyHeight) + "px; width:") + this.properties.keyWidth) + "px;"},[keyValue]):JQuery.create("input",{ type : "text", value : keyValue, style : ("width:" + this.properties.keyWidth) + "px;"},[]));
+	var valueElement = (this.properties.valueIsMultiline == "1"?JQuery.create("textarea",{ style : ((("height:" + this.properties.valueHeight) + "px; width:") + this.properties.valueWidth) + "px;"},[valueValue]):JQuery.create("input",{ type : "text", value : valueValue, style : ("width:" + this.properties.valueWidth) + "px;"},[]));
 	var d = { src : "./res/cms/delete.png", title : "remove"}
 	d["class"] = "qTip";
 	var removeElement = (removeable?JQuery.create("a",{ href : "#"},JQuery.create("img",d)):null);
@@ -2148,14 +2148,14 @@ site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueV
 			_r.removeKeyValueInput(e.target);
 		});
 	}
-	new JQuery("#" + this.id + "_keyValueTable tr:last").after(JQuery.create("tr",{ },[JQuery.create("td",{ valign : "top"},[keyElement]),JQuery.create("td",{ valign : "top"},[valueElement]),JQuery.create("td",{ valign : "top"},[removeElement])]));
+	new JQuery(("#" + this.id) + "_keyValueTable tr:last").after(JQuery.create("tr",{ },[JQuery.create("td",{ valign : "top"},[keyElement]),JQuery.create("td",{ valign : "top"},[valueElement]),JQuery.create("td",{ valign : "top"},[removeElement])]));
 	this.currentRows++;
 	return true;
 }
 site.cms.modules.base.js.KeyValueSet.prototype.currentRows = null;
 site.cms.modules.base.js.KeyValueSet.prototype.flush = function() {
 	var data = [];
-	new JQuery("#" + this.id + "_keyValueTable tr").each(function($int,html) {
+	new JQuery(("#" + this.id) + "_keyValueTable tr").each(function($int,html) {
 		var items = new JQuery(html).find("td").children("input,textarea");
 		if(items.length > 0) {
 			data.push({ key : Reflect.field(items[0],"value"), value : Reflect.field(items[1],"value")});
@@ -2170,7 +2170,7 @@ site.cms.modules.base.js.KeyValueSet.prototype.properties = null;
 site.cms.modules.base.js.KeyValueSet.prototype.request = null;
 site.cms.modules.base.js.KeyValueSet.prototype.setup = function() {
 	this.valueHolder = new JQuery("#" + this.id);
-	this.table = new JQuery("#" + this.id + "_keyValueTable");
+	this.table = new JQuery(("#" + this.id) + "_keyValueTable");
 	var val = this.valueHolder.val();
 	var data = [];
 	if(val != "") data = haxe.Unserializer.run(val);
@@ -2228,7 +2228,7 @@ ValueType.TObject.__enum__ = ValueType;
 ValueType.TUnknown = ["TUnknown",8];
 ValueType.TUnknown.toString = $estr;
 ValueType.TUnknown.__enum__ = ValueType;
-site.cms.js = {}
+if(!site.cms.js) site.cms.js = {}
 site.cms.js.JsTest = function(p) { if( p === $_ ) return; {
 	poko.js.JsRequest.apply(this,[]);
 }}
@@ -2250,7 +2250,7 @@ poko.js.JsUtils.prompt = function(v) {
 	return prompt(js.Boot.__string_rec(v,""));
 }
 poko.js.JsUtils.prototype.__class__ = poko.js.JsUtils;
-js = {}
+if(typeof js=='undefined') js = {}
 js.Lib = function() { }
 js.Lib.__name__ = ["js","Lib"];
 js.Lib.isIE = null;
@@ -2273,7 +2273,7 @@ js.Boot.__unhtml = function(s) {
 	return s.split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
 }
 js.Boot.__trace = function(v,i) {
-	var msg = (i != null?i.fileName + ":" + i.lineNumber + ": ":"");
+	var msg = (i != null?((i.fileName + ":") + i.lineNumber) + ": ":"");
 	msg += js.Boot.__unhtml(js.Boot.__string_rec(v,"")) + "<br/>";
 	var d = document.getElementById("haxe:trace");
 	if(d == null) alert("No haxe:trace element defined\n" + msg);
@@ -2354,10 +2354,10 @@ js.Boot.__string_rec = function(o,s) {
 		if(hasp && !o.hasOwnProperty(k)) continue;
 		if(k == "prototype" || k == "__class__" || k == "__super__" || k == "__interfaces__") continue;
 		if(str.length != 2) str += ", \n";
-		str += s + k + " : " + js.Boot.__string_rec(o[k],s);
+		str += ((s + k) + " : ") + js.Boot.__string_rec(o[k],s);
 		}
 		s = s.substring(1);
-		str += "\n" + s + "}";
+		str += ("\n" + s) + "}";
 		return str;
 	}break;
 	case "function":{
@@ -2424,8 +2424,8 @@ js.Boot.__instanceof = function(o,cl) {
 	}
 }
 js.Boot.__init = function() {
-	js.Lib.isIE = (document.all != null && window.opera == null);
-	js.Lib.isOpera = (window.opera != null);
+	js.Lib.isIE = (typeof document!='undefined' && document.all != null && typeof window!='undefined' && window.opera == null);
+	js.Lib.isOpera = (typeof window!='undefined' && window.opera != null);
 	Array.prototype.copy = Array.prototype.slice;
 	Array.prototype.insert = function(i,x) {
 		this.splice(i,0,x);
@@ -2470,7 +2470,7 @@ js.Boot.__init = function() {
 			if(pos < 0) pos = 0;
 		}
 		else if(len < 0) {
-			len = this.length + len - pos;
+			len = (this.length + len) - pos;
 		}
 		return oldsub.apply(this,[pos,len]);
 	}
@@ -2534,8 +2534,8 @@ IntHash.prototype.toString = function() {
 	return s.b.join("");
 }
 IntHash.prototype.__class__ = IntHash;
-site.cms.modules.media = {}
-site.cms.modules.media.js = {}
+if(!site.cms.modules.media) site.cms.modules.media = {}
+if(!site.cms.modules.media.js) site.cms.modules.media.js = {}
 site.cms.modules.media.js.JsMediaSelector = function(p) { if( p === $_ ) return; {
 	poko.js.JsRequest.apply(this,[]);
 }}
@@ -2588,8 +2588,8 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.onAssocDataLoaded = funct
 		while(_g < response.length) {
 			var item = response[_g];
 			++_g;
-			this.assocSelectBox2.innerHTML += "<option value=\"" + item + "\">" + item + "</option>";
-			this.assocSelectBox3.innerHTML += "<option value=\"" + item + "\">" + item + "</option>";
+			this.assocSelectBox2.innerHTML += ((("<option value=\"" + item) + "\">") + item) + "</option>";
+			this.assocSelectBox3.innerHTML += ((("<option value=\"" + item) + "\">") + item) + "</option>";
 		}
 	}
 	this.assocSelectBox3.selectedIndex = 1;
@@ -2603,7 +2603,7 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.onAssocDataLoaded2 = func
 		while(_g < _g1.length) {
 			var item = _g1[_g];
 			++_g;
-			this.assocSelectBox2.innerHTML += "<option value=\"" + item + "\">" + item + "</option>";
+			this.assocSelectBox2.innerHTML += ((("<option value=\"" + item) + "\">") + item) + "</option>";
 		}
 	}
 	{
@@ -2611,7 +2611,7 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.onAssocDataLoaded2 = func
 		while(_g < _g1.length) {
 			var item = _g1[_g];
 			++_g;
-			this.assocSelectBox3.innerHTML += "<option value=\"" + item + "\">" + item + "</option>";
+			this.assocSelectBox3.innerHTML += ((("<option value=\"" + item) + "\">") + item) + "</option>";
 		}
 	}
 	new JQuery("button").attr("disabled",false);
@@ -2668,12 +2668,12 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.onChangeSelectbox = funct
 }
 site.cms.modules.base.js.JsDefinitionElement.prototype.showElements = function(field) {
 	if(js.Lib.isIE) {
-		new JQuery("[id^='form_def_" + field + "']").parent().parent().css("display","block");
+		new JQuery(("[id^='form_def_" + field) + "']").parent().parent().css("display","block");
 	}
 	else {
-		new JQuery("[id^='form_def_" + field + "']").parent().parent().css("display","table-row");
+		new JQuery(("[id^='form_def_" + field) + "']").parent().parent().css("display","table-row");
 	}
-	new JQuery("fieldset[id^='form_def_" + field + "']").css("display","block");
+	new JQuery(("fieldset[id^='form_def_" + field) + "']").css("display","block");
 }
 site.cms.modules.base.js.JsDefinitionElement.prototype.types = null;
 site.cms.modules.base.js.JsDefinitionElement.prototype.__class__ = site.cms.modules.base.js.JsDefinitionElement;
@@ -2698,7 +2698,7 @@ site.cms.modules.media.js.JsGallery.prototype.getPreview = function(item) {
 		var $r;
 		switch(ext.toUpperCase()) {
 		case "JPG":case "GIF":case "PNG":{
-			$r = JQuery.create("img",{ src : "?request=cms.services.Image&preset=thumb&src=../media/galleries/" + $this.gallery + "/" + item});
+			$r = JQuery.create("img",{ src : (("?request=cms.services.Image&preset=thumb&src=../media/galleries/" + $this.gallery) + "/") + item});
 		}break;
 		case "PDF":{
 			$r = JQuery.create("img",{ src : "./res/cms/media/file_pdf.png"});
@@ -2867,7 +2867,7 @@ site.cms.modules.base.js.JsFileUpload.prototype.onResponse = function(data) {
 		new JQuery("#" + data.display).html("<p>deleted</p>");
 	}
 	else {
-		new JQuery("#" + data.display).html("<p>ERROR: " + data.error + "</p>");
+		new JQuery("#" + data.display).html(("<p>ERROR: " + data.error) + "</p>");
 	}
 }
 site.cms.modules.base.js.JsFileUpload.prototype.test = function() {
@@ -2916,7 +2916,7 @@ site.cms.modules.base.js.JsDefinition.prototype.main = function() {
 	null;
 }
 site.cms.modules.base.js.JsDefinition.prototype.onResponse = function(data) {
-	var el = js.Lib.document.getElementById("checkboxToggle_" + data.type + "_" + data.index);
+	var el = js.Lib.document.getElementById((("checkboxToggle_" + data.type) + "_") + data.index);
 	el.innerHTML = (data.value?"&#x2714;":"&#x02610;");
 }
 site.cms.modules.base.js.JsDefinition.prototype.toggleCheckbox = function(field,index,type) {
@@ -2974,7 +2974,7 @@ js.Boot.__init();
 		var h = date.getHours();
 		var mi = date.getMinutes();
 		var s = date.getSeconds();
-		return date.getFullYear() + "-" + ((m < 10?"0" + m:"" + m)) + "-" + ((d < 10?"0" + d:"" + d)) + " " + ((h < 10?"0" + h:"" + h)) + ":" + ((mi < 10?"0" + mi:"" + mi)) + ":" + ((s < 10?"0" + s:"" + s));
+		return (((((((((date.getFullYear() + "-") + ((m < 10?"0" + m:"" + m))) + "-") + ((d < 10?"0" + d:"" + d))) + " ") + ((h < 10?"0" + h:"" + h))) + ":") + ((mi < 10?"0" + mi:"" + mi))) + ":") + ((s < 10?"0" + s:"" + s));
 	}
 	Date.prototype.__class__ = Date;
 	Date.__name__ = ["Date"];

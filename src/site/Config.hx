@@ -28,13 +28,6 @@ class Config extends poko.system.Config
 		
 		switch(Web.getHostName())
 		{
-			case "touchmypixel.com", "staging.touchmypixel.com":
-				database_host = "localhost";
-				database_database = "touchmyp_poko";
-				database_user = "touchmyp_poko";
-				database_password = "poko";
-				
-				sessionName = "poko_cms";
 			default:
 				database_host = "192.168.1.80";
 				database_database = "poko";
