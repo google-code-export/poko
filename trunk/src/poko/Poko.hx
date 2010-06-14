@@ -49,7 +49,7 @@ class Poko
 	public var url:Url;
 	public var config:Config;
 	public var controller:Controller;
-	public var params:Hash<Dynamic>;
+	public var params:Hash <String>;
 	
 	public var db(getDb, null):Db;
 	private var __db:Db;
