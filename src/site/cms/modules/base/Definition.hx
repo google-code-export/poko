@@ -245,8 +245,8 @@ class Definition extends DefinitionsBase
 		
 		// for bool selectors
 		var yesno = new List();
-		yesno.add( { key:"Yes", value:"1" } );
-		yesno.add( { key:"No", value:"0" } );
+		yesno.add( { key:"1", value:"Yes" } );
+		yesno.add( { key:"0", value:"No" } );
 		
 		form1 = new Form("form1");
 		if(!pagesMode) form1.addElement(new Readonly("table", "Table", generalInfo.table));

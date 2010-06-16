@@ -560,7 +560,7 @@ class Dataset extends DatasetBase
 				if (definition.getElement(field).showInFiltering)
 				{
 					var label = definition.getElement(field).label != "" ? definition.getElement(field).label : field;
-					filterBySelector.addOption( { key:label, value:field } );
+					filterBySelector.addOption( { key:field, value:label } );
 				}
 			
 			var filterAssocSelector = optionsForm.getElementTyped("filterByAssoc", Selectbox);
@@ -569,7 +569,7 @@ class Dataset extends DatasetBase
 			var data:Hash<Dynamic> = associateExtras.get(filterByValue);
 			if (data != null)
 				for (d in data.keys())
-					filterAssocSelector.addOption( { key:data.get(d), value:d } );
+					filterAssocSelector.addOption( { key:d, value:data.get(d) } );
 			
 			var filterOperatorSelector = optionsForm.getElementTyped("filterByOperator", Selectbox);
 			filterOperatorSelector.addOption( { key:"=", value:"=" } );

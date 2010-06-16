@@ -66,7 +66,7 @@ class DatasetsLink extends DatasetBase
 		
 		// fill in form data
 		var definitionsSelctor = form1.getElementTyped("definitionId", Selectbox);
-		definitionsSelctor.data = app.db.request("SELECT `name` as 'key', `id` as 'value' FROM _definitions WHERE isPage='0'");
+		definitionsSelctor.data = app.db.request("SELECT `id` as 'key', `name` as 'value' FROM _definitions WHERE isPage='0'");
 		
 		var indentSelctor = form1.getElementTyped("indents", Selectbox);
 		indentSelctor.addOption( { key:1, value:1 } );

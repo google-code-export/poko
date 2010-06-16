@@ -713,8 +713,8 @@ class DatasetItem extends DatasetBase
 					var trueLable = element.properties.labelTrue != "" ? element.properties.labelTrue : "true";
 					var falseLable = element.properties.labelFalse != "" ? element.properties.labelFalse : "false";
 					
-					options.add( { key:trueLable, value:"1" } );
-					options.add( { key:falseLable, value:"0" } );
+					options.add( { key:"1", value:trueLable } );
+					options.add( { key:"0", value:falseLable } );
 					
 					var el = new RadioGroup(element.name, label, options, value, "1", false);
 					el.description = element.properties.description;
@@ -730,7 +730,7 @@ class DatasetItem extends DatasetBase
 				
 					var assocData = app.db.request("SELECT `" + element.properties.field + "` as value, "+ fieldLabelSelect +" as label FROM `" + element.properties.table + "`");
 					assocData = Lambda.map(assocData, function(value) {
-						return { key:value.label, value:value.value };
+						return { key:value.value, value:value.label };
 					});
 					
 					// set the auto filter on the element
