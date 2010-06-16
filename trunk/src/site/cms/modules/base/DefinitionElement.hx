@@ -176,38 +176,38 @@ class DefinitionElement extends DefinitionsBase
 		
 		// for bool selectors
 		var yesno = new List();
-		yesno.add( { key:"Yes", value:"1" } );
-		yesno.add( { key:"No", value:"0" } );
+		yesno.add( { value:"Yes", key:"1" } );
+		yesno.add( { value:"No", key:"0" } );
 		
 		var truefalse = new List();
-		truefalse.add( { key:"True", value:"1" } );
-		truefalse.add( { key:"False", value:"0" } );		
+		truefalse.add( { value:"True", key:"1" } );
+		truefalse.add( { value:"False", key:"0" } );		
 		
 		// for image text selectors
 		var imagefile = new List();
-		imagefile.add( { key:"Image", value:"1" } );
-		imagefile.add( { key:"File", value:"0" } );
+		imagefile.add( { value:"Image", key:"1" } );
+		imagefile.add( { value:"File", key:"0" } );
 		
 		// for image type selector
 		var uploadTypeList = new List();
-		uploadTypeList.add( { key:"Both", value:"0" } );
-		uploadTypeList.add( { key:"Upload", value:"1" } );
-		uploadTypeList.add( { key:"Media Library", value:"2" } );
+		uploadTypeList.add( { value:"Both", key:"0" } );
+		uploadTypeList.add( { value:"Upload", key:"1" } );
+		uploadTypeList.add( { value:"Media Library", key:"2" } );
 		
 		// for image type selector
 		var libraryView = new List();
-		libraryView.add( { key:"Both", value:"0" } );
-		libraryView.add( { key:"Thumbs", value:"1" } );
-		libraryView.add( { key:"List", value:"2" } );
+		libraryView.add( { value:"Both", key:"0" } );
+		libraryView.add( { value:"Thumbs", key:"1" } );
+		libraryView.add( { value:"List", key:"2" } );
 		
 		// DB Data types
 		var dataType = new List();
-		dataType.add( { key:"VARCHAR", value:"varchar" } );
-		dataType.add( { key:"TEXT", value:"text" } );
-		dataType.add( { key:"BOOL", value:"bool" } );
-		dataType.add( { key:"INT", value:"int" } );
-		dataType.add( { key:"FLOAT", value:"float" } );
-		dataType.add( { key:"DOUBLE", value:"double" } );
+		dataType.add( { value:"VARCHAR", key:"varchar" } );
+		dataType.add( { value:"TEXT", key:"text" } );
+		dataType.add( { value:"BOOL", key:"bool" } );
+		dataType.add( { value:"INT", key:"int" } );
+		dataType.add( { value:"FLOAT", key:"float" } );
+		dataType.add( { value:"DOUBLE", key:"double" } );
 		
 		// table in db for linking
 		var tableList:List<Dynamic> = Tools.getDBTables();

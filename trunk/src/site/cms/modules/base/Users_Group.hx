@@ -123,8 +123,8 @@ class Users_Group extends UsersBase
 		}
 		
 		var permissionsList:List<Dynamic> = new List();
-		permissionsList.add( { key:'isAdmin', value:"Admin" } );
-		permissionsList.add( { key:'isSuper', value:"Super" } );
+		permissionsList.add( { key:'Admin', value:"isAdmin" } );
+		permissionsList.add( { key:'Super', value:"isSuper" } );
 		
 		form1 = new Form("form1");
 		form1.addElement(new Hidden("actionId", actionId));
