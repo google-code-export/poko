@@ -368,6 +368,7 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new RadioGroup( "def_richtext-wym_required", "Required", yesno, data.required, "0", false), "properties");
 		form.addElement(new RadioGroup( "def_richtext-wym_allowTables", "Allow Tables", yesno, data.allowTables, "0", false), "properties");
 		form.addElement(new RadioGroup( "def_richtext-wym_allowImages", "Allow Images", yesno, data.allowImages, "1", false), "properties");
+		
 		var t = new TextArea("def_richtext-wym_editorStyles", "Editor Styles", data.editorStyles, false, null);
 		t.width = 500;
 		t.height = 200;
@@ -375,6 +376,12 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(t, "properties");
 		
 		// {'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'}, {'name': 'H1', 'title': 'Heading_1', 'css': 'wym_containers_h1'}
+		if (data.containersItems == null)
+		{
+			data.containersItems = "";
+			data.containersItems += "{'name': 'P', 'title': 'Paragraph', 'css': 'wym_containers_p'}, \n";
+			data.containersItems += "{'name': 'H1', 'title': 'Heading_1', 'css': 'wym_containers_h1'}";
+		}
 		t = new TextArea("def_richtext-wym_containersItems", "Containers", data.containersItems, false, null);
 		t.width = 500;
 		t.height = 200;
