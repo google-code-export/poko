@@ -49,7 +49,7 @@ class CmsSettings
 				
 		for (f in Reflect.fields(i))
 		{
-			var sql = "UPDATE `_settings` SET `value`='" + Reflect.field(i, f) + "' WHERE `key`='"+f+"'";
+			var sql = "UPDATE `_settings` SET `value`='" + Reflect.field(i, f) + "' WHERE `key`='" + f + "'";
 			db.query(sql);
 		}
 	}
