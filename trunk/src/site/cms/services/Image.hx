@@ -77,6 +77,8 @@ class Image extends poko.controllers.Controller
 					image.queueFitSize(10, 10);
 			}
 			
+			
+			
 			var dateModifiedString = DateTools.format(image.dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
 			Web.setHeader("Last-Modified", dateModifiedString);
 			Web.setHeader("Expires", DateTools.format(new Date(image.dateModified.getFullYear() + 1, image.dateModified.getMonth(), image.dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
@@ -86,7 +88,9 @@ class Image extends poko.controllers.Controller
 			
 			Web.setHeader("content-type", "image");
 			
-			setOutput(image.getOutput());
+			Lib.print( image.getOutput() );
+			
+			//setOutput(image.getOutput());
 			
 		}else {
 			var dateModified = FileSystem.stat(site.cms.PokoCms.uploadFolder + src).mtime;
@@ -107,7 +111,8 @@ class Image extends poko.controllers.Controller
 				var f = File.getContent(site.cms.PokoCms.uploadFolder + src);
 				//Web.setHeader("Content-Length", f.length);
 				
-				setOutput(f);
+				Lib.print( f );
+				//setOutput(f);
 			#end
 		}
 	}

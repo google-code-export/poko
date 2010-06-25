@@ -172,7 +172,7 @@ class DefinitionElement extends DefinitionsBase
 		var data:Dynamic = meta.properties;
 		
 		// for type selector
-		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden", "post-sql-value"]);
+		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden", "enum", "post-sql-value"]);
 		
 		// for bool selectors
 		var yesno = new List();
