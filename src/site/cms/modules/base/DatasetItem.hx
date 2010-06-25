@@ -29,6 +29,7 @@ package site.cms.modules.base;
 
 import php.FileSystem;
 import php.io.File;
+import poko.form.elements.KeyVal;
 import poko.form.elements.RichtextWym;
 import poko.form.validators.DateValidator;
 import poko.js.JsBinding;
@@ -788,6 +789,22 @@ class DatasetItem extends DatasetBase
 				case "post-add-current-time":
 					var el = new Readonly(element.name, label, value, element.properties.required);
 					el.description = element.properties.description;	
+					form.addElement(el);
+					
+				case "enum":
+					var types = app.db.requestSingle("SHOW COLUMNS FROM `"+table+"` LIKE \""+element.properties.name+"\"");
+					
+					var s:String = Reflect.field(types, "Type");
+					var items = s.substr(6, s.length - 8).split("','");
+					
+					var data:List<KeyVal> = new List();
+					for (item in items)
+						data.add( { key:item, value:item } );
+					
+					if (value == null || value == "") value = items[0];
+					
+					var el = new RadioGroup( element.name, label, data, value);
+					el.description = element.properties.description;
 					form.addElement(el);
 			}
 			
