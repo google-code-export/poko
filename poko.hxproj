@@ -14,8 +14,6 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="..\..\..\Program Files\Motion-Twin\haxe\lib\haxigniter" />
-    <class path="..\..\..\Program Files\Motion-Twin\haxe\lib\templo" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -39,7 +37,7 @@
     <!-- example: <hidden path="..." /> -->
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>make.bat</preBuildCommand>
+  <preBuildCommand>Make_Examples.bat</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->

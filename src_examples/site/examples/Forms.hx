@@ -43,28 +43,24 @@ class Forms extends DefaultTemplate
 	override public function main()
 	{
 		form1 = new Form("form1");
-		form1.addElement(new Input("name", "You Name"));
+		form1.addElement(new Input("name", "Your Name"));
 		form1.addElement(new Selectbox("gender", "Gender"));
-		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));
+		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));	
+		var gender = form1.getElementTyped("gender", Selectbox);
+		gender.addOption( { key:"M", value:"Male" } );
+		gender.addOption( { key:"F", value:"Female" } );
 		form1.populateElements();
 		
-		var gender = form1.getElementTyped("gender", Selectbox);
-		gender.addOption( { key:"male", value:"male" } );
-		gender.addOption( { key:"female", value:"female" } );
-		
-		
-		
 		form2 = new Form("form2");
-		var el = new Input("name", "You Name",null,true);
-		el.addValidator(new StringValidator(3, 10, "abcdefg"));
+		var el = new Input("name", "Your Name", null, true);
+		el.addValidator(new StringValidator(3, 10));
 		form2.addElement(el);
-		form2.addElement(new Selectbox("gender", "Gender"));
+		form2.addElement(new Selectbox("doStuff", "Do Stuff?"));
 		form2.setSubmitButton(form2.addElement(new Button("submit", "Submit")));
+		
+		var doStuff = form2.getElementTyped("doStuff", Selectbox);
+		doStuff.addOption( { key:"1", value:"Yes" } );
+		doStuff.addOption( { key:"0", value:"No" } );
 		form2.populateElements();
-		
-		var gender = form2.getElementTyped("gender", Selectbox);
-		gender.addOption( { key:"male", value:"male" } );
-		gender.addOption( { key:"female", value:"female" } );
-		
 	}
 }

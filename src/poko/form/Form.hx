@@ -50,8 +50,18 @@ class Form
 	
 	private var extraErrors:List<String>;
 	
+	public var labelRequiredClass:String;
+	public var labelRequiredErrorClass:String;
+	public var labelErrorClass:String;
+	public var labelRequiredIndicator:String;
+	
 	public function new(name:String, ?action:String, ?method:FormMethod) 
 	{
+		labelRequiredClass = "formLabelRequired";
+		labelRequiredErrorClass = "formLabelRequiredError";
+		labelErrorClass = "formLabelError";
+		labelRequiredIndicator = " *";
+		
 		this.forcePopulate = false;
 		this.id = this.name = name;
 		this.action = action;
@@ -226,7 +236,7 @@ class Form
 		s.add("<table>\n");
 		
 		for (element in getElements()) 
-			s.add("\t"+element.getPreview()+"\n");
+			if(element != submitButton) s.add("\t"+element.getPreview()+"\n");
 
 		if (submitButton != null) {
 			submitButton.form = this;
