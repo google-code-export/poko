@@ -62,7 +62,7 @@ class FormElement
 		
 		if (value == "" && required) 
 		{
-			errors.add("please fill in: '" + name + "'");
+			errors.add("Please enter '" + ((label != null && label != "") ? label : name) + "'");
 			return false;
 		} 
 		else if(value != "")
@@ -134,6 +134,19 @@ class FormElement
 	{
 		var n = form.name + "_" + name;
 		
-		return "<label for=\"" + n + "\" >" + label +(if(required) "*") +"</label>";
+		var css = "";
+		var requiredSet = false;
+		if (required) {
+			css = form.labelRequiredClass;
+			if (form.isSubmitted() && required && value == "") {
+				css = form.labelRequiredErrorClass;
+				requiredSet = true;
+			}
+		}
+		if(!requiredSet && form.isSubmitted() && !isValid()){
+			css = form.labelErrorClass;
+		}
+		
+		return "<label for=\"" + n + "\" class=\""+css+"\">" + label +(if(required) form.labelRequiredIndicator) +"</label>";
 	}
 }
