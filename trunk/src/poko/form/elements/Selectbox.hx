@@ -54,7 +54,7 @@ class Selectbox extends FormElement
 		var s = "";
 		var n = form.name + "_" +name;
 
-		s += "\n<select name=\""+n+"\" id=\""+n+"\" "+attributes+" onChange=\""+onChange+"\" />";
+		s += "\n<select name=\""+n+"\" id=\""+n+"\" "+attributes+" class=\""+ getClasses() +"\" onChange=\""+onChange+"\" />";
 		
 		if (nullMessage != "")
 			s += "<option value=\"\" " + (Std.string(value) == "" ? "selected":"") + ">" + nullMessage + "</option>";

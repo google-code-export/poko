@@ -32,6 +32,8 @@ import poko.js.JsBinding;
 import poko.utils.PhpTools;
 import php.Web;
 
+using StringTools;
+
 class FormElement
 {		
 	public var form:Form;
@@ -130,11 +132,35 @@ class FormElement
 	{
 		return Std.string(Type.getClass(this));
 	}
+	
+	public function getLabelClasses() : String
+	{
+		var css = "";
+		var requiredSet = false;
+		if (required) {
+			css = form.requiredClass;
+			if (form.isSubmitted() && required && value == "") {
+				css = form.requiredErrorClass;
+				requiredSet = true;
+			}
+		}
+		if(!requiredSet && form.isSubmitted() && !isValid()){
+			css = form.invalidErrorClass;
+		}
+		
+		if ( cssClass != null )
+			css += ( css == "" ) ? cssClass : " " + cssClass;
+			
+		return css;
+	}
+	
 	public function getLabel():String
 	{
 		var n = form.name + "_" + name;
 		
-		var css = "";
+		
+		
+		/*var css = "";
 		var requiredSet = false;
 		if (required) {
 			css = form.labelRequiredClass;
@@ -147,6 +173,23 @@ class FormElement
 			css = form.labelErrorClass;
 		}
 		
-		return "<label for=\"" + n + "\" class=\""+css+"\">" + label +(if(required) form.labelRequiredIndicator) +"</label>";
+		if ( cssClass != null )
+			css += " " + cssClass;*/
+		
+		return "<label for=\"" + n + "\" class=\""+getLabelClasses()+"\">" + label +(if(required) form.labelRequiredIndicator) +"</label>";
+	}
+	
+	public function getClasses() : String
+	{
+		var css = ( cssClass != null ) ? cssClass : form.defaultClass;
+		if ( required && form.isSubmitted() )
+		{
+			if ( value == "" )
+				css += " " + form.requiredErrorClass;
+			if ( !isValid() )
+				css += " " + form.invalidErrorClass;
+		}
+		
+		return css.trim();
 	}
 }

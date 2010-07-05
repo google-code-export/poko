@@ -82,6 +82,9 @@ class CheckboxGroup extends FormElement
 			});
 		}
 		
+		var tagCss = getClasses();
+		var labelCss = getLabelClasses();
+			
 		var c = 0;
 		var array = Lambda.array(data);
 		if (array != null)
@@ -102,14 +105,15 @@ class CheckboxGroup extends FormElement
 					
 					var row:Dynamic = array[c];
 					
-					var checkbox = "<input type=\"checkbox\" name=\""+n+"[]\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (value != null ? Lambda.has(value, row.key+"") ? "checked":"":"") +" ></input>\n";
+					var checkbox = "<input type=\"checkbox\" class=\"" + tagCss + "\" name=\""+n+"[]\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (value != null ? Lambda.has(value, row.key+"") ? "checked":"":"") +" ></input>\n";
 					var label;
 					
 					if (formatter != null)
 					{
-						label = "<label for=\"" + n + c + "\" >" + formatter.format(row.value)  +"</label>\n";
+						//label = "<label for=\"" + n + c + "\" >" + formatter.format(row.value)  +"</label>\n";
+						label = "<label for=\"" + n + c + "\" class=\""+labelCss+"\" >" + formatter.format(row.value)  +"</label>\n";
 					} else {
-						label = "<label for=\"" + n + c + "\" >" + row.value  +"</label>\n";
+						label = "<label for=\"" + n + c + "\" class=\""+labelCss+"\" >" + row.value  +"</label>\n";
 					}
 					
 					if (labelRight)

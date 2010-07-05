@@ -7,6 +7,8 @@ package poko.utils;
 import php.Exception;
 import php.Web;
 
+using StringTools;
+
 class CurlManager 
 {
 	private var resource:String;
@@ -81,6 +83,26 @@ class CurlManager
 		lastRequest = null;
 		return(Curl.execToOutput(resource));
 	}	
+	
+	public function setPost( params : Dynamic ) : String
+	{
+		var paramStr = buildPostString( params );		
+		Curl.setOption( resource, Curl.OPTION_POST, true );
+		Curl.setOption( resource, Curl.OPTION_POST_FIELDS, paramStr );
+		return paramStr;
+	}
+	
+	public static function buildPostString( params : Dynamic ) : String
+	{
+		var paramStr = "";
+		for ( param in Reflect.fields( params ) )
+		{
+			if ( paramStr != "" )
+				paramStr += "&";
+			paramStr += param + "=" + cast( Reflect.field( params, param ), String ).urlEncode();
+		}
+		return paramStr;
+	}
 	
 	public function getLastError()
 	{

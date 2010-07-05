@@ -12,6 +12,8 @@ class Curl
 	 */
 	public static inline var OPTION_RETURN_TRANSFER = "CURLOPT_RETURNTRANSFER";
 	public static inline var OPTION_URL = "CURLOPT_URL"; // string
+	public static inline var OPTION_POST = "CURLOPT_POST"; // bool
+	public static inline var OPTION_POST_FIELDS = "CURLOPT_POSTFIELDS"; // URLVariables string (encoded) (like flash)
 	public static inline var OPTION_SSL_VERIFY_PEER = "CURLOPT_SSL_VERIFYPEER"; // bool
 	public static inline var OPTION_SLL_VERIFY_HOST = "CURLOPT_SSL_VERIFYHOST"; // bool
 	public static inline var OPTION_USER_AGENT = "CURLOPT_USERAGENT"; // string
