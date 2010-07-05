@@ -50,16 +50,18 @@ class Form
 	
 	private var extraErrors:List<String>;
 	
-	public var labelRequiredClass:String;
-	public var labelRequiredErrorClass:String;
-	public var labelErrorClass:String;
+	public var requiredClass:String;
+	public var requiredErrorClass:String;
+	public var invalidErrorClass:String;
 	public var labelRequiredIndicator:String;
+	
+	public var defaultClass : String;
 	
 	public function new(name:String, ?action:String, ?method:FormMethod) 
 	{
-		labelRequiredClass = "formLabelRequired";
-		labelRequiredErrorClass = "formLabelRequiredError";
-		labelErrorClass = "formLabelError";
+		requiredClass = "formRequired";
+		requiredErrorClass = "formRequiredError";
+		invalidErrorClass = "formInvalidError";
 		labelRequiredIndicator = " *";
 		
 		this.forcePopulate = false;
@@ -101,6 +103,11 @@ class Form
 	public function getFieldsets():Hash<FieldSet>
 	{
 		return fieldsets;
+	}
+	
+	public function getLabel( elementName : String ) : String
+	{
+		return getElement( elementName ).getLabel();
 	}
 	
 	public function getElement(name:String):FormElement

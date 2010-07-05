@@ -82,8 +82,11 @@ class Poko
 		params = Web.getParams();
 		
 		url = new Url(Web.getURI());
-	
-		var controllerType = Type.resolveClass("site." + findControllerClass());
+		
+		var useURLRewrite = false;
+		var controllerTypeName : String = useURLRewrite ? findControllerClassByRewrite() : findControllerClass();	
+		var controllerType = Type.resolveClass( "site." + controllerTypeName );
+		//var controllerType = Type.resolveClass("site." + findControllerClass());
 		
 		var is404 = false;
 		if (controllerType != null)
@@ -101,6 +104,15 @@ class Poko
 			
 		//var time = Timer.stamp() - time1;
 		//Lib.print(time);
+	}
+	
+	private function findControllerClassByRewrite():String
+	{
+		var request = params.get( "request" );
+		var path = params.get( "path" );
+		trace( request );
+		trace( path );
+		return "Index";
 	}
 	
 	private function findControllerClass():String

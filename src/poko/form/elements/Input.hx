@@ -57,13 +57,13 @@ class Input extends FormElement
 		
 		showLabelAsDefaultValue = false;
 		useSizeValues = false;
-		printRequired = true;
+		printRequired = false;
 		
 		width = 180;
 	}
 	
 	override public function render():String
-	{
+	{		
 		var n = form.name + "_" +name;
 		var tType:String = password ? "password" : "text";
 		
@@ -75,8 +75,9 @@ class Input extends FormElement
 			value = label;
 		}		
 		
-		var style = useSizeValues ? "style=\"width:"+width+"px\"" : "";
-		return "<input "+style+" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />" + (if(required && form.isSubmitted() && printRequired) " required");
+		var style = useSizeValues ? "style=\"width:" + width + "px\"" : "";
+		
+		return "<input "+style+" class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />" + (if(required && form.isSubmitted() && printRequired) " required");
 	}
 	
 	public function toString() :String
