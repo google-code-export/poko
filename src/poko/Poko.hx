@@ -68,6 +68,7 @@ class Poko
 		PhpTools.setupTrace();
 		
 		config = new Config();
+		config.init();
 		
 		var v="";
 		if (Session.getName() != config.sessionName) 
