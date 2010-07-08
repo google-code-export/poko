@@ -30,16 +30,20 @@ package poko.form.elements;
 
 import poko.form.Form;
 import poko.form.FormElement;
+import poko.Poko;
 
 class Checkbox extends FormElement
 {	
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?attibutes:String="") 
+	public var checked : Bool;
+	
+	public function new(name:String, label:String, value:String, ?checked:Bool=false, ?required:Bool=false, ?attibutes:String="") 
 	{
 		super();
 		
 		this.name = name;
 		this.label = label;
 		this.value = value;
+		this.checked = checked;
 		this.required = required;
 		this.attributes = attibutes;
 	}
@@ -48,18 +52,29 @@ class Checkbox extends FormElement
 	{		
 		var n = form.name + "_" +name;
 		
-		if ( cssClass == null )
-			cssClass = form.defaultClass;
-		
-		trace( "check: " + value );
-		
-		var checked = ( value == "on" ) ? "checked" : "";
+		var checkedStr = ( this.checked ) ? "checked" : "";
 			
-		return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + cssClass + "\" value=\"" + value + "\" " + checked + " />";
+		return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"" + value + "\" " + checkedStr + " />";
 	}
 	
 	public function toString() :String
 	{
 		return render();
+	}
+	
+	override public function populate():Void
+	{
+		checked = Poko.instance.params.exists( form.name + "_" + name );
+	}
+	
+	override public function isValid():Bool
+	{
+		errors.clear();
+		if ( required && !checked )
+		{
+			errors.add("Please check '" + ((label != null && label != "") ? label : name) + "'");
+			return false;
+		}
+		return true;
 	}
 }

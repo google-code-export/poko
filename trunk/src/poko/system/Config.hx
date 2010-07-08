@@ -6,7 +6,10 @@ import php.Sys;
 
 class Config
 {
+	// Whether or not the site is in development mode (i.
 	public var development : Bool;
+	public var isLive : Bool;
+	
 	public var controllerPackage : String;
 	
 	public var indexFile : String;
@@ -22,7 +25,7 @@ class Config
 	public var errorPage : String;
 	public var error404Page : String;
 	
-	public var defaultController : String;
+	public var defaultController(getDefaultController, setDefaultController) : String;
 	public var defaultAction : String;
 	
 	public var encryptionKey : String;
@@ -34,6 +37,9 @@ class Config
 	public var database_password : String;
 	public var database_database : String;
 	
+	public var serverRoot( getServerRoot, null ) : String;
+	
+	var _defaultController : String;
 	/**
 	 * Setting non-initialized constants.
 	 */
@@ -42,6 +48,9 @@ class Config
 		var env = Sys.environment();
 		
 		applicationPath = Web.getCwd();
+		
+		development = false;
+		isLive = false;
 		
 		//indexFile
 		if(env.exists('SCRIPT_NAME'))
@@ -96,6 +105,24 @@ class Config
 		
 		if (debug != null) this.dumpEnvironment(debug);
 		
+	}
+	
+	public function init() : Void {	}
+	
+	function getDefaultController() : String
+	{
+		return _defaultController;
+	}
+	
+	function setDefaultController( value : String ) : String
+	{
+		_defaultController = value;
+		return value;
+	}
+	
+	function getServerRoot() : String
+	{
+		return siteUrl.substr( 0, siteUrl.lastIndexOf("/") + 1 );
 	}
 
 	///// Debug method //////////////////////////////////////////////
