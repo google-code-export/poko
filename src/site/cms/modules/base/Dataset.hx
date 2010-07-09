@@ -128,6 +128,35 @@ class Dataset extends DatasetBase
 	
 	/** end remoting */
 	
+	function getView()
+	{
+		var nl = "<br/>";
+		var out = "";
+		
+		var linkSql = "SELECT `" + linkValueField + "` FROM " + linkTo + " WHERE `id` = " + linkValue;
+		out += "linkSql: " + linkSql + nl;
+		var link = Reflect.field( app.db.requestSingle( linkSql ), linkValueField );
+		
+		var dataSql = "SELECT * FROM paypal_transactions WHERE `" + linkToField + "` = '" + linkTo + "' AND `" + linkValueField + "` = '" + link + "'";
+		out += "dataSql: " + dataSql + nl;
+		var data = app.db.requestSingle( dataSql );
+		
+		//var data = app.db.requestSingle( "SELECT * FROM "+linkTo+" WHERE `txn_id` = 'matt'" );
+		
+		
+		
+		
+		out += "data: " + data + nl;
+		out += "dataset: " + dataset + nl;
+		out += "definition: " + definition + nl;
+		out += "table: " + table + nl;
+		out += "linkToField: " + linkToField + nl;
+		out += "linkTo: " + linkTo + nl;
+		out += "linkValueField: " + linkValueField + nl;
+		out += "linkValue: " + linkValue + nl;
+		return out;
+	}
+	
 	override public function main():Void
 	{		
 		FilterSettings.lastDataset = table;
