@@ -4,6 +4,7 @@
  */
 
 package com.touchmypixel.mail;
+
 import com.touchmypixel.mail.Part;
 import poko.utils.PhpTools;
 

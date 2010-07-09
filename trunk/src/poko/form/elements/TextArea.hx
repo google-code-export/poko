@@ -61,10 +61,7 @@ class TextArea extends Input
 		if (required && form.isSubmitted() && printRequired) s += "required<br />";
 		var style = useSizeValues ? "style=\"width:" + width + "px; height:" + height + "px;\"" : "";
 		
-		if ( cssClass == null )
-			cssClass = form.defaultClass;
-		
-		s += "<textarea " + style + " class=\""+cssClass+"\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " >" + value + "</textarea>";
+		s += "<textarea " + style + " class=\""+ getClasses() +"\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " >" + value + "</textarea>";
 		
 		return s;
 	}
