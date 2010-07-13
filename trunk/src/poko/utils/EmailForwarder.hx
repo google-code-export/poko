@@ -13,6 +13,7 @@ class EmailForwarder
 	public static var defaultProxyURL : String = "http://www.mattbenton.net/email_forwarder.php";
 	public static var defaultProxyCode : String = "iamawesome";
 	public static var useProxy : Bool = true;
+	public static var disableHtml : Bool = false;
 	
 	public static function forwardEmail( to : String, subject : String, message : String, headers : String, ?proxyUrl : String = null, ?proxyCode : String = null ) : Bool
 	{
@@ -30,13 +31,12 @@ class EmailForwarder
 		}
 		else
 		{
-			//var mail = new SimpleMail();
-			return false;
+			return untyped __call__( "mail", to, subhect, messagem, headers );
 		}
 	}
 	
 	public static function forwardMultipart( to : String, subject : String, from : String, plainMessage : String, htmlMessage : String, ?proxyUrl : String = null, ?proxyCode : String = null ) : Bool
-	{
+	{			
 		var notice_text = "This is a multi-part message in MIME format.";
 
 		var semi_rand = Md5.encode( Std.string( Timer.stamp() ) );
@@ -49,12 +49,15 @@ class EmailForwarder
 		body += "Content-Transfer-Encoding: 7bit\n\n";
 
 		body += plainMessage + "\n\n";
+		
+		if ( !disableHtml )
+		{
+			body += "--" + mime_boundary + "\n";
+			body += "Content-Type: text/html; charset=us-ascii\n";
+			body += "Content-Transfer-Encoding: 7bit\n\n";
 
-		body += "--" + mime_boundary + "\n";
-		body += "Content-Type: text/html; charset=us-ascii\n";
-		body += "Content-Transfer-Encoding: 7bit\n\n";
-
-		body += htmlMessage + "\n\n";
+			body += htmlMessage + "\n\n";
+		}
 
 		body += "--" + mime_boundary + "--";
 		
