@@ -31,7 +31,8 @@ class EmailForwarder
 		}
 		else
 		{
-			return untyped __call__( "mail", to, subhect, messagem, headers );
+			PhpTools.mail( to, subject, message, headers );
+			return true;
 		}
 	}
 	
