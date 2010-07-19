@@ -1,7 +1,12 @@
 
 	<h3>Manage ::pageLabel:: : "::definition.name::"</h3>
 	
-	::raw form1.getPreview() ::
+	<div id="definitionOptions">
+		<div id=""><a href="#" onclick="$('#definitionOptionsForm').toggle(); return false;"><img src="./res/cms/cog.png" title="Toggle Definitions Options" align="absmiddle" /> Toggle Definitions Options</a></div>
+		<div id="definitionOptionsForm" style="display: none;">
+		::raw form1.getPreview() ::
+		</div>
+	</div>
 	
 	<br/><br/>
 	<h4>Defined Fields</h4>
