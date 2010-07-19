@@ -5,6 +5,7 @@
 	<div id="datasetActionsWrapper">
 		<a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/add.png" class="qTip" title="Add new item to list" /></a>
 		::if !linkMode && showFiltering || showOrderBy:: | <a href="#" onClick="return(toggleFilterOrder());"><img class="qTip" src="./res/cms/find.png" title="Show/hide filteringer and ordering options." /></a>::end::
+		::if allowCsv:: | <a href="?request=cms.services.Csv&dataset=::dataset::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/table_download.png" class="qTip" title="Download CSV" /></a>::end::
 	</div>
 	
 	::if !linkMode::

@@ -47,6 +47,7 @@ import poko.utils.ListData;
 import site.cms.common.DefinitionElementMeta;
 import site.cms.common.Procedure;
 import site.cms.modules.base.Datasets;
+import site.cms.modules.base.helper.FilterSettings;
 
 class Dataset extends DatasetBase
 {
@@ -64,6 +65,7 @@ class Dataset extends DatasetBase
 	public var optionsForm:Form;
 	public var showOrderBy:Bool;
 	public var showFiltering:Bool;
+	public var allowCsv:Bool;
 	
 	private var linkToField:String;
 	private var linkTo:String;
@@ -128,7 +130,7 @@ class Dataset extends DatasetBase
 	
 	/** end remoting */
 	
-	function getView()
+	/*function getView()
 	{
 		var nl = "<br/>";
 		var out = "";
@@ -155,7 +157,7 @@ class Dataset extends DatasetBase
 		out += "linkValueField: " + linkValueField + nl;
 		out += "linkValue: " + linkValue + nl;
 		return out;
-	}
+	}*/
 	
 	override public function main():Void
 	{		
@@ -183,6 +185,9 @@ class Dataset extends DatasetBase
 		
 		getAssociationExtras();
 		setupOptionsForm();
+		
+		// do we show CSV download?
+		allowCsv = definition.allowCsv;
 		
 		var ths = this;
 		fieldLabels= Lambda.map(fields, function(row:Dynamic) {	
@@ -695,6 +700,7 @@ class Dataset extends DatasetBase
 			}
 		}
 	}
+	
 	public function formatBool(data:Bool, properties:Dynamic)
 	{
 		if (properties.labelTrue == "" || properties.labelFalse == "")
@@ -709,66 +715,5 @@ class Dataset extends DatasetBase
 		
 		var months = Lambda.array(ListData.getMonths());
 		return d.getDate() + " " + months[d.getMonth()].key +" " + d.getFullYear();
-	}
-}
-
-class FilterSettings
-{
-	public var enabled:Bool;
-	public var dataset:String;
-	
-	public var filterBy:String;
-	public var filterByOperator:String;
-	public var filterByAssoc:String;
-	public var filterByValue:String;
-	public var orderBy:String;
-	public var orderByDirection:String;
-	
-	public static var lastDataset:String;
-	
-	public function new(dataset:String)
-	{
-		this.dataset = dataset;
-		lastDataset = dataset;
-		clear();
-	}
-	
-	public function clear():Void
-	{
-		enabled = false;
-		
-		filterBy = "";
-		filterByOperator = "";
-		filterByAssoc = "";
-		filterByValue = "";
-		
-		orderBy = "";
-		orderByDirection = "";
-		
-		save();		
-	}
-	
-	public static function get(dataset:String)
-	{
-		if (Session.get("datasetFilterSettings-" + dataset)) {
-			return Session.get("datasetFilterSettings-" + dataset);
-		}else {
-			return new FilterSettings(dataset);
-		}
-	}
-	
-	public static function getLast():FilterSettings
-	{
-		return get(lastDataset);
-	}	
-	
-	public function save()
-	{
-		Session.set("datasetFilterSettings-" + dataset, this);
-	}
-	
-	public function toString():String
-	{
-		return((enabled ? "ON" : "OFF") +" dataset:" + dataset);
 	}
 }

@@ -48,6 +48,7 @@ class Definition
 	
 	public var showFiltering:Bool;
 	public var showOrdering:Bool;
+	public var allowCsv:Bool;
 	
 	public var helpItem:String;
 	public var helpList:String;
@@ -135,6 +136,7 @@ class Definition
 		
 		showFiltering = results.showFiltering;
 		showOrdering = results.showOrdering;
+		allowCsv = results.allowCsv;
 		
 		helpItem = results.help;
 		helpList = results.help_list;

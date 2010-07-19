@@ -254,6 +254,7 @@ class Definition extends DefinitionsBase
 		form1.addElement(new Input("description", "Description", generalInfo.description, false));
 		form1.addElement(new RadioGroup("showFiltering", "Filtering?", yesno, generalInfo.showFiltering, "0", false));
 		form1.addElement(new RadioGroup("showOrdering", "Ordering?", yesno, generalInfo.showOrdering, "0", false));
+		form1.addElement(new RadioGroup("allowCsv", "CSV Download?", yesno, generalInfo.allowCsv, "0", false));
 		form1.addElement(new RadioGroup("showInMenu", "In Menu?", yesno, generalInfo.showInMenu, "0", false));
 		form1.addElement(new Selectbox("indents", "Indents", null, generalInfo.indents, false, "- none -" ));
 		

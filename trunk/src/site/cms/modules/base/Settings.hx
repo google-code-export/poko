@@ -27,10 +27,7 @@ class Settings extends SettingsBase
 	
 	override public function main()
 	{			
-		super.main();
-		
-		setupLeftNav();
-		
+		super.main();		
 		
 		form = new Form("settingsUpdate", "?request=cms.modules.base.Settings&section="+section, FormMethod.POST);
 		
@@ -80,6 +77,12 @@ class SettingsBase extends CmsTemplate
 		super.init();
 		
 		navigation.setSelected("Settings");
+	}
+	
+	override public function main()
+	{
+		super.main();
+		setupLeftNav();
 	}
 	
 	public function setupLeftNav():Void

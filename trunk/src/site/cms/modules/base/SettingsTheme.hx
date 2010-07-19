@@ -25,6 +25,8 @@ class SettingsTheme extends SettingsBase
 	
 	override public function main()
 	{
+		super.main();
+		
 		currentTheme = settings.get("themeCurrent");
 		
 		themes = new List();
