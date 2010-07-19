@@ -36,14 +36,15 @@ class Checkbox extends FormElement
 {	
 	public var checked : Bool;
 	
-	public function new(name:String, label:String, value:String, ?checked:Bool=false, ?required:Bool=false, ?attibutes:String="") 
+	public function new(name:String, label:String, ?checked:Bool=false, ?required:Bool=false, ?attibutes:String="") 
 	{
 		super();
 		
 		this.name = name;
 		this.label = label;
-		this.value = value;
-		this.checked = checked;
+		this.value = checked ? "1" : "0";
+		//this.value = value;
+		//this.checked = checked;
 		this.required = required;
 		this.attributes = attibutes;
 	}
@@ -52,9 +53,11 @@ class Checkbox extends FormElement
 	{		
 		var n = form.name + "_" +name;
 		
-		var checkedStr = ( this.checked ) ? "checked" : "";
-			
+		//var checkedStr = ( this.checked ) ? "checked" : "";
+		var checkedStr = ( value == "1" ) ? "checked" : "";
+		
 		return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"" + value + "\" " + checkedStr + " />";
+		//return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"" + value + "\" " + checkedStr + " />";
 	}
 	
 	public function toString() :String
@@ -64,7 +67,10 @@ class Checkbox extends FormElement
 	
 	override public function populate():Void
 	{
-		checked = Poko.instance.params.exists( form.name + "_" + name );
+		//super.populate();
+		value = Poko.instance.params.exists( form.name + "_" + name ) ? "1" : "0";
+		//checked = Poko.instance.params.exists( form.name + "_" + name );
+		//checked = false;
 	}
 	
 	override public function isValid():Bool

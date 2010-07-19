@@ -350,6 +350,13 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new RadioGroup( "def_date_restrictMax", "Restrict Max", yesno, data.restrictMax, "0", false), "properties");
 		form.addElement(new Input( "def_date_maxOffset", "Min Offset (+months)", data.maxOffset, false), "properties");
 		form.addElement(new RadioGroup( "def_date_required", "Required", yesno, data.required, "0", false), "properties");
+		//form.addElement(new Selectbox( "def_date_asdf", "asdf", yesno, data.required, "0", false), "properties");
+		
+		var dateModes = new List();
+		dateModes.add( { value:"Date & Time", key:"DATETIME" } );
+		dateModes.add( { value:"Date", key:"DATE"} );
+		dateModes.add( { value:"Time", key:"TIME"} );
+		form.addElement(new Selectbox( "def_date_mode", "Mode", dateModes, data.mode, false,""), "properties");
 		
 		var rtf = new List();
 		rtf.add( { key:"Simple", value:"SIMPLE" } );

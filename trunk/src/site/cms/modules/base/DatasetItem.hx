@@ -31,10 +31,11 @@ import php.FileSystem;
 import php.io.File;
 import poko.form.elements.KeyVal;
 import poko.form.elements.RichtextWym;
-import poko.form.validators.DateValidator;
+import poko.form.validators.DateTimeValidator;
 import poko.js.JsBinding;
 import haxe.Md5;
 import poko.controllers.HtmlController;
+import site.cms.common.DateTimeMode;
 import site.cms.common.DefinitionElementMeta;
 import poko.form.elements.Button;
 import poko.form.elements.CheckboxGroup;
@@ -674,7 +675,18 @@ class DatasetItem extends DatasetBase
 					if (element.properties.restrictMax == "1") el.maxOffset = element.properties.maxOffset;
 					
 					// need to add min / max to date validation
-					el.addValidator(new DateValidator());
+					var dateMode = switch ( element.properties.mode )
+					{
+						case "DATE":
+							DateTimeMode.date;
+						case "TIME":
+							DateTimeMode.time;
+						default:
+							DateTimeMode.dateTime;
+					}
+					
+					el.mode = dateMode;
+					//el.addValidator( new DateTimeValidator( dateMode ) );
 					
 					el.description = element.properties.description;
 					form.addElement(el);

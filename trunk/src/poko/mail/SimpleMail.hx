@@ -3,9 +3,8 @@
  * @author Tarwin Stroh-Spijer
  */
 
-package com.touchmypixel.mail;
+package poko.mail;
 
-import com.touchmypixel.mail.Part;
 import poko.utils.PhpTools;
 
 // currently only supports SMTP
