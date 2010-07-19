@@ -31,18 +31,27 @@ import poko.form.Form;
 import poko.form.FormElement;
 import poko.form.Validator;
 import poko.utils.ListData;
+import site.cms.common.DateTimeMode;
 
 class DateSelector extends FormElement
 {
 	public var maxOffset:Int;
 	public var minOffset:Int;
 	
+	public var datetime : String;
+	public var mode : DateTimeMode;
+	
 	public function new(name:String, label:String, ?value:Date, ?required:Bool=false, ?validators:Array<Validator>, ?attibutes:String="") 
 	{
 		super();
 		this.name = name;
 		this.label = label;
-		this.value = Std.string(value).substr(0, 10);
+		//trace( value );
+		this.datetime = Std.string(value);
+		this.value = datetime.substr(0, 10);
+		
+		mode = DateTimeMode.date;
+		
 		this.required = required;
 		this.attributes = attibutes;
 		
@@ -57,7 +66,53 @@ class DateSelector extends FormElement
 		
 		var s:StringBuf = new StringBuf();
 		
-		s.add("<input type=\"text\" name=\"" + n + "\" id=\"" + n + "\" value=\"" + value + "\" /> \n");
+		//trace( "mode: " + mode );
+		
+		var n_time = n + "__time";
+		var n_date = n + "__date";
+		
+		var dtHour = datetime.substr(11, 2);
+		var dtMin = datetime.substr(14, 2);
+		var dtSec = datetime.substr(17, 2);
+		
+		if ( mode == DateTimeMode.date || mode == DateTimeMode.dateTime )
+			s.add("<input type=\"text\" name=\"" + n_date + "\" id=\"" + n_date + "\" value=\"" + value + "\" /> \n");	
+
+		if ( mode == DateTimeMode.time || mode == DateTimeMode.dateTime )
+		{			
+			s.add('<select name="' + n_time + '_hour" id="' + n_time + '_hour"> \n');
+			for ( i in 0 ... 24  )
+			{
+				var hour = i < 10 ? '0' + Std.string(i) : Std.string(i);
+				if ( hour == dtHour )
+					s.add('		<option value="' + hour + '" selected="selected">' + hour + '</option> \n');
+				else
+					s.add('		<option value="' + hour + '">' + hour + '</option> \n');
+			}
+			s.add("</select> \n");
+			s.add('<select name="' + n_time + '_min" id="' + n_time + '_min"> \n');
+			for ( i in 0 ... 60  )
+			{
+				var minute = i < 10 ? '0' + Std.string(i) : Std.string(i);
+				if ( minute == dtMin )
+					s.add('		<option value="' + minute + '" selected="selected">' + minute + '</option> \n');
+				else
+					s.add('		<option value="' + minute + '">' + minute + '</option> \n');
+			}
+			s.add("</select> \n");
+			s.add('<select name="' + n_time + '_sec" id="' + n_time + '_sec"> \n');
+			for ( i in 0 ... 60  )
+			{
+				var second = i < 10 ? '0' + Std.string(i) : Std.string(i);
+				if ( second == dtSec )
+					s.add('		<option value="' + second + '" selected="selected">' + second + '</option> \n');
+				else
+					s.add('		<option value="' + second + '">' + second + '</option> \n');
+			}
+			s.add("</select> \n");
+		}
+		
+		s.add("<input type=\"hidden\" name=\"" + n + "\" id=\"" + n + "\" value=\"" + value + "\" /> \n");
 		
 		s.add("<script type=\"text/javascript\">			\n");
 		s.add("		$(function() {							\n");
@@ -65,10 +120,29 @@ class DateSelector extends FormElement
 		var maxOffsetStr = minOffset != null ? ", minDate: '-" + minOffset + "m'" : "";
 		var minOffsetStr = maxOffset != null ? ", maxDate: '+" + maxOffset + "m'" : "";
 		
-		s.add("			$(\"#"+n+"\").datepicker({ dateFormat: 'yy-mm-dd' "+minOffsetStr+maxOffsetStr+" });		\n");
+		s.add("			$(\"#"+n_date+"\").datepicker({ dateFormat: 'yy-mm-dd' "+minOffsetStr+maxOffsetStr+" });		\n");
+		
+		if ( mode == DateTimeMode.date || mode == DateTimeMode.dateTime )
+			s.add("			$(\"#" + n_date + "\").change( updateDateTime ); \n");
+		
+		if ( mode == DateTimeMode.time || mode == DateTimeMode.dateTime )
+		{
+			s.add('			$("#' + n_time + '_hour").change( updateDateTime ); \n');
+			s.add('			$("#' + n_time + '_min").change( updateDateTime ); \n');
+			s.add('			$("#' + n_time + '_sec").change( updateDateTime ); \n');
+		}
 		s.add("		}); 									\n");
-		s.add("</script> 									\n");
+		
+		s.add("		function updateDateTime() {\n");
+			if ( mode == DateTimeMode.time )
+				s.add("			$('#" + n + "').val( $('#" + n_time + "_hour').val() + ':' + $('#" + n_time + "_min').val() + ':' + $('#" + n_time + "_sec').val() ); \n");
+			else if ( mode == DateTimeMode.date )
+				s.add("			$('#" + n + "').val( $('#" + n_date + "').val() ); \n");
+			else
+				s.add("			$('#"+n+"').val( $('#"+n_date+"').val() + ' ' + $('#"+n_time+"_hour').val() + ':' + $('#"+n_time+"_min').val() + ':' + $('#"+n_time+"_sec').val() ); \n");
+		s.add("		}\n");
 
+		s.add("</script> 									\n");
 		
 		return s.toString();
 	}

@@ -28,6 +28,7 @@
 package poko.form;
 
 import poko.form.elements.Button;
+import poko.form.elements.Checkbox;
 import poko.form.elements.Input;
 import poko.form.elements.Selectbox;
 import poko.utils.PhpTools;
@@ -134,7 +135,10 @@ class Form
 		var data:Dynamic = {};
 		for (element in getElements())
 		{
-			Reflect.setField(data, element.name, element.value);
+			//if ( Std.is( element, Checkbox ) )
+				//Reflect.setField(data, element.name, cast( element, Checkbox ).checked );
+			//else
+				Reflect.setField(data, element.name, element.value);
 		}
 		return data;
 	}

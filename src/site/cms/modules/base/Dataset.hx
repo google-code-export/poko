@@ -49,6 +49,8 @@ import site.cms.common.Procedure;
 import site.cms.modules.base.Datasets;
 import site.cms.modules.base.helper.FilterSettings;
 
+using StringTools;
+
 class Dataset extends DatasetBase
 {
 	public var dataset:Int;
@@ -692,7 +694,8 @@ class Dataset extends DatasetBase
 						}
 					}
 				case "bool": formatBool(cast data, properties);
-				case "date": formatDate(cast data);
+				//case "date": formatDate(cast data);
+				case "date": formatDate( cast data, properties.mode );
 				case "keyvalue": "list of values";
 				case "association":
 					properties.showAsLabel == "1" ? associateExtras.get(field).get(cast data) : data;
@@ -708,12 +711,22 @@ class Dataset extends DatasetBase
 		else 
 			return data ? properties.labelTrue : properties.labelFalse;
 	}
-	public function formatDate(d:Date)
+	
+	public function formatDate( d : Date, ?mode : String = "DATETIME" )
 	{
 		if (!Std.is(d, Date))
 			return null;
 		
+		var out = "";
+		
 		var months = Lambda.array(ListData.getMonths());
-		return d.getDate() + " " + months[d.getMonth()].key +" " + d.getFullYear();
+		
+		if ( mode == "DATE" || mode == "DATETIME" )
+			out = d.getDate() + " " + months[d.getMonth()].key +" " + d.getFullYear();
+		
+		if ( mode == "TIME" || mode == "DATETIME" )
+			out += " " + Std.string(d.getHours()).lpad("0", 2) + ":" + Std.string(d.getMinutes()).lpad("0", 2) + ":" + Std.string(d.getSeconds()).lpad("0", 2);
+			
+		return out;
 	}
 }
