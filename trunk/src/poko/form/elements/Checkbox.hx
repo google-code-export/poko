@@ -34,7 +34,7 @@ import poko.Poko;
 
 class Checkbox extends FormElement
 {	
-	public var checked : Bool;
+	//public var checked : Bool;
 	
 	public function new(name:String, label:String, ?checked:Bool=false, ?required:Bool=false, ?attibutes:String="") 
 	{
@@ -76,7 +76,7 @@ class Checkbox extends FormElement
 	override public function isValid():Bool
 	{
 		errors.clear();
-		if ( required && !checked )
+		if ( required && value == "0" )
 		{
 			errors.add("Please check '" + ((label != null && label != "") ? label : name) + "'");
 			return false;
