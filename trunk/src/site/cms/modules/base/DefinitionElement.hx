@@ -172,7 +172,7 @@ class DefinitionElement extends DefinitionsBase
 		var data:Dynamic = meta.properties;
 		
 		// for type selector
-		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden", "enum", "post-sql-value"]);
+		var datatypes:List<Dynamic> = ListData.flatArraytoList(["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden", "enum", "post-sql-value", "location"]);
 		
 		// for bool selectors
 		var yesno = new List();
@@ -356,7 +356,11 @@ class DefinitionElement extends DefinitionsBase
 		dateModes.add( { value:"Date & Time", key:"DATETIME" } );
 		dateModes.add( { value:"Date", key:"DATE"} );
 		dateModes.add( { value:"Time", key:"TIME"} );
-		form.addElement(new Selectbox( "def_date_mode", "Mode", dateModes, data.mode, false,""), "properties");
+		form.addElement(new Selectbox( "def_date_mode", "Mode", dateModes, data.mode, false, ""), "properties");
+		
+		form.addElement(new Input( "def_location_popupWidth", "Popup Width", data.popupWidth, false), "properties");
+		form.addElement(new Input( "def_location_popupHeight", "Popup Height", data.popupHeight, false), "properties");
+		form.addElement(new RadioGroup( "def_location_searchAddress", "Allow searching addresses?", yesno, data.searchAddress, "1", false), "properties");
 		
 		var rtf = new List();
 		rtf.add( { key:"Simple", value:"SIMPLE" } );

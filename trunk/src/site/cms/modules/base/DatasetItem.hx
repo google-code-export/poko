@@ -30,6 +30,7 @@ package site.cms.modules.base;
 import php.FileSystem;
 import php.io.File;
 import poko.form.elements.KeyVal;
+import poko.form.elements.LocationSelector;
 import poko.form.elements.RichtextWym;
 import poko.form.validators.DateTimeValidator;
 import poko.js.JsBinding;
@@ -689,6 +690,17 @@ class DatasetItem extends DatasetBase
 					//el.addValidator( new DateTimeValidator( dateMode ) );
 					
 					el.description = element.properties.description;
+					form.addElement(el);
+					
+				case "location":
+					var el = new LocationSelector( element.name, label, "", element.properties.required );
+					
+					el.description = element.properties.description;
+					
+					el.popupWidth = element.properties.popupWidth;
+					el.popupHeight = element.properties.popupHeight;
+					el.searchAddress = element.properties.searchAddress;
+					
 					form.addElement(el);
 				
 				case "richtext-tinymce":
