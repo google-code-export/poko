@@ -693,10 +693,11 @@ class DatasetItem extends DatasetBase
 					form.addElement(el);
 					
 				case "location":
-					var el = new LocationSelector( element.name, label, "", element.properties.required );
+					var el = new LocationSelector( element.name, label, value, element.properties.required );
 					
 					el.description = element.properties.description;
 					
+					el.defaultLocation = element.properties.defaultLocation;
 					el.popupWidth = element.properties.popupWidth;
 					el.popupHeight = element.properties.popupHeight;
 					el.searchAddress = element.properties.searchAddress;

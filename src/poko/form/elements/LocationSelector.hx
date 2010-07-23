@@ -28,8 +28,11 @@ package poko.form.elements;
 
 import poko.form.FormElement;
 
+using StringTools;
+
 class LocationSelector extends FormElement
 {
+	public var defaultLocation : String;
 	public var popupWidth : Int;
 	public var popupHeight : Int;
 	public var searchAddress : Bool;
@@ -51,7 +54,9 @@ class LocationSelector extends FormElement
 		
 		var s:StringBuf = new StringBuf();
 		
-		var popupUrl = "tpl/php/cms/components/LocationSelector.php?eName=" + n + "&popupWidth=" + popupWidth + "&popupHeight=" + popupHeight + "&searchAddress=" + searchAddress;
+		var location : String = ( value == null || value == "" ) ? defaultLocation : value;
+		
+		var popupUrl = "tpl/php/cms/components/LocationSelector.php?eName=" + n + "&location=" + StringTools.urlEncode(location) + "&popupWidth=" + popupWidth + "&popupHeight=" + popupHeight + "&searchAddress=" + searchAddress;
 		var popupFeatures = "width=" + popupWidth + ",height=" + popupHeight + ",resizable=0,width=620,height=450,toolbar=0,location=0,status=0";
 		
 		s.add("<input type=\"text\" name=\"" + n + "\" id=\"" + n + "\" value=\"" + value + "\" size=\"50\" /> \n");

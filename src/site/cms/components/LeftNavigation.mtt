@@ -8,7 +8,7 @@
 			
 		::foreach item sections.get(section)::
 			::if item.link != null::
-				<li><a href="?request=::item.link::">::raw item.indents::::raw item.title:: </a></li>
+				<li><a href="?request=::item.link::">::raw item.indents::::raw item.title:: </a>::raw item.extra::</li>
 			::else::
 				<li>::raw item.indents::::raw item.title::</li>
 			::end::
