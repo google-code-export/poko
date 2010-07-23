@@ -63,7 +63,7 @@ class LeftNavigation extends Component
 		sectionsIsSeperator.set(name, isSeperator);
 	}
 	
-	public function addLink(section:String, title:String, link:String, ?indents:Int=0, ?external=false) 
+	public function addLink(section:String, title:String, link:String, ?indents:Int=0, ?external=false, ?extra:String) 
 	{
 		var indentsData = [];
 		indentsData[0] = "";
@@ -77,6 +77,11 @@ class LeftNavigation extends Component
 		indentsData[4] = "&nbsp;&nbsp;&nbsp;<img src=\"./res/cms/tree_kink.png\" />";
 		var ind = indentsData[indents];
 		
-		sections.get(section).add( { title:title, link:link, external:external, indents:ind } );
+		sections.get(section).add( { title:title, link:link, external:external, indents:ind, extra:extra } );
+	}
+	
+	public function editTag( request : String ) : String
+	{
+		return '<a class="leftNavEdit" href="?request=' + request + '">[e]</a>';
 	}
 }

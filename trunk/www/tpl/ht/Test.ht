@@ -1,9 +1,0 @@
-
-TEST TEMPLATE <br />
-
-
-{eval}
-	Math = resolveClass("Math");
-{end}
-
-{: Math.ceil(5.2)}

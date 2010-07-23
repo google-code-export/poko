@@ -180,7 +180,9 @@ fieldset.fieldsetNoDisplay legend{
 	background: url('../../res/cms/theme/default/button1.png') no-repeat;
 }
 
-
+a.leftNavEdit {
+	float: right;
+}
 
 #heading hr
 {

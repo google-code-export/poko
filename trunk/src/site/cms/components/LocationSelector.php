@@ -1,10 +1,15 @@
 <?
 	$eName = $_REQUEST["eName"];
+	$location = $_REQUEST["location"];
 	$searchAddress = $_REQUEST["searchAddress"];
 	$popupWidth = (int)($_REQUEST["popupWidth"]);
 	$popupHeight = (int)($_REQUEST["popupWidth"]);
 	$mapWidth = $popupWidth - 20;
 	$mapHeight = $popupHeight - 100;
+	
+	$centerParts = explode( ",", $location );
+	$centerLat = trim($centerParts[0]);
+	$centerLong = trim($centerParts[1]);
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -31,7 +36,7 @@ function loadmap() {
         map = new GMap2(document.getElementById("map"));
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
-		var center = new GLatLng( -27.839076094777802, 133.59375 );
+		var center = new GLatLng( <?= $centerLat ?>, <?= $centerLong ?> );
 		gCenter = center;
 		map.setCenter(center, 3);
 		geocoder = new GClientGeocoder();
@@ -129,6 +134,7 @@ function updateParentCenter( center ) {
 	#map {
 		width: 100%;
 		height: 100%;
+		height: 100%;
 		margin: 0;
 		padding: 0;
 	}
@@ -152,7 +158,7 @@ function updateParentCenter( center ) {
 <div id="search">
 	<strong>Search Address: </strong><br/>
 	<form action="#" onsubmit="showAddress(this.address.value); return false">
-		<input id="address" type="text" name="address" value="3 cit&eacute; Nollez Paris France" />
+		<input id="address" type="text" name="address" value="" />
 		<input type="submit" value="Search!" />
 	</form>
 </div>

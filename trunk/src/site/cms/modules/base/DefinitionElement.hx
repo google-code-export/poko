@@ -27,6 +27,7 @@
 
 package site.cms.modules.base;
 
+import poko.form.elements.LocationSelector;
 import poko.form.elements.Readonly;
 import poko.form.elements.TextArea;
 import poko.js.JsBinding;
@@ -358,6 +359,8 @@ class DefinitionElement extends DefinitionsBase
 		dateModes.add( { value:"Time", key:"TIME"} );
 		form.addElement(new Selectbox( "def_date_mode", "Mode", dateModes, data.mode, false, ""), "properties");
 		
+		//form.addElement(new Input( "def_location_defaultLocation", "Default Location", data.defaultLocation, false), "properties");
+		form.addElement(new LocationSelector( "def_location_defaultLocation", "Default Location", data.defaultLocation, false), "properties");
 		form.addElement(new Input( "def_location_popupWidth", "Popup Width", data.popupWidth, false), "properties");
 		form.addElement(new Input( "def_location_popupHeight", "Popup Height", data.popupHeight, false), "properties");
 		form.addElement(new RadioGroup( "def_location_searchAddress", "Allow searching addresses?", yesno, data.searchAddress, "1", false), "properties");

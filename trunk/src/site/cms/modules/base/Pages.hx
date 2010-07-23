@@ -81,12 +81,18 @@ class PageBase extends CmsTemplate
 		
 		leftNavigation.addSection("Pages");
 		
+		var isAdmin = user.isAdmin();
+		
 		for (page in pages)
 		{
-			leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id="+page.pid, page.indents);
+			if ( !isAdmin )
+				leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents);
+			else
+				leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents, false, 
+					leftNavigation.editTag("cms.modules.base.Definition&id=" + page.id + "&pagesMode=true") );
 		}
 		
-		if (user.isAdmin() || user.isSuper())
+		if (isAdmin || user.isSuper())
 			leftNavigation.footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 	}
 	

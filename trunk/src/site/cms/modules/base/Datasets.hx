@@ -110,6 +110,8 @@ class DatasetBase extends CmsTemplate
 	
 	private function setupLeftNav():Void
 	{
+		var isAdmin = user.isAdmin();
+		
 		if (pagesMode && !siteMode) 
 		{
 			var pages = app.db.request("SELECT *, p.id as pid FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id ORDER BY d.`order`");
@@ -117,7 +119,11 @@ class DatasetBase extends CmsTemplate
 			leftNavigation.addSection("Pages");
 
 			for (page in pages) {
-				leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents);
+				if ( !isAdmin )
+					leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents);
+				else
+					leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents, false,
+						leftNavigation.editTag("cms.modules.base.Definition&id=" + page.id + "&pagesMode=true") );
 			}
 			
 			if (user.isAdmin() || user.isSuper())
@@ -150,7 +156,7 @@ class DatasetBase extends CmsTemplate
 						siteView.addSeperator();
 					}
 				}
-
+				
 				// go through menu items and make sure they still exist in DB, otherwise just ignore them and they'll be removed on the next save!
 				for (item in menu.items) {
 					switch(item.type) {
@@ -160,7 +166,9 @@ class DatasetBase extends CmsTemplate
 							})) {
 								// add to nav
 								var link = "cms.modules.base.Dataset&dataset=" + item.id + "&resetState=true&siteMode=true";
-								leftNavigation.addLink(item.heading, item.name, link, item.indent);
+								// Add [e] edit link if user is admin
+								var editTag = isAdmin ? leftNavigation.editTag( "cms.modules.base.Definition&id=" + item.id + "&pagesMode=false" ) : '';
+								leftNavigation.addLink(item.heading, item.name, link, item.indent, false, editTag);
 								if (item.listChildren != null) {
 									// get dataset
 									
@@ -192,12 +200,24 @@ class DatasetBase extends CmsTemplate
 								siteView.addItem(item.id, item.type, item.name, item.heading, item.indent, item.listChildren);
 							}
 						case MenuItemType.PAGE:
-							if(Lambda.exists(pages, function(x){
+							/*if(Lambda.exists(pages, function(x){
 								return(x.pid == item.id);
-							})) {
+							})) {*/
+							var page = null;
+							for ( p in pages )
+							{
+								if ( p.pid == item.id )
+								{
+									page = p;
+									break;
+								}
+							}
+							if ( page != null )
+							{
 								// add to nav
 								var link = "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + item.id + "&siteMode=true";
-								leftNavigation.addLink(item.heading, item.name, link, item.indent);
+								var editTag = isAdmin ? leftNavigation.editTag("cms.modules.base.Definition&id=" + page.id + "&pagesMode=true") : "";
+								leftNavigation.addLink(item.heading, item.name, link, item.indent, false, editTag);
 								
 								// remove from pages list
 								pages = Lambda.filter(pages, function(x)
@@ -247,12 +267,18 @@ class DatasetBase extends CmsTemplate
 			// build the nav
 			leftNavigation.addSection("Datasets");
 			
+			var isAdmin = user.isAdmin();
+			
 			//var def:Dynamic = Definition;
 			for (table in tables)
 			{
 				if(table.showInMenu){
 					var name = table.name != "" ? table.name : table.table;
-					leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id + "&resetState=true", table.indents);
+					if ( isAdmin )
+						leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id + "&resetState=true", table.indents, false, 
+							leftNavigation.editTag("cms.modules.base.Definition&id=" + table.id + "&pagesMode=false") );
+					else
+						leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id + "&resetState=true", table.indents);
 				}
 			}
 			

@@ -166,6 +166,8 @@ class DefinitionsBase extends CmsTemplate
 	{
 		refreshDefinitions();
 		
+		var isAdmin = user.isAdmin();
+		
 		if(pagesMode){
 			leftNavigation.footer = "<a href=\"?request=cms.modules.base.Definitions&manage=true&pagesMode=true\">Manage Pages</a>";
 			leftNavigation.addSection("Pages");
@@ -174,22 +176,34 @@ class DefinitionsBase extends CmsTemplate
 			
 			leftNavigation.addSection("Pages");
 			
-			for(page in pages)
-				leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents);	
+			for (page in pages)
+			{
+				//leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents);	
+				if ( isAdmin )
+					leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents, false, 
+						leftNavigation.editTag( "cms.modules.base.Definition&id=" + page.id + "&pagesMode=true" ) );
+				else
+					leftNavigation.addLink("Pages", page.name, "cms.modules.base.DatasetItem&pagesMode=true&action=edit&id=" + page.pid, page.indents);	
+			}
 		}
 		else 
 		{
 			var tables:List <Dynamic> = app.db.request("SELECT * FROM `_definitions` d WHERE d.isPage='0' ORDER BY `order`");
 			
 			// build the nav
-			leftNavigation.addSection("Datasets");
+			leftNavigation.addSection("Datasets");			
 			
 			var def:Dynamic = Definition;
 			for (table in tables)
 			{
 				if(table.showInMenu){
 					var name = table.name != "" ? table.name : table.table;
-					leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id, table.indents);
+					//leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id, table.indents);
+					if ( isAdmin )
+						leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id, table.indents, false, 
+							leftNavigation.editTag( "cms.modules.base.Definition&id=" + table.id + "&pagesMode=false" ) );
+					else
+						leftNavigation.addLink("Datasets", name, "cms.modules.base.Dataset&dataset=" + table.id, table.indents);
 				}
 			}
 			
