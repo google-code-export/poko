@@ -137,7 +137,7 @@ class DatasetItem extends DatasetBase
 			definition = new Definition(dataset);
 			label = definition.name;
 			table = definition.table;
-			data = app.db.requestSingle("SELECT * FROM `" + table + "` WHERE `id`=" + app.db.cnx.quote(Std.string(id)));
+			data = app.db.requestSingle("SELECT * FROM `" + table + "` WHERE `id`=" + app.db.quote(Std.string(id)));
 			
 			orderField = getOrderField();
 			isOrderingEnabled = orderField != null;
@@ -149,7 +149,7 @@ class DatasetItem extends DatasetBase
 			
 			// Pages mode
 			
-			var result = app.db.requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" + app.db.cnx.quote(Std.string(id)));
+			var result = app.db.requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" + app.db.quote(Std.string(id)));
 			label = page = result.name;
 			
 			data = result.data != "" ? cast Unserializer.run(result.data) : {};
@@ -224,7 +224,7 @@ class DatasetItem extends DatasetBase
 				var doPost = true;
 				try{
 					app.db.insert(table, data);
-					id = app.db.cnx.lastInsertId();
+					id = app.db.lastInsertId;
 				}catch (e:Dynamic) {
 					doPost = false;
 					messages.addError("Update failed. Not running post commands or procedures.");
@@ -263,15 +263,15 @@ class DatasetItem extends DatasetBase
 				if (pagesMode)
 				{
 					var sdata = Serializer.run(data);
-					app.db.update("_pages", {data:sdata}, "`id`=" + app.db.cnx.quote(Std.string(id)));
+					app.db.update("_pages", {data:sdata}, "`id`=" + app.db.quote(Std.string(id)));
 				} else {
 					// get old data before update
-					var oldData:Dynamic = app.db.requestSingle("SELECT * FROM `"+table+"` WHERE `id`=" + app.db.cnx.quote(Std.string(id)));
+					var oldData:Dynamic = app.db.requestSingle("SELECT * FROM `"+table+"` WHERE `id`=" + app.db.quote(Std.string(id)));
 					
 					// do update
 					var doPost = true;
 					try{
-						app.db.update(table, data, "`id`=" + app.db.cnx.quote(Std.string(id)));
+						app.db.update(table, data, "`id`=" + app.db.quote(Std.string(id)));
 					}catch (e:Dynamic) {
 						doPost = false;
 						messages.addError("Update failed. Not running post commands or procedures.");
@@ -307,7 +307,7 @@ class DatasetItem extends DatasetBase
 			if (element.type == "multilink")
 			{
 				// delete existing links
-				app.db.delete(element.properties.link, "`" + element.properties.linkField1 + "`=" + app.db.cnx.quote(Std.string(id)));
+				app.db.delete(element.properties.link, "`" + element.properties.linkField1 + "`=" + app.db.quote(Std.string(id)));
 				
 				// insert new links
 				for (check in cast(Reflect.field(data, element.name), Array<Dynamic>))
@@ -336,7 +336,7 @@ class DatasetItem extends DatasetBase
 					var tData = { };
 					try {
 						Reflect.setField(tData, element.name, result.__v);
-						app.db.update(table, tData, "`id`=" + app.db.cnx.quote(Std.string(id)));	
+						app.db.update(table, tData, "`id`=" + app.db.quote(Std.string(id)));	
 					} catch (e:Dynamic)
 					{
 						messages.addError("There is an error in your 'post-sql-value' setup for field: " + element.name);
@@ -354,7 +354,7 @@ class DatasetItem extends DatasetBase
 					var tData = {};
 					Reflect.setField(tData, element.name, Date.now());
 					try {
-						app.db.update(table, tData, "`id`=" + app.db.cnx.quote(Std.string(id)));	
+						app.db.update(table, tData, "`id`=" + app.db.quote(Std.string(id)));	
 					} catch (e:Dynamic){
 							messages.addError("There is an error updating the time for element: " + element.name);
 					}
@@ -428,7 +428,7 @@ class DatasetItem extends DatasetBase
 		// setup the data for deleting files ...
 		var filesToDelete:List<String> = new List();
 		var fieldsToWipe:List<String> = new List();
-		var safeId = app.db.cnx.quote(Std.string(id));
+		var safeId = app.db.quote(Std.string(id));
 		
 		var nFilesReplaced:Int = 0;
 		var nFilesAdded:Int = 0;
@@ -782,7 +782,7 @@ class DatasetItem extends DatasetBase
 						var sql = "";
 						sql += "SELECT `" + element.properties.linkField2 + "` as 'link' 	";
 						sql += "  FROM `" + element.properties.link + "`";
-						sql += " WHERE `" + element.properties.linkField1 + "`=" + app.db.cnx.quote(Std.string(id));
+						sql += " WHERE `" + element.properties.linkField1 + "`=" + app.db.quote(Std.string(id));
 						
 						var result = app.db.request(sql);
 						

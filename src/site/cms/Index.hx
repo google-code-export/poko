@@ -44,8 +44,8 @@ class Index extends CmsTemplate
 		
 		if (app.params.get("submitted") != null) 
 		{
-			var username = app.db.cnx.quote(app.params.get("username"));
-			var password = app.db.cnx.quote(Md5.encode(app.params.get("password")));
+			var username = app.db.quote(app.params.get("username"));
+			var password = app.db.quote(Md5.encode(app.params.get("password")));
 			
 			if (app.db.count("_users", "`username`=" + username + " AND `password`=" + password) > 0)
 			{

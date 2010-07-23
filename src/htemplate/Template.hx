@@ -1,4 +1,4 @@
-﻿package htemplate;
+package htemplate;
 
 import hscript.Interp;
 

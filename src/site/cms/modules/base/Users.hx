@@ -58,6 +58,7 @@ class Users extends UsersBase
 				}catch (e:Dynamic) {
 					messages.addError("Can't delete user.");
 				}
+				trace(app.db.lastAffectedRows);
 				if (app.db.lastAffectedRows > 0) {
 					messages.addMessage("User deleted.");
 				}else {
@@ -67,7 +68,11 @@ class Users extends UsersBase
 		}
 		
 		view.template = "cms/modules/base/Users.mtt";
-		users = app.db.request("SELECT * FROM _users");
+		if(user.isSuper()){
+			users = app.db.request("SELECT * FROM _users");
+		}else {
+			users = app.db.request("SELECT * FROM _users WHERE groups NOT LIKE '%cms_admin%'");
+		}
 	}
 }
 

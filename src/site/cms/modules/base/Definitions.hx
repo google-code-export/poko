@@ -92,7 +92,7 @@ class Definitions extends DefinitionsBase
 				
 				app.db.insert("_definitions", { name:app.params.get("name"), isPage:pagesMode, order:nextId } );
 				
-				var defId = app.db.cnx.lastInsertId();
+				var defId = app.db.lastInsertId;
 				
 				if (pagesMode)
 					app.db.insert("_pages", { name:app.params.get("name"), definitionId:defId } );
@@ -105,7 +105,7 @@ class Definitions extends DefinitionsBase
 					{
 						if (deleteList[i] != null) 
 						{
-							var defId = app.db.cnx.quote(Std.string(i));
+							var defId = app.db.quote(Std.string(i));
 							app.db.delete("_definitions", "`id`=" + defId);
 							app.db.delete("_pages", "`definitionId`=" + defId);
 						}

@@ -38,10 +38,13 @@ import php.Web;
 
 class Db 
 {	
-	public var cnx:Connection;
+	private var cnx:Connection;
 	public var lastError:String;
 	public var lastQuery:String;
+	
 	public var lastAffectedRows:Int;
+	public var lastInsertId:Int;
+	public var numRows:Int;
 	
 	public var host:String;
 	public var database:String;
@@ -71,6 +74,16 @@ class Db
 		this.password = password;
 		this.port = port;
 		this.socket = socket;
+	}
+	
+	public function escape(s)
+	{
+		return cnx.escape(s);
+	}
+	
+	public function quote(s)
+	{
+		return cnx.quote(s);
 	}
 	
 	public function query(sql:String):ResultSet
@@ -144,7 +157,7 @@ class Db
 		lastQuery = sql;
 		var request = cnx.request(sql); 
 		
-		lastAffectedRows = request.length;
+		lastInsertId = cnx.lastInsertId();
 		
 		return true;
 	}

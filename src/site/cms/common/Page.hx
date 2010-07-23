@@ -42,14 +42,14 @@ class Page
 	public function loadById(id:Int)
 	{
 		var application = Poko.instance;
-		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE p.`id`=\"" + app.db.cnx.escape(Std.string(id)) + "\" AND p.`definitionid`=d.`id`");
+		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE p.`id`=\"" + app.db.escape(Std.string(id)) + "\" AND p.`definitionid`=d.`id`");
 		init(result);
 	}
 	
 	public function loadByName(name:String)
 	{
 		var application = Poko.instance;
-		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE d.`name`=\"" + app.db.cnx.escape(name) + "\" AND p.`definitionid`=d.`id`");
+		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE d.`name`=\"" + app.db.escape(name) + "\" AND p.`definitionid`=d.`id`");
 		init(result);
 	}
 	
