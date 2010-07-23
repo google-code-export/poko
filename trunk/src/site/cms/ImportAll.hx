@@ -46,6 +46,7 @@ import site.cms.modules.base.Users;
 import site.cms.modules.base.User;
 import site.cms.modules.base.Users_Groups;
 import site.cms.modules.base.Users_Group;
+import site.cms.modules.base.ChangePassword;
 import site.cms.modules.base.SiteView;
 
 import site.cms.modules.help.Help;

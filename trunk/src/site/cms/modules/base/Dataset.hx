@@ -246,9 +246,11 @@ class Dataset extends DatasetBase
 
 		if((currentFilterSettings.enabled || optionsForm.isSubmitted()) && filterByValue != null && filterByValue != "")
 		{
+			var elType = definition.getElement(filterByValue).type;
+			
 			// Associative filter
-			if (definition.getElement(filterByValue).type == "enum" || definition.getElement(filterByValue).type == "association" || definition.getElement(filterByValue).type == "bool")
-			{	
+			if (elType == "enum" || elType == "association" || elType == "bool")
+			{
 				if (filterByAssocValue != "")
 					sql += "WHERE `" + filterByValue + "`='" + filterByAssocValue + "' ";
 					
@@ -262,10 +264,12 @@ class Dataset extends DatasetBase
 				{
 					var op = filterByOperatorValue == "~" ? "LIKE" : filterByOperatorValue;
 					var val = filterByOperatorValue == "~" ? "%" +filterByValueValue+ "%" : filterByValueValue;
-					sql += "WHERE `" + filterByValue + "` " + op + " '" + val + "' ";
 					
-					trace(filterByValue + " " + op + " " + val);
-			
+					if(elType == "date"){
+						sql += "WHERE `" + filterByValue + "` " + op + " " + val + " ";
+					}else {
+						sql += "WHERE `" + filterByValue + "` " + op + " '" + val + "' ";
+					}
 					
 					hasWhere = true;
 				}
@@ -354,7 +358,7 @@ class Dataset extends DatasetBase
 			if (id == null || id == "")
 				return;
 			
-			var data = app.db.requestSingle("SELECT * FROM `"+table+"` WHERE " + definition.primaryKey + "=" + app.db.cnx.quote(Std.string(id)));
+			var data = app.db.requestSingle("SELECT * FROM `"+table+"` WHERE " + definition.primaryKey + "=" + app.db.quote(Std.string(id)));
 
 			// pre duplication field stuff
 			for (element in definition.elements) {
@@ -387,7 +391,7 @@ class Dataset extends DatasetBase
 			}
 			
 			app.db.insert(table, data);
-			var insertedId = app.db.cnx.lastInsertId();
+			var insertedId = app.db.lastInsertId;
 			
 			if (app.db.lastAffectedRows > 0) {
 				var element:DefinitionElementMeta;
@@ -398,7 +402,7 @@ class Dataset extends DatasetBase
 						case "multilink":
 							// add the multilinks
 							var p = element.properties;
-							var result = app.db.request("SELECT `" + p.linkField1 + "`, `" + p.linkField2 + "` FROM `" + p.link + "` WHERE `" + p.linkField1 + "`=" + app.db.cnx.quote(Std.string(id)));
+							var result = app.db.request("SELECT `" + p.linkField1 + "`, `" + p.linkField2 + "` FROM `" + p.link + "` WHERE `" + p.linkField1 + "`=" + app.db.quote(Std.string(id)));
 							for (o in result) {
 								Reflect.setField(o, p.linkField1, insertedId);
 								app.db.insert(p.link, o);

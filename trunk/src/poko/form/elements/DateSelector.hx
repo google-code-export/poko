@@ -80,7 +80,7 @@ class DateSelector extends FormElement
 
 		if ( mode == DateTimeMode.time || mode == DateTimeMode.dateTime )
 		{			
-			s.add('<select name="' + n_time + '_hour" id="' + n_time + '_hour"> \n');
+			s.add(' H: <select name="' + n_time + '_hour" id="' + n_time + '_hour"> \n');
 			for ( i in 0 ... 24  )
 			{
 				var hour = i < 10 ? '0' + Std.string(i) : Std.string(i);
@@ -90,7 +90,7 @@ class DateSelector extends FormElement
 					s.add('		<option value="' + hour + '">' + hour + '</option> \n');
 			}
 			s.add("</select> \n");
-			s.add('<select name="' + n_time + '_min" id="' + n_time + '_min"> \n');
+			s.add(' M: <select name="' + n_time + '_min" id="' + n_time + '_min"> \n');
 			for ( i in 0 ... 60  )
 			{
 				var minute = i < 10 ? '0' + Std.string(i) : Std.string(i);
@@ -100,7 +100,7 @@ class DateSelector extends FormElement
 					s.add('		<option value="' + minute + '">' + minute + '</option> \n');
 			}
 			s.add("</select> \n");
-			s.add('<select name="' + n_time + '_sec" id="' + n_time + '_sec"> \n');
+			s.add(' S: <select name="' + n_time + '_sec" id="' + n_time + '_sec"> \n');
 			for ( i in 0 ... 60  )
 			{
 				var second = i < 10 ? '0' + Std.string(i) : Std.string(i);

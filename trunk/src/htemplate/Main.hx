@@ -1,4 +1,4 @@
-﻿class Main
+class Main
 {
   static var TEMPLATE =
 "{eval}

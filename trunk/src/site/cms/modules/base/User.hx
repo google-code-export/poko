@@ -86,10 +86,10 @@ class User extends UsersBase
 						//if (app.debug) throw(e);
 						messages.addError("Database error.");
 					}
-					if (app.db.lastAffectedRows < 1) {
+					if (app.db.lastInsertId < 1) {
 						messages.addError("Problem adding user.");
 					}else {
-						messages.addMessage("User added. <a href=\"?request=cms.modules.base.User&action=edit&id=" + app.db.cnx.lastInsertId() + "\">edit</a>");
+						messages.addMessage("User added. <a href=\"?request=cms.modules.base.User&action=edit&id=" + app.db.lastInsertId + "\">edit</a>");
 						form1.clearData();
 					}
 				} else {

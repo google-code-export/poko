@@ -57,22 +57,27 @@ class Navigation extends Component
 		var cmsController:CmsController = cast app.controller;
 		
 		if(cmsController.user.authenticated){
-		
-			if (cmsController.user.isAdmin() || cmsController.user.isSuper()) {
+			var contentExtra = "";
+			
+			if (cmsController.user.isSuper()) {
 				requests.set("modules.base.Pages", "Pages");
-				requests.set("modules.base.Datasets", "Data");			
+				requests.set("modules.base.Datasets", "Data");
 				requests.set("modules.base.SiteView", "Site View");
 				requests.set("modules.media.Index", "Media");
 				requests.set("modules.base.Settings", "Settings");
-			}else {
+				requests.set("modules.base.SiteView", "Site Map");
+				requests.set("modules.base.Users", "Users");
+				requests.set("modules.help.Help", "Help");
+			}else if (cmsController.user.isAdmin()) {
+				requests.set("modules.base.SiteView", "Site View");
+				requests.set("modules.base.Settings", "Settings");
+				requests.set("modules.base.SiteView", "Site Map");
+				requests.set("modules.base.Users", "Users");
+			}else{
 				requests.set("modules.base.SiteView", "Site Map");
 			}
 			
-			requests.set("modules.help.Help", "Help");
-			
-			if (cmsController.user.isAdmin() || cmsController.user.isSuper()) {
-				requests.set("modules.base.Users", "Users");
-			}
+			requests.set("modules.base.ChangePassword", "Password");
 			
 			content = "<ul id=\"headingNavigation\">\n";
 
@@ -88,6 +93,7 @@ class Navigation extends Component
 			}
 			
 			content += "</ul>\n";
+			content += contentExtra;
 			
 			userName = cmsController.user.name;
 		}else {

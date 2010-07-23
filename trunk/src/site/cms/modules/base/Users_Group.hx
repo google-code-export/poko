@@ -86,7 +86,7 @@ class Users_Group extends UsersBase
 				if (app.db.lastAffectedRows < 1) {
 					messages.addError("Problem adding group.");
 				}else {
-					messages.addMessage("Group added. <a href=\"?request=cms.modules.base.Users_Group&action=edit&id="+app.db.cnx.lastInsertId()+"\">edit</a>");
+					messages.addMessage("Group added. <a href=\"?request=cms.modules.base.Users_Group&action=edit&id="+app.db.lastInsertId+"\">edit</a>");
 					form1.clearData();
 				}
 			case "edit":
