@@ -25,6 +25,7 @@ class Config
 	public var errorPage : String;
 	public var error404Page : String;
 	
+	public var holdingController(getHoldingController, setHoldingController) : String;
 	public var defaultController(getDefaultController, setDefaultController) : String;
 	public var defaultAction : String;
 	
@@ -39,7 +40,8 @@ class Config
 	
 	public var serverRoot( getServerRoot, null ) : String;
 	
-	var _defaultController : String;
+	private var _defaultController : String;
+	private var _holdingController : String;
 	/**
 	 * Setting non-initialized constants.
 	 */
@@ -117,6 +119,17 @@ class Config
 	function setDefaultController( value : String ) : String
 	{
 		_defaultController = value;
+		return value;
+	}
+	
+	function getHoldingController() : String
+	{
+		return _holdingController;
+	}
+	
+	function setHoldingController( value : String ) : String
+	{
+		_holdingController = value;
 		return value;
 	}
 	

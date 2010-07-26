@@ -70,7 +70,6 @@ class Navigation extends Component
 				requests.set("modules.help.Help", "Help");
 			}else if (cmsController.user.isAdmin()) {
 				requests.set("modules.base.SiteView", "Site View");
-				requests.set("modules.base.Settings", "Settings");
 				requests.set("modules.base.SiteView", "Site Map");
 				requests.set("modules.base.Users", "Users");
 			}else{
