@@ -107,7 +107,7 @@ class Dataset extends DatasetBase
 		// change layout for link view
 		if (linkMode)
 		{
-			head.css.add("css/cms/miniView.css");
+			head.css.add("css/cms/miniView.css");	
 			layoutView.template = "cms/templates/CmsTemplate_mini.mtt";
 		}
 	}

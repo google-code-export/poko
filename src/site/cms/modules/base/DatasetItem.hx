@@ -118,7 +118,7 @@ class DatasetItem extends DatasetBase
 		if (linkMode)
 		{
 			head.css.add("css/cms/miniView.css");
-			view.template = "cms/templates/CmsTemplate_mini.mtt";
+			layoutView.template = "cms/templates/CmsTemplate_mini.mtt";
 		}
 	}
 	
