@@ -118,6 +118,9 @@ class Poko
 	
 	private function findControllerClass():String
 	{
+		if (!config.isLive)
+			return config.holdingController;
+		
 		var c:String = url.getSegments()[0] != "" ? url.getSegments()[0] : (params.get("request") != null ? params.get("request") : config.defaultController);
 
 		if (c.lastIndexOf(".") != -1)

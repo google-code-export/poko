@@ -18,6 +18,7 @@ import site.cms.templates.CmsTemplate;
 class Index extends CmsTemplate
 {
 	public var message:String;
+	public var cmsTitle:String;
 	public var inputUsername:String;
 	
 	public function new() 
@@ -31,6 +32,7 @@ class Index extends CmsTemplate
 	override public function main() 
 	{
 		//navigation = null;
+		cmsTitle = head.title;
 		
 		if (app.params.get("logout") == "true")
 		{
