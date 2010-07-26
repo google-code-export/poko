@@ -1,5 +1,5 @@
 <div id="loginBox">
-	<h2>::cmsTitle::</h2>
+	<h2>Login</h2>
 	<form action="" method="POST">
 		<p><b>::message::</b></p>
 		<table>
