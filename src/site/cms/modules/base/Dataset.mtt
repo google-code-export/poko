@@ -5,6 +5,7 @@
 	<div id="datasetActionsWrapper">
 		<a href="?request=cms.modules.base.DatasetItem&action=add&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/add.png" class="qTip" title="Add new item to list" /></a>
 		::if !linkMode && showFiltering || showOrderBy:: | <a href="#" onClick="return(toggleFilterOrder());"><img class="qTip" src="./res/cms/find.png" title="Show/hide filteringer and ordering options." /></a>::end::
+		| <a href="#" id="datasetCheckAll"><img src="./res/cms/check_all.png" class="qTip" title="Check all" /></a>
 		::if allowCsv:: | <a href="?request=cms.services.Csv&dataset=::dataset::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/table_download.png" class="qTip" title="Download CSV" /></a>::end::
 	</div>
 	
@@ -49,7 +50,7 @@
 	::end::	
 	
 	<form action="" method="POST">
-		<table class="greyTable" id="News">
+		<table class="greyTable datasetListTable">
 			
 			
 			<tr>
@@ -85,8 +86,10 @@
 						::end::
 						
 						::set cols = cols+1::
-						<td><a class="qTip" title="Edit" href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/pencil.png" /></a> | 
-							<a class="qTip" title="Duplicate" href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/page_copy.png" /></a></td>
+						<td class="cmsDatasetListRecordAction">
+							<a class="qTip" title="Edit" href="?request=cms.modules.base.DatasetItem&action=edit&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/pencil.png" /></a>
+							<a class="qTip" title="Duplicate" href="?request=cms.modules.base.Dataset&action=duplicate&dataset=::dataset::&id=::row.cms_primaryKey::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::"><img src="./res/cms/page_copy.png" /></a>
+						</td>
 					</tr>
 				::end::
 			::else::
@@ -96,7 +99,8 @@
 			
 			<input type="hidden" name="action" value="update" />
 		
-			<input type="submit" id="datasetDeleteButton" name="submitted_delete" value="::if isOrderingEnabled:: delete & order ::else:: delete checked ::end::"  />
+			<input type="submit" id="datasetDeleteButton" name="submitted_delete" value="delete checked"  />
+			::if isOrderingEnabled::<input type="submit" id="datasetOrderButton" name="submitted_order" value="order"  />::end::
 	</form>
 	
 	<script>
@@ -134,4 +138,20 @@
 			$("#filterOrderWrapper").toggle();
 			return(false);
 		}
+		
+		var allChecked = false;
+		
+		$(document).ready(function(){
+			$("#datasetDeleteButton").click(function(){
+				if(confirm("Delete checked rows?")){
+					return true;
+				}else{
+					return false;
+				}
+			});
+			$("#datasetCheckAll").click(function(){
+				allChecked = !allChecked;
+				$(".datasetListTable input[type=checkbox]").attr("checked", allChecked);
+			});
+		});
 	</script>	
