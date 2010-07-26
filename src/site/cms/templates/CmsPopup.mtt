@@ -43,7 +43,7 @@
 			</ul></div>
 		::end::
 		
-		<div id="content">::raw controller.getView()::</div>
+		<div id="content">::raw controller.view.render()::</div>
 	
 		<div style="clear:both"></div>
 	</div>
