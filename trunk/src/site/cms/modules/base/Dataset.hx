@@ -393,7 +393,7 @@ class Dataset extends DatasetBase
 			app.db.insert(table, data);
 			var insertedId = app.db.lastInsertId;
 			
-			if (app.db.lastAffectedRows > 0) {
+			if (app.db.lastInsertId > 0) {
 				var element:DefinitionElementMeta;
 				
 				// post duplication field stuff
@@ -422,98 +422,110 @@ class Dataset extends DatasetBase
 				url += "&autofilterByAssoc=" + app.params.get("autofilterByAssoc");
 				url += "&autofilterBy=" + app.params.get("autofilterBy");
 				if (siteMode) url += "&siteMode=true";
+				messages.addMessage("Record duplicated.");
 				app.redirect(url);
 				
 			}else {
 				messages.addError("Error duplicating item.");
 			}
 		}else {
-			// delete
-			if (php.Web.getParamValues("delete") != null)
-			{
-				// see if we need to do pre-SQL?
-				var runSqlPerRow:Bool = false;
-				if (definition.postDeleteSql.indexOf("#") != -1){
-					runSqlPerRow = true;
-					messages.addDebug("Post-delete SQL running per row");
-				}else if (definition.postDeleteSql != null && definition.postDeleteSql != ""){
-					app.db.request(definition.postDeleteSql);
-				}
-
-				var numDeleted = 0;
-				for (delId in php.Web.getParamValues("delete"))
+			if(app.params.get("submitted_delete") != null){
+				// delete
+				if (php.Web.getParamValues("delete") != null)
 				{
-					// post processing setup
-					var postProcedure:Procedure = null;
-					if (definition.postProcedure != null && definition.postProcedure != "") {
-						var c:Class<Dynamic> = Type.resolveClass(definition.postProcedure);
-						if (c != null) {
-							postProcedure = Type.createInstance(c, []);
-							if (!Std.is(postProcedure, Procedure)) {
-								postProcedure = null;
+					// see if we need to do pre-SQL?
+					var runSqlPerRow:Bool = false;
+					if (definition.postDeleteSql.indexOf("#") != -1){
+						runSqlPerRow = true;
+						messages.addDebug("Post-delete SQL running per row");
+					}else if (definition.postDeleteSql != null && definition.postDeleteSql != ""){
+						app.db.request(definition.postDeleteSql);
+					}
+
+					var numDeleted = 0;
+					for (delId in php.Web.getParamValues("delete"))
+					{
+						// post processing setup
+						var postProcedure:Procedure = null;
+						if (definition.postProcedure != null && definition.postProcedure != "") {
+							var c:Class<Dynamic> = Type.resolveClass(definition.postProcedure);
+							if (c != null) {
+								postProcedure = Type.createInstance(c, []);
+								if (!Std.is(postProcedure, Procedure)) {
+									postProcedure = null;
+								}
+							}
+						}						
+						
+						// pre-fetch the deleted data
+						var tData = new List();
+						if(runSqlPerRow || postProcedure != null){
+							tData = app.db.requestSingle("SELECT * FROM `" + table + "` WHERE `" + definition.primaryKey + "`='" + delId + "'");
+						}
+						
+						// delete our row
+						try{
+							app.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");
+							numDeleted++;
+						}catch (e:Dynamic) {
+							messages.addError("There was a problem deleting your data.");
+							if (runSqlPerRow) messages.addWarning("Post-delete SQL not run as delete run completed.");
+							runSqlPerRow = false;
+						}
+						
+						// now run the post delete if there was no problem running our delete
+						if(runSqlPerRow){
+							var tSql = definition.postDeleteSql;
+							for (tField in Reflect.fields(tData)) {
+								tSql = StringTools.replace(tSql, "#" + tField + "#", Reflect.field(tData, tField));
+							}
+							try {
+								app.db.request(tSql);
+							}catch (e:Dynamic) {
+								messages.addError("Post-delete SQL had problems: " + tSql);
 							}
 						}
-					}						
-					
-					// pre-fetch the deleted data
-					var tData = new List();
-					if(runSqlPerRow || postProcedure != null){
-						tData = app.db.requestSingle("SELECT * FROM `" + table + "` WHERE `" + definition.primaryKey + "`='" + delId + "'");
-					}
-					
-					// delete our row
-					try{
-						app.db.delete(table, "`" + definition.primaryKey + "`='" + delId + "'");
-						numDeleted++;
-					}catch (e:Dynamic) {
-						messages.addError("There was a problem deleting your data.");
-						if (runSqlPerRow) messages.addWarning("Post-delete SQL not run as delete run completed.");
-						runSqlPerRow = false;
-					}
-					
-					// now run the post delete if there was no problem running our delete
-					if(runSqlPerRow){
-						var tSql = definition.postDeleteSql;
-						for (tField in Reflect.fields(tData)) {
-							tSql = StringTools.replace(tSql, "#" + tField + "#", Reflect.field(tData, tField));
-						}
-						try {
-							app.db.request(tSql);
-						}catch (e:Dynamic) {
-							messages.addError("Post-delete SQL had problems: " + tSql);
-						}
-					}
-					
-					// do post procedure
-					if(postProcedure != null) postProcedure.postDelete(table, tData);
-				}
-				messages.addMessage(numDeleted+" record(s) deleted.");
-			}	
-			
-			// ordering
-			if (isOrderingEnabled)
-			{
-				var c = 0;
-				for (orderId in php.Web.getParamValues("order"))
-				{
-					if (orderId != null) {
 						
-						var d:Dynamic = { };
-						Reflect.setField(d, orderField, orderId);
-						app.db.update(table, d, "`"+definition.primaryKey+"`='"+c+"'");
+						// do post procedure
+						if(postProcedure != null) postProcedure.postDelete(table, tData);
 					}
-					c++;
+					messages.addMessage(numDeleted+" record(s) deleted.");
+				}else {
+					messages.addWarning("Select records to delete.");
 				}
-				
-				c = 0;
-				var res = app.db.request("SELECT `" + definition.primaryKey + "` as 'id' from " + table + " ORDER BY `" + orderField + "`");
-				for (item in res)
+			}else if(app.params.get("submitted_order") != null){
+			
+				// ordering
+				if (isOrderingEnabled)
 				{
-					var d:Dynamic = { };
-					Reflect.setField(d, orderField, ++c);
-					app.db.update(table, d, "`" + definition.primaryKey + "`='" + item.id + "'");
+					var c = 0;
+					for (orderId in php.Web.getParamValues("order"))
+					{
+						if (orderId != null) {
+							
+							var d:Dynamic = { };
+							Reflect.setField(d, orderField, orderId);
+							app.db.update(table, d, "`"+definition.primaryKey+"`='"+c+"'");
+						}
+						c++;
+					}
+					
+					c = 0;
+					var res = app.db.request("SELECT `" + definition.primaryKey + "` as 'id' from " + table + " ORDER BY `" + orderField + "`");
+					var numSorted = 0;
+					for (item in res)
+					{
+						var d:Dynamic = { };
+						Reflect.setField(d, orderField, ++c);
+						app.db.update(table, d, "`" + definition.primaryKey + "`='" + item.id + "'");
+						numSorted++;
+					}
+					
+					messages.addMessage(numSorted+" record(s) sorted.");
+				}else {
+					messages.addError("Tried to order records that are not allowed to be re-ordered!");
 				}
-			}			
+			}
 		}
 	}
 	

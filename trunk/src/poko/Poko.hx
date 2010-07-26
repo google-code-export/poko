@@ -131,9 +131,9 @@ class Poko
 	
 	public function getDb()
 	{
-		if (__db == null) db = new Db();
-		db.connect(config.database_host, config.database_database, config.database_user, config.database_password, config.database_port);
-		return db;
+		if (__db == null) __db = new Db();
+		__db.connect(config.database_host, config.database_database, config.database_user, config.database_password, config.database_port);
+		return __db;
 	}
 	
 	public function redirect(url:String)
