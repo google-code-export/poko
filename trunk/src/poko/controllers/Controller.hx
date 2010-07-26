@@ -58,7 +58,7 @@ class Controller
 	{
 		
 		init();
-		
+
 		for (comp in components) comp.init();
 		
 		if (!HttpConnection.handleRequest(remoting)) 

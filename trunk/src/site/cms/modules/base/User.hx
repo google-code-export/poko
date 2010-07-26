@@ -130,13 +130,16 @@ class User extends UsersBase
 		
 		var groups:List<Dynamic>;
 		var sql:String;
-		
-		if (!user.isSuper()) {
-			sql = "SELECT `name` AS 'key', `stub` AS 'value' FROM _users_groups WHERE isAdmin=0 AND isSuper=0";
+
+		if (!user.isSuper() && !user.isAdmin()) {
+			sql = "SELECT `stub` AS 'key', `name` AS 'value' FROM _users_groups WHERE isAdmin=0 AND isSuper=0";
+			groups = app.db.request(sql);		
+		} else if (!user.isSuper()) {
+			sql = "SELECT `stub` AS 'key', `name` AS 'value' FROM _users_groups WHERE isSuper=0";
 			groups = app.db.request(sql);
 		}else {
 			// super, they can do anything!
-			sql = "SELECT `name` AS 'key', `stub` AS 'value' FROM _users_groups";
+			sql = "SELECT `stub` AS 'key', `name` AS 'value' FROM _users_groups";
 			groups = app.db.request(sql);
 		}
 		

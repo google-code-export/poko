@@ -53,7 +53,7 @@ class CmsTemplate extends CmsController
 	override public function post()
 	{
 		super.post();
-		
+
 		messages.clearAll();
 	}
 }
