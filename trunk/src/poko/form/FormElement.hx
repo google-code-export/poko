@@ -182,6 +182,7 @@ class FormElement
 	public function getClasses() : String
 	{
 		var css = ( cssClass != null ) ? cssClass : form.defaultClass;
+		
 		if ( required && form.isSubmitted() )
 		{
 			if ( value == "" )

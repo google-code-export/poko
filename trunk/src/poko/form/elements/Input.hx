@@ -76,7 +76,7 @@ class Input extends FormElement
 		}		
 		
 		var style = useSizeValues ? "style=\"width:" + width + "px\"" : "";
-		
+		trace(getClasses());
 		return "<input "+style+" class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\"  "+attributes+" />" + (if(required && form.isSubmitted() && printRequired) " required");
 	}
 	
