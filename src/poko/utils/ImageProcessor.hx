@@ -292,9 +292,12 @@ class ImageProcessor
 		var hash = getHash();
 		var ext = switch(format) 
 		{
-			case ImageOutputFormat.GIF: "GIF";
-			case ImageOutputFormat.JPG: "JPG";
-			case ImageOutputFormat.PNG: "PNG";
+			//case ImageOutputFormat.GIF: "GIF";
+			//case ImageOutputFormat.JPG: "JPG";
+			//case ImageOutputFormat.PNG: "PNG";
+			case ImageOutputFormat.GIF: "gif";
+			case ImageOutputFormat.JPG: "jpg";
+			case ImageOutputFormat.PNG: "png";
 		}
 		
 		return hash + "." + ext;
