@@ -1,0 +1,75 @@
+	<div style="margin-bottom:50px;">
+		<h3>Restore Backups</h3>
+		
+		::if restoreFile != null && restoreFile != ""::
+			::if confirmRestore == null || !confirmRestore::
+			<p style="color:red;">
+				You are about to restore the database with data saved on ::raw restoreDate::.<br/>
+				Any changes to data made since then will be lost.<br/><br/>
+				Are you sure you want to restore the database?<br/><br/>
+			</p>
+			<form action="" method="POST">
+				<input type="hidden" name="restore" value="::raw restoreFile::"/>
+				<input type="hidden" name="confirmRestore" value="1"/>
+				<table>
+					<tr>
+						<td><input type="submit" value="Yes I am sure!"/></td>
+						<td><a href="?request=cms.modules.base.DbBackup" style="font-weight:bold;padding-left:30px;color:blue">CANCEL</a></td>
+					</tr>
+				</table>
+			</form>
+			
+			::else::
+			Restored!<br/><br/>
+			Execution time: ::raw executionTime::
+			::end::
+			
+		::else::
+		
+		<form action="" method="POST">
+			<table border="1" cellpadding="2" cellspacing="2">
+				<tr>
+					<td width="200px"><b>Backup Date</b></td>
+					<td><b>Size</b></td>
+					<td><b>Comment</b></td>
+					<td><b>Download</b></td>
+					<td><b>Restore?</b></td>
+				</tr>
+				:: foreach backup backups ::
+				<tr>
+					<td>::raw backup.date::</td>
+					<td>::raw backup.size::</td>
+					<td>::raw backup.comment::</td>
+					<td><a href="::raw backup.url::">Download</a></td>
+					<td align="center"><input type="radio" name="restore" value="::raw backup.filename::"/></td>
+				</tr>
+				::end::
+			</table>
+			<input type="submit" value="Restore"/>
+		</form>
+		::end::
+		
+	</div>	
+	
+	::if restoreFile == null::
+	<div>
+		<h3>Backup Database</h3>
+		<form action="" method="POST">
+			<input type="hidden" name="createBackup" value="1"/>
+			<table border="1">
+				<tr>
+					<td>Tables</td>
+					<td>
+						<select multiple="multiple" size="6" name="tables[]">
+							:: foreach table tables ::
+							<option value="::raw table::" selected="selected">::raw table::&nbsp;&nbsp;&nbsp;&nbsp;</option>
+							::end::
+						</select>
+					</td>
+				</tr>
+				<tr><td>Comment</td><td><input type="text" size="80" name="comment" value=""/></td></tr>
+				<tr><td></td><td><input type="submit" value="Create Backup"/></td></tr>
+			</table>
+		</form>
+	</div>
+	::end::

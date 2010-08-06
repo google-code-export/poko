@@ -27,14 +27,18 @@
 
 package poko.system;
 
+import haxe.io.Eof;
 import php.db.Connection;
 import php.db.Mysql;
 import php.db.Object;
 import php.db.ResultSet;
 import php.Exception;
 import php.HException;
+import php.io.File;
 import php.Lib;
 import php.Web;
+
+using StringTools;
 
 class Db 
 {	
@@ -243,5 +247,104 @@ class Db
 		}else {
 			return(null);
 		}
+	}
+	
+	public function getTables() : Array<String>
+	{
+		var tables = new Array<String>();
+		var result = cnx.request( "SHOW TABLES" );
+		for ( row in result )
+			tables.push( Reflect.field( row, "Tables_in_" + database ) );
+		return tables;
+	}
+	
+	public function importFromFile( filepath : String ) : Void
+	{
+		var f = File.read( filepath, false );
+		try
+		{
+			var temp = "";
+			
+			while ( true )
+			{
+				var line = f.readLine();
+				
+				if ( line.substr( 0, 2 ) == "--" || line.charAt(0) == "#" || line == "" )
+					continue;
+					
+				temp += line;
+				
+				if ( line.trim().substr( -1, 1 ) == ";" )
+				{
+					cnx.request( temp );
+					temp = "";
+				}
+			}
+		}
+		catch ( e : Eof )
+		{
+			f.close();
+		}
+	}
+	
+	// http://davidwalsh.name/backup-mysql-database-php
+	public function export( ?tableStr : String = "*" ) : String
+	{		
+		var output = "";
+		var tables : Array<String>;
+		
+		if ( tableStr == "*" )
+		{
+			tables = new Array<String>();
+			var result = cnx.request( "SHOW TABLES" );
+			for ( row in result )
+				tables.push( Reflect.field( row, "Tables_in_" + database ) );
+		}
+		else
+		{
+			tables = tableStr.split( "," );
+			for ( i in 0 ... tables.length )
+				tables[i] = tables[i].trim();
+		}
+		
+		for ( table in tables )
+		{
+			var result = cnx.request( "SELECT * FROM " + table );
+			var numFields = result.nfields;
+			
+			output += "DROP TABLE IF EXISTS " + table + ";";
+			
+			var createSql = cnx.request( "SHOW CREATE TABLE " + table ).next();
+			//trace( createSql );
+			//break;
+			output += "\n\n" + Reflect.field( createSql, "Create Table" ) + ";\n\n";
+			
+			for ( i in 0 ... numFields )
+			{
+				for ( row in result )
+				{
+					output += "INSERT INTO " + table + " VALUES (";
+					
+					var j = 0;
+					for ( f in Reflect.fields( row ) )
+					{
+						var value = Reflect.field( row, f );
+						value = untyped __call__( "addslashes", value );
+						value = untyped __call__( "ereg_replace", "\n", "\\n", value );
+						if ( value != "" && value != null )
+							output += '"' + value + '"';
+						else
+							output += '""';
+						if ( j < numFields - 1 )
+							output += ",";
+						j++;
+					}
+					output += ");\n";
+				}
+			}
+			output += "\n\n\n";
+		}
+		
+		return output;
 	}
 }
