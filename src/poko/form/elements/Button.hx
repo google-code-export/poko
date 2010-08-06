@@ -51,7 +51,7 @@ class Button extends FormElement
 	
 	override public function render() :String
 	{
-		return "<button type=\""+type+"\" name=\"" +form.name+"_" +name+ "\" id=\"" +form.name+"_" +name+ "\" value=\""+value+"\" "+attributes+" >" +label+ "</button>";
+		return "<button type=\""+type+"\" class=\""+ getClasses() +"\" name=\"" +form.name+"_" +name+ "\" id=\"" +form.name+"_" +name+ "\" value=\""+value+"\" "+attributes+" >" +label+ "</button>";
 	}
 	
 	public function toString() :String

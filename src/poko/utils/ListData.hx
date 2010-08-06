@@ -89,9 +89,9 @@ class ListData
 		var data:List<Dynamic> = new List();
 		
 		var c = startCounter;
-		for (i in array) 
+		for (v in array) 
 		{
-			data.add( { key:i, value:c } );
+			data.add( { key:c, value:v } );
 			c++;
 		}
 		return data;

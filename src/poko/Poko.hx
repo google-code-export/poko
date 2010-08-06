@@ -48,6 +48,7 @@ class Poko
 	
 	public var url:Url;
 	public var config:Config;
+	public var controllerId:String;
 	public var controller:Controller;
 	public var params:Hash <Dynamic>;
 	
@@ -85,14 +86,16 @@ class Poko
 		url = new Url(Web.getURI());
 		
 		var useURLRewrite = false;
-		var controllerTypeName : String = useURLRewrite ? findControllerClassByRewrite() : findControllerClass();	
-		var controllerType = Type.resolveClass( "site." + controllerTypeName );
+		
+		controllerId = useURLRewrite ? findControllerClassByRewrite() : findControllerClass();	
+		
+		var controllerClass = Type.resolveClass( "site." + controllerId );
 		//var controllerType = Type.resolveClass("site." + findControllerClass());
 		
 		var is404 = false;
-		if (controllerType != null)
+		if (controllerClass != null)
 		{
-			controller = Type.createInstance(controllerType, []) ; 
+			controller = Type.createInstance(controllerClass, []) ; 
 			if (Std.is(controller, Controller))
 				controller.handleRequest();
 			else 

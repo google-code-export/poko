@@ -45,14 +45,14 @@ class Input extends FormElement
 	
 	public var formatter:Formatter;
 	
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attibutes:String="") 
+	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators=null, ?attributes:String="") 
 	{
 		super();
 		this.name = name;
 		this.label = label;
 		this.value = value;
 		this.required = required;
-		this.attributes = attibutes;
+		this.attributes = attributes;
 		this.password = false;
 		
 		showLabelAsDefaultValue = false;
@@ -77,7 +77,7 @@ class Input extends FormElement
 		
 		var style = useSizeValues ? "style=\"width:" + width + "px\"" : "";
 		
-		return "<input "+style+" class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\" />" + (if(required && form.isSubmitted() && printRequired) " required");
+		return "<input "+style+" class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\"  "+attributes+" />" + (if(required && form.isSubmitted() && printRequired) " required");
 	}
 	
 	public function toString() :String

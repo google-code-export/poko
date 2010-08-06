@@ -74,7 +74,6 @@ class Controller
 		for (comp in components) comp.post();
 		
 		onFinal();
-		
 	}
 	
 	public function render():Void
