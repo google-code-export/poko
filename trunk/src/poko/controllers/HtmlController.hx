@@ -43,6 +43,8 @@ class HtmlController extends Controller
 {
 	public var head:HtmlHeader;
 	
+	public var identifier:String;
+	
 	public var jsBindings:Hash<JsBinding>;
 	public var jsCalls:List<String>;
 	
@@ -51,6 +53,9 @@ class HtmlController extends Controller
 	public function new() 
 	{
 		super();
+		
+		var s = Type.getClassName(Type.getClass(this));
+		identifier = s.substr(s.indexOf(".")+1);
 		
 		head = new HtmlHeader();
 		head.title = "haxe poko";
