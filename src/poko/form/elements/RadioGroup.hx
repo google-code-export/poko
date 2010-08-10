@@ -64,10 +64,12 @@ class RadioGroup extends FormElement
 		{
 			for (row in data)
 			{
+				s += '<div class="radioItem">';
 				var radio = "<input type=\"radio\" name=\""+n+"\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (row.key == Std.string(value) ? "checked":"") +" />\n";
 				var label = "<label for=\"" + n+c + "\" >" + row.value  +"</label>";
 				
 				s += labelRight ? radio + " "+label+" ": label+" "+radio+" ";
+				s += '</div>';
 				if (verticle) s += "<br />";
 				c++;
 			}	
