@@ -46,6 +46,13 @@ class HaxeTemplate implements Renderable
 		return "";
 	}
 	
+	public static function parse(template:String, ?data:Dynamic)
+	{
+		var t = new HaxeTemplate(template);
+		t.data = data;
+		return t.render();
+	}
+	
 	public function assign(field:String, value:Dynamic):Void
 	{
 		Reflect.setField(data, field, value);
