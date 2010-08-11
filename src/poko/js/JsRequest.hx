@@ -36,6 +36,8 @@ class JsRequest
 {
 	public var app:JsPoko;
 	
+	public var dom:JsDom;
+	
 	public var remoting:HttpAsyncConnection;
 	
 	public function new() 
@@ -44,6 +46,8 @@ class JsRequest
 	
 	public function init()
 	{
+		dom = new JsDom();
+		
 		remoting = HttpAsyncConnection.urlConnect(Lib.window.location.href);
 		remoting.setErrorHandler( function(e) trace("Remoting Error : " + Std.string(e)) );
 	}

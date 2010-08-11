@@ -27,6 +27,9 @@
 
 
 package poko.form.elements;
+import haxe.Md5;
+import haxe.Timer;
+import php.FileSystem;
 import poko.Poko;
 import poko.form.Form;
 import poko.form.FormElement;
@@ -34,40 +37,90 @@ import poko.utils.PhpTools;
 
 class FileUpload extends FormElement
 {
-
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false ) 
+	public var toFolder:String;
+	public var keepFullFileName:Bool;
+	
+	public function new(name:String, label:String, ?value:String, ?required:Bool=false,  ?toFolder:String=null, ?keepFullFileName:Bool=true ) 
 	{
 		super();
 		this.name = name;
 		this.label = label;
 		this.value = value;
 		this.required = required;
+		this.toFolder = toFolder != null ? toFolder : Poko.instance.config.applicationPath + "res/temp/";
+		this.keepFullFileName = keepFullFileName;
 	}
 	
 	override public function populate()
 	{
 		var n = form.name + "_" + name;
+		var previous = Poko.instance.params.get(n+"__previous");
 		var file:Hash<String> = PhpTools.getFilesInfo().get(n);
 		
 		if (file != null && file.get("error") == "0")
 		{
-			var v = file.get("name");
-			
-			if (v != null)
+			if (FileSystem.exists(file.get("tmp_name")))
 			{
-				value = v;
+				// delete previous uploaded file
+				var oldfile = keepFullFileName ? previous : toFolder + previous;
+				if (previous != null && FileSystem.exists(oldfile))
+					FileSystem.deleteFile(oldfile);
+				
+				// move upladed file to toFolder
+				var newname = Md5.encode(Timer.stamp() + file.get("name")) + file.get("name");
+				
+				PhpTools.moveFile(file.get("tmp_name"), toFolder+newname);
+				
+				value = keepFullFileName ? toFolder+newname : newname;
 			}
+		} 
+		else if (previous != null) 
+		{
+			// no upload- remember previous value
+			value = previous;
 		}
 	}
 	
 	override public function render():String
 	{
 		var n = form.name + "_" +name;
+		var path = toFolder.substr((Poko.instance.config.applicationPath + "res/").length);
+		
 		var str:String = "";
 		
-		str += "<input type=\"file\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " />";
+		str += '<span class="fileName">'+getOriginalFileName()+'</span><br/>';
+		str += '<input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' />';
+		str += '<input type="hidden" name="' + n + '__previous" id="' + n + '__previous" value="'+value+'"/>';
 		
 		return str;
+	}
+	
+	/* 
+	 * Contains MD5 and original filename.
+	 */
+	public function getFileName()
+	{
+		if (keepFullFileName)
+		{
+			var s = Std.string(value);
+			return s.substr(s.lastIndexOf("/") + 1);
+		} else {
+			return value;
+		}	
+	}
+	
+	/* 
+	 * Orginal filename.
+	 */
+	public function getOriginalFileName()
+	{
+		if (keepFullFileName)
+		{
+			var s = Std.string(value);
+			return s.substr(s.lastIndexOf("/") + 33);
+		} else {
+			return Std.string(value).substr(33);
+		}	
 	}
 	
 	public function toString() :String
