@@ -35,6 +35,12 @@ class DbBackup extends CmsTemplate
 	
 	static inline var RESTORE_COMMENT : String = "# RESTORE_COMMENT ";
 	
+	public function new()
+	{
+		authenticationRequired = ["cms_admin"];
+		super();
+	}
+	
 	override public function init()
 	{
 		super.init();

@@ -64,7 +64,8 @@ class FormElement
 		
 		if (value == "" && required) 
 		{
-			errors.add("Please enter '" + ((label != null && label != "") ? label : name) + "'");
+			//errors.add("Please enter '" + ((label != null && label != "") ? label : name) + "'");
+			errors.add("<span class=\"formErrorsField\">" + ((label != null && label != "") ? label : name) + "</span> required.");
 			return false;
 		} 
 		else if(value != "")
@@ -113,7 +114,7 @@ class FormElement
 		
 		for (val in validators)
 			for(err in val.errors)
-				errors.add(label + " : " + err);
+				errors.add("<span class=\"formErrorsField\">" + label + "</span> : " + err);
 		
 		return errors;
 	}
@@ -157,26 +158,8 @@ class FormElement
 	public function getLabel():String
 	{
 		var n = form.name + "_" + name;
-		
-		
-		
-		/*var css = "";
-		var requiredSet = false;
-		if (required) {
-			css = form.labelRequiredClass;
-			if (form.isSubmitted() && required && value == "") {
-				css = form.labelRequiredErrorClass;
-				requiredSet = true;
-			}
-		}
-		if(!requiredSet && form.isSubmitted() && !isValid()){
-			css = form.labelErrorClass;
-		}
-		
-		if ( cssClass != null )
-			css += " " + cssClass;*/
-		
-		return "<label for=\"" + n + "\" class=\""+getLabelClasses()+"\">" + label +(if(required) form.labelRequiredIndicator) +"</label>";
+	
+		return "<label for=\"" + n + "\" class=\""+getLabelClasses()+"\" id=\"" + n + "Label\">" + label +(if(required) form.labelRequiredIndicator) +"</label>";
 	}
 	
 	public function getClasses() : String
