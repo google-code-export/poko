@@ -177,6 +177,9 @@ class Form
 			if (!element.isValid()) 
 				valid = false;
 		
+		if (extraErrors.length > 0)
+			valid = false;
+			
 		return valid;
 	}	
 	

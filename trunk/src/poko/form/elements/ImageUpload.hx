@@ -35,69 +35,33 @@ import poko.form.Form;
 import poko.form.FormElement;
 import poko.utils.PhpTools;
 
-class ImageUpload extends FormElement
+class ImageUpload extends FileUpload
 {
 	public var imageServiceUrl:String;
 	public var imageServicePreset:String;
-	public var tempFolder:String;
 	
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?imageServiceUrl:String=null, ?imageServicePreset=null, ?tempFolder:String=null ) 
+	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?imageServiceUrl:String=null, ?imageServicePreset=null, ?toFolder:String=null, ?keepFullFileName:Bool=true ) 
 	{
-		super();
-		this.name = name;
-		this.label = label;
-		this.value = value;
-		this.required = required;
+		super(name, label, value, required, toFolder, keepFullFileName);
+		
 		this.imageServiceUrl = imageServiceUrl != null ? imageServiceUrl : "?request=services.Image";
 		this.imageServicePreset = imageServicePreset != null ? imageServicePreset : "thumb";
-		this.tempFolder = tempFolder != null ? tempFolder : "temp/";
-	}
-	
-	override public function populate()
-	{
-		var n = form.name + "_" + name;
-		var previous = Poko.instance.params.get(n+"__previous");
-		var file:Hash<String> = PhpTools.getFilesInfo().get(n);
-		
-		if (file != null &&file.get("error") == "0")
-		{
-			if (FileSystem.exists(file.get("tmp_name")))
-			{
-				var newpath = Poko.instance.config.applicationPath + "res/" + tempFolder + Md5.encode(Timer.stamp()+file.get("name")) + file.get("name");
-				PhpTools.moveFile(file.get("tmp_name"), newpath);
-				value = newpath;
-			}
-			
-		} else if(previous != null) {
-			value = previous;
-		}
 	}
 	
 	override public function render():String
 	{
 		var n = form.name + "_" +name;
-		var str:String = "";
+		var path = toFolder.substr((Poko.instance.config.applicationPath + "res/").length);
 		
-		str += '<img src="'+imageServiceUrl+'&preset='+imageServicePreset+'&src='+tempFolder+getPathFileName()+'" /><br/>';
+		var str:String = "";
+		str += '<img src="'+imageServiceUrl+'&preset='+imageServicePreset+'&src='+path+getFileName()+'" /><br/>';
 		str += '<input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' />';
 		str += '<input type="hidden" name="' + n + '__previous" id="' + n + '__previous" value="'+value+'"/>';
 		
 		return str;
 	}
 	
-	public function getPathFileName()
-	{
-		var s = Std.string(value);
-		return s.substr(s.lastIndexOf("/") + 1);
-	}
-	
-	public function getFileName()
-	{
-		var s = Std.string(value);
-		return s.substr(s.lastIndexOf("/") + 33);
-	}
-	
-	public function toString() :String
+	override public function toString() :String
 	{
 		return render();
 	}
