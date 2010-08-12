@@ -127,7 +127,8 @@ class JsDefinitionElement extends JsRequest
 	
 	override public function main()
 	{
-		types = ["text", "number", "bool", "image", "richtext-wym", "richtext-tinymce", "date", "association", "multilink", "keyvalue", "read-only", "order", "link", "hidden"];
+		//types = ["text", "number", "bool", "image", "richtext-wym", "richtext-tinymce", "date", "association", "multilink", "keyvalue", "read-only", "order", "link", "hidden", "location"];
+		types = ["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden", "enum", "post-sql-value", "location"];
 		var types = types;
 		var ths = this;
 		var typeSelector:js.Select = cast Lib.document.getElementById("form_type");
@@ -145,7 +146,8 @@ class JsDefinitionElement extends JsRequest
 
 	function hideAllElements()
 	{
-		new JQuery("select[id^='form_def_'],input[id^='form_def_'],textarea[id^='form_def_']").parent().parent().css("display", "none");
+		//new JQuery("select[id^='form_def_'],input[id^='form_def_'],textarea[id^='form_def_']").parent().parent().css("display", "none");
+		new JQuery("select[id^='form_def_'],input[id^='form_def_'],textarea[id^='form_def_']").closest("tr").css("display", "none");
 		new JQuery("fieldset[id^='form_def_']").css("display", "none");
 	}
 	
@@ -153,9 +155,11 @@ class JsDefinitionElement extends JsRequest
 	{
 		if (Lib.isIE)
 		{
-			new JQuery("[id^='form_def_" + field + "']").parent().parent().css("display", "block");
+			//new JQuery("[id^='form_def_" + field + "']").parent().parent().css("display", "block");
+			new JQuery("[id^='form_def_" + field + "']").closest("tr").css("display", "block");
 		}else {
-			new JQuery("[id^='form_def_" + field + "']").parent().parent().css("display", "table-row");
+			//new JQuery("[id^='form_def_" + field + "']").parent().parent().css("display", "table-row");
+			new JQuery("[id^='form_def_" + field + "']").closest("tr").css("display", "table-row");
 		}
 		new JQuery("fieldset[id^='form_def_" + field + "']").css("display", "block");
 	}

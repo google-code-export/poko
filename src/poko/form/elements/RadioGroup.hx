@@ -36,16 +36,16 @@ class RadioGroup extends FormElement
 	public var selectMessage:String;
 	public var labelLeft:Bool;
 	public var labelRight:Bool;
-	public var verticle:Bool;
+	public var vertical:Bool;
 	
-	public function new(name:String, label:String, ?data:List<KeyVal>, ?selected:String, ?defaultValue:String, ?verticle:Bool=true, ?labelRight:Bool=true) 
+	public function new(name:String, label:String, ?data:List<KeyVal>, ?selected:String, ?defaultValue:String, ?vertical:Bool=true, ?labelRight:Bool=true) 
 	{
 		super();
 		this.name = name;
 		this.label = label;
 		this.data = data != null ? data : new List();
 		this.value = selected != null ? selected : defaultValue;
-		this.verticle = verticle;
+		this.vertical = vertical;
 		this.labelRight = labelRight;
 	}
 	
@@ -64,13 +64,14 @@ class RadioGroup extends FormElement
 		{
 			for (row in data)
 			{
-				s += '<div class="radioItem">';
+				var vClass = vertical ? " radioItemVertical" : " radioItemHorizontal";
+				s += '<div class="radioItem'+vClass+'">';
 				var radio = "<input type=\"radio\" name=\""+n+"\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (row.key == Std.string(value) ? "checked":"") +" />\n";
 				var label = "<label for=\"" + n+c + "\" >" + row.value  +"</label>";
 				
 				s += labelRight ? radio + " "+label+" ": label+" "+radio+" ";
 				s += '</div>';
-				if (verticle) s += "<br />";
+				//if (verticle) s += "<br />";
 				c++;
 			}	
 		}
