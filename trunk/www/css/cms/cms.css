@@ -316,6 +316,12 @@ a.leftNavEdit {
 	width:100px;
 }
 
+.radioItemHorizontal
+{
+	float: left;
+	margin-right: 5px;
+}
+
 .contentTd
 {
 	width:450px;

@@ -742,7 +742,8 @@ class DatasetItem extends DatasetBase
 					options.add( { key:"1", value:trueLable } );
 					options.add( { key:"0", value:falseLable } );
 					
-					var el = new RadioGroup(element.name, label, options, value, "1", false);
+					//var el = new RadioGroup(element.name, label, options, value, "1", false);
+					var el = new RadioGroup(element.name, label, options, value, element.properties.defaultValue, false);
 					el.description = element.properties.description;
 					form.addElement(el);
 					

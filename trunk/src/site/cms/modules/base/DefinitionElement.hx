@@ -326,6 +326,7 @@ class DefinitionElement extends DefinitionsBase
 		
 		form.addElement(new Input( "def_bool_labelTrue", "Label 'true'", data.labelTrue), "properties");
 		form.addElement(new Input( "def_bool_labelFalse", "Label 'false'", data.labelFalse), "properties");
+		form.addElement(new RadioGroup( "def_bool_defaultValue", "Default Value", truefalse, data.defaultValue, "0", false), "properties");
 		form.addElement(new Input( "def_bool_showHideFields", "Hide Field(s)", data.showHideFields), "properties");
 		form.addElement(new RadioGroup( "def_bool_showHideValue", "Hide on...", truefalse, data.showHideValue, "0", false), "properties");
 		
