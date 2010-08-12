@@ -63,7 +63,7 @@ class FileUpload extends FormElement
 			{
 				// delete previous uploaded file
 				var oldfile = keepFullFileName ? previous : toFolder + previous;
-				if (previous != null && FileSystem.exists(oldfile))
+				if (previous != null && previous != "" && FileSystem.exists(oldfile))
 					FileSystem.deleteFile(oldfile);
 				
 				// move upladed file to toFolder
