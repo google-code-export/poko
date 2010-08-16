@@ -47,12 +47,15 @@ class FormElement
 	public var active:Bool;
 	public var validators:List<Validator>;
 	public var cssClass:String;
+	public var inited:Bool;
 	
 	public function new() 
 	{
 		active = true;
 		errors = new List();
 		validators = new List();
+		
+		inited = false;
 	}
 	
 	public function isValid():Bool
@@ -90,6 +93,12 @@ class FormElement
 		return true;
 	}
 	
+	
+	public function init()
+	{
+		inited = true;
+	}
+	
 	public function addValidator(validator:Validator)
 	{
 		validators.add(validator);
@@ -102,6 +111,9 @@ class FormElement
 	
 	public function populate():Void
 	{
+		if (!inited)
+			init();
+	
 		var n = form.name + "_" + name;
 		var v = Poko.instance.params.get(n);
 		
@@ -121,6 +133,9 @@ class FormElement
 	
 	public function render():String
 	{
+		if (!inited)
+			init();
+			
 		return value;
 	}
 	
