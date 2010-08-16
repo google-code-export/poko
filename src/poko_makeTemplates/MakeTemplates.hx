@@ -80,8 +80,9 @@ class MakeTemplates
 			}
 		}
 		
-		
-		neko.Sys.command("temploc2.exe", tempoArgs); 
+		if (neko.Sys.systemName() == "Windows")
+            neko.Sys.command("temploc2.exe", tempoArgs)
+        else neko.Sys.command("./temploc2", tempoArgs);
 		
 		cleanUp();
 	}

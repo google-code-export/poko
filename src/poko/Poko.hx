@@ -57,6 +57,7 @@ class Poko
 	
 	public function new() 
 	{
+		
 		//var time1 = Timer.stamp();
 		/*
 		var data = {one:"one", two:null}
@@ -121,7 +122,8 @@ class Poko
 	
 	private function findControllerClass():String
 	{
-		var c:String = url.getSegments()[0] != "" ? url.getSegments()[0] : (params.get("request") != null ? params.get("request") : config.defaultController);
+		//var tmp = ();
+		var c:String = url.getSegments()[0] != "" ? url.getSegments()[0] : params.get("request") != null ? params.get("request") : config.defaultController;
 
 		if (c.lastIndexOf(".") != -1)
 		{
