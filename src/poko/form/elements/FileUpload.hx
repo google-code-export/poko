@@ -55,16 +55,18 @@ class FileUpload extends FormElement
 	{
 		var n = form.name + "_" + name;
 		var previous = Poko.instance.params.get(n+"__previous");
-		var file:Hash<String> = PhpTools.getFilesInfo().get(n);
+		var file:Hash<Dynamic> = PhpTools.getFilesInfo().get(n);
 		
-		if (file != null && file.get("error") == "0")
+		if (file != null && file.get("error") == 0)
 		{
 			if (FileSystem.exists(file.get("tmp_name")))
 			{
 				// delete previous uploaded file
 				var oldfile = keepFullFileName ? previous : toFolder + previous;
 				if (previous != null && previous != "" && FileSystem.exists(oldfile))
+				{
 					FileSystem.deleteFile(oldfile);
+				}
 				
 				// move upladed file to toFolder
 				var newname = Md5.encode(Timer.stamp() + file.get("name")) + file.get("name");

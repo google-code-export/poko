@@ -93,6 +93,11 @@ class FormElement
 		return true;
 	}
 	
+	public function checkValid()
+	{
+		value == "";
+	}
+	
 	
 	public function init()
 	{
