@@ -69,7 +69,7 @@ class PhpTools
 			throw "Error uploading '" + filename + "' to '" + destination + "'";
 	}
 	
-	public static function getFilesInfo():Hash <Hash<String>>
+	public static function getFilesInfo():Hash <Hash<Dynamic>>
 	{
 		var files:Hash<NativeArray> = php.Lib.hashOfAssociativeArray(untyped __php__("$_FILES"));
 		var output:Hash < Hash < String >> = new Hash();

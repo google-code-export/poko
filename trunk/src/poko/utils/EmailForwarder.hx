@@ -37,7 +37,7 @@ class EmailForwarder
 	}
 	
 	public static function forwardMultipart( to : String, subject : String, from : String, plainMessage : String, htmlMessage : String, ?proxyUrl : String = null, ?proxyCode : String = null ) : Bool
-	{			
+	{
 		var notice_text = "This is a multi-part message in MIME format.";
 
 		var semi_rand = Md5.encode( Std.string( Timer.stamp() ) );

@@ -4,7 +4,7 @@ import poko.Poko;
 
 class Url
 {
-	var uri:String;
+	public var uri:String;
 	
 	public function new(uri:String)
 	{

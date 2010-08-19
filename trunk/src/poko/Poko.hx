@@ -136,7 +136,8 @@ class Poko
 	
 	public function getDb()
 	{
-		if (__db == null) __db = new Db();
+		if (__db == null) 
+			__db = new Db();
 		__db.connect(config.database_host, config.database_database, config.database_user, config.database_password, config.database_port);
 		return __db;
 	}
