@@ -20,6 +20,7 @@ class DateDropdowns extends FormElement
 	
 	public var yearMin:Int;
 	public var yearMax:Int;
+	
 	private var daySelector:Selectbox;
 	private var monthSelector:Selectbox;
 	private var yearSelector:Selectbox;
@@ -42,9 +43,9 @@ class DateDropdowns extends FormElement
 		minOffset = null;
 		
 		var data:Dynamic = {};
-		daySelector = new Selectbox("", "Birth Day",ListData.getDays(),data.childsBirthDay,true,"Day",'title="Day"');
-		monthSelector = new Selectbox("", "Birth Month",ListData.getMonths(),data.childsBirthMonth,true,"Month", 'title="Month"');
-		yearSelector = new Selectbox("", "Birth Year", ListData.getYears(1920, 2010, true), data.childsBirthYear, true, "Year", 'title="Year"');
+		daySelector = new Selectbox("", "Birth Day",ListData.getDays(),data.childsBirthDay,true,"-Day-",'title="Day"');
+		monthSelector = new Selectbox("", "Birth Month",ListData.getMonths(),data.childsBirthMonth,true,"-Month-", 'title="Month"');
+		yearSelector = new Selectbox("", "Birth Year", ListData.getYears(1920, 2010, true), data.childsBirthYear, true, "-Year-", 'title="Year"');
 	}
 	
 	override public function init()
@@ -55,8 +56,42 @@ class DateDropdowns extends FormElement
 		form.addElement(monthSelector);
 		form.addElement(yearSelector);
 	}
-		
+	
 	override public function populate()
+	{
+		var n = form.name + "_" + name;
+		var day = Std.parseInt(Poko.instance.params.get(n + "Day"));
+		var month = Std.parseInt(Poko.instance.params.get(n + "Month"));
+		var year = Std.parseInt(Poko.instance.params.get(n + "Year"));
+		
+		value = (day != null && month != null && year != null ) ? new Date(year, month - 1, day, 0, 0, 0) : null;
+		
+		trace("pop value: " + value);
+	}
+	
+	override public function isValid():Bool
+	{
+		var valid = super.isValid();
+		
+		if ( required )
+		{
+			var n = form.name + "_" + name;
+			var day = Std.parseInt(Poko.instance.params.get(n + "Day"));
+			var month = Std.parseInt(Poko.instance.params.get(n + "Month"));
+			var year = Std.parseInt(Poko.instance.params.get(n + "Year"));
+			
+			if (day == null || month == null || year == null )
+			{
+				errors.add("Invalid date!");
+				return false;
+			}
+			return true;
+		}
+		
+		return valid;
+	}
+	
+	/*override public function populate()
 	{
 		var n = form.name + "_" + name;
 		var v1 = Poko.instance.params.get(n + "Day");
@@ -70,7 +105,7 @@ class DateDropdowns extends FormElement
 			if (v1 != null && v2 != null && v3 != null && v1 != "" && v2 != "" && v3 != "") 
 				value = new Date(v3,Std.parseInt(v2)-1,v1,0,0,0);
 		}
-	}
+	}*/
 	
 	override public function render():String
 	{		

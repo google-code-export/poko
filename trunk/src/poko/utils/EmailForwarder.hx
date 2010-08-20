@@ -36,7 +36,7 @@ class EmailForwarder
 		}
 	}
 	
-	public static function forwardMultipart( to : String, subject : String, from : String, plainMessage : String, htmlMessage : String, ?proxyUrl : String = null, ?proxyCode : String = null ) : Bool
+	public static function forwardMultipart( to : String, subject : String, from : String, plainMessage : String, htmlMessage : String, ?replyTo : String=null, ?proxyUrl : String = null, ?proxyCode : String = null ) : Bool
 	{
 		var notice_text = "This is a multi-part message in MIME format.";
 
@@ -62,7 +62,10 @@ class EmailForwarder
 
 		body += "--" + mime_boundary + "--";
 		
-		var headers = "From: " + from + "\n" + "MIME-Version: 1.0\n" + "Content-Type: multipart/alternative;\n" + "     boundary=" + mime_boundary_header;
+		var headers = "From: " + from + "\n";
+		if ( replyTo != null && replyTo != "" )
+			headers += "Reply-To: " + replyTo + "\n";
+		headers += "MIME-Version: 1.0\n" + "Content-Type: multipart/alternative;\n" + "     boundary=" + mime_boundary_header;		
 		
 		return forwardEmail( to, subject, body, headers, proxyUrl, proxyCode );
 	}	

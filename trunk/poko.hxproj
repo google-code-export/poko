@@ -20,8 +20,7 @@
     <option directives="" />
     <option flashStrict="False" />
     <option mainClass="poko.Poko" />
-    <option override="False" />
-    <option verbose="False" />
+    <option enabledebug="False" />
     <option additional="-lib templo&#xA;-lib hscript" />
   </build>
   <!-- haxelib libraries -->

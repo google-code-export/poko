@@ -28,11 +28,15 @@
 package site.examples.templates;
 
 import poko.controllers.HtmlController;
+import poko.utils.html.ScriptList;
+import poko.utils.html.ScriptType;
 import site.examples.components.Navigation;
 
 class DefaultTemplate extends HtmlController
 {	
 	public var navigation:Navigation;
+	
+	public var scripts : ScriptList;
 	
 	override public function init()
 	{
@@ -41,17 +45,24 @@ class DefaultTemplate extends HtmlController
 		head.title = "haXe poko examples site";
 		
 		//app.defaultJS.add("js/firebug-lite.js");
-		head.css.add("css/reset.css");
+	/*	head.css.add("css/reset.css");
 		head.css.add("css/fonts.css");
 		head.css.add("css/normal.css");
 		
-		head.css.add("css/cms/cms.css");
+		head.css.add("css/cms/cms.css");*/
+		
+		scripts = new ScriptList();
+		//scripts.addExternal(ScriptType.css , "css/reset.css");
+		//scripts.addExternal(ScriptType.css, "css/fonts.css");
+		scripts.addExternal(ScriptType.css, "css/normal.css");
+		scripts.addExternal(ScriptType.css, "css/cms/cms.css");
 		
 		navigation = new Navigation();
 		navigation.addLink("Test Page",			"examples.TestPage");
 		navigation.addLink("Pages", 			"examples.Pages");
 		navigation.addLink("Basic data",	 	"examples.Basic");
 		navigation.addLink("Forms", 			"examples.Forms");
+		navigation.addLink("Dates", 			"examples.Dates");
 		navigation.addLink("Image Processing", "examples.ImageProcessing");
 		navigation.addLink("Complex Data", 		"examples.ComplexData");
 		

@@ -48,7 +48,7 @@ poko.js.JsRequest.prototype.app = null;
 poko.js.JsRequest.prototype.call = function(method,args) {
 	var func = Reflect.field(this,method);
 	if(func == null) {
-		haxe.Log.trace("Method does not exist: " + method,{ fileName : "JsRequest.hx", lineNumber : 57, className : "poko.js.JsRequest", methodName : "call"});
+		haxe.Log.trace("Method does not exist: " + method,{ fileName : "JsRequest.hx", lineNumber : 61, className : "poko.js.JsRequest", methodName : "call"});
 		return;
 	}
 	var a = haxe.Unserializer.run(args);
@@ -63,6 +63,7 @@ poko.js.JsRequest.prototype.call = function(method,args) {
 	}
 	func.apply(this,a);
 }
+poko.js.JsRequest.prototype.dom = null;
 poko.js.JsRequest.prototype.getCall = function(method,args) {
 	var str = ((this.getThis() + ".call('") + method) + "', ";
 	str += ("'" + haxe.Serializer.run(args)) + "'";
@@ -76,9 +77,10 @@ poko.js.JsRequest.prototype.getThis = function() {
 	return ("poko.js.JsPoko.instance.resolveRequest('" + Type.getClassName(Type.getClass(this))) + "')";
 }
 poko.js.JsRequest.prototype.init = function() {
+	this.dom = new poko.js.JsDom();
 	this.remoting = haxe.remoting.HttpAsyncConnection.urlConnect(js.Lib.window.location.href);
 	this.remoting.setErrorHandler(function(e) {
-		haxe.Log.trace("Remoting Error : " + Std.string(e),{ fileName : "JsRequest.hx", lineNumber : 48, className : "poko.js.JsRequest", methodName : "init"});
+		haxe.Log.trace("Remoting Error : " + Std.string(e),{ fileName : "JsRequest.hx", lineNumber : 52, className : "poko.js.JsRequest", methodName : "init"});
 	});
 }
 poko.js.JsRequest.prototype.main = function() {
@@ -610,15 +612,13 @@ StringTools.replace = function(s,sub,by) {
 	return s.split(sub).join(by);
 }
 StringTools.hex = function(n,digits) {
-	var neg = false;
-	if(n < 0) {
-		neg = true;
-		n = -n;
-	}
-	var s = n.toString(16);
-	s = s.toUpperCase();
+	var s = "";
+	var hexChars = "0123456789ABCDEF";
+	do {
+		s = hexChars.charAt(n & 15) + s;
+		n >>>= 4;
+	} while(n > 0);
 	if(digits != null) while(s.length < digits) s = "0" + s;
-	if(neg) s = "-" + s;
 	return s;
 }
 StringTools.prototype.__class__ = StringTools;
@@ -627,8 +627,8 @@ Reflect.__name__ = ["Reflect"];
 Reflect.hasField = function(o,field) {
 	if(o.hasOwnProperty != null) return o.hasOwnProperty(field);
 	var arr = Reflect.fields(o);
-	{ var $it2 = arr.iterator();
-	while( $it2.hasNext() ) { var t = $it2.next();
+	{ var $it0 = arr.iterator();
+	while( $it0.hasNext() ) { var t = $it0.next();
 	if(t == field) return true;
 	}}
 	return false;
@@ -638,9 +638,9 @@ Reflect.field = function(o,field) {
 	try {
 		v = o[field];
 	}
-	catch( $e3 ) {
+	catch( $e0 ) {
 		{
-			var e = $e3;
+			var e = $e0;
 			null;
 		}
 	}
@@ -657,19 +657,19 @@ Reflect.fields = function(o) {
 	var a = new Array();
 	if(o.hasOwnProperty) {
 		
-					for(var i in o)
-						if( o.hasOwnProperty(i) )
-							a.push(i);
-				;
+				for(var i in o)
+					if( o.hasOwnProperty(i) )
+						a.push(i);
+			;
 	}
 	else {
 		var t;
 		try {
 			t = o.__proto__;
 		}
-		catch( $e4 ) {
+		catch( $e0 ) {
 			{
-				var e = $e4;
+				var e = $e0;
 				{
 					t = null;
 				}
@@ -677,10 +677,10 @@ Reflect.fields = function(o) {
 		}
 		if(t != null) o.__proto__ = null;
 		
-					for(var i in o)
-						if( i != "__proto__" )
-							a.push(i);
-				;
+				for(var i in o)
+					if( i != "__proto__" )
+						a.push(i);
+			;
 		if(t != null) o.__proto__ = t;
 	}
 	return a;
@@ -785,8 +785,8 @@ site.cms.modules.base.js.JsDataset.prototype.onGetFilterInfo = function(response
 		var options = response.data;
 		select.style.display = "block";
 		select.innerHTML = "<option value=\"\" >- select -</option>";
-		{ var $it5 = options.keys();
-		while( $it5.hasNext() ) { var option = $it5.next();
+		{ var $it0 = options.keys();
+		while( $it0.hasNext() ) { var option = $it0.next();
 		{
 			select.innerHTML += ((("<option value=\"" + option) + "\">") + options.get(option)) + "</option>";
 		}
@@ -1010,6 +1010,14 @@ haxe.io.Error.OutsideBounds.__enum__ = haxe.io.Error;
 haxe.io.Error.Overflow = ["Overflow",1];
 haxe.io.Error.Overflow.toString = $estr;
 haxe.io.Error.Overflow.__enum__ = haxe.io.Error;
+poko.js.JsDom = function(p) { if( p === $_ ) return; {
+	null;
+}}
+poko.js.JsDom.__name__ = ["poko","js","JsDom"];
+poko.js.JsDom.prototype.resolve = function(id) {
+	return js.Lib.document.getElementById(id);
+}
+poko.js.JsDom.prototype.__class__ = poko.js.JsDom;
 haxe.remoting.HttpAsyncConnection = function(data,path) { if( data === $_ ) return; {
 	this.__data = data;
 	this.__path = path;
@@ -1038,9 +1046,9 @@ haxe.remoting.HttpAsyncConnection.prototype.call = function(params,onResult) {
 			var s1 = new haxe.Unserializer(response.substr(3));
 			ret = s1.unserialize();
 		}
-		catch( $e6 ) {
+		catch( $e0 ) {
 			{
-				var err = $e6;
+				var err = $e0;
 				{
 					ret = null;
 					ok = false;
@@ -1102,7 +1110,6 @@ Type.getSuperClass = function(c) {
 	return c.__super__;
 }
 Type.getClassName = function(c) {
-	if(c == null) return null;
 	var a = c.__name__;
 	return a.join(".");
 }
@@ -1115,9 +1122,9 @@ Type.resolveClass = function(name) {
 	try {
 		cl = eval(name);
 	}
-	catch( $e7 ) {
+	catch( $e0 ) {
 		{
-			var e = $e7;
+			var e = $e0;
 			{
 				cl = null;
 			}
@@ -1131,9 +1138,9 @@ Type.resolveEnum = function(name) {
 	try {
 		e = eval(name);
 	}
-	catch( $e8 ) {
+	catch( $e0 ) {
 		{
-			var err = $e8;
+			var err = $e0;
 			{
 				e = null;
 			}
@@ -1227,9 +1234,9 @@ Type.enumEq = function(a,b) {
 		var e = a.__enum__;
 		if(e != b.__enum__ || e == null) return false;
 	}
-	catch( $e9 ) {
+	catch( $e0 ) {
 		{
-			var e = $e9;
+			var e = $e0;
 			{
 				return false;
 			}
@@ -1275,6 +1282,9 @@ haxe.Unserializer.prototype.cache = null;
 haxe.Unserializer.prototype.get = function(p) {
 	return this.buf.cca(p);
 }
+haxe.Unserializer.prototype.getResolver = function() {
+	return this.resolver;
+}
 haxe.Unserializer.prototype.length = null;
 haxe.Unserializer.prototype.pos = null;
 haxe.Unserializer.prototype.readDigits = function() {
@@ -1290,9 +1300,8 @@ haxe.Unserializer.prototype.readDigits = function() {
 			this.pos++;
 			continue;
 		}
-		c -= 48;
-		if(c < 0 || c > 9) break;
-		k = k * 10 + c;
+		if(c < 48 || c > 57) break;
+		k = k * 10 + (c - 48);
 		this.pos++;
 	}
 	if(s) k *= -1;
@@ -1336,7 +1345,7 @@ haxe.Unserializer.prototype.unserialize = function() {
 	}break;
 	case 121:{
 		var len = this.readDigits();
-		if(this.buf.charAt(this.pos++) != ":" || this.length - this.pos < len) throw "Invalid string length";
+		if(this.buf.cca(this.pos++) != 58 || this.length - this.pos < len) throw "Invalid string length";
 		var s = this.buf.substr(this.pos,len);
 		this.pos += len;
 		s = StringTools.urlDecode(s);
@@ -1456,7 +1465,7 @@ haxe.Unserializer.prototype.unserialize = function() {
 	case 115:{
 		var len = this.readDigits();
 		var buf = this.buf;
-		if(buf.charAt(this.pos++) != ":" || this.length - this.pos < len) throw "Invalid bytes length";
+		if(this.buf.cca(this.pos++) != 58 || this.length - this.pos < len) throw "Invalid bytes length";
 		var codes = haxe.Unserializer.CODES;
 		if(codes == null) {
 			codes = haxe.Unserializer.initCodes();
@@ -1489,6 +1498,16 @@ haxe.Unserializer.prototype.unserialize = function() {
 		this.pos += len;
 		this.cache.push(bytes);
 		return bytes;
+	}break;
+	case 67:{
+		var name = this.unserialize();
+		var cl = this.resolver.resolveClass(name);
+		if(cl == null) throw "Class not found " + name;
+		var o = Type.createEmptyInstance(cl);
+		this.cache.push(o);
+		o.hxUnserialize(this);
+		if(this.buf.cca(this.pos++) != 103) throw "Invalid custom data";
+		return o;
 	}break;
 	default:{
 		null;
@@ -1571,8 +1590,8 @@ poko.js.JsPoko.prototype.resolveRequest = function(req) {
 	return this.requests.get(req);
 }
 poko.js.JsPoko.prototype.run = function() {
-	{ var $it10 = this.requests.iterator();
-	while( $it10.hasNext() ) { var req = $it10.next();
+	{ var $it0 = this.requests.iterator();
+	while( $it0.hasNext() ) { var req = $it0.next();
 	req.main();
 	}}
 }
@@ -1792,8 +1811,8 @@ haxe.Serializer.prototype.serialize = function(v) {
 		case List:{
 			this.buf.add("l");
 			var v1 = v;
-			{ var $it11 = v1.iterator();
-			while( $it11.hasNext() ) { var i = $it11.next();
+			{ var $it0 = v1.iterator();
+			while( $it0.hasNext() ) { var i = $it0.next();
 			this.serialize(i);
 			}}
 			this.buf.add("h");
@@ -1806,8 +1825,8 @@ haxe.Serializer.prototype.serialize = function(v) {
 		case Hash:{
 			this.buf.add("b");
 			var v1 = v;
-			{ var $it12 = v1.keys();
-			while( $it12.hasNext() ) { var k = $it12.next();
+			{ var $it1 = v1.keys();
+			while( $it1.hasNext() ) { var k = $it1.next();
 			{
 				this.serializeString(k);
 				this.serialize(v1.get(k));
@@ -1818,8 +1837,8 @@ haxe.Serializer.prototype.serialize = function(v) {
 		case IntHash:{
 			this.buf.add("q");
 			var v1 = v;
-			{ var $it13 = v1.keys();
-			while( $it13.hasNext() ) { var k = $it13.next();
+			{ var $it2 = v1.keys();
+			while( $it2.hasNext() ) { var k = $it2.next();
 			{
 				this.buf.add(":");
 				this.buf.add(k);
@@ -1856,10 +1875,19 @@ haxe.Serializer.prototype.serialize = function(v) {
 		}break;
 		default:{
 			this.cache.pop();
-			this.buf.add("c");
-			this.serializeString(Type.getClassName(c));
-			this.cache.push(v);
-			this.serializeFields(v);
+			if(v.hxSerialize != null) {
+				this.buf.add("C");
+				this.serializeString(Type.getClassName(c));
+				this.cache.push(v);
+				v.hxSerialize(this);
+				this.buf.add("g");
+			}
+			else {
+				this.buf.add("c");
+				this.serializeString(Type.getClassName(c));
+				this.cache.push(v);
+				this.serializeFields(v);
+			}
 		}break;
 		}
 	}break;
@@ -1999,9 +2027,9 @@ haxe.Http.prototype.request = function(post) {
 			try {
 				$r = r.status;
 			}
-			catch( $e14 ) {
+			catch( $e0 ) {
 				{
-					var e = $e14;
+					var e = $e0;
 					$r = null;
 				}
 			}
@@ -2028,8 +2056,8 @@ haxe.Http.prototype.request = function(post) {
 	if(this.async) r.onreadystatechange = onreadystatechange;
 	var uri = this.postData;
 	if(uri != null) post = true;
-	else { var $it15 = this.params.keys();
-	while( $it15.hasNext() ) { var p = $it15.next();
+	else { var $it1 = this.params.keys();
+	while( $it1.hasNext() ) { var p = $it1.next();
 	{
 		if(uri == null) uri = "";
 		else uri += "&";
@@ -2045,9 +2073,9 @@ haxe.Http.prototype.request = function(post) {
 		}
 		else r.open("GET",this.url,this.async);
 	}
-	catch( $e16 ) {
+	catch( $e2 ) {
 		{
-			var e = $e16;
+			var e = $e2;
 			{
 				this.onError(e.toString());
 				return;
@@ -2055,8 +2083,8 @@ haxe.Http.prototype.request = function(post) {
 		}
 	}
 	if(this.headers.get("Content-Type") == null && post && this.postData == null) r.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-	{ var $it17 = this.headers.keys();
-	while( $it17.hasNext() ) { var h = $it17.next();
+	{ var $it3 = this.headers.keys();
+	while( $it3.hasNext() ) { var h = $it3.next();
 	r.setRequestHeader(h,this.headers.get(h));
 	}}
 	r.send(uri);
@@ -2081,8 +2109,8 @@ site.cms.modules.base.js.JsKeyValueInput.__super__ = poko.js.JsRequest;
 for(var k in poko.js.JsRequest.prototype ) site.cms.modules.base.js.JsKeyValueInput.prototype[k] = poko.js.JsRequest.prototype[k];
 site.cms.modules.base.js.JsKeyValueInput.prototype.addKeyValueInput = function(id) {
 	var set;
-	{ var $it18 = this.keyValueSets.iterator();
-	while( $it18.hasNext() ) { var set1 = $it18.next();
+	{ var $it0 = this.keyValueSets.iterator();
+	while( $it0.hasNext() ) { var set1 = $it0.next();
 	{
 		if(set1.id == id) set1.addRow();
 	}
@@ -2090,8 +2118,8 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.addKeyValueInput = function(i
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.flushKeyValueInputs = function() {
 	var set;
-	{ var $it19 = this.keyValueSets.iterator();
-	while( $it19.hasNext() ) { var set1 = $it19.next();
+	{ var $it0 = this.keyValueSets.iterator();
+	while( $it0.hasNext() ) { var set1 = $it0.next();
 	{
 		set1.flush();
 	}
@@ -2101,8 +2129,8 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.flushKeyValueInputs = functio
 site.cms.modules.base.js.JsKeyValueInput.prototype.keyValueSets = null;
 site.cms.modules.base.js.JsKeyValueInput.prototype.main = function() {
 	var set;
-	{ var $it20 = this.keyValueSets.iterator();
-	while( $it20.hasNext() ) { var set1 = $it20.next();
+	{ var $it0 = this.keyValueSets.iterator();
+	while( $it0.hasNext() ) { var set1 = $it0.next();
 	{
 		set1.setup();
 	}
@@ -2334,9 +2362,9 @@ js.Boot.__string_rec = function(o,s) {
 		try {
 			tostr = o.toString;
 		}
-		catch( $e21 ) {
+		catch( $e0 ) {
 			{
-				var e = $e21;
+				var e = $e0;
 				{
 					return "???";
 				}
@@ -2393,9 +2421,9 @@ js.Boot.__instanceof = function(o,cl) {
 		}
 		if(js.Boot.__interfLoop(o.__class__,cl)) return true;
 	}
-	catch( $e22 ) {
+	catch( $e0 ) {
 		{
-			var e = $e22;
+			var e = $e0;
 			{
 				if(cl == null) return false;
 			}
@@ -2521,8 +2549,8 @@ IntHash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it23 = it;
-	while( $it23.hasNext() ) { var i = $it23.next();
+	{ var $it0 = it;
+	while( $it0.hasNext() ) { var i = $it0.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -2565,11 +2593,11 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.assocSelectBox1 = null;
 site.cms.modules.base.js.JsDefinitionElement.prototype.assocSelectBox2 = null;
 site.cms.modules.base.js.JsDefinitionElement.prototype.assocSelectBox3 = null;
 site.cms.modules.base.js.JsDefinitionElement.prototype.hideAllElements = function() {
-	new JQuery("select[id^='form_def_'],input[id^='form_def_'],textarea[id^='form_def_']").parent().parent().css("display","none");
+	new JQuery("select[id^='form_def_'],input[id^='form_def_'],textarea[id^='form_def_']").closest("tr").css("display","none");
 	new JQuery("fieldset[id^='form_def_']").css("display","none");
 }
 site.cms.modules.base.js.JsDefinitionElement.prototype.main = function() {
-	this.types = ["text","number","bool","image","richtext-wym","richtext-tinymce","date","association","multilink","keyvalue","read-only","order","link","hidden"];
+	this.types = ["text","number","bool","image-file","richtext-tinymce","richtext-wym","date","association","keyvalue","read-only","order","link-to","link-value","hidden","enum","post-sql-value","location"];
 	var types = this.types;
 	var ths = this;
 	var typeSelector = js.Lib.document.getElementById("form_type");
@@ -2668,10 +2696,10 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.onChangeSelectbox = funct
 }
 site.cms.modules.base.js.JsDefinitionElement.prototype.showElements = function(field) {
 	if(js.Lib.isIE) {
-		new JQuery(("[id^='form_def_" + field) + "']").parent().parent().css("display","block");
+		new JQuery(("[id^='form_def_" + field) + "']").closest("tr").css("display","block");
 	}
 	else {
-		new JQuery(("[id^='form_def_" + field) + "']").parent().parent().css("display","table-row");
+		new JQuery(("[id^='form_def_" + field) + "']").closest("tr").css("display","table-row");
 	}
 	new JQuery(("fieldset[id^='form_def_" + field) + "']").css("display","block");
 }
@@ -2727,8 +2755,8 @@ site.cms.modules.media.js.JsGallery.prototype.main = function() {
 site.cms.modules.media.js.JsGallery.prototype.onContent = function(content) {
 	var container = new JQuery("#imageContent");
 	container.html("");
-	{ var $it24 = content.iterator();
-	while( $it24.hasNext() ) { var $t1 = $it24.next();
+	{ var $it0 = content.iterator();
+	while( $it0.hasNext() ) { var $t1 = $it0.next();
 	{
 		var item = [$t1];
 		if(item[0] != "." && item[0] != ".." && item[0] != ".svn") {
@@ -2781,9 +2809,9 @@ Hash.prototype.exists = function(key) {
 		key = "$" + key;
 		return this.hasOwnProperty.call(this.h,key);
 	}
-	catch( $e25 ) {
+	catch( $e0 ) {
 		{
-			var e = $e25;
+			var e = $e0;
 			{
 				
 				for(var i in this.h)
@@ -2826,8 +2854,8 @@ Hash.prototype.toString = function() {
 	var s = new StringBuf();
 	s.b[s.b.length] = "{";
 	var it = this.keys();
-	{ var $it26 = it;
-	while( $it26.hasNext() ) { var i = $it26.next();
+	{ var $it0 = it;
+	while( $it0.hasNext() ) { var i = $it0.next();
 	{
 		s.b[s.b.length] = i;
 		s.b[s.b.length] = " => ";
@@ -2933,24 +2961,25 @@ js.Boot.__init();
 	var JQuery = window.jQuery;
 }
 {
-	Date.now = function() {
+	var d = Date;
+	d.now = function() {
 		return new Date();
 	}
-	Date.fromTime = function(t) {
-		var d = new Date();
-		d["setTime"](t);
-		return d;
+	d.fromTime = function(t) {
+		var d1 = new Date();
+		d1["setTime"](t);
+		return d1;
 	}
-	Date.fromString = function(s) {
+	d.fromString = function(s) {
 		switch(s.length) {
 		case 8:{
 			var k = s.split(":");
-			var d = new Date();
-			d["setTime"](0);
-			d["setUTCHours"](k[0]);
-			d["setUTCMinutes"](k[1]);
-			d["setUTCSeconds"](k[2]);
-			return d;
+			var d1 = new Date();
+			d1["setTime"](0);
+			d1["setUTCHours"](k[0]);
+			d1["setUTCMinutes"](k[1]);
+			d1["setUTCSeconds"](k[2]);
+			return d1;
 		}break;
 		case 10:{
 			var k = s.split("-");
@@ -2967,17 +2996,17 @@ js.Boot.__init();
 		}break;
 		}
 	}
-	Date.prototype["toString"] = function() {
+	d.prototype["toString"] = function() {
 		var date = this;
 		var m = date.getMonth() + 1;
-		var d = date.getDate();
+		var d1 = date.getDate();
 		var h = date.getHours();
 		var mi = date.getMinutes();
 		var s = date.getSeconds();
-		return (((((((((date.getFullYear() + "-") + ((m < 10?"0" + m:"" + m))) + "-") + ((d < 10?"0" + d:"" + d))) + " ") + ((h < 10?"0" + h:"" + h))) + ":") + ((mi < 10?"0" + mi:"" + mi))) + ":") + ((s < 10?"0" + s:"" + s));
+		return (((((((((date.getFullYear() + "-") + ((m < 10?"0" + m:"" + m))) + "-") + ((d1 < 10?"0" + d1:"" + d1))) + " ") + ((h < 10?"0" + h:"" + h))) + ":") + ((mi < 10?"0" + mi:"" + mi))) + ":") + ((s < 10?"0" + s:"" + s));
 	}
-	Date.prototype.__class__ = Date;
-	Date.__name__ = ["Date"];
+	d.prototype.__class__ = d;
+	d.__name__ = ["Date"];
 }
 {
 	String.prototype.__class__ = String;
@@ -2994,6 +3023,7 @@ js.Boot.__init();
 	Void = { __ename__ : ["Void"]}
 }
 {
+	Math.__name__ = ["Math"];
 	Math.NaN = Number["NaN"];
 	Math.NEGATIVE_INFINITY = Number["NEGATIVE_INFINITY"];
 	Math.POSITIVE_INFINITY = Number["POSITIVE_INFINITY"];
@@ -3003,7 +3033,6 @@ js.Boot.__init();
 	Math.isNaN = function(i) {
 		return isNaN(i);
 	}
-	Math.__name__ = ["Math"];
 }
 {
 	js.Lib.document = document;
@@ -3020,16 +3049,16 @@ js.Boot.__init();
 		try {
 			return new ActiveXObject("Msxml2.XMLHTTP");
 		}
-		catch( $e27 ) {
+		catch( $e0 ) {
 			{
-				var e = $e27;
+				var e = $e0;
 				{
 					try {
 						return new ActiveXObject("Microsoft.XMLHTTP");
 					}
-					catch( $e28 ) {
+					catch( $e1 ) {
 						{
-							var e1 = $e28;
+							var e1 = $e1;
 							{
 								throw "Unable to create XMLHttpRequest object.";
 							}

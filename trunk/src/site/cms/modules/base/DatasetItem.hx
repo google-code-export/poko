@@ -448,7 +448,7 @@ class DatasetItem extends DatasetBase
 		}
 		
 		// add new files
-		var files:Hash <Hash<String>> = PhpTools.getFilesInfo();
+		var files:Hash <Hash<Dynamic>> = PhpTools.getFilesInfo();
 		// data to insert into DB
 		var data:Hash<String> = new Hash();
 		
@@ -667,9 +667,12 @@ class DatasetItem extends DatasetBase
 					form.addElement(el);
 					
 				case "date":
-					var d:Date = (value != "" && value != null) ? cast value : Date.now();	
+					//var d:Date = (value != "" && value != null) ? cast value : Date.now();	
+					var d:Date = (value != "" && value != null) ? cast value : null;	
 					if (element.properties.currentOnAdd == "1" && (form.getElement("__action").value == "add" || app.params.get("action") == "add"))
 						d = Date.now();
+						
+					d = null;
 									
 					var el = new DateSelector(element.name, label, d, element.properties.required);
 					if (element.properties.restrictMin == "1") el.minOffset = element.properties.minOffset;

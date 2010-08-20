@@ -50,7 +50,7 @@ class ComplexData extends DefaultTemplate
 		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));
 		form1.populateElements();
 		
-		var options = app.db.request("SELECT `id` as 'value', `name` as 'key' FROM example_projects");
+		var options = app.db.request("SELECT `id` as 'key', `name` as 'value' FROM example_projects");
 		
 		for(option in options)
 			form1.getElementTyped("project", Selectbox).addOption(option);
@@ -60,6 +60,7 @@ class ComplexData extends DefaultTemplate
 		
 		if (form1.isSubmitted())
 		{
+			trace( form1.getData() );
 			projectId = form1.getData().project;
 			
 			if (projectId != "") 

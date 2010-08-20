@@ -30,6 +30,7 @@ package poko.form.elements;
 import poko.form.Form;
 import poko.form.FormElement;
 import poko.form.Validator;
+import poko.Poko;
 import poko.utils.ListData;
 import site.cms.common.DateTimeMode;
 
@@ -46,9 +47,19 @@ class DateSelector extends FormElement
 		super();
 		this.name = name;
 		this.label = label;
-		//trace( value );
-		this.datetime = Std.string(value);
-		this.value = datetime.substr(0, 10);
+
+		//trace("DS init v: " + value);
+		if ( value != null )
+		{
+			this.datetime = Std.string(value);
+			this.value = datetime.substr(0, 10);
+		}
+		else
+		{
+			this.datetime = null;
+			this.value = null;
+		}
+		//trace("DS init this.v: " + this.value);
 		
 		mode = DateTimeMode.date;
 		
@@ -120,7 +131,7 @@ class DateSelector extends FormElement
 		var maxOffsetStr = minOffset != null ? ", minDate: '-" + minOffset + "m'" : "";
 		var minOffsetStr = maxOffset != null ? ", maxDate: '+" + maxOffset + "m'" : "";
 		
-		s.add("			$(\"#"+n_date+"\").datepicker({ dateFormat: 'yy-mm-dd' "+minOffsetStr+maxOffsetStr+" });		\n");
+		s.add('			$("#'+n_date+'").datepicker({ clickInput:true, dateFormat: "yy-mm-dd" '+minOffsetStr+maxOffsetStr+' });		\n');
 		
 		if ( mode == DateTimeMode.date || mode == DateTimeMode.dateTime )
 			s.add("			$(\"#" + n_date + "\").change( updateDateTime ); \n");
@@ -131,6 +142,9 @@ class DateSelector extends FormElement
 			s.add('			$("#' + n_time + '_min").change( updateDateTime ); \n');
 			s.add('			$("#' + n_time + '_sec").change( updateDateTime ); \n');
 		}
+		
+		//s.add('$("#' + n_date + '").bind("click", clickDatePicker)');
+		
 		s.add("		}); 									\n");
 		
 		s.add("		function updateDateTime() {\n");
@@ -141,7 +155,7 @@ class DateSelector extends FormElement
 			else
 				s.add("			$('#"+n+"').val( $('#"+n_date+"').val() + ' ' + $('#"+n_time+"_hour').val() + ':' + $('#"+n_time+"_min').val() + ':' + $('#"+n_time+"_sec').val() ); \n");
 		s.add("		}\n");
-
+		
 		s.add("</script> 									\n");
 		
 		return s.toString();
@@ -150,6 +164,16 @@ class DateSelector extends FormElement
 	public function toString() :String
 	{
 		return render();
+	}
+	
+	override public function populate():Void
+	{
+		var n = form.name + "_" + name;
+		var v = Poko.instance.params.get(n);
+		
+		//trace("ds.populate = " + v );
+		
+		if (v != null) value = v;
 	}
 }
 

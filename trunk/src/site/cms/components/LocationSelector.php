@@ -10,6 +10,8 @@
 	$centerParts = explode( ",", $location );
 	$centerLat = trim($centerParts[0]);
 	$centerLong = trim($centerParts[1]);
+	
+	$key = $_REQUEST["key"];
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -23,7 +25,7 @@
 body {padding:0; font: 11px Arial, Helvetica, Sans serif; color:#666666;}
 </style>
 <script type="text/javascript" src="../../../../js/cms/jquery-1.3.2.min.js" ></script> 
-<script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAaM2df7Rr0rd2qaRG5YdoLRTGDWPcvWBxAxLZaXjuOvw18nQzOBQrnVN-ODq1bNZA3n9PnUxV_O4c_w" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=<?=$key?>" type="text/javascript"></script>
 <script type="text/javascript">
 
 var el_name = "<?= $eName ?>";
