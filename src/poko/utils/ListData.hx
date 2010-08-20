@@ -29,14 +29,32 @@ package poko.utils;
 
 class ListData 
 {
-
+	public static function getDateElement( low : Int, high : Int, ?labels : Array<String> ) : List<Dynamic>
+	{
+		var data = new List<Dynamic>();
+		if ( labels != null )
+		{
+			for ( i in low ... high + 1 )
+				data.add( { key:Std.string(i), value:labels[i-1] } );
+		}
+		else
+		{
+			for ( i in low ... high + 1 )
+			{
+				var n = Std.string(i);
+				data.add( { key:n, value: ((i < 10) ? "0" + n : n) } );
+			}
+		}
+		return data;
+	}
+	
 	public static function getDays(?reverse = true)
 	{
 		var data:List<Dynamic> = new List();
 		
 		for (i in 1...31+1) {
-			var n = i;
-			data.add( { key:Std.string(n), value:Std.string(n) } );
+			var n = Std.string(i);
+			data.add( { key:n, value:n } );
 		}
 		
 		return(data);

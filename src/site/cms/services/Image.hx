@@ -43,6 +43,7 @@ class Image extends site.cms.services.ImageBase
 			case "tiny":
 				image.queueFitSize(40, 40);
 			case "thumb":
+				image.queueCropToAspect(100, 100);
 				image.queueFitSize(100, 100);
 			case "aspect": 
 				var w:Int = Std.parseInt(app.params.get("w"));

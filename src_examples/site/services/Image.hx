@@ -37,7 +37,39 @@ import php.io.Process;
 import php.Lib;
 import php.Sys;
 import php.Web;
+import site.cms.services.ImageBase;
 
+class Image extends ImageBase
+{
+	public function new() 
+	{
+		super();
+	}
+	
+	override function resizeImage( preset : String, image : ImageProcessor ) : Void
+	{
+		switch(app.params.get("preset"))
+		{
+			case "tiny":
+				image.queueFitSize(40, 40);
+			case "thumb":
+				image.queueFitSize(100, 100);
+			case "square":
+				image.queueCropToAspect(100, 100);
+				image.queueFitSize(200, 200);
+			case "aspect": 
+				var w:Int = Std.parseInt(app.params.get("w"));
+				var h:Int = Std.parseInt(app.params.get("h"));
+				image.queueCropToAspect(w, h);
+			case "custom": 
+				var w:Int = Std.parseInt(app.params.get("w"));
+				var h:Int = Std.parseInt(app.params.get("h"));
+				image.queueFitSize(w, h);
+		}
+	}
+}
+
+/*
 class Image extends Controller
 {
 	public var data:Dynamic;
@@ -117,3 +149,4 @@ class Image extends Controller
 		}
 	}
 }
+*/

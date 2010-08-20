@@ -29,6 +29,7 @@ package poko.form;
 
 import poko.form.elements.Button;
 import poko.form.elements.Checkbox;
+import poko.form.elements.DateSelector;
 import poko.form.elements.Input;
 import poko.form.elements.Selectbox;
 import poko.utils.PhpTools;
@@ -139,6 +140,11 @@ class Form
 				//Reflect.setField(data, element.name, cast( element, Checkbox ).checked );
 			//else
 				Reflect.setField(data, element.name, element.value);
+			if ( Std.is(element, DateSelector) )
+			{
+				var ds = cast(element, DateSelector);
+				//trace("ds.value = " + ds.value);
+			}
 		}
 		return data;
 	}

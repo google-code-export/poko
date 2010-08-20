@@ -4,6 +4,7 @@
  */
 
 package site.cms.modules.base;
+
 import poko.form.elements.Button;
 import poko.form.elements.FileUpload;
 import poko.form.elements.Input;
@@ -36,8 +37,16 @@ class Settings extends SettingsBase
 			case "main":
 				var data = app.db.requestSingle("SELECT * FROM _settings WHERE `key`='cmsTitle'");
 				form.addElement(new Input("cmsTitle", "CMS Title", data.value, true));
+				
 				data = app.db.requestSingle("SELECT * FROM _settings WHERE `key`='cmsLogo'");
 				form.addElement(new FileUpload("cmsLogo", "CMS Logo", data.value, false));
+				
+				data = app.db.requestSingle("SELECT * FROM _settings WHERE `key`='googleMapsApiKey'");
+				var input = new Input("googleMapsApiKey", "Google Maps API Key", data.value, false);
+				input.useSizeValues = true;
+				input.width = 400;
+				form.addElement(input);
+				
 				form.setSubmitButton(form.addElement(new Button( "submit", "Submit"), "submit"));
 				
 				if (form.isSubmitted()) {

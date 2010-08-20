@@ -48,8 +48,8 @@ class Hidden extends FormElement
 	override public function render():String
 	{
 		var n = form.name + "_" +name;
-
-		return "<input type=\"hidden\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\"/>";
+		var type = display ? "text" : "hidden";
+		return '<input type="' + type + '" name="' + n + '" id="' + n + '" value="' +value + '"/>';
 	}
 	
 	override public function getPreview():String

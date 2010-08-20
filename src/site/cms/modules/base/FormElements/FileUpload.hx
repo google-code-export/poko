@@ -51,7 +51,7 @@ class FileUpload extends FormElement
 	override public function populate()
 	{
 		var n = form.name + "_" + name;
-		var file:Hash<String> = PhpTools.getFilesInfo().get(n);
+		var file:Hash<Dynamic> = PhpTools.getFilesInfo().get(n);
 		
 		if (file != null && file.get("error") == "0")
 		{
