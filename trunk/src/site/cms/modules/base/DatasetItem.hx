@@ -152,7 +152,7 @@ class DatasetItem extends DatasetBase
 			var result = app.db.requestSingle("SELECT * FROM `_pages` p, `_definitions` d WHERE p.definitionId=d.id AND p.id=" + app.db.quote(Std.string(id)));
 			label = page = result.name;
 			
-			data = result.data != "" ? cast Unserializer.run(result.data) : {};
+			data = (result.data != "" && result.data != null) ? cast Unserializer.run(result.data) : {};
 				
 			definition = new Definition(result.definitionId);
 		}
@@ -516,18 +516,18 @@ class DatasetItem extends DatasetBase
 			// delete files linked to pages?
 			var r = app.db.requestSingle("SELECT data FROM _pages WHERE `id`=" + safeId);
 			try {
-				var d = Unserializer.run(r.data);
+				var d = (r.data != "" && r.data != null) ? Unserializer.run(r.data) : null;
 				for (k in data.keys())
 				{
 					// only add if we hadn't been asked to delete already
-					if (!Lambda.has(fieldsToWipe, k)){
+					if (d != null && !Lambda.has(fieldsToWipe, k)){
 						filesToDelete.add(Reflect.field(d, k));
 						nFilesAdded--;
 						nFilesReplaced++;
 					}
 				}
 			}catch (e:Dynamic) {
-				messages.addError("There may have been a problem updating your page.");
+				messages.addError("There may have been a problem updating your page." + e);
 			}
 		}
 		

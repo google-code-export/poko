@@ -14,12 +14,17 @@
 	<link rel="shortcut icon" href="::head.favicon::" />
 </head>
 <body>
-	<div id="container">	
-		<h1> EXAMPLES </h1>
-		::raw navigation::
+	<div id="container">
+		<div id="navigationMenu">
+			<h1> EXAMPLES</h1>
+			::raw navigation::
+		</div>
+		
+		<div id="mainContent">
 			<!-- START PAGE CONTENT -->
 			::raw controller.view.render() ::
 			<!-- END PAGE CONTENT -->
+		</div>
 	</div>
 </body>
 </html>

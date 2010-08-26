@@ -35,7 +35,7 @@ Images is an extra called a Link-View (allows you to manage another table an ass
 <b>Linked Services (using multilink)</b>
 <table class="greyTable">
 	::foreach service projectServices::
-		<tr><td><b>::service.name::</b></td><td>::service.description::</td></tr>
+		<tr><td><b>::service.name::</b></td><td>::raw service.description::</td></tr>
 	::end::
 </table>
 

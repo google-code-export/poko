@@ -4,6 +4,26 @@
 
 <h3>Products</h3>
 
+<pre class="code" lang="mtt" style="width:600px;display:none">
+// Retrieving data from your database often requires only one line of code
+products = app.db.request("SELECT * FROM `example_projects` WHERE `visible`=1");
+// This can be displayed in your mtt templates using loops
+&#58;&#58;foreach product products&#58;&#58;
+	// Displaying and accessing member variables is as easy as:
+	&#58;&#58;product.id&#58;&#58;
+	&#58;&#58;product.name&#58;&#58;
+// And finally close the loop
+&#58;&#58;end&#58;&#58;
+</pre>
+
+<pre class="code" lang="php" style="width:600px;display:none">
+// The same can be displayed in PHP as easily
+foreach ($products as $product) {
+	product-&gt;id
+	product-&gt;name
+}
+</pre>
+
 <table class="greyTable">
 	<tr>
 		<td><b>id</b></td>
@@ -15,7 +35,7 @@
 		<tr>
 			<td>::product.id::</td>
 			<td>::product.name::</td>
-			<td>::product.image::</td>
+			<td><img src="?request=services.Image&preset=thumb&src=::product.heroimage::"/></td>
 			<td>::raw controller.trim(product.description,200)::</td>
 		</tr>
 	::end::

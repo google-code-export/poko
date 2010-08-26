@@ -50,6 +50,9 @@ import site.cms.modules.base.Users_Group;
 import site.cms.modules.base.ChangePassword;
 import site.cms.modules.base.SiteView;
 
+import site.cms.modules.email.Index;
+import site.cms.modules.email.Settings;
+
 import site.cms.modules.help.Help;
 
 import site.cms.services.Image;

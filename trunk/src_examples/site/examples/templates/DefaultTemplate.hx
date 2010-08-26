@@ -55,7 +55,9 @@ class DefaultTemplate extends HtmlController
 		//scripts.addExternal(ScriptType.css , "css/reset.css");
 		//scripts.addExternal(ScriptType.css, "css/fonts.css");
 		scripts.addExternal(ScriptType.css, "css/normal.css");
+		scripts.addExternal(ScriptType.css, "css/example-site.css");
 		scripts.addExternal(ScriptType.css, "css/cms/cms.css");
+		scripts.addExternal(ScriptType.js, "js/jquery.js" );
 		
 		navigation = new Navigation();
 		navigation.addLink("Test Page",			"examples.TestPage");
@@ -63,6 +65,7 @@ class DefaultTemplate extends HtmlController
 		navigation.addLink("Basic data",	 	"examples.Basic");
 		navigation.addLink("Forms", 			"examples.Forms");
 		navigation.addLink("Dates", 			"examples.Dates");
+		navigation.addLink("Locations", 		"examples.Locations");
 		navigation.addLink("Image Processing", "examples.ImageProcessing");
 		navigation.addLink("Complex Data", 		"examples.ComplexData");
 		

@@ -14,6 +14,7 @@
 	::raw head.getCss()::
 	::raw "<!--[if IE 6]>":: ::head.getCssIe6():: ::raw "<![endif]-->"::
 	::raw "<!--[if IE 7]>":: ::head.getCssIe7():: ::raw "<![endif]-->"::
+	::raw head.getScripts()::
 	<link rel="shortcut icon" href="::head.favicon::" />
 </head>
 <body>

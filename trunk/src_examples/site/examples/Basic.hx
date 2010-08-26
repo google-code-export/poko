@@ -26,7 +26,9 @@
  */ 
 
 package site.examples;
+
 import site.examples.templates.DefaultTemplate;
+import poko.utils.html.ScriptType;
 
 class Basic extends DefaultTemplate
 {
@@ -34,6 +36,9 @@ class Basic extends DefaultTemplate
 	
 	override public function main()
 	{
+		scripts.addExternal(ScriptType.css, "css/formatCode.css");
+		scripts.addExternal(ScriptType.js, "js/jquery.formatCode.js");
+		
 		products = app.db.request("SELECT * FROM `example_projects` WHERE `visible`=1");
 	}
 	
@@ -44,8 +49,6 @@ class Basic extends DefaultTemplate
 			return value.substr(0, length-3) + "...";
 		} else {
 			return value;
-		}
-		
-		
+		}		
 	}
 }

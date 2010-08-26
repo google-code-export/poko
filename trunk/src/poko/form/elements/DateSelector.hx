@@ -52,7 +52,8 @@ class DateSelector extends FormElement
 		if ( value != null )
 		{
 			this.datetime = Std.string(value);
-			this.value = datetime.substr(0, 10);
+			//this.value = datetime.substr(0, 10);
+			this.value = datetime;
 		}
 		else
 		{
@@ -77,17 +78,16 @@ class DateSelector extends FormElement
 		
 		var s:StringBuf = new StringBuf();
 		
-		//trace( "mode: " + mode );
-		
 		var n_time = n + "__time";
 		var n_date = n + "__date";
 		
+		var dtDate = datetime.substr(0, 10);
 		var dtHour = datetime.substr(11, 2);
 		var dtMin = datetime.substr(14, 2);
 		var dtSec = datetime.substr(17, 2);
 		
 		if ( mode == DateTimeMode.date || mode == DateTimeMode.dateTime )
-			s.add("<input type=\"text\" name=\"" + n_date + "\" id=\"" + n_date + "\" value=\"" + value + "\" /> \n");	
+			s.add("<input type=\"text\" name=\"" + n_date + "\" id=\"" + n_date + "\" value=\"" + dtDate + "\" /> \n");	
 
 		if ( mode == DateTimeMode.time || mode == DateTimeMode.dateTime )
 		{			
@@ -170,10 +170,14 @@ class DateSelector extends FormElement
 	{
 		var n = form.name + "_" + name;
 		var v = Poko.instance.params.get(n);
+
+		if (v != null) 
+		{
+			datetime = Std.string(v);
+			//value = datetime.substr(0, 10);
+			value = v;
+		}
 		
-		//trace("ds.populate = " + v );
-		
-		if (v != null) value = v;
 	}
 }
 

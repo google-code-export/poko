@@ -7,9 +7,9 @@
 	$mapWidth = $popupWidth - 20;
 	$mapHeight = $popupHeight - 100;
 	
-	$centerParts = explode( ",", $location );
-	$centerLat = trim($centerParts[0]);
-	$centerLong = trim($centerParts[1]);
+	$latlng = explode( ",", $location );
+	$centerLat = trim($latlng[0]);
+	$centerLong = trim($latlng[1]);
 	
 	$key = $_REQUEST["key"];
 ?>
@@ -38,37 +38,25 @@ function loadmap() {
         map = new GMap2(document.getElementById("map"));
         map.addControl(new GSmallMapControl());
         map.addControl(new GMapTypeControl());
-		var center = new GLatLng( <?= $centerLat ?>, <?= $centerLong ?> );
-		gCenter = center;
-		map.setCenter(center, 3);
+		
+		gCenter = new GLatLng( <?php echo $centerLat; ?>, <?php echo $centerLong; ?> );
+		map.setCenter(gCenter, 3);
+		
 		geocoder = new GClientGeocoder();
-		var marker = new GMarker(center, {draggable: true});  
+		
+		var marker = new GMarker(gCenter, {draggable: true});  
 		map.addOverlay(marker);
-		//document.getElementById("lat").value = center.lat();
-		//document.getElementById("lng").value = center.lng();
-		geocoder = new GClientGeocoder();
+		
 		GEvent.addListener(marker, "dragend", function() {
 			var point = marker.getPoint();
 			gCenter = point;
 			map.panTo(point);
-			//document.getElementById("lat").value = point.lat();
-			//document.getElementById("lng").value = point.lng();
         });
 		GEvent.addListener(map, "moveend", function() {
 			map.clearOverlays();
-			var center = map.getCenter();
-			gCenter = center;
-			var marker = new GMarker(center, {draggable: true});
+			gCenter = map.getCenter();
+			var marker = new GMarker(gCenter, {draggable: true});
 			map.addOverlay(marker);
-			//document.getElementById("lat").value = center.lat();
-			//document.getElementById("lng").value = center.lng();
-        });
-		GEvent.addListener(marker, "dragend", function() {
-			var point = marker.getPoint();
-			map.panTo(point);
-			gCenter = point;
-			//document.getElementById("lat").value = point.lat();
-			//document.getElementById("lng").value = point.lng();
         });
 		
 		if ( window.attachEvent ) {
@@ -81,23 +69,20 @@ function loadmap() {
 				map.checkResize();
 				map.setCenter( gCenter );
 			}, false);
-		} 
+		}
+		updateParentCenter( gCenter );
     }
 	GEvent.addListener(map, "moveend", function() {
 		map.clearOverlays();
-        var center = map.getCenter();
-		gCenter = center;
-		var marker = new GMarker(center, {draggable: true});
+        gCenter = map.getCenter();
+		var marker = new GMarker(gCenter, {draggable: true});
 		map.addOverlay(marker);
-		//document.getElementById("lat").value = center.lat();
-		//document.getElementById("lng").value = center.lng();
 		GEvent.addListener(marker, "dragend", function() {
-			var pt =marker.getPoint();
+			var pt = marker.getPoint();
 			map.panTo(pt);
-			//document.getElementById("lat").value = pt.lat();
-			//document.getElementById("lng").value = pt.lng();
+			gCenter = pt;
         });
-		updateParentCenter( center );
+		updateParentCenter( gCenter );
     });
 }
 
@@ -106,6 +91,7 @@ function showAddress( address ) {
 		if ( !center ) {
 			alert( "This is not a valid address" );
 		} else {
+			gCenter = center;
 			map.panTo( center, map.getZoom() );
 		}
 	});	
