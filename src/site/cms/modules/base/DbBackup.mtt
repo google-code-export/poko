@@ -26,11 +26,19 @@
 			
 		::else::
 		
+		<style type="text/css">
+			#dbBackupTable td {
+				padding: 2px 10px 2px 10px;
+			}
+		</style>
+		
 		<form action="" method="POST">
-			<table border="1" cellpadding="2" cellspacing="2">
+			<table id="dbBackupTable" border="1" cellpadding="2" cellspacing="2">
 				<tr>
-					<td width="200px"><b>Backup Date</b></td>
+					<td><b>Backup Date</b></td>
 					<td><b>Size</b></td>
+					<td><b>Database</b></td>
+					<td><b>Host</b></td>
 					<td><b>Comment</b></td>
 					<td><b>Download</b></td>
 					<td><b>Restore?</b></td>
@@ -39,6 +47,8 @@
 				<tr>
 					<td>::raw backup.date::</td>
 					<td>::raw backup.size::</td>
+					<td>::raw backup.dbName::</td>
+					<td>::raw backup.dbHost::</td>
 					<td>::raw backup.comment::</td>
 					<td><a href="::raw backup.url::">Download</a></td>
 					<td align="center"><input type="radio" name="restore" value="::raw backup.filename::"/></td>
@@ -60,9 +70,9 @@
 				<tr>
 					<td>Tables</td>
 					<td>
-						<select multiple="multiple" size="6" name="tables[]">
+						<select multiple="multiple" size="::listSize::" name="tables[]">
 							:: foreach table tables ::
-							<option value="::raw table::" selected="selected">::raw table::&nbsp;&nbsp;&nbsp;&nbsp;</option>
+							<option value="::raw table::">::raw table::&nbsp;&nbsp;&nbsp;&nbsp;</option>
 							::end::
 						</select>
 					</td>

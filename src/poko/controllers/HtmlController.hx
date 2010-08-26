@@ -28,6 +28,7 @@
 package poko.controllers;
 
 import poko.Poko;
+import poko.utils.html.ScriptList;
 import poko.utils.PhpTools;
 import haxe.remoting.Context;
 import haxe.remoting.HttpConnection;
@@ -42,6 +43,8 @@ import poko.views.View;
 class HtmlController extends Controller
 {
 	public var head:HtmlHeader;
+	
+	public var scriptes:ScriptList;
 	
 	public var identifier:String;
 	
@@ -98,7 +101,7 @@ class HtmlController extends Controller
 	
 }
 
-class HtmlHeader 
+class HtmlHeader extends ScriptList
 {	
 	public var title:String;
 	public var description:String;
@@ -117,6 +120,8 @@ class HtmlHeader
 		
 	public function new()
 	{
+		super();
+		
 		title = description = meta = keywords = publisher = date = "";
 		js = new List();
 		css = new List();

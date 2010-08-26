@@ -27,51 +27,41 @@
 
 package site.examples;
 
-import poko.form.elements.Button;
-import poko.form.elements.DateDropdowns;
-import poko.form.elements.DateInput;
-import poko.form.elements.DateSelector;
-import poko.form.elements.EmbeddedVideoOptions;
+import poko.form.elements.LocationSelector;
 import poko.form.Form;
 import poko.utils.html.ScriptType;
-import site.cms.common.DateTimeMode;
 import site.examples.templates.DefaultTemplate;
 
-class Dates extends DefaultTemplate
+class Locations extends DefaultTemplate
 {
 	public var form:Form;
 	
 	override public function main()
-	{		
-		//scripts.addExternal(ScriptType.css, "css/datepicker.css" );
-		scripts.addExternal(ScriptType.css, "css/cms/ui-lightness/jquery-ui-1.7.2.custom.css" );
-		//scripts.addExternal(ScriptType.js, "js/date.js" );
-		
-		scripts.addExternal(ScriptType.js, "js/cms/jquery-ui-1.7.2.custom.min.js" );
-		//scripts.addExternal(ScriptType.js, "js/jquery.datePicker.js" );
-		//scripts.addExternal(ScriptType.js, "js/initDatePicker.js" );
+	{
+		scripts.addExternal(ScriptType.css, "css/formatCode.css");
+		scripts.addExternal(ScriptType.js, "js/jquery.formatCode.js");
 		
 		form = new Form("form");
-		var d = new DateSelector("date", "Date", Date.now());
-		d.mode = DateTimeMode.dateTime;
-		form.addElement(d);
 		
-		var d2 = new DateInput("date2", "Date 2", Date.now());
-		form.addElement(d2);
+		var location = new LocationSelector("location", "Simple Location");
+		form.addElement(location);
 		
-		//var video = new EmbeddedVideoOptions("vimeo", "Vimeo", EmbeddedVideoService.vimeo);
-		//video.vimeo.
+		var location2 = new LocationSelector("location2", "Location with default");
+		location2.defaultLocation = "-37.797871, 144.986099";
+		form.addElement(location2);
 		
-		//var d3 = new DateDropdowns("date3", "Date 3", Date.now() );
-		//form.addElement(d3);
+		var location3 = new LocationSelector("location3", "Location with search");
+		location3.searchAddress = true;
+		form.addElement(location3);
 		
-		form.setSubmitButton(form.addElement(new Button("submit", "Submit")));
+		var location4 = new LocationSelector("location4", "Advanced Location");
+		location4.searchAddress = true;
+		location4.defaultLocation = "-25.641526373065755, 133.41796875";
+		location4.googleMapsKey = "ABQIAAAAPEZwP3fTiAxipcxtf7x-gxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRPwWSQQtyYryiI5S6KBZMsOwuCsw";
+		location4.popupWidth = 800;
+		location4.popupHeight = 600;
+		form.addElement(location4);
 		
 		form.populateElements();
-		
-		if ( form.isSubmitted() && form.isValid() )
-		{
-			var data = form.getData();
-		}
 	}
 }

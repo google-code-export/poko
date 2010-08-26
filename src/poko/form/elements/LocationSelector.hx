@@ -62,6 +62,8 @@ class LocationSelector extends FormElement
 		var s:StringBuf = new StringBuf();
 		
 		var location : String = ( value == null || value == "" ) ? defaultLocation : value;
+		if (location == null || location.indexOf(",") == -1 || location == "")
+			location = "0,0";
 		
 		var popupUrl = "tpl/php/cms/components/LocationSelector.php?eName=" + n + "&location=" + StringTools.urlEncode(location) + "&popupWidth=" + popupWidth + "&popupHeight=" + popupHeight + "&searchAddress=" + searchAddress + "&key=" + googleMapsKey;
 		var popupFeatures = "width=" + popupWidth + ",height=" + popupHeight + ",resizable=0,width=620,height=450,toolbar=0,location=0,status=0";

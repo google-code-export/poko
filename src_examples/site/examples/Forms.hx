@@ -26,11 +26,19 @@
  */ 
 
 package site.examples;
+import poko.form.elements.Checkbox;
+import poko.form.elements.ImageUpload;
 import poko.form.elements.Input;
+import poko.form.elements.KeyVal;
+import poko.form.elements.LocationSelector;
+import poko.form.elements.RadioGroup;
+import poko.form.elements.RichtextWym;
 import poko.form.elements.Selectbox;
 import poko.form.elements.Button;
+import poko.form.elements.TextArea;
 import poko.form.Form;
 import poko.form.validators.StringValidator;
+import poko.utils.html.ScriptType;
 import site.cms.common.PageData;
 import site.examples.components.Navigation;
 import site.examples.templates.DefaultTemplate;
@@ -42,13 +50,45 @@ class Forms extends DefaultTemplate
 	
 	override public function main()
 	{
+		scripts.addExternal(ScriptType.js, "js/cms/wymeditor/jquery.wymeditor.pack.js");
+		scripts.addExternal(ScriptType.js, "js/cms/wym_editor_browse.js");
+		
 		form1 = new Form("form1");
+		
 		form1.addElement(new Input("name", "Your Name"));
 		form1.addElement(new Selectbox("gender", "Gender"));
-		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));	
+	
 		var gender = form1.getElementTyped("gender", Selectbox);
 		gender.addOption( { key:"M", value:"Male" } );
 		gender.addOption( { key:"F", value:"Female" } );
+		
+		var checkbox = new Checkbox("newsletter", "Sign up for newsletter?", false);
+		form1.addElement(checkbox);
+		
+		var radioGroup = new RadioGroup("age", "Age", null);
+		radioGroup.addOption("15-18", "15 - 18 years");
+		radioGroup.addOption("18-25", "18 - 25 years");
+		radioGroup.addOption("25-35", "25 - 35 years");
+		radioGroup.addOption("45+", "over 45 years");
+		form1.addElement(radioGroup);
+		
+		var textarea = new TextArea("specialRequests", "Special Requests", null);
+		textarea.height = 60;
+		textarea.useSizeValues = true;
+		form1.addElement(textarea);
+		
+		var editor = new RichtextWym("editor", "Editor", null);
+		editor.width = 400;
+		editor.height = 200;
+		form1.addElement(editor);
+		
+		var location = new LocationSelector("location", "Location (Lat/Long)", "");
+		location.popupWidth = 500;
+		location.popupHeight = 500;
+		location.searchAddress = true;
+		form1.addElement(location);
+		
+		form1.setSubmitButton(form1.addElement(new Button("submit", "Submit")));	
 		form1.populateElements();
 		
 		form2 = new Form("form2");
