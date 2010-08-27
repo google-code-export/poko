@@ -1,13 +1,13 @@
 /*
  based on mtwin.mail.Smtp
  */
-package com.touchmypixel.mail;
+package touchmypixel.mail;
 
 import php.net.Socket;
 import php.net.Host;
 
-import com.touchmypixel.mail.Tools;
-import com.touchmypixel.mail.Exception;
+import touchmypixel.mail.Tools;
+import touchmypixel.mail.Exception;
 
 class SimpleSmtp {
 

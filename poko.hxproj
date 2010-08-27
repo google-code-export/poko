@@ -14,13 +14,15 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
+    <class path="..\..\touchmypixel\haxe\src" />
   </classpaths>
   <!-- Build options -->
   <build>
     <option directives="" />
     <option flashStrict="False" />
     <option mainClass="poko.Poko" />
-    <option enabledebug="False" />
+    <option override="False" />
+    <option verbose="False" />
     <option additional="-lib templo&#xA;-lib hscript" />
   </build>
   <!-- haxelib libraries -->

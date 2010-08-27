@@ -81,4 +81,40 @@ class StringTools2
 		
 		return out;
 	}
+	
+	public static function html2Txt(t:String):String
+	{
+		t = StringTools.replace(t, "<h1>", "=== ");
+		t = StringTools.replace(t, "</h1>", " ===\n\n");
+		t = StringTools.replace(t, "<h2>", "=== ");
+		t = StringTools.replace(t, "</h2>", " ===\n\n");
+		t = StringTools.replace(t, "<h3>", "=== ");
+		t = StringTools.replace(t, "</h3>", " ===\n\n");		
+		t = StringTools.replace(t, "<p>", "");
+		t = StringTools.replace(t, "</p>", "\n\n");
+		t = StringTools.replace(t, "<div>", "");
+		t = StringTools.replace(t, "</div>", "\n\n");
+		t = StringTools.replace(t, "<br>", "\n");
+		t = StringTools.replace(t, "<br />", "\n");
+		
+		t = StringTools.replace(t, "<b>", "\"");
+		t = StringTools.replace(t, "</b>", "\"");
+		t = StringTools.replace(t, "<strong>", "\"");
+		t = StringTools.replace(t, "</strong>", "\"");		
+		t = StringTools.replace(t, "<u>", "\"");
+		t = StringTools.replace(t, "</u>", "\"");
+		t = StringTools.replace(t, "<i>", "'");
+		t = StringTools.replace(t, "</i>", "'");
+		t = StringTools.replace(t, "<em>", "'");
+		t = StringTools.replace(t, "</em>", "'");		
+
+		t = StringTools.replace(t, "<ul>", "");
+		t = StringTools.replace(t, "</ul>", "\n");
+		t = StringTools.replace(t, "<ol>", "");
+		t = StringTools.replace(t, "</ol>", "\n");
+		t = StringTools.replace(t, "<li>", "    * ");
+		t = StringTools.replace(t, "</li>", "\n");
+		
+		return t;
+	}	
 }

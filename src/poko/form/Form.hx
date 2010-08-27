@@ -125,6 +125,11 @@ class Form
 		return null;
 	}
 	
+	public function getValueOf(elementName:String):String
+	{
+		return getElement(elementName).value;
+	}
+	
 	public function getElementTyped<T>(name:String, type:Class<T>):T
 	{
 		var o:T = cast(getElement(name));
