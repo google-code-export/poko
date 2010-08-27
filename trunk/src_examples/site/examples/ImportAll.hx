@@ -16,5 +16,7 @@ import site.examples.Locations;
 import site.examples.ImageProcessing;
 import site.examples.ComplexData;
 
+import site.examples.Emailer;
+
 
 class ImportAll {}
