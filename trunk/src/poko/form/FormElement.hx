@@ -144,6 +144,15 @@ class FormElement
 		return value;
 	}
 	
+	public function remove():Bool
+	{
+		if ( form != null )
+		{
+			return form.removeElement(this);
+		}
+		return false;
+	}
+	
 	public function getPreview():String
 	{
 		return "<tr><td>" + getLabel() + "</td><td>" + this.render() + "<td></tr>";

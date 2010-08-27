@@ -39,7 +39,7 @@ class Index extends DefaultTemplate
 	{
 		super.main();
 		
-		trace(layoutView.template);
+		//trace(layoutView.template);
 	}
 
 }

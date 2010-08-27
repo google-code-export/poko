@@ -84,6 +84,8 @@ import site.cms.modules.base.js.JsSiteView;
 import site.cms.modules.media.js.JsGallery;
 import site.cms.modules.media.js.JsMediaSelector;
 
+import site.cms.modules.email.js.JsSettings;
+
 import site.cms.js.JsTest;
 
 #end

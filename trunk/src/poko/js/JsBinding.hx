@@ -64,6 +64,12 @@ class JsBinding
 		}
 	}
 	
+	public function queueRawCall(method:String):Void
+	{
+		var controller:HtmlController = cast Poko.instance.controller;
+		controller.jsCalls.add(this + "." + method);
+	}
+	
 	public function getRawCall(method:String):String
 	{
 		return this + "." + method;

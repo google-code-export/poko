@@ -6,6 +6,7 @@
 package site.cms.templates;
 
 import poko.controllers.HtmlController;
+import poko.utils.html.ScriptType;
 import site.cms.CmsController;
 import site.cms.common.Messages;
 import site.cms.components.LeftNavigation;
@@ -31,6 +32,8 @@ class CmsTemplate extends CmsController
 		head.css.add("css/fixes/fonts.css");
 		head.css.add("css/cms/cms.css");
 		head.css.add("?request=cms.services.CmsCss");
+		
+		//head.addExternal(ScriptType.js, "js/cms/jquery-1.4.2.min.js");
 		
 		head.js.add("js/cms/jquery-1.3.2.min.js");
 		head.js.add("js/cms/jquery.domec.js");

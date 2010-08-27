@@ -10,8 +10,10 @@ import haxe.Timer;
 
 class EmailForwarder
 {
-	public static var defaultProxyURL : String = "http://www.mattbenton.net/email_forwarder.php";
-	public static var defaultProxyCode : String = "iamawesome";
+	//public static var defaultProxyURL : String = "http://www.mattbenton.net/email_forwarder.php";
+	public static var defaultProxyURL : String = "http://poko.touchmypixel.com/email_forwarder.php";
+	//public static var defaultProxyCode : String = "iamawesome";
+	public static var defaultProxyCode : String = "yourendofthebargain";
 	public static var useProxy : Bool = true;
 	public static var disableHtml : Bool = false;
 	
@@ -23,6 +25,7 @@ class EmailForwarder
 		if ( useProxy )
 		{
 			var curl = new CurlManager( proxyUrl );
+			
 			var hash = Md5.encode( CurlManager.buildPostString( { to : to, subject : subject, message : message, headers : headers } ) + proxyCode );
 			var paramStr = curl.setPost( { to : to, subject : subject, message : message, headers : headers, hash : hash } );
 			
