@@ -30,12 +30,14 @@ package poko.form.elements;
 
 import poko.form.Form;
 import poko.form.FormElement;
+import poko.Poko;
 
 class Button extends FormElement
 {
 	public var type:ButtonType;
 	
-	public function new(name:String, label:String, ?value:String = "Submit", ?type:ButtonType = null) 
+	//public function new(name:String, label:String, ?value:String = "Submit", ?type:ButtonType = null) 
+	public function new(name:String, label:String, ?value:String = null, ?type:ButtonType = null) 
 	{
 		super();
 		this.name = name;
@@ -69,6 +71,14 @@ class Button extends FormElement
 	override public function getPreview():String
 	{
 		return "<tr><td></td><td>" + this.render() + "<td></tr>";
+	}
+	
+	override public function populate():Void
+	{
+		super.populate();
+		var n = form.name + "_" + name;
+		if ( Poko.instance.params.exists(n) )
+			form.submittedButtonName = name;
 	}
 }
 

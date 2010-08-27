@@ -31,6 +31,7 @@ import poko.form.elements.Button;
 import poko.form.elements.Checkbox;
 import poko.form.elements.DateSelector;
 import poko.form.elements.Input;
+import poko.form.elements.RichtextWym;
 import poko.form.elements.Selectbox;
 import poko.utils.PhpTools;
 import php.Lib;
@@ -59,6 +60,11 @@ class Form
 	
 	public var defaultClass : String;
 	
+	// Submitted button's name
+	public var submittedButtonName : String;
+	
+	var wymEditorCount:Int;
+	
 	public function new(name:String, ?action:String, ?method:FormMethod) 
 	{
 		requiredClass = "formRequired";
@@ -76,6 +82,10 @@ class Form
 		
 		fieldsets = new Hash();
 		addFieldset("__default", new FieldSet("__default", "Default", false));
+		
+		wymEditorCount = 0;
+		
+		submittedButtonName = null;
 	}
 	
 	public function addElement(element:FormElement, ?fieldSetKey:String = "__default"):FormElement
@@ -88,7 +98,27 @@ class Form
 			fieldsets.get(fieldSetKey).elements.add(element);
 		}
 		
+		if ( Std.is(element, RichtextWym) )
+			wymEditorCount++;
+		
 		return element;
+	}
+	
+	public function removeElement(element:FormElement):Bool
+	{
+		if ( elements.remove(element) )
+		{
+			element.form = null;
+			for ( fs in fieldsets )
+			{
+				fs.elements.remove(element);
+			}
+			
+			if ( Std.is(element, RichtextWym) )
+				wymEditorCount--;
+			return true;
+		}
+		return false;
 	}
 	
 	public function setSubmitButton(el:FormElement):FormElement
@@ -177,7 +207,17 @@ class Form
 	
 	public function getCloseTag():String
 	{
-		return "<input type=\"hidden\" name=\""+name+"_formSubmitted\" value=\"true\" /></form>";
+		var s = new StringBuf();
+		s.add('<input type="hidden" name="' + name + '_formSubmitted" value="true" /></form>');
+		// Matt - Updates all WYMEditors before submitting a form if any have been added
+		if ( wymEditorCount > 0 )
+		{
+			s.add('<script>$(function(){ $("#' + id + '").submit(function(){');
+			s.add('var i = 0; while ( jQuery != null ) { var wym = jQuery.wymeditors(i); if ( wym != null ) {	wym.update(); i++; } else {	break; } }');
+			s.add('}); });</script>');
+		}
+		return s.toString();
+		//return "<input type=\"hidden\" name=\""+name+"_formSubmitted\" value=\"true\" /></form>";
 	}
 	
 	public function isValid():Bool

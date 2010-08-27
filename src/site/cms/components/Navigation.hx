@@ -65,7 +65,6 @@ class Navigation extends Component
 				requests.set("modules.base.DbBackup", "Backup");
 				requests.set("modules.base.SiteView", "Site View");
 				requests.set("modules.media.Index", "Media");
-				requests.set("modules.email.Index", "Email");
 				requests.set("modules.base.Settings", "Settings");
 				requests.set("modules.base.SiteView", "Site Map");
 				requests.set("modules.base.Users", "Users");
@@ -77,6 +76,8 @@ class Navigation extends Component
 			}else{
 				requests.set("modules.base.SiteView", "Site Map");
 			}
+			
+			requests.set("modules.email.Index", "Email");
 			
 			requests.set("modules.base.ChangePassword", "Password");
 			
