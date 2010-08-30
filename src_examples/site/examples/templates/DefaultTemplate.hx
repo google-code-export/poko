@@ -69,7 +69,8 @@ class DefaultTemplate extends HtmlController
 		navigation.addLink("Image Processing", "examples.ImageProcessing");
 		navigation.addLink("Complex Data", 		"examples.ComplexData");
 		
-		navigation.addLink("Emailer", 		"examples.Emailer");
+		//navigation.addLink("Emailer", 		"examples.Emailer");
+		navigation.addLink("Using Poko CMS", "examples.UsingPokoCMS");
 		
 		navigation.setSelectedByRequest(app.params.get('request'));
 	}

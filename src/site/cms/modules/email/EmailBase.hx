@@ -22,7 +22,18 @@ class EmailBase extends CmsTemplate
 	
 	function loadSettings() : EmailSettings
 	{
-		var data = settings.get("emailSettings");
+		var data = null;
+		
+		if ( settings.exists("emailSettings") )
+		{
+			data = settings.get("emailSettings");
+		}
+		else
+		{
+			data = "";
+			app.db.insert("_settings", { key:"emailSettings", value:data } );
+		}
+
 		if ( data != null && data != "" )
 			return Unserializer.run(data);
 		return {userTable:null, emailField:null, nameField:null, idField:null};
