@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 30, 2010 at 12:46 PM
+-- Generation Time: Aug 30, 2010 at 03:33 PM
 -- Server version: 5.1.33
 -- PHP Version: 5.2.9
 
@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS `example_categories` (
 INSERT INTO `example_categories` (`id`, `category`, `description`) VALUES
 (1, 'Web Projects', 'Various web projects we have worked on'),
 (2, 'Games', 'Our games!'),
-(5, 'Something Else', 'Yet another category!');
+(5, 'Something Else', 'Yet another category!'),
+(6, 'Cats', 'Different cats');
 
 -- --------------------------------------------------------
 
@@ -47,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `example_images` (
   `link_to` varchar(255) COLLATE latin1_general_ci NOT NULL,
   `link_value` int(22) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `example_images`
@@ -55,7 +56,12 @@ CREATE TABLE IF NOT EXISTS `example_images` (
 
 INSERT INTO `example_images` (`id`, `image`, `link_to`, `link_value`) VALUES
 (5, 'c9052c452547b530796144907f38e7ecDesert.jpg', 'example_projects', 5),
-(4, '8e8e0527daf5ebde07b139068a1f5e6fChrysanthemum.jpg', 'example_projects', 5);
+(4, '8e8e0527daf5ebde07b139068a1f5e6fChrysanthemum.jpg', 'example_projects', 5),
+(6, '4b2203d68a7617ed91873a3297ea153d50229647_39bcd31c01.jpg', 'example_projects', 20),
+(7, '356717974247ff287a1f8096c192c111634556562_7de4049b57.jpg', 'example_projects', 20),
+(8, 'cc680537107ca491da1c7422abfeceea17200747_f294316218.jpg', 'example_projects', 20),
+(9, 'e512415a317e74c91ec353ac63f646c1292626608_b3f9867c07.jpg', 'example_projects', 21),
+(10, 'a353515f131b9fc4dc623b3648a2fada3675162262_65d971a898.jpg', 'example_projects', 21);
 
 -- --------------------------------------------------------
 
@@ -103,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `example_projects` (
   `description` text COLLATE latin1_general_ci NOT NULL,
   `visible` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=72 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=22 ;
 
 --
 -- Dumping data for table `example_projects`
@@ -111,7 +117,9 @@ CREATE TABLE IF NOT EXISTS `example_projects` (
 
 INSERT INTO `example_projects` (`id`, `category`, `name`, `heroimage`, `pdf`, `description`, `visible`) VALUES
 (5, 1, 'My Websites', '0341de70b8f4e8bc8bb57e1a4ee5b70cTulips.jpg', 'a6b5374d8fe5f1eea88f89883e9fbb86test_pdf.pdf', '<p>This is an example projects... This is an example projects... This is an example projects... This is an example projects... <strong>This is an example projects</strong>... This is an example projects... This is an example projects... This is an example projects... This is an example projects... This is an example projects... This is an example projects... <strong><em>This is an example projects</span></em>.</strong>..</p><p>This is an example projects...</p>', 1),
-(19, 2, 'Scarygirl', '8e8e0527daf5ebde07b139068a1f5e6fChrysanthemum.jpg', '6fe03133dc42b88dc2f7f1d58e6273bcDSC_4408-2.jpg', '<p>This is a brief project description using the <em>What You Mean Editor!</em></p>', 1);
+(19, 2, 'Scarygirl', '8e8e0527daf5ebde07b139068a1f5e6fChrysanthemum.jpg', '6fe03133dc42b88dc2f7f1d58e6273bcDSC_4408-2.jpg', '<p>This is a brief project description using the <em>What You Mean Editor!</em></p>', 1),
+(20, 6, 'Fluffy', '85c62a889fe07e028b2996f98abe7199385650640_04f8406599.jpg', '', '<br /><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque accumsan, nibh at viverra pulvinar, tortor dolor scelerisque urna, vel ultrices dui sapien id tortor. Vestibulum nulla metus, lacinia sed elementum ut, porttitor sed diam. Praesent bibendum iaculis interdum. Sed a diam sit amet sapien pharetra aliquet nec non neque. Nunc tortor tellus, bibendum quis scelerisque nec, posuere quis diam. Nullam orci arcu, auctor et tristique ac, malesuada et leo. Donec arcu elit, pharetra et pharetra in, gravida et dolor. Sed tempus metus ac lacus imperdiet tempor. Ut dapibus, quam vel sagittis viverra, ligula eros placerat diam, ut cursus tellus sapien eu elit. Etiam non augue purus. </p>', 1),
+(21, 5, 'Food Project', '2ca7bae7789d6818d36b790b489454ca4166220739_e9d4144ed6.jpg', '', '<p>Different foods</p>', 1);
 
 -- --------------------------------------------------------
 
@@ -124,34 +132,17 @@ CREATE TABLE IF NOT EXISTS `example_projects_services` (
   `projectId` int(11) NOT NULL,
   `serviceId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=249 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=251 ;
 
 --
 -- Dumping data for table `example_projects_services`
 --
 
 INSERT INTO `example_projects_services` (`id`, `projectId`, `serviceId`) VALUES
-(11, 12, 2),
 (248, 19, 2),
-(14, 13, 1),
-(15, 13, 2),
-(17, 14, 1),
-(151, 15, 1),
-(118, 16, 1),
-(37, 17, 1),
-(156, 18, 1),
-(224, 20, 2),
-(223, 20, 1),
-(234, 54, 1),
-(235, 55, 2),
-(236, 56, 2),
-(237, 57, 2),
-(238, 58, 2),
-(239, 59, 2),
-(241, 60, 2),
-(243, 61, 2),
-(244, 62, 2),
-(247, 71, 2);
+(223, 20, 2),
+(250, 21, 1),
+(249, 20, 3);
 
 -- --------------------------------------------------------
 
@@ -171,8 +162,9 @@ CREATE TABLE IF NOT EXISTS `example_services` (
 --
 
 INSERT INTO `example_services` (`id`, `name`, `description`) VALUES
-(1, 'design', '<p>good design</p>'),
-(2, 'washing', '<p>we can wash too</p>');
+(1, 'Design', '<p>Good design</p>'),
+(2, 'Washing', '<p>We can wash too</p>'),
+(3, 'House Sitting', '<p>Free house sitting service!</p>');
 
 -- --------------------------------------------------------
 
@@ -208,9 +200,9 @@ CREATE TABLE IF NOT EXISTS `_definitions` (
 --
 
 INSERT INTO `_definitions` (`id`, `name`, `description`, `isPage`, `table`, `showFiltering`, `showOrdering`, `showInMenu`, `elements`, `order`, `indents`, `postCreateSql`, `postEditSql`, `postDeleteSql`, `postProcedure`, `help`, `help_list`, `autoOrdering`, `allowCsv`) VALUES
-(58, 'example_projects', '', 0, 'example_projects', 0, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey6:link_1y4:typey11:linkdisplayy6:dbtypeny5:labely6:Imagesy10:propertiesoR3R4R1R2R6R7y5:tabley14:example_imagesgy5:orderny10:showInListny15:showInFilteringny14:showInOrderingngcR0R1y2:idR3y9:read-onlyR5nR6y2:IDR8oR3R16R1R15R6R17y11:descriptiony0:R12i1R13zR14zgR11nR12i1R13zR14zgcR0R1y8:categoryR3y11:associationR5nR6y8:CategoryR8oR3R21R1R20R6R22R18R19R12i1R13zR14zR9y18:example_categoriesy5:fieldR15y10:fieldLabelR20y8:fieldSqlR19y11:showAsLabely1:0gR11nR12i1R13zR14zgcR0R1R1R3y4:textR5nR6y4:NameR8oR3R29R1R1R6R30R18R19R12i1R13zR14zy11:isMultilineR28y5:widthy3:300y6:heightR19y8:minCharsR19y8:maxCharsR19y9:charsListR19y4:modey5:ALLOWy5:regexR19y10:regexErrorR19y16:regexDescriptionR19y20:regexCaseInsensitiveR28y8:requiredR28y9:formatterR19gR11nR12i1R13zR14zgcR0R1y9:heroimageR3y10:image-fileR5nR6y12:Hero%20ImageR8oR3R47R1R46R6R48R18R19R12i1R13zR14zR44R28y7:isImagey1:1y7:extListR19y7:extModeR39y7:minSizeR19y7:maxSizeR19y10:uploadTypeR50y17:showOnlyLibrariesR19y11:libraryViewR28gR11nR12i1R13zR14zgcR0R1y3:pdfR3R29R5nR6y3:PDFR8oR3R29R1R58R6R59R18R19R12i1R13zR14zR31R28R32R33R34R19R35R19R36R19R37R19R38R39R40R19R41R19R42R19R43R28R44R28R45R19gR11nR12i1R13zR14zgcR0R1R18R3y12:richtext-wymR5nR6y11:DescriptionR8oR3R60R1R18R6R61R18R19R12i1R13zR14zR32y3:400R34y3:200R44R28y11:allowTablesR28y11:allowImagesR50y12:editorStylesR19y15:containersItemsy234:%7B%27name%27%3A%20%27P%27%2C%20%27title%27%3A%20%27Paragraph%27%2C%20%27css%27%3A%20%27wym_containers_p%27%7D%2C%20%0D%0A%7B%27name%27%3A%20%27H1%27%2C%20%27title%27%3A%20%27Heading_1%27%2C%20%27css%27%3A%20%27wym_containers_h1%27%7Dy12:classesItemsR19gR11nR12i1R13zR14zgcR0R1y7:visibleR3y4:boolR5nR6y12:Is%20VisibleR8oR3R71R1R70R6R72R18R19R12i1R13zR14zy9:labelTruey3:Yesy10:labelFalsey2:Noy12:defaultValueR28y14:showHideFieldsR19y13:showHideValueR28gR11nR12i1R13zR14zgh', 4, 0, '', '', '', '', '', '', '|ASC', 1),
+(58, 'example_projects', '', 0, 'example_projects', 1, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey6:link_1y4:typey11:linkdisplayy6:dbtypeny5:labely6:Imagesy10:propertiesoR3R4R1R2R6R7y5:tabley14:example_imagesgy5:orderny10:showInListny15:showInFilteringny14:showInOrderingngcR0R1y2:idR3y9:read-onlyR5nR6y2:IDR8oR3R16R1R15R6R17y11:descriptiony0:R12i1R13zR14zgR11nR12i1R13zR14zgcR0R1y8:categoryR3y11:associationR5nR6y8:CategoryR8oR3R21R1R20R6R22R18R19R12i1R13zR14zR9y18:example_categoriesy5:fieldR15y10:fieldLabelR20y8:fieldSqlR19y11:showAsLabely1:0gR11nR12i1R13tR14zgcR0R1R1R3y4:textR5nR6y4:NameR8oR3R29R1R1R6R30R18R19R12i1R13zR14zy11:isMultilineR28y5:widthy3:300y6:heightR19y8:minCharsR19y8:maxCharsR19y9:charsListR19y4:modey5:ALLOWy5:regexR19y10:regexErrorR19y16:regexDescriptionR19y20:regexCaseInsensitiveR28y8:requiredR28y9:formatterR19gR11nR12i1R13zR14zgcR0R1y9:heroimageR3y10:image-fileR5nR6y12:Hero%20ImageR8oR3R47R1R46R6R48R18R19R12i1R13zR14zR44R28y7:isImagey1:1y7:extListR19y7:extModeR39y7:minSizeR19y7:maxSizeR19y10:uploadTypeR50y17:showOnlyLibrariesR19y11:libraryViewR28gR11nR12i1R13zR14zgcR0R1y3:pdfR3R29R5nR6y3:PDFR8oR3R29R1R58R6R59R18R19R12i1R13zR14zR31R28R32R33R34R19R35R19R36R19R37R19R38R39R40R19R41R19R42R19R43R28R44R28R45R19gR11nR12i1R13zR14zgcR0R1R18R3y12:richtext-wymR5nR6y11:DescriptionR8oR3R60R1R18R6R61R18R19R12i1R13zR14zR32y3:400R34y3:200R44R28y11:allowTablesR28y11:allowImagesR50y12:editorStylesR19y15:containersItemsy234:%7B%27name%27%3A%20%27P%27%2C%20%27title%27%3A%20%27Paragraph%27%2C%20%27css%27%3A%20%27wym_containers_p%27%7D%2C%20%0D%0A%7B%27name%27%3A%20%27H1%27%2C%20%27title%27%3A%20%27Heading_1%27%2C%20%27css%27%3A%20%27wym_containers_h1%27%7Dy12:classesItemsR19gR11nR12i1R13zR14zgcR0R1y7:visibleR3y4:boolR5nR6y12:Is%20VisibleR8oR3R71R1R70R6R72R18R19R12i1R13zR14zy9:labelTruey3:Yesy10:labelFalsey2:Noy12:defaultValueR28y14:showHideFieldsR19y13:showHideValueR28gR11nR12i1R13zR14zgh', 4, 0, '', '', '', '', '', '', '|ASC', 1),
 (59, 'example_projects_services', '', 0, 'example_projects_services', 0, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely2:IDy10:propertiesoR3R4R1R2R6R7y11:descriptiony0:y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:ordernR11i1R12zR13zgcR0R1y9:projectIdR3y11:associationR5nR6y12:Project%20IDR8oR3R16R1R15R6R17R9R10R11i1R12zR13zy5:tabley16:example_projectsy5:fieldR2y10:fieldLabelR1y8:fieldSqlR10y11:showAsLabely1:0gR14nR11i1R12zR13zgcR0R1y9:serviceIdR3R16R5nR6y12:Service%20IDR8oR3R16R1R25R6R26R9R10R11i1R12zR13zR18y16:example_servicesR20R2R21R1R22R10R23R24gR14nR11i1R12zR13zgh', 5, 0, '', '', '', '', '', '', '|ASC', 0),
-(60, 'example_services', '', 0, 'example_services', 0, 0, 1, 'ah', 6, 0, '', '', '', '', '', '', '|ASC', 0),
+(60, 'example_services', '', 0, 'example_services', 0, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely2:IDy10:propertiesoR3R4R1R2R6R7y11:descriptiony0:y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:ordernR11i1R12zR13zgcR0R1R1R3y4:textR5nR6y4:NameR8oR3R15R1R1R6R16R9R10R11i1R12zR13zy11:isMultiliney1:0y5:widthR10y6:heightR10y8:minCharsR10y8:maxCharsR10y9:charsListR10y4:modey5:ALLOWy5:regexR10y10:regexErrorR10y16:regexDescriptionR10y20:regexCaseInsensitiveR18y8:requiredR18y9:formatterR10gR14nR11i1R12zR13zgcR0R1R9R3y12:richtext-wymR5nR6y11:DescriptionR8oR3R32R1R9R6R33R9R10R11i1R12zR13zR19y3:400R20y3:200R30R18y11:allowTablesR18y11:allowImagesy1:1y12:editorStylesR10y15:containersItemsy234:%7B%27name%27%3A%20%27P%27%2C%20%27title%27%3A%20%27Paragraph%27%2C%20%27css%27%3A%20%27wym_containers_p%27%7D%2C%20%0D%0A%7B%27name%27%3A%20%27H1%27%2C%20%27title%27%3A%20%27Heading_1%27%2C%20%27css%27%3A%20%27wym_containers_h1%27%7Dy12:classesItemsR10gR14nR11i1R12zR13zgh', 6, 0, '', '', '', '', '', '', '|ASC', 0),
 (54, 'Test Page', '', 1, NULL, 0, 0, 0, 'acy37:site.cms.common.DefinitionElementMetay4:namey5:imagey4:typey10:image-filey6:dbtypeny5:labely5:Imagey10:propertiesoR3R4R1R2R6R7y11:descriptiony0:y10:showInListi1y15:showInFilteringzy14:showInOrderingzy8:requiredy1:0y7:isImagey1:1y7:extListR10y7:extModey5:ALLOWy7:minSizeR10y7:maxSizeR10y10:uploadTypeR17y17:showOnlyLibrariesR10y11:libraryViewR15gy5:orderd1R11i1R12zR13zgcR0R1y7:headingR3y4:textR5nR6y7:HeadingR8oR3R28R1R27R6R29R9R10R11i1R12zR13zy11:isMultilineR15y5:widthy3:300y6:heightR10y8:minCharsR10y8:maxCharsR10y9:charsListR10y4:modeR20y5:regexR10y10:regexErrorR10y16:regexDescriptionR10y20:regexCaseInsensitiveR15R14R15y9:formatterR10gR26d2R11i1R12zR13zgcR0R1y7:contentR3y12:richtext-wymR5nR6y7:ContentR8oR3R44R1R43R6R45R9R10R11i1R12zR13zR31y3:400R33y3:200R14R15y11:allowTablesR15y11:allowImagesR17y12:editorStylesR10y15:containersItemsy234:%7B%27name%27%3A%20%27P%27%2C%20%27title%27%3A%20%27Paragraph%27%2C%20%27css%27%3A%20%27wym_containers_p%27%7D%2C%20%0D%0A%7B%27name%27%3A%20%27H1%27%2C%20%27title%27%3A%20%27Heading_1%27%2C%20%27css%27%3A%20%27wym_containers_h1%27%7Dy12:classesItemsR10gR26d3R11i1R12zR13zgh', 1, 0, '', '', '', '', '', '', '|ASC', 0),
 (55, 'example_categories', '', 0, 'example_categories', 0, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely2:IDy10:propertiesoR3R4R1R2R6R7y11:descriptiony0:y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:ordernR11i1R12zR13zgcR0R1R9R3y4:textR5nR6y11:DescriptionR8oR3R15R1R9R6R16R9R10R11i1R12zR13zy11:isMultiliney1:0y5:widthy3:300y6:heightR10y8:minCharsR10y8:maxCharsR10y9:charsListR10y4:modey5:ALLOWy5:regexR10y10:regexErrorR10y16:regexDescriptionR10y20:regexCaseInsensitiveR18y8:requiredR18y9:formatterR10gR14nR11i1R12zR13zgcR0R1y8:categoryR3R15R5nR6y8:CategoryR8oR3R15R1R33R6R34R9R10R11i1R12zR13zR17R18R19R20R21R10R22R10R23R10R24R10R25R26R27R10R28R10R29R10R30R18R31R18R32R10gR14nR11i1R12zR13zgh', 1, 0, '', '', '', '', '', '', '|ASC', 0),
 (56, 'example_images', '', 0, 'example_images', 0, 0, 1, 'acy37:site.cms.common.DefinitionElementMetay4:namey2:idy4:typey9:read-onlyy6:dbtypeny5:labely2:IDy10:propertiesoR3R4R1R2R6R7y11:descriptiony0:y10:showInListi1y15:showInFilteringzy14:showInOrderingzgy5:orderd1R11i1R12zR13zgcR0R1y5:imageR3y10:image-fileR5nR6y5:ImageR8oR3R16R1R15R6R17R9R10R11i1R12zR13zy8:requiredy1:0y7:isImagey1:1y7:extListR10y7:extModey5:ALLOWy7:minSizeR10y7:maxSizeR10y10:uploadTypeR21y17:showOnlyLibrariesR10y11:libraryViewR19gR14d2R11i1R12zR13zgcR0R1y7:link_toR3y7:link-toR5nR6R10R8oR3R31R1R30R6R10R9R10R11i1R12zR13zgR14nR11i1R12zR13zgcR0R1y10:link_valueR3y10:link-valueR5nR6R10R8oR3R33R1R32R6R10R9R10R11i1R12zR13zgR14nR11i1R12zR13zgh', 2, 0, '', '', '', '', '', '', '|ASC', 0),
@@ -254,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `_settings` (
 --
 
 INSERT INTO `_settings` (`key`, `value`) VALUES
-('siteView', 'cy36:site.cms.modules.base.helper.MenuDefy8:headingsaoy4:namey4:Sitey11:isSeperatorfghy5:itemsaoy2:idi38y4:typewy41:site.cms.modules.base.helper.MenuItemTypey4:PAGE:0R2y5:Abouty7:headingR3y6:indentzy12:listChildrenny9:linkChildngoR6i39R7wR8R9:0R2y14:Get%20InvolvedR11R3R12zR13nR14ngoR6i47R7wR8y7:DATASET:0R2y8:ProjectsR11R3R12zR13nR14nghy18:numberOfSeperatorszg'),
+('siteView', 'cy36:site.cms.modules.base.helper.MenuDefy8:headingsaoy4:namey14:Example%20Datay11:isSeperatorfgoR2y15:Example%20PagesR4fghy5:itemsaoy2:idi55y4:typewy41:site.cms.modules.base.helper.MenuItemTypey7:DATASET:0R2y10:Categoriesy7:headingR3y6:indentzy12:listChildrenny9:linkChildngoR7i57R8wR9R10:0R2y4:NewsR12R3R13zR14nR15ngoR7i58R8wR9R10:0R2y8:ProjectsR12R3R13zR14nR15ngoR7i60R8wR9R10:0R2y8:ServicesR12R3R13zR14nR15ngoR7i59R8wR9R10:0R2y25:Projects%20%2F%20ServicesR12R3R13zR14nR15ngoR7i56R8wR9R10:0R2y6:ImagesR12R3R13zR14nR15ngoR7i45R8wR9y4:PAGE:0R2y11:Test%20PageR12R5R13zR14nR15nghy18:numberOfSeperatorszg'),
 ('googleMapsApiKey', 'ABQIAAAAPEZwP3fTiAxipcxtf7x-gxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRPwWSQQtyYryiI5S6KBZMsOwuCsw'),
 ('cms', ''),
 ('themeCurrent', 'default'),
@@ -263,7 +255,7 @@ INSERT INTO `_settings` (`key`, `value`) VALUES
 ('themeStyle', 'oy15:colorLinkOnDarky9:%2323A2C5y16:colorLinkOnLightR1y23:colorNavigationLinkBgUpR1y25:colorNavigationLinkBgOverR1y24:colorNavigationLinkColory6:%23fffg'),
 ('live', '1'),
 ('nonLiveAddress', './coming_soon/'),
-('emailSettings', '');
+('emailSettings', 'oy9:userTabley18:example_categoriesy7:idFieldy2:idy10:emailFieldy8:categoryy9:nameFieldy11:descriptiony6:submity0:g');
 
 -- --------------------------------------------------------
 
@@ -289,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `_users` (
 --
 
 INSERT INTO `_users` (`id`, `username`, `password`, `name`, `email`, `groups`, `updated`, `added`) VALUES
-(39, 'user', '1a1dc91c907325c69271ddf0c944bc72', 'user', 'pass', 'cms_editor', '2010-07-23 11:10:35', '2010-07-23 01:08:34'),
+(39, 'user', '1a1dc91c907325c69271ddf0c944bc72', 'User', 'pass', 'cms_editor', '2010-07-23 11:10:35', '2010-07-23 01:08:34'),
 (40, 'admin', '1a1dc91c907325c69271ddf0c944bc72', 'Admin', 'admin', 'cms_editor,cms_manager,cms_admin', '2010-08-30 11:39:29', '2010-08-30 11:42:22');
 
 -- --------------------------------------------------------

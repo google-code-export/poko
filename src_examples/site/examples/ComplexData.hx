@@ -60,7 +60,6 @@ class ComplexData extends DefaultTemplate
 		
 		if (form1.isSubmitted())
 		{
-			trace( form1.getData() );
 			projectId = form1.getData().project;
 			
 			if (projectId != "") 
