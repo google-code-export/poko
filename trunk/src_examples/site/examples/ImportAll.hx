@@ -16,7 +16,7 @@ import site.examples.Locations;
 import site.examples.ImageProcessing;
 import site.examples.ComplexData;
 
-import site.examples.Emailer;
+import site.examples.UsingPokoCMS;
 
 
 class ImportAll {}

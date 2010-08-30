@@ -83,6 +83,13 @@ class Index extends EmailBase
 		form.populateElements();
 		
 		var emailSettings = loadSettings();
+		
+		if ( emailSettings.userTable == null || emailSettings.userTable == "" )
+		{
+			messages.addError("Warning: No user table was defined in email settings.");
+			return;
+		}
+		
 		for ( item in emailVars )
 			item.field = Reflect.field(emailSettings, item.link);
 		
