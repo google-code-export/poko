@@ -65,8 +65,6 @@ class DateDropdowns extends FormElement
 		var year = Std.parseInt(Poko.instance.params.get(n + "Year"));
 		
 		value = (day != null && month != null && year != null ) ? new Date(year, month - 1, day, 0, 0, 0) : null;
-		
-		trace("pop value: " + value);
 	}
 	
 	override public function isValid():Bool
