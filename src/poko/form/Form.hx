@@ -313,6 +313,11 @@ class Form
 		
 		return s.toString();
 	}
+	
+	public function toString()
+	{
+		return getPreview();
+	}
 }
 
 class FieldSet
