@@ -71,7 +71,7 @@ class DateDropdowns extends FormElement
 	{
 		var valid = super.isValid();
 		
-		if ( required )
+		if ( required && valid )
 		{
 			var n = form.name + "_" + name;
 			var day = Std.parseInt(Poko.instance.params.get(n + "Day"));
@@ -80,7 +80,7 @@ class DateDropdowns extends FormElement
 			
 			if (day == null || month == null || year == null )
 			{
-				errors.add("Invalid date!");
+				errors.add("<span class=\"formErrorsField\">" + ((label != null && label != "") ? label : name) + "</span> is an invalid date.");
 				return false;
 			}
 			return true;
@@ -104,6 +104,16 @@ class DateDropdowns extends FormElement
 				value = new Date(v3,Std.parseInt(v2)-1,v1,0,0,0);
 		}
 	}*/
+	
+	public function getValue()
+	{
+		var n = form.name + "_" + name;
+		var day = Std.parseInt(Poko.instance.params.get(n + "Day"));
+		var month = Std.parseInt(Poko.instance.params.get(n + "Month"));
+		var year = Std.parseInt(Poko.instance.params.get(n + "Year"));
+		
+		return year + "-" + month + "-" + day;
+	}
 	
 	override public function render():String
 	{		

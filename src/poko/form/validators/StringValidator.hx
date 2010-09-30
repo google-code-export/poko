@@ -46,7 +46,7 @@ class StringValidator extends Validator
 	public var errorDenyChars:String;
 	public var errorAllowChars:String;
 	
-	public function new(?minChars:Int=0, ?maxChars:Int=999999, ?charList:String="", ?mode:StringValidatorMode, ?regex:EReg, ?regexError:String)
+	public function new(?minChars:Int=0, ?maxChars:Int=999999, ?charList:String="", ?mode:StringValidatorMode, ?regex:EReg = null, ?regexError:String)
 	{	
 		super();
 		
