@@ -34,6 +34,7 @@ import poko.form.Validator;
 import poko.form.validators.BoolValidator;
 import poko.form.Formatter;
 
+using StringTools;
 
 class Input extends FormElement
 {
@@ -76,7 +77,7 @@ class Input extends FormElement
 		}		
 		
 		var style = useSizeValues ? "style=\"width:" + width + "px\"" : "";
-		return "<input "+style+" class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +value+ "\"  "+attributes+" />" + (if(required && form.isSubmitted() && printRequired) " required");
+		return "<input "+style+" class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +safeString(value)+ "\"  "+attributes+" />" + (if(required && form.isSubmitted() && printRequired) " required");
 	}
 	
 	public function toString() :String

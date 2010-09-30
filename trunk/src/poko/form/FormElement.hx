@@ -205,4 +205,8 @@ class FormElement
 		
 		return css.trim();
 	}
+	
+	private inline function safeString(s:Dynamic) {
+		return s == null ? "" : Std.string(s).htmlEscape().split('"').join("&quot;");
+	}
 }
