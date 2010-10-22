@@ -81,8 +81,8 @@ class JsGallery extends JsRequest
 		var ext:String = item.substr(item.lastIndexOf(".") + 1);
 		return switch(ext.toUpperCase())
 		{
-			case "JPG", "GIF", "PNG":  
-				JQuery.create("img", { src:'?request=cms.services.Image&preset=thumb&src=../media/galleries/' + gallery + '/' + item } );
+			case "JPG", "GIF", "PNG":
+				JQuery.create("img", { src:'?request=core.services.Image&preset=thumb&src=' + item } );
 			case "PDF":
 				JQuery.create("img", { src:'./res/cms/media/file_pdf.png' } );
 			case "TXT":

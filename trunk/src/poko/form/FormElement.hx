@@ -49,6 +49,8 @@ class FormElement
 	public var cssClass:String;
 	public var inited:Bool;
 	
+	public var internal:Bool;
+	
 	public function new() 
 	{
 		active = true;
@@ -56,6 +58,7 @@ class FormElement
 		validators = new List();
 		
 		inited = false;
+		internal = false;
 	}
 	
 	public function isValid():Bool

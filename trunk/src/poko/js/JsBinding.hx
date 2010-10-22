@@ -29,6 +29,7 @@ package poko.js;
 
 #if php
 
+import php.Lib;
 import poko.controllers.HtmlController;
 import poko.Poko;
 import haxe.Serializer;
@@ -45,6 +46,9 @@ class JsBinding
 	
 	public function getCall(method:String, args:Array<Dynamic>):String
 	{
+		//if (args != null && Std.is(args, Array))
+		//	args = Lib.toHaxeArray(cast args);
+		
 		var str = this + ".call('" + method + "', ";
 		str += "'" +Serializer.run(args) + "'";
 		str += ")";

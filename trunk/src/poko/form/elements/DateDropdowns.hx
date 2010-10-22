@@ -42,10 +42,29 @@ class DateDropdowns extends FormElement
 		maxOffset = null;
 		minOffset = null;
 		
-		var data:Dynamic = {};
-		daySelector = new Selectbox("", "Birth Day",ListData.getDays(),data.childsBirthDay,true,"-Day-",'title="Day"');
-		monthSelector = new Selectbox("", "Birth Month",ListData.getMonths(),data.childsBirthMonth,true,"-Month-", 'title="Month"');
-		yearSelector = new Selectbox("", "Birth Year", ListData.getYears(1920, 2010, true), data.childsBirthYear, true, "-Year-", 'title="Year"');
+		var day = "";
+		var month = "";
+		var year = "";
+		
+		if (value != null)
+		{
+			day = ""+ (value.getDate());
+			month = ""+ (value.getMonth()+1);
+			year = ""+ value.getFullYear();
+		}
+		
+		daySelector = new Selectbox("", "Birth Day",ListData.getDays(),day,true,"-Day-",'title="Day"');
+		monthSelector = new Selectbox("", "Birth Month",ListData.getMonths(),month,true,"-Month-", 'title="Month"');
+		yearSelector = new Selectbox("", "Birth Year", ListData.getYears(1920, 2010, true), year, true, "-Year-", 'title="Year"');
+		
+		daySelector.internal = monthSelector.internal = yearSelector.internal = true;
+	}
+	public function shortLabels()
+	{
+		daySelector.nullMessage = "-D-";
+		monthSelector.nullMessage = "-M-";
+		yearSelector.nullMessage = "-Y-";
+		monthSelector.data = ListData.getMonths(true);
 	}
 	
 	override public function init()

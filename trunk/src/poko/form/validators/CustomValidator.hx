@@ -32,21 +32,27 @@ import poko.form.Validator;
 
 class CustomValidator extends Validator
 {
-	public var validationFunction : String->CustomValidator->Bool;
+	public var validationFunction : Dynamic->Bool;
+	public var errorNotValid:String;
 	
-	public function new( validationFunction : String->CustomValidator->Bool ) 
+	public function new( validationFunction : Dynamic->Bool, errorMessage:String ) 
 	{
 		super();
 		this.validationFunction = validationFunction;
+		this.errorNotValid = errorMessage;
 	}
 	
 	override public function isValid( value : Dynamic ) : Bool
 	{
 		super.isValid( value );
 		
+		var valid = false;
 		if ( validationFunction != null )
-			return validationFunction( value, this );
+			valid = validationFunction( value);
+		
+		if (!valid)
+			errors.add(errorNotValid);
 			
-		return false;
+		return valid;
 	}
 }

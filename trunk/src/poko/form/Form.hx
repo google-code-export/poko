@@ -202,12 +202,13 @@ class Form
 	
 	public function getOpenTag():String
 	{
-		return "<form id=\""+id+"\" name=\"" + name + "\" method=\""+ method +"\" action=\""+ action +"\" enctype=\"multipart/form-data\" >";
+		return '<form id="'+id+'" name="' + name + '" method="'+ method +'" action="'+ action +'" enctype="multipart/form-data" >';
 	}
 	
 	public function getCloseTag():String
 	{
 		var s = new StringBuf();
+		s.add('<div style="clear:both; height:0px;">&nbsp;</div>');
 		s.add('<input type="hidden" name="' + name + '_formSubmitted" value="true" /></form>');
 		// Matt - Updates all WYMEditors before submitting a form if any have been added
 		if ( wymEditorCount > 0 )
@@ -301,7 +302,8 @@ class Form
 		s.add("<table>\n");
 		
 		for (element in getElements()) 
-			if(element != submitButton) s.add("\t"+element.getPreview()+"\n");
+			if (element != submitButton && element.internal == false) 
+				s.add("\t"+element.getPreview()+"\n");
 
 		if (submitButton != null) {
 			submitButton.form = this;
