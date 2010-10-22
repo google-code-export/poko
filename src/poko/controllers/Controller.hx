@@ -31,6 +31,7 @@ import haxe.remoting.Context;
 import haxe.remoting.HttpConnection;
 import php.Lib;
 import poko.Poko;
+import poko.views.Parse;
 import poko.views.View;
 import poko.system.Component;
 
@@ -40,6 +41,7 @@ class Controller
 	public var view:View;
 	public var remoting:Context;
 	public var components:List<Component>;
+	public var identifier:String;
 	
 	public function new() 
 	{
@@ -52,6 +54,9 @@ class Controller
 		remoting = new Context();
 
 		components = new List();
+		
+		var s = Type.getClassName(Type.getClass(this));
+		identifier = s.substr(s.indexOf(".")+1);
 	}
 	
 	public function handleRequest()
@@ -74,6 +79,11 @@ class Controller
 		for (comp in components) comp.post();
 		
 		onFinal();
+	}
+	
+	public function parse(tpl:String):String
+	{
+		return Parse.template(tpl, this);
 	}
 	
 	public function render():Void

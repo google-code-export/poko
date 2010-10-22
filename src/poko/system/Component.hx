@@ -36,9 +36,12 @@ class Component implements Renderable
 {
 	public var app:Poko;
 	public var view:View;
+	public var visible:Bool;
 	
 	public function new() 
 	{
+		visible = true;
+		
 		app  = Poko.instance;
 		app.controller.components.add(this);
 		
@@ -57,7 +60,10 @@ class Component implements Renderable
 	
 	public function render():String
 	{
-		return view.render();
+		if (!visible)
+			return "";
+		else 
+			return view.render();
 	}
 	
 	public function toString()

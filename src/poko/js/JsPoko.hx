@@ -99,12 +99,12 @@ class JsPoko
 		}
 	}	
 	
-	public static function setupLog() 
+	public function setupLog() 
 	{
 		haxe.Log.trace = log;
 	}
 	
-	public static function log ( v:Dynamic, ?pos : haxe.PosInfos ):Void 
+	public function log ( v:Dynamic, ?pos : haxe.PosInfos ):Void 
 	{
 		var console = Reflect.field( js.Lib.window, "console" );
 		

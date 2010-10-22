@@ -94,7 +94,7 @@ class View implements Renderable
 			renderer.assign(i, d);
 		}
 		
-		renderer.assign("application", Poko.instance);
+		renderer.assign("app", Poko.instance);
 		renderer.assign("controller", Poko.instance.controller);
 		renderer.assign("resolveClass", Type.resolveClass);
 		
