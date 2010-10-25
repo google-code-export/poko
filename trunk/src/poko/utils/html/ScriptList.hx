@@ -16,15 +16,25 @@ class ScriptList
 		scripts = new Array<ScriptRef>();
 	}
 	
-	public function addExternal( type : ScriptType, url : String, ?condition : String = null, ?media : String = null ) : Void
+	//public function addExternal( type : ScriptType, url : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	public function addExternal( type : String, url : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
 	{
-		scripts.push( { type : type, isExternal : true, value : url, condition : condition, media : media } );
+		//var script = { type: type, isExternal: true, value: url, condition: condition, media: media, priority: priority };
+		//if ( !Lambda.has(scripts, script, compareScriptRef) )
+			//scripts.push(script);
+		scripts.push( { type: type, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
 	}
 	
-	public function addInline( type : ScriptType, source : String, ?condition : String = null, ?media : String = null ) : Void
+	//public function addInline( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	public function addInline( type : String, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
 	{
-		scripts.push( { type : type, isExternal : false, value : source, condition : condition, media : media } );
+		scripts.push( { type: type, isExternal: false, value: source, condition: condition, media: media, priority: priority } );
 	}
+	
+	//function compareScriptRef( a:ScriptRef, b:ScriptRef ) : Bool
+	//{
+		//return ( a.type == b.type && a.isExternal == b.isExternal && a.value == b.value );
+	//}
 	
 	public function getScripts() : String
 	{
@@ -33,6 +43,8 @@ class ScriptList
 		#if debug
 		var missing = new Array<String>();
 		#end
+		
+		//scripts.sort(sortScripts);
 		
 		for ( script in scripts )
 		{
@@ -58,14 +70,19 @@ class ScriptList
 		return output;
 	}
 	
+	function sortScripts( a:ScriptRef, b:ScriptRef ) : Int
+	{
+		return (b.priority - a.priority);
+	}
+	
 	function formatInlineScript( script : ScriptRef ) : String
 	{
 		var output : String = "";
 		switch ( script.type )
 		{
-			case css:
+			case "css":
 				output = (script.media == null) ? "<style type=\"text/css\">" + script.value + "</style>" : "<style type=\"text/css\" media=\"" + script.media + "\">" + script.value + "</style>";
-			case js:
+			case "js":
 				output = "<script>" + script.value + "</script>";
 		}
 		if ( script.condition != null )
@@ -78,9 +95,9 @@ class ScriptList
 		var output : String = "";
 		switch ( script.type )
 		{
-			case css:
+			case "css":
 					output = (script.media == null) ? "<link href=\"" + script.value + "\" rel=\"stylesheet\" type=\"text/css\" />" : "<link href=\"" + script.value + "\" rel=\"stylesheet\" type=\"text/css\" media=\"" + script.media + "\" />";
-			case js:
+			case "js":
 				output = "<script src=\"" + script.value + "\"></script>";
 		}
 		if ( script.condition != null )

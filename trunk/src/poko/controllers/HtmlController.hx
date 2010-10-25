@@ -44,7 +44,7 @@ class HtmlController extends Controller
 {
 	public var head:HtmlHeader;
 	
-	public var scriptes:ScriptList;
+	//public var scriptes:ScriptList;
 		
 	public var jsBindings:Hash<JsBinding>;
 	public var jsCalls:List<String>;

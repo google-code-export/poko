@@ -7,15 +7,28 @@ package poko.utils;
 
 import haxe.Md5;
 import haxe.Timer;
+import poko.utils.mailtest.Part;
 
 class EmailForwarder
 {
 	//public static var defaultProxyURL : String = "http://www.mattbenton.net/email_forwarder.php";
-	public static var defaultProxyURL : String = "http://poko.touchmypixel.com/email_forwarder.php";
+	//public static var defaultProxyURL : String = "http://poko.touchmypixel.com/email_forwarder.php";
+	public static var defaultProxyURL : String = "http://www.photostorymob.com.au/email/email_forwarder.php";
 	//public static var defaultProxyCode : String = "iamawesome";
 	public static var defaultProxyCode : String = "yourendofthebargain";
 	public static var useProxy : Bool = true;
 	public static var disableHtml : Bool = false;
+	
+	public static var parts : Array<Part>;
+	
+	public static function addPart( part : Part ) : Void
+	{
+		if ( parts == null )
+			parts = new Array<Part>();
+		parts.push(part);
+	}
+	
+	//public static function mail( to : String, subject : String
 	
 	public static function forwardEmail( to : String, subject : String, message : String, headers : String, ?proxyUrl : String = null, ?proxyCode : String = null ) : Bool
 	{
