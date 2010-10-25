@@ -672,7 +672,7 @@ class DatasetItem extends DatasetBase
 					if (element.properties.currentOnAdd == "1" && (form.getElement("__action").value == "add" || app.params.get("action") == "add"))
 						d = Date.now();
 						
-					d = null;
+					//d = null;
 									
 					var el = new DateSelector(element.name, label, d, element.properties.required);
 					if (element.properties.restrictMin == "1") el.minOffset = element.properties.minOffset;
