@@ -50,8 +50,8 @@ class HTemplate implements Renderable
 		var tpl = "./tpl/ht/" + template;
 		if(FileSystem.exists(tpl))
 		{
-			var ht = new Template(File.getContent(tpl));
-			return ht.execute(data);
+			var renderer = new Template(File.getContent(tpl));
+			return renderer.execute(data);
 		} else {
 			throw "HTemplate Template is missing: " + template;
 			return null;
@@ -66,9 +66,8 @@ class HTemplate implements Renderable
 	
 	public static function parse(template:String, ?data:Dynamic):String
 	{
-		var renderer = new Php(template);
-		renderer.data = data;
-		return renderer.render();
+		var renderer = new Template(File.getContent(template));
+		return renderer.execute(data);
 	}
 	
 	public function toString():String

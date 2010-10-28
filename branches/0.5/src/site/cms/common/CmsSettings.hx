@@ -44,12 +44,14 @@ class CmsSettings
 	
 	public static function save(db:Db)
 	{
-		if (CmsSettings.i == null) throw "Please run CmsSettings.load() before trying to run CmsSettings.save()";
+		if (CmsSettings.i == null) 
+			throw "Please run CmsSettings.load() before trying to run CmsSettings.save()";
 		var i = CmsSettings.i;
 				
 		for (f in Reflect.fields(i))
 		{
-			var sql = "UPDATE `_settings` SET `value`='" + Reflect.field(i, f) + "' WHERE `key`='" + f + "'";
+			var sql = 'UPDATE `_settings` SET `value`="' + Reflect.field(i, f) + '" WHERE `key`="'+ f + '"';
+			
 			db.query(sql);
 		}
 	}

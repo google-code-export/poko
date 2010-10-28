@@ -40,7 +40,13 @@ class Component extends ViewContext
 	
 	override public function render():String
 	{
-		return output != null ? output : super.render();
+		if (output != null)
+		{
+			return output;
+		} else {
+			
+		  return  super.render();
+		}
 	}
 	
 	override public function toString()

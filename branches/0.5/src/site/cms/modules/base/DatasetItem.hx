@@ -192,7 +192,7 @@ class DatasetItem extends DatasetBase
 		// upload files
 		var uploadData = uploadFiles();
 		for (k in uploadData.keys()) {
-			Reflect.setField(data, k, uploadData.get(k));
+			Reflect.setField(data, k, StringTools.urlEncode(uploadData.get(k)));
 		}
 		
 		// post processing
@@ -259,6 +259,7 @@ class DatasetItem extends DatasetBase
 				if (pagesMode)
 				{
 					var sdata = Serializer.run(data);
+					
 					application.db.update("_pages", {data:sdata}, "`id`=" + application.db.cnx.quote(Std.string(id)));
 				} else {
 					// get old data before update
@@ -474,9 +475,11 @@ class DatasetItem extends DatasetBase
 				}
 				
 			}else {
+				
 				// upload file	
 				if (info.get("error") == 0) 
 				{
+				
 					PhpTools.moveFile(info.get("tmp_name"), application.uploadFolder + "/" + randomString + filename);
 					data.set(name, randomString + filename);
 					nFilesAdded++;
@@ -535,7 +538,7 @@ class DatasetItem extends DatasetBase
 				FileSystem.deleteFile(application.uploadFolder + "/" + f);
 			}catch (e:Dynamic) {
 				//TO DO: need to get this warning working properly!
-				//application.messages.addError("Problem deleting file: " + f);
+				application.messages.addError("Problem deleting file: " + f);
 			}
 		}
 		
@@ -653,13 +656,13 @@ class DatasetItem extends DatasetBase
 						if (element.properties.maxSize) el.description += "Max Size: " + element.properties.maxSize + "Kb";
 					}
 					
-					el.showUpload = (element.properties.uploadType == "0" || element.properties.uploadType == "1");
-					el.showLibrary = (element.properties.uploadType == "0" || element.properties.uploadType == "2");
+					el.showUpload = (""+element.properties.uploadType == "0" || ""+element.properties.uploadType == "1");
+					el.showLibrary = (""+element.properties.uploadType == "0" || ""+element.properties.uploadType == "2");
 					
-					el.libraryViewThumb = (element.properties.libraryView == "0" || element.properties.libraryView == "1");
-					el.libraryViewList = (element.properties.libraryView == "0" || element.properties.libraryView == "2");
+					el.libraryViewThumb = (""+element.properties.libraryView == "0" || ""+element.properties.libraryView == "1");
+					el.libraryViewList = (""+element.properties.libraryView == "0" || ""+element.properties.libraryView == "2");
 					
-					el.showJavaUploader = (element.properties.showJavaUploader != "0");
+					el.showJavaUploader = (""+element.properties.showJavaUploader != "0");
 					el.ftpUrl = element.properties.ftpUrl;
 					el.ftpUsername = element.properties.ftpUsername;
 					el.ftpPassword = element.properties.ftpPassword;
