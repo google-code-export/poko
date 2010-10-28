@@ -103,8 +103,7 @@ class FileUpload extends FormElement
 				if (!required) {
 					str += " <a href=\"#\" onclick=\"" + jsBind.getCall("deleteFile", [s, "fileUploadDisplay_"+name]) + "; return(false);\"><img align=\"absmiddle\" title=\"delete\" src=\"./res/cms/delete.png\" /></a>";
 				}
-			}
-			
+			} 
 			str += "</div>";
 		}
 		
@@ -129,8 +128,16 @@ class FileUpload extends FormElement
 			
 		str += '<input type="hidden" name="' + n + '_libraryItemValue" id="' + n + '_libraryItemValue" value="" />';
 		str += '<div class="cmsComponentFileImageEdit">';
-		str += '<div class="cmsComponentFileImageEditUpload" style="'+(showUpload == false ? 'display:none;' : '')+'"><input checked type="radio" id="' + n + '_cmsComponentFileImageEditOperationUpload" name="' + n + '_operation" value="'+ OPERATION_UPLOAD +'" /> <input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' onClick="document.getElementById(\'' + n + '_cmsComponentFileImageEditOperationUpload\').checked = true;" /></div>';
-		str += '<div class="cmsComponentFileImageEditLibrary" style="'+(showLibrary == false ? 'display:none;':'')+'"><input type="radio" id="' + n + '_cmsComponentFileImageEditOperationLibrary" name="' + n + '_operation" value="' + OPERATION_LIBRARY +'" /> ' + popupURL.render() + '<span id="' + n + '_libraryItemDisplay" class="cmsComponentFileImageEditLibraryDisplay"></span>';
+		
+		showUpload = true;
+		
+		str += '<div class="cmsComponentFileImageEditUpload" style="' + (showUpload == false ? 'display:none;' : '') + '">';
+			str += '<input checked type="radio" id="' + n + '_cmsComponentFileImageEditOperationUpload" name="' + n + '_operation" value="' + OPERATION_UPLOAD +'" />';
+		str += '<input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' onClick="document.getElementById(\'' + n + '_cmsComponentFileImageEditOperationUpload\').checked = true;" /></div>';
+		
+		str += '<div class="cmsComponentFileImageEditLibrary" style="' + (showLibrary == false ? 'display:none;':'') + '">';
+		str += '<input type="radio" id="' + n + '_cmsComponentFileImageEditOperationLibrary" name="' + n + '_operation" value="' + OPERATION_LIBRARY +'" /> ' + popupURL.render() + '<span id="' + n + '_libraryItemDisplay" class="cmsComponentFileImageEditLibraryDisplay"></span>';
+	
 		str += "</div>";
 		
 		return str;
