@@ -114,6 +114,7 @@ class HtmlHeader extends ScriptList
 	public var cssIe6:List<String>;
 	public var cssIe7:List<String>;
 		
+	
 	public function new()
 	{
 		super();
@@ -183,5 +184,5 @@ class HtmlHeader extends ScriptList
 		for (cssItem in cssPrint) 
 			str += "<link rel=\"stylesheet\" href=\"" + cssItem + "\" type=\"text/css\" media=\"print\" /> \n";
 		return str;
-	}	
+	}
 }

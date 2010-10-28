@@ -35,6 +35,8 @@ class Selectbox extends FormElement
 	public var data:List<Dynamic>;
 	public var nullMessage:String;
 	public var onChange:String;
+	public var size:Int;
+	public var multiple:Bool;
 	
 	public function new(name:String, label:String, ?data:List<Dynamic>, ?selected:String, required:Bool=false, ?nullMessage:String="- select -", ?attributes:String="") 
 	{
@@ -47,6 +49,9 @@ class Selectbox extends FormElement
 		this.nullMessage = nullMessage;
 		this.attributes = attributes;
 		
+		size = 1;
+		multiple = false;
+		
 		onChange = "";
 	}
 	
@@ -55,7 +60,7 @@ class Selectbox extends FormElement
 		var s = "";
 		var n = form.name + "_" +name;
 
-		s += "\n<select name=\""+n+"\" id=\""+n+"\" "+attributes+" class=\""+ getClasses() +"\" onChange=\""+onChange+"\" "+attributes+" />";
+		s += '\n<select name="' + n + '" id="' + n + '" '+attributes+' class="'+ getClasses() +'" onChange="'+onChange+'" size="'+size+'" '+(multiple ? "multiple" : "")+'/>';
 		
 		if (nullMessage != "")
 			s += "<option value=\"\" " + (Std.string(value) == "" ? "selected":"") + ">" + nullMessage + "</option>";

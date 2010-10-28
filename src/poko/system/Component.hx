@@ -49,9 +49,9 @@ class Component implements Renderable
 		view.findTemplate(this);
 	}
 	
-	public function init(){}
-	public function main(){}
-	public function post(){}
+	public function init():Void{}
+	public function main():Void{}
+	public function post():Void{}
 	
 	public function setOutput(value)
 	{

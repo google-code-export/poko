@@ -5,6 +5,7 @@
 
 package poko.utils.html;
 import php.FileSystem;
+import poko.controllers.HtmlController;
 import poko.Poko;
 
 class ScriptList 
@@ -57,6 +58,14 @@ class ScriptList
 			output += ( script.isExternal ) ? formatExternalScript( script ) + "\n" : formatInlineScript( script ) + "\n";
 		}
 		
+		// special binds that are allowed in poko
+		if (Std.is(Poko.instance.controller, HtmlController))
+		{
+			var jsBindings = cast(Poko.instance.controller, HtmlController).jsBindings;
+			for(jsBinding in jsBindings.keys())
+				output += "<script> poko.js.JsPoko.instance.addRequest(\"" + jsBinding + "\") </script> \n";			
+		}
+		
 		#if debug
 		if ( missing.length > 0 )
 		{
@@ -98,7 +107,7 @@ class ScriptList
 			case "css":
 					output = (script.media == null) ? "<link href=\"" + script.value + "\" rel=\"stylesheet\" type=\"text/css\" />" : "<link href=\"" + script.value + "\" rel=\"stylesheet\" type=\"text/css\" media=\"" + script.media + "\" />";
 			case "js":
-				output = "<script src=\"" + script.value + "\"></script>";
+				output = '<script type="text/javascript" src="' + script.value + '"></script>';
 		}
 		if ( script.condition != null )
 			return formatCondition( output, script.condition );
