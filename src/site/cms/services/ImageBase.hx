@@ -51,6 +51,20 @@ class ImageBase extends poko.controllers.Controller
 	{
 		var src:String = app.params.get("src");
 		
+		// Just in case we're asked for a blank source don't send back an HTML error.
+		if (src == "" || src == null) {
+			
+			// base64 encoded 1x1 pixel GIF
+			var blankGif = "R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+			// hash for caching
+			var blankHash = Md5.encode(blankGif);
+			
+			setHeaders( Date.fromTime(0), "43", blankHash );
+			Lib.print(untyped __call__("base64_decode", blankGif));
+			
+			return;
+		}
+		
 		if ( app.params.exists("preset") )
 		{
 			// Create a new image processor.

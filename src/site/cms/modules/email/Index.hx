@@ -41,7 +41,7 @@ class Index extends EmailBase
 	{
 		super.main();
 		
-		head.addExternal(ScriptType.js, "js/cms/wymeditor/jquery.wymeditor.pack.js");
+		head.addExternal(cast ScriptType.js, "js/cms/wymeditor/jquery.wymeditor.pack.js");
 		
 		setupLeftNav();
 		
