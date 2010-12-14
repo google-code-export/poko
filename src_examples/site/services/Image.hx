@@ -65,6 +65,9 @@ class Image extends ImageBase
 				var w:Int = Std.parseInt(app.params.get("w"));
 				var h:Int = Std.parseInt(app.params.get("h"));
 				image.queueFitSize(w, h);
+			case "trans": 
+				image.format = ImageOutputFormat.PNG;
+				image.saveAlpha = true;
 		}
 	}
 }

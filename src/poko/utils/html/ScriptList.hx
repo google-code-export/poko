@@ -18,12 +18,12 @@ class ScriptList
 	}
 	
 	//public function addExternal( type : ScriptType, url : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
-	public function addExternal( type : String, url : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	public function addExternal( type : ScriptType, url : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
 	{
 		//var script = { type: type, isExternal: true, value: url, condition: condition, media: media, priority: priority };
 		//if ( !Lambda.has(scripts, script, compareScriptRef) )
 			//scripts.push(script);
-		scripts.push( { type: type, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
+		scripts.push( { type: cast type, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
 	}
 	
 	//public function addInline( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void

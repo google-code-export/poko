@@ -74,6 +74,11 @@ fieldset.fieldsetNoDisplay legend{
 	display:none;
 }
 
+.radioItemHorizontal {
+	float: left;
+	margin-right: 10px;
+}
+
 #container
 {
 	
@@ -170,18 +175,9 @@ fieldset.fieldsetNoDisplay legend{
 	padding-top: 5px;
 }
 
-#heading #headingNavigation .navigation_selected
-{
-	background: url('../../res/cms/theme/default/button1.png') no-repeat;
-}
-
 #heading #headingNavigation li a:hover
 {
 	background: url('../../res/cms/theme/default/button1.png') no-repeat;
-}
-
-a.leftNavEdit {
-	float: right;
 }
 
 #heading hr
@@ -316,12 +312,6 @@ a.leftNavEdit {
 	width:100px;
 }
 
-.radioItemHorizontal
-{
-	float: left;
-	margin-right: 5px;
-}
-
 .contentTd
 {
 	width:450px;
@@ -382,6 +372,50 @@ a.leftNavEdit {
 }
 
 /* ------------------------------------------------------- */
+/* filter tabs */
+#datasetTabFields li {
+	display: inline;
+	padding: 5px;
+	padding-bottom: 10px;
+	background: #eee;
+}
+#datasetTabFields li.datasetTabFieldSelected {
+	background: #f8f8f8;
+	border: 3px solid #fff;
+	border-bottom: 1px solid #fff;
+	padding: 10px;
+}
+
+/* ------------------------------------------------------- */
+/* paging */
+
+.datasetPagination {
+	height: 50px;
+}
+
+.datasetPagination a {
+	background: #eee;
+	padding: 5px;
+	margin: 1px;
+}
+.datasetPagination a:hover {
+	background: #fff;
+	border: 1px solid #eee;
+	padding: 4px;
+}
+
+.datasetPagination span.paginationCurrent {
+	background: #f8f8f8;
+	padding: 10px;
+	font-weight: bold;
+	margin: 1px;
+}
+
+.datasetPagination span.paginationOf {
+	margin-left: 15px;
+}
+
+/* ------------------------------------------------------- */
 /* filtering and ordering controls */
 
 #filterOrderWrapper
@@ -432,6 +466,16 @@ a.leftNavEdit {
 	background-repeat: no-repeat;
 	padding-left: 18px;
 	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+
+#datasetOrderButton
+{
+	background-image: url(../../res/cms/icon_order.png);
+	background-repeat: no-repeat;
+	padding-left: 18px;
+	margin-top: 10px;
 }
 
 /* ------------------------------------------------------- */
@@ -457,11 +501,19 @@ a.leftNavEdit {
 	padding: 7px;
 }
 
-strong
+#cmsDatasetItemOverallHelp
 {
-	font-weight: bold;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #ccc;
 }
 
-em {
-	font-style: italic;
+.cmsDatasetListRecordAction
+{
+	width: 50px;
+}
+
+.leftNavEdit
+{
+	float: right;
 }

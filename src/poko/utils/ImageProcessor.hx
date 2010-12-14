@@ -54,6 +54,8 @@ class ImageProcessor
 	public var hash:String;
 	public var dateModified:Date;
 	
+	public var saveAlpha:Bool;
+	
 	public function new(file:String) 
 	{
 		fileName = file;
@@ -61,6 +63,8 @@ class ImageProcessor
 		cache = true;
 		cacheFolder = "./cache";
 		forceNoCache = false;
+		
+		saveAlpha = false;
 		
 		quality =  .8;
 		format = ImageOutputFormat.JPG;
@@ -262,7 +266,7 @@ class ImageProcessor
 		
 		var stat:FileStat = FileSystem.stat(fileName);
 		
-		s += "&" + stat.mtime + "&" + stat.ctime + "&" + revision + quality;
+		s += "&" + stat.mtime + "&" + stat.ctime + "&" + revision + quality + (saveAlpha ? 1 : 0);
 		
 		//trace(s);
 		var hash = Md5.encode(s);
@@ -314,6 +318,8 @@ class ImageProcessor
 			}
 			else 
 			{
+				if (saveAlpha) GD.imageSaveAlpha(resource, true);
+				
 				if (!queue.isEmpty()) processQueue();
 				
 				var output = output();

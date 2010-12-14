@@ -18,5 +18,6 @@ import site.examples.ComplexData;
 
 import site.examples.UsingPokoCMS;
 
+import site.examples.SuperSimple;
 
 class ImportAll {}
