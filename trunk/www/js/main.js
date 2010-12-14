@@ -1588,24 +1588,21 @@ poko.js.JsPoko = function(p) { if( p === $_ ) return; {
 	this.requests = new Hash();
 	this.requestBuffer = new List();
 	this.serverUrl = "";
-	poko.js.JsPoko.setupLog();
+	this.setupLog();
 	this.parseParams();
 }}
 poko.js.JsPoko.__name__ = ["poko","js","JsPoko"];
 poko.js.JsPoko.instance = null;
-poko.js.JsPoko.setupLog = function() {
-	haxe.Log.trace = $closure(poko.js.JsPoko,"log");
-}
-poko.js.JsPoko.log = function(v,pos) {
-	var console = Reflect.field(js.Lib.window,"console");
-	console.log("%s:%s: %o \n",pos.fileName,pos.lineNumber,v);
-}
 poko.js.JsPoko.prototype.addRequest = function(req) {
 	var r = this.setupRequest(req);
 	if(r != null) this.requests.set(req,r);
 	return r;
 }
 poko.js.JsPoko.prototype.config = null;
+poko.js.JsPoko.prototype.log = function(v,pos) {
+	var console = Reflect.field(js.Lib.window,"console");
+	console.log("%s:%s: %o \n",pos.fileName,pos.lineNumber,v);
+}
 poko.js.JsPoko.prototype.params = null;
 poko.js.JsPoko.prototype.parseParams = function() {
 	if(this.params == null) this.params = new Hash();
@@ -1632,6 +1629,9 @@ poko.js.JsPoko.prototype.run = function() {
 	}}
 }
 poko.js.JsPoko.prototype.serverUrl = null;
+poko.js.JsPoko.prototype.setupLog = function() {
+	haxe.Log.trace = $closure(this,"log");
+}
 poko.js.JsPoko.prototype.setupRequest = function(req) {
 	var request = null;
 	var c = Type.resolveClass(req);
@@ -2205,7 +2205,7 @@ site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueV
 	var valueElement = (this.properties.valueIsMultiline == "1"?JQuery.create("textarea",{ style : ((("height:" + this.properties.valueHeight) + "px; width:") + this.properties.valueWidth) + "px;"},[valueValue]):JQuery.create("input",{ type : "text", value : valueValue, style : ("width:" + this.properties.valueWidth) + "px;"},[]));
 	var d = { src : "./res/cms/delete.png", title : "remove"}
 	d["class"] = "qTip";
-	var removeElement = (removeable?JQuery.create("a",{ href : "#"},JQuery.create("img",d)):null);
+	var removeElement = (removeable?JQuery.create("a",{ href : "#", onclick : "return false;"},JQuery.create("img",d)):null);
 	var _r = this.request;
 	if(removeable) {
 		removeElement.click(function(e) {
@@ -2762,7 +2762,7 @@ site.cms.modules.media.js.JsGallery.prototype.getPreview = function(item) {
 		var $r;
 		switch(ext.toUpperCase()) {
 		case "JPG":case "GIF":case "PNG":{
-			$r = JQuery.create("img",{ src : (("?request=cms.services.Image&preset=thumb&src=../media/galleries/" + $this.gallery) + "/") + item});
+			$r = JQuery.create("img",{ src : "?request=core.services.Image&preset=thumb&src=" + item});
 		}break;
 		case "PDF":{
 			$r = JQuery.create("img",{ src : "./res/cms/media/file_pdf.png"});

@@ -61,6 +61,7 @@ class DefaultTemplate extends HtmlController
 		
 		navigation = new Navigation();
 		navigation.addLink("Test Page",			"examples.TestPage");
+		navigation.addLink("Super Simple",			"examples.SuperSimple");
 		navigation.addLink("Pages", 			"examples.Pages");
 		navigation.addLink("Basic data",	 	"examples.Basic");
 		navigation.addLink("Forms", 			"examples.Forms");

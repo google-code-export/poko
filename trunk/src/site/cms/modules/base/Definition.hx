@@ -374,8 +374,10 @@ class Definition extends DefinitionsBase
 		// submit button crap
 		var submitButton = new Button( "__submit", "Save Settings", null, ButtonType.SUBMIT);
 		
-		var keyValJsBinding = jsBindings.get("site.cms.modules.base.js.JsKeyValueInput"); 
-		submitButton.attributes = "onClick=\"return(" + keyValJsBinding.getCall("flushKeyValueInputs", []) +");\"";
+		if (!pagesMode){
+			var keyValJsBinding = jsBindings.get("site.cms.modules.base.js.JsKeyValueInput"); 
+			submitButton.attributes = "onClick=\"return(" + keyValJsBinding.getCall("flushKeyValueInputs", []) +");\"";
+		}
 		
 		form1.setSubmitButton(submitButton);
 		

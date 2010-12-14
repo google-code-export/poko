@@ -35,11 +35,13 @@ import site.services.Image;
 class ImageProcessing extends DefaultTemplate
 {
 	public var imageUrl:String;
+	public var imageUrl2:String;
 	
 	override public function main()
 	{
 		var page = PageData.getPageByName("Test Page");
 		
 		imageUrl = page.data.image;
+		imageUrl2 = page.data.image2;
 	}
 }
