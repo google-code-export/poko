@@ -27,7 +27,9 @@
 
 package site.cms.modules.base;
 
+import haxe.Serializer;
 import haxe.Unserializer;
+import poko.form.elements.Checkbox;
 import poko.form.elements.RadioGroup;
 import poko.form.elements.Readonly;
 import poko.form.elements.TextArea;
@@ -41,6 +43,7 @@ import poko.utils.PhpTools;
 import php.Web;
 import site.cms.modules.base.Definitions;
 import poko.form.Form;
+import site.cms.modules.base.formElements.KeyValueInput;
 
 
 class Definition extends DefinitionsBase
@@ -94,10 +97,19 @@ class Definition extends DefinitionsBase
 		// Update data
 		if (form1.isSubmitted())
 		{
-			var d = form1.getData();
+			var d:Dynamic = form1.getData();
 			try{
 				d.autoOrdering = form1.getElement('orderByField').value + "|" + form1.getElement('orderByDirection').value;
-			}catch(e:Dynamic){}
+				var p = new DefinitionParams();
+				p.usePaging = form1.getElement('usePaging').value == "1" ? true : false;
+				p.perPage = form1.getElement('perPage').value;
+				p.pagingRange = form1.getElement('pagingRange').value;
+				p.useTabulation = form1.getElement('useTabulation').value == "1" ? true : false;
+				p.tabulationFields = form1.getElement('tabulationFields').value;
+				d.params = Serializer.run(p);
+			}catch (e:Dynamic) {
+				messages.addError(Std.string(e));
+			}
 			app.db.update("_definitions", d, "`id`=" + id);
 		}
 			
@@ -237,6 +249,7 @@ class Definition extends DefinitionsBase
 	private function setupForm1():Void
 	{
 		var generalInfo = app.db.requestSingle("SELECT * FROM `_definitions` WHERE `id`=" + id);
+		var params = definition.params;
 		
 		var tOrder:Array<String> = generalInfo.autoOrdering.split("|");
 		var orderBy = "";
@@ -254,17 +267,46 @@ class Definition extends DefinitionsBase
 		form1 = new Form("form1");
 		form1.addFieldset("simple", new FieldSet("simple", "Simple"));
 		form1.addFieldset("filt", new FieldSet("filt", "Filtering, Ordering"));
+		form1.addFieldset("page", new FieldSet("page", "Paging"));
+		form1.addFieldset("tab", new FieldSet("tab", "Tabulation"));
 		form1.addFieldset("func", new FieldSet("func", "Functions"));
 		form1.addFieldset("help", new FieldSet("help", "Help"));
 		form1.addFieldset("old", new FieldSet("old", "Old (not really used anymore)"));
 		
-		if(!pagesMode) form1.addElement(new Readonly("table", "Table", generalInfo.table), "simple");
-		form1.addElement(new Input("name", "Name", generalInfo.name, false), "simple");
-		form1.addElement(new Input("description", "Description", generalInfo.description, false), "simple");
+		if(!pagesMode) form1.addElement(new Readonly("table", "Table", definition.table), "simple");
+		form1.addElement(new Input("name", "Name", definition.name, false), "simple");
+		form1.addElement(new Input("description", "Description", definition.description, false), "simple");
 		
 		form1.addElement(new RadioGroup("showFiltering", "Filtering?", yesno, generalInfo.showFiltering, "0", false), "filt");
 		form1.addElement(new RadioGroup("showOrdering", "Ordering?", yesno, generalInfo.showOrdering, "0", false), "filt");
 		form1.addElement(new RadioGroup("allowCsv", "CSV Download?", yesno, generalInfo.allowCsv, "0", false), "filt");
+		
+		if (!pagesMode) {
+			// paging
+			form1.addElement(new RadioGroup("usePaging", "Pagulation?", yesno, definition.params.usePaging ? "1" : "0", "0", false), "page");
+			
+			var i:Input = new Input("perPage", "Items Per Page", cast definition.params.perPage, false);
+			i.description = "How many items to list per page.";
+			i.width = 30;
+			i.useSizeValues = true;
+			form1.addElement(i, "page");
+			
+			var i:Input = new Input("pagingRange", "Paging Range", cast definition.params.pagingRange, false);
+			i.description = "How many pages to list before we get next/previous links.";
+			i.width = 30;
+			i.useSizeValues = true;
+			form1.addElement(i, "page");
+			
+			// tabulation
+			form1.addElement(new RadioGroup("useTabulation", "Tabulation?", yesno, definition.params.useTabulation ? "1" : "0", "0", false), "tab");
+			
+			var p = {
+				keyLabel: "Tab Name",
+				valueLabel: "Filter SQL",
+				valueIsMultiline: true
+			}
+			form1.addElement(new KeyValueInput("tabulationFields", "Tabulation Fields", definition.params.tabulationFields, p), "tab");
+		}
 		
 		if (!pagesMode) {
 			var result = app.db.request("SHOW FIELDS FROM `" + definition.table + "`");
@@ -279,7 +321,7 @@ class Definition extends DefinitionsBase
 			s2.nullMessage = "";
 			form1.addElement(s2, "filt");
 			
-			var i:Input = new Input("postCreateSql", "Post-create SQL", StringTools.htmlEscape(generalInfo.postCreateSql), false);
+			var i:TextArea = new TextArea("postCreateSql", "Post-create SQL", StringTools.htmlEscape(generalInfo.postCreateSql), false);
 			i.description = "An SQL statement that is run after a new record has been created. You can use any of the created records data by adding '#FIELD_NAME#'. ie UPDATE tbl SET name='Hello' WHERE id='#id#'.";
 			i.width = 400;
 			i.useSizeValues = true;
@@ -306,7 +348,7 @@ class Definition extends DefinitionsBase
 			form1.addElement(i, "func");
 			
 			// used for create, update, delete and duplicate
-			var i:TextArea = new TextArea("postProcedure", "Post Procedure", generalInfo.postProcedure, false);
+			var i:Input = new Input("postProcedure", "Post Procedure", generalInfo.postProcedure, false);
 			i.description = "The name of a class which extends Procedure to use when adding, updating or deleting a record.";
 			i.width = 400;
 			i.useSizeValues = true;
@@ -329,10 +371,17 @@ class Definition extends DefinitionsBase
 		form1.addElement(new RadioGroup("showInMenu", "In Menu?", yesno, generalInfo.showInMenu, "0", false), "old");
 		form1.addElement(new Selectbox("indents", "Indents", null, generalInfo.indents, false, "- none -" ), "old");
 		
-		var b = new Button("submit", "Save Settings", "Save Settings");
-		form1.setSubmitButton(b);
+		// submit button crap
+		var submitButton = new Button( "__submit", "Save Settings", null, ButtonType.SUBMIT);
+		
+		var keyValJsBinding = jsBindings.get("site.cms.modules.base.js.JsKeyValueInput"); 
+		submitButton.attributes = "onClick=\"return(" + keyValJsBinding.getCall("flushKeyValueInputs", []) +");\"";
+		
+		form1.setSubmitButton(submitButton);
+		
 		form1.populateElements();
 		
+		// out indent selector ...
 		var indentSelector = form1.getElementTyped("indents", Selectbox);
 		indentSelector.addOption( { key:1, value:1 } );
 		indentSelector.addOption( { key:2, value:2 } );

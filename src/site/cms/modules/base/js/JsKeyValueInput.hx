@@ -141,7 +141,7 @@ class KeyValueSet
 		var valueElement = properties.valueIsMultiline == "1" ? JQuery.create('textarea', { style:"height:"+properties.valueHeight+"px; width:"+properties.valueWidth+"px;" }, [valueValue] ) : JQuery.create('input', { type:"text", value:valueValue, style:"width:"+properties.valueWidth+"px;" }, [] );
 		var d = { src:"./res/cms/delete.png", title:"remove" };
 		Reflect.setField(d, "class", "qTip");
-		var removeElement = removeable ? JQuery.create('a', { href:"#" }, JQuery.create('img', d)) : null;
+		var removeElement = removeable ? JQuery.create('a', { href:"#", onclick:"return false;" }, JQuery.create('img', d)) : null;
 		var _r = request;
 		if (removeable){
 			removeElement.click(function(e){

@@ -46,21 +46,31 @@ class Definition
 	public var postDeleteSql:String;
 	public var postProcedure:String;
 	
+	// filtering
 	public var showFiltering:Bool;
 	public var showOrdering:Bool;
+	
+	// csv download
 	public var allowCsv:Bool;
 	
+	// info to show above items and lists
 	public var helpItem:String;
 	public var helpList:String;
 	
+	// default orderings
 	public var autoOrderingField:String;
 	public var autoOrderingOrder:String;
+	
+	// params
+	public var params:DefinitionParams;
 	
 	public function new(id:Int) 
 	{
 		this.id = id;
 		elements = new Array();
 		primaryKey = "";
+		
+		params = new DefinitionParams();
 		
 		load();
 	}
@@ -151,6 +161,12 @@ class Definition
 			autoOrderingOrder = autoOrdering[1];
 		}
 
+		try{
+			params = Unserializer.run(results.params);
+		} catch (e:Dynamic) {
+			// non existant field, or not set as yet	
+			params = new DefinitionParams();
+		}
 		
 		try{
 			elements = Unserializer.run(results.elements);
@@ -186,6 +202,8 @@ class Definition
 		
 		data.autoOrdering = autoOrderingField + "|" + autoOrderingOrder;
 		
+		data.params = Serializer.run(params);
+		
 		Poko.instance.db.update("_definitions", data, "`id`=\"" + id + "\"" );
 	}
 	
@@ -193,5 +211,25 @@ class Definition
 	{
 		var res:Dynamic = Poko.instance.db.requestSingle("SELECT `id` FROM `_definitions` WHERE `table`='" + table + "'");
 		return res.id;
+	}
+}
+
+class DefinitionParams
+{
+	public var usePaging:Bool;
+	public var perPage:Int;
+	public var pagingRange:Int;
+	
+	public var useTabulation:Bool;
+	public var tabulationFields:String;
+	
+	public function new()
+	{
+		usePaging = false;
+		perPage = 20;
+		pagingRange = 4;
+		
+		useTabulation = false;
+		tabulationFields = null;
 	}
 }
