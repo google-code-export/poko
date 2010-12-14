@@ -80,6 +80,11 @@ class Dataset extends DatasetBase
 	
 	public var autoFilterValue:String;
 	public var autoFilterByAssocValue:String;
+
+	// quick holder for tabulation
+	public var tabFields:List<Dynamic>;
+	public var tabFilter:String;
+	private var paginationLinks:String;
 	
 	public function new()
 	{
@@ -211,9 +216,20 @@ class Dataset extends DatasetBase
 		currentFilterSettings = FilterSettings.get(table);
 		if (app.params.get("resetState") == "true" || optionsForm.isSubmitted())
 			currentFilterSettings.clear();
+
+		//--------------------------------------------------------		
+		// tabulation
+		if (definition.params.useTabulation) {
+			tabFields = Unserializer.run(definition.params.tabulationFields);
+			tabFilter = app.params.get("tabFilter");
+			if (tabFilter == null) tabFilter = "";
+		}
 			
 		//--------------------------------------------------------		
 		// filtering
+		
+		// setup a sqlP for params so we can use later
+		var sqlWhere = "";
 		
 		// setup values
 		var filterByValue = optionsForm.getElement('filterBy').value;
@@ -225,7 +241,7 @@ class Dataset extends DatasetBase
 		autoFilterByAssocValue = app.params.get("autofilterByAssoc") != "" ? app.params.get("autofilterByAssoc") : null;
 		if (autoFilterValue != null && autoFilterByAssocValue != null && optionsForm.isSubmitted()) {
 			currentFilterSettings.enabled = false;
-			sql += "WHERE `" + autoFilterValue + "`='" + autoFilterByAssocValue + "' ";
+			sqlWhere += "WHERE `" + autoFilterValue + "`='" + autoFilterByAssocValue + "' ";
 			 
 			hasWhere = true;
 		}
@@ -252,7 +268,7 @@ class Dataset extends DatasetBase
 			if (elType == "enum" || elType == "association" || elType == "bool")
 			{
 				if (filterByAssocValue != "")
-					sql += "WHERE `" + filterByValue + "`='" + filterByAssocValue + "' ";
+					sqlWhere += "WHERE `" + filterByValue + "`='" + filterByAssocValue + "' ";
 					
 			
 				hasWhere = true;
@@ -266,14 +282,19 @@ class Dataset extends DatasetBase
 					var val = filterByOperatorValue == "~" ? "%" +filterByValueValue+ "%" : filterByValueValue;
 					
 					if(elType == "date"){
-						sql += "WHERE `" + filterByValue + "` " + op + " " + val + " ";
+						sqlWhere += "WHERE `" + filterByValue + "` " + op + " " + val + " ";
 					}else {
-						sql += "WHERE `" + filterByValue + "` " + op + " '" + val + "' ";
+						sqlWhere += "WHERE `" + filterByValue + "` " + op + " '" + val + "' ";
 					}
 					
 					hasWhere = true;
 				}
 			}
+		}
+		
+		if (tabFilter != null && tabFilter != "") {
+			if (!hasWhere) sqlWhere += " WHERE ";
+			sqlWhere += " " + tabFilter + " ";
 		}
 		
 		//--------------------------------------------------------
@@ -286,12 +307,12 @@ class Dataset extends DatasetBase
 			linkValue= Std.parseInt(app.params.get("linkValue"));
 			
 			if(!hasWhere)
-				sql += " WHERE ";
+				sqlWhere += " WHERE ";
 			else 
-				sql += " AND ";
+				sqlWhere += " AND ";
 				
-			sql += "`" + linkToField + "`=\"" + linkTo + "\" ";
-			sql += "AND `" + linkValueField + "`=\"" + linkValue + "\" ";
+			sqlWhere += "`" + linkToField + "`=\"" + linkTo + "\" ";
+			sqlWhere += "AND `" + linkValueField + "`=\"" + linkValue + "\" ";
 		}
 		
 		//--------------------------------------------------------
@@ -311,24 +332,42 @@ class Dataset extends DatasetBase
 			optionsForm.getElement("orderBy").value = orderByValue;
 			optionsForm.getElement("orderByDirection").value = orderByDirectionValue;
 		}
-				
+		
+		var sqlOrder = "";
+		
 		if (isOrderingEnabled && this.orderField != null && (!(optionsForm.isSubmitted() || currentFilterSettings.enabled) || orderByValue == null))
 		{
-			sql += "ORDER BY `dataset__orderField`";
+			sqlOrder += "ORDER BY `dataset__orderField`";
 		}
 		// Use OrderBy Filter
 		else if ((optionsForm.isSubmitted() || currentFilterSettings.enabled) && orderByValue != null && orderByValue != "")
 		{
-			sql += "ORDER BY `" + orderByValue + "` " + orderByDirectionValue;
+			sqlOrder += "ORDER BY `" + orderByValue + "` " + orderByDirectionValue;
 		}
 		// default ordering by definition
 		else if (definition.autoOrderingField != "" && definition.autoOrderingField != null)
 		{
-			sql += "ORDER BY `" + definition.autoOrderingField + "` " + definition.autoOrderingOrder;
+			sqlOrder += "ORDER BY `" + definition.autoOrderingField + "` " + definition.autoOrderingOrder;
 		}
 		// Use Primary key
 		else{
-			sql += "ORDER BY `" + definition.primaryKey + "`";
+			sqlOrder += "ORDER BY `" + definition.primaryKey + "`";
+		}
+		
+		var sqlLimit = " ";
+		paginationLinks = "";
+		
+		if (definition.params.usePaging) {
+			var maxRecords = app.db.requestSingle("SELECT COUNT(*) as count FROM `" + table + "` " + sqlWhere).count;
+			var perPage = definition.params.perPage;
+			var maxPage = Math.ceil(maxRecords / perPage) - 1;
+			var wantedPage = app.params.get("page");
+			if (wantedPage == null) wantedPage = 0;
+			if (wantedPage > maxPage) wantedPage = maxPage;
+			var startAt = perPage * wantedPage;
+			if (startAt < 0) startAt = 0;
+			sqlLimit += " LIMIT " + startAt + ", " + perPage;
+			paginationLinks = pagination(maxPage + 1, wantedPage, definition.params.pagingRange);
 		}
 		
 		if (optionsForm.isSubmitted() && optionsForm.getElement("reset").value != "true"){
@@ -344,9 +383,51 @@ class Dataset extends DatasetBase
 			currentFilterSettings.save();
 		}
 		
+		sql = sql + " " + sqlWhere + " " + sqlOrder + " " + sqlLimit;
 		data = app.db.request(sql);	
 		
 		setupLeftNav();
+	}
+	
+	public function pagination(numberOfPages:Int, currentPage:Int = 0, ?range:Int = 4)
+	{
+		var showItems = (range * 2) + 1; 
+		currentPage++;
+		
+		var o = "";
+		
+		if (currentPage > 2 && currentPage > range + 1 && showItems < numberOfPages) o += "<a href='" + getPageLink(1) + "'>&laquo;</a>";
+		if (currentPage > 1 && showItems < numberOfPages) o += "<a href='" + getPageLink(currentPage - 1) + "'>&lsaquo;</a>";
+		
+		for (i in 1...numberOfPages + 1)
+		{
+			if (1 != numberOfPages && ( !(i >= currentPage + range + 1 || i <= currentPage-range-1) || numberOfPages <= showItems ))
+			{
+				o += (currentPage == i)? "<span class=\"paginationCurrent\">" + i + "</span>":"<a href='" + getPageLink(i) + "' class=\"paginationInactive\">" + i + "</a>";
+			}
+		}
+
+		if (currentPage < numberOfPages && showItems < numberOfPages) o += "<a href=\"" + getPageLink(currentPage + 1) + "\">&rsaquo;</a>";
+		if (currentPage < numberOfPages - 1 && currentPage + range-1 < numberOfPages && showItems < numberOfPages) o += "<a href='" + getPageLink(numberOfPages) + "'>&raquo;</a>";
+		o += "<span class=\"paginationOf\">Page " + currentPage + " of " + numberOfPages + "</span>";
+		
+		return o;
+	}
+	
+	public function getPageLink(page:Int)
+	{
+		page = page - 1;
+		return "?request=cms.modules.base.Dataset&dataset=" + dataset
+			+ "&tabFilter=" + StringTools.urlEncode(tabFilter)
+			+ "&page=" + Std.string(page)
+			+ "&siteMode=" + (siteMode ? "true" : "false")
+			+ "&linkMode=" + linkMode
+			+ "&linkToField=" + linkToField
+			+ "&linkTo=" + linkTo
+			+ "&linkValueField=" + linkValueField
+			+ "&linkValue=" + linkValue
+			+ "&autofilterBy" + autoFilterValue
+			+ "&autofilterByAssoc" + autoFilterByAssocValue;
 	}
 	
 	/** Process Delete & Order */
