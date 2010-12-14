@@ -67,10 +67,14 @@ class Checkbox extends FormElement
 	
 	override public function populate():Void
 	{
-		//super.populate();
-		value = Poko.instance.params.exists( form.name + "_" + name ) ? "1" : "0";
-		//checked = Poko.instance.params.exists( form.name + "_" + name );
-		//checked = false;
+		var n = form.name + "_" + name;
+		var v = Poko.instance.params.exists( n ) ? "1" : "0";
+		
+		if (form.isSubmitted()) {
+			if (v != null) {
+				value = v;
+			}
+		}
 	}
 	
 	override public function isValid():Bool

@@ -35,7 +35,7 @@ class CustomValidator extends Validator
 	public var validationFunction : Dynamic->Bool;
 	public var errorNotValid:String;
 	
-	public function new( validationFunction : Dynamic->Bool, errorMessage:String ) 
+	public function new( validationFunction : Dynamic->Bool, ?errorMessage:String = null ) 
 	{
 		super();
 		this.validationFunction = validationFunction;

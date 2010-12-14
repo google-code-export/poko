@@ -65,6 +65,9 @@ class Definition extends DefinitionsBase
 		remoting.addObject("api", { toggleCheckbox:toggleCheckbox } );
 		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsDefinition");
+		
+		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
+		head.js.add("js/cms/jquery.qtip.min.js");
 	}
 	
 	
@@ -249,71 +252,85 @@ class Definition extends DefinitionsBase
 		yesno.add( { key:"0", value:"No" } );
 		
 		form1 = new Form("form1");
-		if(!pagesMode) form1.addElement(new Readonly("table", "Table", generalInfo.table));
-		form1.addElement(new Input("name", "Name", generalInfo.name, false));
-		form1.addElement(new Input("description", "Description", generalInfo.description, false));
-		form1.addElement(new RadioGroup("showFiltering", "Filtering?", yesno, generalInfo.showFiltering, "0", false));
-		form1.addElement(new RadioGroup("showOrdering", "Ordering?", yesno, generalInfo.showOrdering, "0", false));
-		form1.addElement(new RadioGroup("allowCsv", "CSV Download?", yesno, generalInfo.allowCsv, "0", false));
-		form1.addElement(new RadioGroup("showInMenu", "In Menu?", yesno, generalInfo.showInMenu, "0", false));
-		form1.addElement(new Selectbox("indents", "Indents", null, generalInfo.indents, false, "- none -" ));
+		form1.addFieldset("simple", new FieldSet("simple", "Simple"));
+		form1.addFieldset("filt", new FieldSet("filt", "Filtering, Ordering"));
+		form1.addFieldset("func", new FieldSet("func", "Functions"));
+		form1.addFieldset("help", new FieldSet("help", "Help"));
+		form1.addFieldset("old", new FieldSet("old", "Old (not really used anymore)"));
+		
+		if(!pagesMode) form1.addElement(new Readonly("table", "Table", generalInfo.table), "simple");
+		form1.addElement(new Input("name", "Name", generalInfo.name, false), "simple");
+		form1.addElement(new Input("description", "Description", generalInfo.description, false), "simple");
+		
+		form1.addElement(new RadioGroup("showFiltering", "Filtering?", yesno, generalInfo.showFiltering, "0", false), "filt");
+		form1.addElement(new RadioGroup("showOrdering", "Ordering?", yesno, generalInfo.showOrdering, "0", false), "filt");
+		form1.addElement(new RadioGroup("allowCsv", "CSV Download?", yesno, generalInfo.allowCsv, "0", false), "filt");
 		
 		if (!pagesMode) {
 			var result = app.db.request("SHOW FIELDS FROM `" + definition.table + "`");
 			var fields = new List();
 			for(f in result) fields.add({key: f.Field, value: f.Field});
 			var s:Selectbox = new Selectbox("orderByField", "Order By", fields, orderBy);
-			form1.addElement(s);
+			form1.addElement(s, "filt");
 			var l2 = new List();
 			l2.add( { key: "ASC", value: "ASC" } );
 			l2.add( { key: "DESC", value: "DESC" } );
 			var s2:Selectbox = new Selectbox("orderByDirection", "Order Dir", l2, orderOrder);
 			s2.nullMessage = "";
-			form1.addElement(s2);
+			form1.addElement(s2, "filt");
 			
 			var i:Input = new Input("postCreateSql", "Post-create SQL", StringTools.htmlEscape(generalInfo.postCreateSql), false);
+			i.description = "An SQL statement that is run after a new record has been created. You can use any of the created records data by adding '#FIELD_NAME#'. ie UPDATE tbl SET name='Hello' WHERE id='#id#'.";
 			i.width = 400;
 			i.useSizeValues = true;
-			form1.addElement(i);
+			form1.addElement(i, "func");
 		}
 
-		var i:Input = new Input("postEditSql", "Post-edit SQL", StringTools.htmlEscape(generalInfo.postEditSql), false);
+		var i:TextArea = new TextArea("postEditSql", "Post-edit SQL", StringTools.htmlEscape(generalInfo.postEditSql), false);
+		i.description = "An SQL statement that is run each time you save a record. You can use data both from the before and after states of your record. For data before the edits use '#id#', for after use '*id*'.";
 		i.width = 400;
 		i.useSizeValues = true;
-		form1.addElement(i);
+		form1.addElement(i, "func");
 		
 		if(!pagesMode){
-			var i:Input = new Input("postDeleteSql", "Post-delete SQL", StringTools.htmlEscape(generalInfo.postDeleteSql), false);
+			var i:TextArea = new TextArea("postDeleteSql", "Post-delete SQL", StringTools.htmlEscape(generalInfo.postDeleteSql), false);
+			i.description = "An SQL statement that is run after a record has been deleted. You can use any of the created records data by adding '#FIELD_NAME#'. ie UPDATE tbl SET name='Hello' WHERE id='#id#'.";
 			i.width = 400;
 			i.useSizeValues = true;
-			form1.addElement(i);
-			var i:Input = new Input("postDuplicateSql", "Post-dup SQL", StringTools.htmlEscape(generalInfo.postDuplicateSql), false);
+			form1.addElement(i, "func");
+			
+			var i:TextArea = new TextArea("postDuplicateSql", "Post-dup SQL", StringTools.htmlEscape(generalInfo.postDuplicateSql), false);
+			i.description = "WARNING: Currently not implemented. Should be implemented in Dataset.hx !";
 			i.width = 400;
 			i.useSizeValues = true;
-			form1.addElement(i);
+			form1.addElement(i, "func");
 			
 			// used for create, update, delete and duplicate
-			var i:Input = new Input("postProcedure", "Post Procedure", generalInfo.postProcedure, false);
+			var i:TextArea = new TextArea("postProcedure", "Post Procedure", generalInfo.postProcedure, false);
 			i.description = "The name of a class which extends Procedure to use when adding, updating or deleting a record.";
 			i.width = 400;
 			i.useSizeValues = true;
-			form1.addElement(i);
+			form1.addElement(i, "func");
 			
 			// used for create, update, delete and duplicate
 			var t:TextArea = new TextArea("help_list", "Help (list)", generalInfo.help_list, false);
 			t.width = 400;
 			t.useSizeValues = true;
-			form1.addElement(t);	
+			form1.addElement(t, "help");	
 		}
 		
 		// used for create, update, delete and duplicate
 		var t:TextArea = new TextArea("help", "Help (item)", generalInfo.help, false);
 		t.width = 400;
 		t.useSizeValues = true;
-		form1.addElement(t);
+		form1.addElement(t, "help");
 		
-		var b = new Button("submit", "Update", "Update");
-		form1.submitButton = b;
+		// don't really use these anymore - oh well ...
+		form1.addElement(new RadioGroup("showInMenu", "In Menu?", yesno, generalInfo.showInMenu, "0", false), "old");
+		form1.addElement(new Selectbox("indents", "Indents", null, generalInfo.indents, false, "- none -" ), "old");
+		
+		var b = new Button("submit", "Save Settings", "Save Settings");
+		form1.setSubmitButton(b);
 		form1.populateElements();
 		
 		var indentSelector = form1.getElementTyped("indents", Selectbox);

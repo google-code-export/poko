@@ -4,7 +4,38 @@
 	<div id="definitionOptions">
 		<div id=""><a href="#" onclick="$('#definitionOptionsForm').toggle(); return false;"><img src="./res/cms/cog.png" title="Toggle Definitions Options" align="absmiddle" /> Toggle Definitions Options</a></div>
 		<div id="definitionOptionsForm" style="display: none;">
-		::raw form1.getPreview() ::
+		
+		::raw form1.getOpenTag()::
+			
+			::raw form1.getErrors()::	
+			
+				::if form1.getFieldsets() != null ::
+					::foreach fieldset form1.getFieldsets() ::
+						::if fieldset.name != "__submit" && fieldset.elements.length > 0:: 
+							
+							::raw fieldset.getOpenTag() ::
+								<table class="greyTable">
+									::foreach element fieldset.elements ::
+									<tr>
+										<td class="labelTd">::raw element.getLabel():: ::if element.description != null && element.description != ""::<img class="qTip" src="./res/cms/help.png" title="::raw controller.nl2br(element.description)::" align="absmiddle" />::end::</td>
+										<td class="contentTd">::raw element::</td>
+									</tr>
+									::end::
+								</table>
+							::raw fieldset.getCloseTag() ::
+							
+						::end::
+					::end::
+				::else::
+					::foreach element elements::
+						<tr><td>::raw element.getLabel()::</td><td>::raw element::</td></tr>
+					::end::
+				::end::
+				
+				<tr><td colspan="2">::raw form1.submitButton::</td></tr>
+
+		::raw form1.getCloseTag()::
+		
 		</div>
 	</div>
 	
@@ -78,4 +109,23 @@
 	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=linkdisplay">Add 'Link-Display'</a>
 	::end::
 	
+<script>
+		
+	$('.qTip').qtip({
+		tooltip: 'bottomRight',
+		style: 'cream',
+		show: {
+			delay: 200,
+			solo: true,
+			effect: {
+				type: 'none'
+			}
+		},
+		hide: {
+			effect: {
+				type: 'none'
+			}
+		}
+	});	
 	
+</script>
