@@ -52,8 +52,8 @@ class FileUpload extends FormElement
 	{
 		var n = form.name + "_" + name;
 		var file:Hash<Dynamic> = PhpTools.getFilesInfo().get(n);
-		
-		if (file != null && file.get("error") == "0")
+
+		if (file != null && (file.get("error") == "0" || file.get("error") == 0))
 		{
 			var v = file.get("name");
 			

@@ -454,6 +454,7 @@ class DatasetItem extends DatasetBase
 		
 		for (file in files.keys())
 		{
+			//trace(file);
 			var info:Hash<Dynamic> = files.get(file);
 			var name = file.substr(form.name.length + 1);
 			var filename = info.get("name");
