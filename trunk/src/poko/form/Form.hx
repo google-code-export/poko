@@ -94,7 +94,8 @@ class Form
 		elements.add(element);
 		
 		// add it to a group if requested
-		if (fieldSetKey != null && fieldsets.exists(fieldSetKey)) {
+		if (fieldSetKey != null){
+			if (!fieldsets.exists(fieldSetKey)) throw "No fieldset '" + fieldSetKey + "' exists in '" + name + "' form.";
 			fieldsets.get(fieldSetKey).elements.add(element);
 		}
 		
@@ -123,7 +124,9 @@ class Form
 	
 	public function setSubmitButton(el:FormElement):FormElement
 	{
-		return submitButton = el;
+		submitButton = el;
+		submitButton.form = this;
+		return el;
 	}
 	
 	public function addFieldset(fieldSetKey:String, fieldSet:FieldSet)
@@ -187,7 +190,7 @@ class Form
 	public function populateElements():Dynamic
 	{
 		var element:FormElement;
-		for (element in getElements()){
+		for (element in getElements()) {
 			element.populate();
 		}
 	}
