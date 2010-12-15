@@ -57,7 +57,7 @@ class Settings extends EmailBase
 		var nameField = new Selectbox("nameField", "Name Field", emailSettings.nameField, null);
 		form.addElement(nameField);
 		
-		form.setSubmitButton(form.addElement(new Button( "submit", "Submit"), "submit"));
+		form.setSubmitButton(form.addElement(new Button( "submit", "Submit")));
 		
 		form.populateElements();
 		

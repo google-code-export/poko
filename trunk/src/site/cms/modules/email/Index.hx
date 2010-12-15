@@ -93,7 +93,11 @@ class Index extends EmailBase
 		for ( item in emailVars )
 			item.field = Reflect.field(emailSettings, item.link);
 		
-		userCount = app.db.count(emailSettings.userTable, "1");
+		try {
+			userCount = app.db.count(emailSettings.userTable, "1");
+		}catch (e:Dynamic) {
+			messages.addError("Table not found. Please edit settings.");
+		}
 		
 		previewStr = body.value;
 		editStr = body.value;
