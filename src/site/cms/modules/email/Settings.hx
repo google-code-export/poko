@@ -66,14 +66,18 @@ class Settings extends EmailBase
 			
 		if ( userTable.value != null && userTable.value != "" )
 		{
-			var columns = app.db.request("SHOW COLUMNS FROM `" + userTable.value + "`");
-			var fields = new List();
-			for ( col in columns )
-			{
-				var field = Reflect.field(col, "Field");
-				fields.add( {key:field, value:field} );
+			try {
+				var columns = app.db.request("SHOW COLUMNS FROM `" + userTable.value + "`");
+				var fields = new List();
+				for ( col in columns )
+				{
+					var field = Reflect.field(col, "Field");
+					fields.add( {key:field, value:field} );
+				}
+				idField.data = emailField.data = nameField.data = fields;
+			}catch (e:Dynamic) {
+				messages.addWarning("Table does not exist anymore.");
 			}
-			idField.data = emailField.data = nameField.data = fields;
 		}
 		
 		if ( form.isSubmitted() && form.isValid() )
