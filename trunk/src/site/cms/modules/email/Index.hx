@@ -108,10 +108,14 @@ class Index extends EmailBase
 		}
 		
 		//previewStr = generateHtml(previewStr, emailVars, emailSettings.userTable, "id = 36", true);
-		var userData = getUsers(emailSettings, "1 LIMIT 1").first();
-		if (userData == null)
-			userData = { id:"#id#", name:"#name#", email:"#email#" };
-		previewStr = generateHtml(previewStr, emailVars, userData, true);
+		try {
+			var userData = getUsers(emailSettings, "1 LIMIT 1").first();
+			if (userData == null)
+				userData = { id:"#id#", name:"#name#", email:"#email#" };
+			previewStr = generateHtml(previewStr, emailVars, userData, true);
+		}catch (e:Dynamic) {
+			messages.addError("Couldn't get user information.");
+		}
 		
 		if ( form.isSubmitted() && form.isValid() )
 		{
