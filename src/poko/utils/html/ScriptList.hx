@@ -4,6 +4,7 @@
  */
 
 package poko.utils.html;
+
 import php.FileSystem;
 import poko.controllers.HtmlController;
 import poko.Poko;
@@ -23,11 +24,11 @@ class ScriptList
 		//var script = { type: type, isExternal: true, value: url, condition: condition, media: media, priority: priority };
 		//if ( !Lambda.has(scripts, script, compareScriptRef) )
 			//scripts.push(script);
-		scripts.push( { type: cast type, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
+		scripts.push( { type: type, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
 	}
 	
 	//public function addInline( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
-	public function addInline( type : String, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	public function addInline( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
 	{
 		scripts.push( { type: type, isExternal: false, value: source, condition: condition, media: media, priority: priority } );
 	}
@@ -89,9 +90,9 @@ class ScriptList
 		var output : String = "";
 		switch ( script.type )
 		{
-			case "css":
+			case ScriptType.css:
 				output = (script.media == null) ? "<style type=\"text/css\">" + script.value + "</style>" : "<style type=\"text/css\" media=\"" + script.media + "\">" + script.value + "</style>";
-			case "js":
+			case ScriptType.js:
 				output = "<script>" + script.value + "</script>";
 		}
 		if ( script.condition != null )
@@ -104,9 +105,9 @@ class ScriptList
 		var output : String = "";
 		switch ( script.type )
 		{
-			case "css":
+			case ScriptType.css:
 					output = (script.media == null) ? "<link href=\"" + script.value + "\" rel=\"stylesheet\" type=\"text/css\" />" : "<link href=\"" + script.value + "\" rel=\"stylesheet\" type=\"text/css\" media=\"" + script.media + "\" />";
-			case "js":
+			case ScriptType.js:
 				output = '<script type="text/javascript" src="' + script.value + '"></script>';
 		}
 		if ( script.condition != null )
