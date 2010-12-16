@@ -83,11 +83,15 @@ class LinkTable extends FormElement
 		{
 			str += "Please edit link tables after adding item.";
 		}
-		else if(linkValueField == null || linkToField == null)
+		/*else if(linkValueField == null || linkToField == null)
 		{
 			if (linkValueField == null) str += "Could not find a 'link-to' in dataset definition<br/>";
 			if (linkToField==null) str += "Could not find both 'link-value' in dataset definition<br/>";
-		} 
+		} */
+		else if(linkValueField == null)
+		{
+			if (linkValueField == null) str += "Could not find a 'link-value' in dataset definition<br/>";
+		}
 		else 
 		{
 			var url = "?request=cms.modules.base.Dataset&dataset=" + linkDefId + "&linkMode=true";

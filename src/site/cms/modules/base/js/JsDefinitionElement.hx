@@ -44,6 +44,25 @@ class JsDefinitionElement extends JsRequest
 		super();
 	}
 	
+	override public function main()
+	{
+		//types = ["text", "number", "bool", "image", "richtext-wym", "richtext-tinymce", "date", "association", "multilink", "keyvalue", "read-only", "order", "link", "hidden", "location"];
+		types = ["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden", "enum", "post-sql-value", "location"];
+		var types = types;
+		var ths = this;
+		var typeSelector:js.Select = cast Lib.document.getElementById("form_type");
+		
+		hideAllElements();
+		
+		if (typeSelector.value != "") ths.showElements(typeSelector.value);
+		
+		typeSelector.onchange = function(e) 
+		{
+			ths.hideAllElements();
+			ths.showElements(typeSelector.value);
+		}
+	}
+	
 	/** remoting */
 	
 	public function onChangeSelectbox(selectBox:FormElement)
@@ -75,8 +94,9 @@ class JsDefinitionElement extends JsRequest
 		for (i in 0...assocSelectBox2.options.length)
 			assocSelectBox2.remove(0);
 			
-		for (i in 0...assocSelectBox3.options.length)
-			assocSelectBox3.remove(0);
+		if (assocSelectBox3.options != null)
+			for (i in 0...assocSelectBox3.options.length)
+				assocSelectBox3.remove(0);
 		
 		assocSelectBox2.innerHTML += "<option>-- loading --</option>";
 		assocSelectBox3.innerHTML += "<option>-- loading --</option>";
@@ -125,24 +145,7 @@ class JsDefinitionElement extends JsRequest
 	/** end remoting */
 	
 	
-	override public function main()
-	{
-		//types = ["text", "number", "bool", "image", "richtext-wym", "richtext-tinymce", "date", "association", "multilink", "keyvalue", "read-only", "order", "link", "hidden", "location"];
-		types = ["text", "number", "bool", "image-file", "richtext-tinymce", "richtext-wym", "date", "association", "keyvalue", "read-only", "order", "link-to", "link-value", "hidden", "enum", "post-sql-value", "location"];
-		var types = types;
-		var ths = this;
-		var typeSelector:js.Select = cast Lib.document.getElementById("form_type");
-		
-		hideAllElements();
-		
-		if (typeSelector.value != "") ths.showElements(typeSelector.value);
-		
-		typeSelector.onchange = function(e) 
-		{
-			ths.hideAllElements();
-			ths.showElements(typeSelector.value);
-		}
-	}
+	
 
 	function hideAllElements()
 	{
