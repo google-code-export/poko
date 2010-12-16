@@ -72,10 +72,11 @@ class FileUpload extends FormElement
 		if (value != "")
 		{
 			str += "<div id=\"fileUploadDisplay_"+name+"\" class=\"cmsComponentFileImageDisplay\">";
-			var s:String = value;
+			var s:String = ""+ value + "";
 			var ext = s.substr(s.lastIndexOf(".") + 1).toLowerCase();
-
-			if(s.length > 0){
+			
+			if (s.length > 0)
+			{
 				switch(ext) {
 					case "jpg", "gif", "png":
 						str += '<a target="_blank" href="?request=cms.services.Image&src='+value+'" ><img src="./?request=cms.services.Image&preset=thumb&src='+value+'" /></a>';

@@ -12,8 +12,8 @@ import poko.utils.mailtest.Part;
 class EmailForwarder
 {
 	//public static var defaultProxyURL : String = "http://www.mattbenton.net/email_forwarder.php";
-	//public static var defaultProxyURL : String = "http://poko.touchmypixel.com/email_forwarder.php";
-	public static var defaultProxyURL : String = "http://www.photostorymob.com.au/email/email_forwarder.php";
+	public static var defaultProxyURL : String = "http://poko.touchmypixel.com/email_forwarder.php";
+	//public static var defaultProxyURL : String = "http://www.photostorymob.com.au/email/email_forwarder.php";
 	//public static var defaultProxyCode : String = "iamawesome";
 	public static var defaultProxyCode : String = "yourendofthebargain";
 	public static var useProxy : Bool = true;

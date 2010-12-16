@@ -59,7 +59,7 @@ class Controller
 		identifier = s.substr(s.indexOf(".")+1);
 	}
 	
-	public function handleRequest()
+	public function handleRequest():Void
 	{
 		
 		init();
@@ -92,16 +92,16 @@ class Controller
 			Lib.print(view.render());
 	}
 	
-	public function setOutput(value)
+	public function setOutput(value):Void
 	{
 		view.setOutput(value);
 	}
 	
-	public function init(){}
+	public function init():Void{}
 	
-	public function main(){}
+	public function main():Void{}
 	
-	public function post() { }
+	public function post():Void { }
 	
-	public function onFinal() { }
+	public function onFinal():Void { }
 }

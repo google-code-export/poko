@@ -191,7 +191,7 @@ class FormElement
 	{
 		var n = form.name + "_" + name;
 	
-		return "<label for=\"" + n + "\" class=\""+getLabelClasses()+"\" id=\"" + n + "Label\">" + label +(if(required) form.labelRequiredIndicator) +"</label>";
+		return "<label for=\"" + n + "\" class=\""+getLabelClasses()+"\" id=\"" + n + "__Label\">" + label +(if(required) form.labelRequiredIndicator) +"</label>";
 	}
 	
 	public function getClasses() : String
