@@ -1,22 +1,23 @@
 body, html
 {
-	width: 600px;
 	margin:0;
 	padding:0;
 }
 
 #container
 {
-	width: 565px;
 }
 
 #content
 {
-	width: 565px;
-	margin-left: 20px;
+	width: auto;
+	margin: 0px;
+	padding:0;
 }
 
 form
 {
-	width: 565px;
+	width: auto;
 }
+
+table

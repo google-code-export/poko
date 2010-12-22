@@ -812,6 +812,7 @@ class DatasetItem extends DatasetBase
 					form.addElement(el);
 					
 				case "linkdisplay":
+					
 					var el = new LinkTable(element.name, label, element.properties.table, table, id, null, null, "class=\"resizableFrame\"");
 					el.description = element.properties.description;
 					form.addElement(el);
