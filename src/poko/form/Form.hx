@@ -187,12 +187,23 @@ class Form
 		return data;
 	}
 	
-	public function populateElements():Dynamic
+	public function populateElements(custom:Dynamic=null):Dynamic
 	{
-		var element:FormElement;
-		for (element in getElements()) {
-			element.populate();
+		if (custom != null)
+		{
+			for (element in getElements()) {
+				var n = name + "_" + element.name;
+				var v = Reflect.field(custom, n);
+				if (v != null)
+					element.value = v;
+			}
+		} else {
+			var element:FormElement;
+			for (element in getElements()) {
+				element.populate();
+			}
 		}
+		
 	}
 	
 	public function clearData():Dynamic

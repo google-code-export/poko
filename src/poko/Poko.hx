@@ -55,6 +55,8 @@ class Poko
 	public var db(getDb, null):Db;
 	private var __db:Db;
 	
+	public var session:Dynamic;
+	
 	public function new() 
 	{
 		
@@ -81,7 +83,12 @@ class Poko
 		}
 		
 		Session.start();
-
+		
+		if (!Session.exists("pokodata"))
+			Session.set("pokodata", { } );
+		
+		session = Session.get("pokodata");
+		
 		params = Web.getParams();
 		
 		url = new Url(Web.getURI());
@@ -107,6 +114,9 @@ class Poko
 			
 		if (is404) Lib.print("<font color=\"red\"><b>404: Not a valid request</b></font>");
 			
+		
+		Session.set("pokodata", session);
+		
 		//var time = Timer.stamp() - time1;
 		//Lib.print(time);
 	}

@@ -307,11 +307,12 @@ class Dataset extends DatasetBase
 			linkValue= Std.parseInt(app.params.get("linkValue"));
 			
 			if(!hasWhere)
-				sqlWhere += " WHERE ";
-			else 
-				sqlWhere += " AND ";
+				sqlWhere += " WHERE 1=1 ";
 				
-			sqlWhere += "`" + linkToField + "`=\"" + linkTo + "\" ";
+
+			if(linkToField != null && linkToField != "")
+				sqlWhere += "AND `" + linkToField + "`=\"" + linkTo + "\" ";
+			
 			sqlWhere += "AND `" + linkValueField + "`=\"" + linkValue + "\" ";
 		}
 		

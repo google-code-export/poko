@@ -61,7 +61,6 @@ class Controller
 	
 	public function handleRequest():Void
 	{
-		
 		init();
 
 		for (comp in components) comp.init();

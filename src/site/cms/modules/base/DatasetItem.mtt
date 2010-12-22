@@ -15,12 +15,20 @@
 
 ::raw form.getOpenTag()::
 
-<table class="greyTable datasetItem">
+<table class="greyTable datasetItem" width="100%">
 
 	:: foreach element form.getElements() ::
 		::if (element.getType() == "site.cms.modules.base.formElements.LinkTo")::
 			<tr>
 				<td colspan="2" class="contentTd">::raw element.getLabel():: <img src="./res/cms/help.png" /> <br /> ::raw element::</td>
+			</tr>
+		::elseif (element.getType() == "site.cms.modules.base.formElements.LinkTable")::
+			<tr>
+				<td class="contentTd" colspan="2">
+					::raw element.getLabel():: ::if element.description != null && element.description != ""::<img class="qTip" src="./res/cms/help.png" title="::raw controller.nl2br(element.description)::" align="absmiddle" />::end::
+					<br /><br />
+					::raw element::
+				</td>
 			</tr>
 		::elseif (element.getType() != "poko.form.elements.Hidden")::
 			<tr>

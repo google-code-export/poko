@@ -100,7 +100,7 @@ class LinkTable extends FormElement
 			url += "&linkValueField=" + linkValueField;
 			url += "&linkValue=" + linkValue;
 			
-			str += "<iframe id="+name+" width=\"630\" height=\"300\" src=\"" + url + "\" " + attributes + " >";
+			str += "<iframe id="+name+" width=\"100%\" height=\"400\" src=\"" + url + "\" " + attributes + " >";
 			str += name;
 			str += "</iframe>";
 		}
