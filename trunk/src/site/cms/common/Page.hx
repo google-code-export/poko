@@ -26,6 +26,7 @@
  */
 
 package site.cms.common;
+
 import poko.Poko;
 import haxe.Unserializer;
 import php.Lib;
@@ -42,14 +43,14 @@ class Page
 	public function loadById(id:Int)
 	{
 		var application = Poko.instance;
-		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE p.`id`=\"" + app.db.escape(Std.string(id)) + "\" AND p.`definitionid`=d.`id`");
+		var result = application.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE p.`id`=\"" + application.db.escape(Std.string(id)) + "\" AND p.`definitionid`=d.`id`");
 		init(result);
 	}
 	
 	public function loadByName(name:String)
 	{
 		var application = Poko.instance;
-		var result = app.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE d.`name`=\"" + app.db.escape(name) + "\" AND p.`definitionid`=d.`id`");
+		var result = application.db.requestSingle("SELECT p.id as 'id', d.name as 'name', d.id as 'definitionId', p.data as 'data' FROM `_pages` p, `_definitions` d WHERE d.`name`=\"" + application.db.escape(name) + "\" AND p.`definitionid`=d.`id`");
 		init(result);
 	}
 	
