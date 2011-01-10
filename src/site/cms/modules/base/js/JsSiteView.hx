@@ -167,6 +167,7 @@ class JsSiteView extends JsRequest
 						s += "<li>";
 						s += "<img src=\"./res/cms/";
 						s += switch(item.type) {
+							case MenuItemType.PAGE_ROLL: // ???
 							case MenuItemType.DATASET: "site_list_list.png";
 							case MenuItemType.PAGE: "site_list_page.png";
 							case MenuItemType.NULL: "site_list_null.png";
@@ -197,6 +198,7 @@ class JsSiteView extends JsRequest
 			s += "<li>";
 			s += "<img src=\"./res/cms/";
 			s += switch(item.type) {
+				case MenuItemType.PAGE_ROLL: // ???
 				case MenuItemType.DATASET: "site_list_list.png";
 				case MenuItemType.PAGE: "site_list_page.png";
 				case MenuItemType.NULL: "site_list_null.png";

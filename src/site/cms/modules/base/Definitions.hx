@@ -90,7 +90,11 @@ class Definitions extends DefinitionsBase
 				var nextId = app.db.requestSingle("SELECT MAX(`order`) as 'order' FROM `_definitions` WHERE `isPage`='" + pagesMode +"'").order;
 				nextId++;
 				
-				app.db.insert("_definitions", { name:app.params.get("name"), isPage:pagesMode, order:nextId } );
+				app.db.insert("_definitions", { name:app.params.get("name"), isPage:pagesMode, order:nextId,
+					// add values for not-null-allowed fields that have no default values
+					postCreateSql:'', postEditSql:'', postDeleteSql:'', postProcedure:'', 
+					help:'', help_list:'', autoOrdering:'ASC'
+				 } );
 				
 				var defId = app.db.lastInsertId;
 				

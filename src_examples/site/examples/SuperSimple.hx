@@ -25,18 +25,21 @@ class SuperSimple extends Controller
 	override public function init()
 	{
 		super.init();
-		trace(here);
+		trace("SuperSimple: init");
+		//trace(here);
 	}
 	
 	override public function main()
 	{
 		super.main();
-		trace(here);
+		trace("SuperSimple: main");
+		//trace(here);
 	}
 	
 	override public function post()
 	{
 		super.post();
-		trace(here);
+		trace("SuperSimple: post");
+		//trace(here);
 	}
 }

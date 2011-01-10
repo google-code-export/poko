@@ -160,6 +160,7 @@ class DatasetBase extends CmsTemplate
 				// go through menu items and make sure they still exist in DB, otherwise just ignore them and they'll be removed on the next save!
 				for (item in menu.items) {
 					switch(item.type) {
+						case MenuItemType.PAGE_ROLL: // ???
 						case MenuItemType.DATASET:
 							if(Lambda.exists(tables, function(x){
 								return(x.id == item.id);

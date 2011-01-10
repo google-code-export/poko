@@ -19,25 +19,26 @@
 <body>
 	<div id="haxe:trace"></div>
 	<div id="container">
-		::if messages.length > 1::
+	
+		::if messages.getMessages().length > 1::
 			<div class="messageBlock" id="messageMessages"><ul>
-				::foreach m messages::
+				::foreach m messages.getMessages()::
 					<li> ::m::</li>
 				::end::
 			</ul></div>
 		::end::
 		
-		::if warnings.length > 1::
+		::if messages.getWarnings().length > 1::
 			<div class="messageBlock" id="messageWarnings"><ul>
-				::foreach m warnings::
+				::foreach m messages.getWarnings()::
 					<li> ::m:: </li>
 				::end::
 			</ul></div>
 		::end::
 		
-		::if errors.length > 1::
+		::if messages.getErrors().length > 1::
 			<div class="messageBlock" id="messageErrors"><ul>
-				::foreach m errors::
+				::foreach m messages.getErrors()::
 					<li> ::m:: </li>
 				::end::
 			</ul></div>
