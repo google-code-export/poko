@@ -82,7 +82,7 @@ class JsGallery extends JsRequest
 		return switch(ext.toUpperCase())
 		{
 			case "JPG", "GIF", "PNG":
-				JQuery.create("img", { src:'?request=core.services.Image&preset=thumb&src=' + item } );
+				JQuery.create("img", { src:'?request=services.Image&preset=thumb&src=' + item } );
 			case "PDF":
 				JQuery.create("img", { src:'./res/cms/media/file_pdf.png' } );
 			case "TXT":

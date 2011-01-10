@@ -1,9 +1,11 @@
-::if showOnlyLibraries.length > 1::
+::if showOnlyLibraries.length == 0 || showOnlyLibraries.length > 1::
 	::raw form.getPreview()::
 ::end::
 
-::if allowViewThumb && allowViewList::
-	<div id="galleryViewType">View as <a href="?request=cms.modules.media.MediaSelector&viewType=thumbs&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">Thumbs</a> | <a href="?request=cms.modules.media.MediaSelector&viewType=list&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">List</a></div>
+::if currentView == "thumbs"::
+<div id="galleryViewType">View as Thumbs | <a href="?request=cms.modules.media.MediaSelector&viewType=list&libraryViewThumb=1&libraryViewList=1&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">List</a></div>
+::else::
+<div id="galleryViewType">View as <a href="?request=cms.modules.media.MediaSelector&viewType=thumbs&libraryViewThumb=1&libraryViewList=1&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">Thumbs</a> | List</div>
 ::end::
 
 <div id="imageContent">

@@ -22,7 +22,7 @@
 			<tr>
 				<td><input type="checkbox" name="delete[]" value="::element.name::" /></td>
 				<td>::element.name::</td>
-				<td><a href="?request=cms.modules.media.Gallery&id=::id::&definition=::element.name::">edit</a></td>
+				<td><a href="?request=cms.modules.media.Gallery&name=::element.name::">edit</a></td>
 			</tr>	
 		::end::
 		

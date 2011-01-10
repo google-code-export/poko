@@ -45,7 +45,7 @@ INSTALLATION
 - compile
 - go to http://*yoursite*/*poko folder*/www - you can put 'cms' after this to be direct staight to the cms
 - login using:
-	u: super
+	u: admin
 	p: pass
 - view the help section for details about how the cms works. 
 

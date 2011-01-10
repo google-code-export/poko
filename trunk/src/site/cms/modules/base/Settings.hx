@@ -47,7 +47,7 @@ class Settings extends SettingsBase
 				input.width = 400;
 				form.addElement(input);
 				
-				form.setSubmitButton(form.addElement(new Button( "submit", "Submit"), "submit"));
+				form.setSubmitButton(form.addElement(new Button( "submit", "Submit")));
 				
 				if (form.isSubmitted()) {
 					if (form.isValid()) {

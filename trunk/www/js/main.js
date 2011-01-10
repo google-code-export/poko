@@ -14,7 +14,7 @@ site.cms.modules.base.helper.MenuDef.prototype.addHeading = function(name) {
 	this.headings.push({ name : name, isSeperator : false});
 }
 site.cms.modules.base.helper.MenuDef.prototype.addItem = function(id,type,name,heading,indent,listChildren,linkChild) {
-	if(indent == null) indent = 0;
+	if(indent=== undefined) indent = 0;
 	this.items.push({ id : id, type : type, name : name, heading : heading, indent : indent, listChildren : listChildren, linkChild : linkChild});
 }
 site.cms.modules.base.helper.MenuDef.prototype.addSeperator = function() {
@@ -195,18 +195,23 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 							s += "<img src=\"./res/cms/";
 							s += (function($this) {
 								var $r;
-								switch(item.type) {
-								case site.cms.modules.base.helper.MenuItemType.DATASET:{
+								var $e = (item.type);
+								switch( $e[1] ) {
+								case 3:
+								{
+									$r = null;
+								}break;
+								case 1:
+								{
 									$r = "site_list_list.png";
 								}break;
-								case site.cms.modules.base.helper.MenuItemType.PAGE:{
+								case 0:
+								{
 									$r = "site_list_page.png";
 								}break;
-								case site.cms.modules.base.helper.MenuItemType.NULL:{
+								case 2:
+								{
 									$r = "site_list_null.png";
-								}break;
-								default:{
-									$r = null;
 								}break;
 								}
 								return $r;
@@ -246,18 +251,23 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 			s += "<img src=\"./res/cms/";
 			s += (function($this) {
 				var $r;
-				switch(item.type) {
-				case site.cms.modules.base.helper.MenuItemType.DATASET:{
+				var $e = (item.type);
+				switch( $e[1] ) {
+				case 3:
+				{
+					$r = null;
+				}break;
+				case 1:
+				{
 					$r = "site_list_list.png";
 				}break;
-				case site.cms.modules.base.helper.MenuItemType.PAGE:{
+				case 0:
+				{
 					$r = "site_list_page.png";
 				}break;
-				case site.cms.modules.base.helper.MenuItemType.NULL:{
+				case 2:
+				{
 					$r = "site_list_null.png";
-				}break;
-				default:{
-					$r = null;
 				}break;
 				}
 				return $r;
@@ -2176,15 +2186,15 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.removeKeyValueInput = functio
 	new JQuery(link).parent().parent().parent().remove();
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.setupKeyValueInput = function(id,properties,minRows,maxRows) {
-	if(maxRows == null) maxRows = 0;
-	if(minRows == null) minRows = 0;
+	if(maxRows=== undefined) maxRows = 0;
+	if(minRows=== undefined) minRows = 0;
 	if(this.keyValueSets == null) this.keyValueSets = new List();
 	this.keyValueSets.add(new site.cms.modules.base.js.KeyValueSet(id,properties,this,minRows,maxRows));
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.__class__ = site.cms.modules.base.js.JsKeyValueInput;
 site.cms.modules.base.js.KeyValueSet = function(id,properties,request,minRows,maxRows) { if( id === $_ ) return; {
-	if(maxRows == null) maxRows = 0;
-	if(minRows == null) minRows = 0;
+	if(maxRows=== undefined) maxRows = 0;
+	if(minRows=== undefined) minRows = 0;
 	this.id = id;
 	this.properties = properties;
 	this.request = request;
@@ -2194,9 +2204,9 @@ site.cms.modules.base.js.KeyValueSet = function(id,properties,request,minRows,ma
 }}
 site.cms.modules.base.js.KeyValueSet.__name__ = ["site","cms","modules","base","js","KeyValueSet"];
 site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueValue,removeable) {
-	if(removeable == null) removeable = true;
-	if(valueValue == null) valueValue = "";
-	if(keyValue == null) keyValue = "";
+	if(removeable=== undefined) removeable = true;
+	if(valueValue=== undefined) valueValue = "";
+	if(keyValue=== undefined) keyValue = "";
 	if(this.maxRows > 0 && this.currentRows == this.maxRows) {
 		js.Lib.alert(("Only " + this.maxRows) + " allowed.");
 		return false;
@@ -2713,7 +2723,7 @@ site.cms.modules.base.js.JsDefinitionElement.prototype.onChangeSelectbox = funct
 			this.assocSelectBox2.remove(0);
 		}
 	}
-	{
+	if(this.assocSelectBox3.options != null) {
 		var _g1 = 0, _g = this.assocSelectBox3.options.length;
 		while(_g1 < _g) {
 			var i = _g1++;
@@ -2762,7 +2772,7 @@ site.cms.modules.media.js.JsGallery.prototype.getPreview = function(item) {
 		var $r;
 		switch(ext.toUpperCase()) {
 		case "JPG":case "GIF":case "PNG":{
-			$r = JQuery.create("img",{ src : "?request=core.services.Image&preset=thumb&src=" + item});
+			$r = JQuery.create("img",{ src : "?request=services.Image&preset=thumb&src=" + item});
 		}break;
 		case "PDF":{
 			$r = JQuery.create("img",{ src : "./res/cms/media/file_pdf.png"});

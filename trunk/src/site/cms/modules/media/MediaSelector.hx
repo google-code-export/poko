@@ -44,6 +44,8 @@ class MediaSelector extends CmsPopup
 	
 	override public function init()
 	{
+		super.init();
+		
 		if (app.params.get("showOnlyLibraries") != null && app.params.get("showOnlyLibraries") != "") {
 			showOnlyLibraries = app.params.get("showOnlyLibraries").split(":");
 		}else {
@@ -99,9 +101,9 @@ class MediaSelector extends CmsPopup
 		var dir = php.FileSystem.readDirectory(imageRoot);
 		for (d in dir)
 		{
-			if (FileSystem.isDirectory(imageRoot + "/" +d) && !Lambda.has(exclude, d)) 
+			if (FileSystem.isDirectory(imageRoot + "/" +d) && !Lambda.has(exclude, d))
 			{
-				if(showOnlyLibraries == null || Lambda.has(showOnlyLibraries, d))
+				if(showOnlyLibraries.length == 0 || Lambda.has(showOnlyLibraries, d))
 					galleries.add( { key:d, value:d } );
 			}
 		}
@@ -114,7 +116,7 @@ class MediaSelector extends CmsPopup
 		form.populateElements();
 		
 		items = new List();
-			
+		
 		if(gallery != null && gallery != "")
 		{
 			var dir = php.FileSystem.readDirectory(imageRoot + "/" + gallery);
