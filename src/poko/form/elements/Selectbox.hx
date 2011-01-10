@@ -76,6 +76,11 @@ class Selectbox extends FormElement
 		return s;
 	}
 	
+	public function selectFirst()
+	{
+		value = data.first().key;
+	}
+	
 	public inline function add(key:String, value:Dynamic)
 	{
 		addOption( { key:key, value:value } );
