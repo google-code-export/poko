@@ -192,7 +192,7 @@ class Form
 		if (custom != null)
 		{
 			for (element in getElements()) {
-				var n = name + "_" + element.name;
+				var n = element.name;
 				var v = Reflect.field(custom, n);
 				if (v != null)
 					element.value = v;
@@ -313,7 +313,7 @@ class Form
 		if (isSubmitted())
 			s.add(getErrors());
 		
-		s.add("<table>\n");
+		s.add('<table cellspacing="0" cellspacing="0" border="0" >\n');
 		
 		for (element in getElements()) 
 			if (element != submitButton && element.internal == false) 
