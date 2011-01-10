@@ -55,7 +55,7 @@ class DateDropdowns extends FormElement
 		
 		daySelector = new Selectbox("", "Birth Day",ListData.getDays(),day,true,"-Day-",'title="Day"');
 		monthSelector = new Selectbox("", "Birth Month",ListData.getMonths(),month,true,"-Month-", 'title="Month"');
-		yearSelector = new Selectbox("", "Birth Year", ListData.getYears(1920, 2010, true), year, true, "-Year-", 'title="Year"');
+		yearSelector = new Selectbox("", "Birth Year", ListData.getYears(1920, Date.now().getFullYear(), true), year, true, "-Year-", 'title="Year"');
 		
 		daySelector.internal = monthSelector.internal = yearSelector.internal = true;
 	}
