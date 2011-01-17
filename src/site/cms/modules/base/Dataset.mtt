@@ -68,13 +68,16 @@
 	::end::
 	
 	<form action="" method="POST">
+		<input type="submit" id="datasetDeleteButtonTop" class="datasetDeleteButton" name="submitted_delete" value="delete checked"  />
+		::if isOrderingEnabled::<input type="submit" id="datasetOrderButtonTop" class="datasetOrderButton" name="submitted_order" value="order"  />::end::
+		
 		<table class="greyTable datasetListTable">
 			
 			
-			<tr>
+			<tr class="nodrag nodrop">
 			<td><img src="./res/cms/help.png" class="qTip" title="<b>Deleting</b><br /><br />To remove items just select the check box next to them and then click the 'delete and order' button." /></td>
 			::if (isOrderingEnabled):: 
-				<td><img src="./res/cms/help.png" class="qTip" title="<b>Ordering</b><br /><br />To order elements change the numbers in the boxes below and then click the 'delete and order' button.<br /><br />If you have elements 1, 2, 3 and 4 and you want to move 4 between 1 and 2 then put any number between 1 and 2 in the box ie 1.5" /></td>
+				<td><img src="./res/cms/help.png" class="qTip" id="helpIconOrder" title="<b>Ordering</b><br /><br />To order elements change the numbers in the boxes below and then click the 'delete and order' button.<br /><br />If you have elements 1, 2, 3 and 4 and you want to move 4 between 1 and 2 then put any number between 1 and 2 in the box ie 1.5" /></td>
 			::end::
 			
 			::foreach field fieldLabels ::
@@ -88,12 +91,12 @@
 			::set cols=0::
 			::if data.length > 0::
 				::foreach row data::
-					<tr>
+					<tr class="draggable">
 						::set cols= cols+1:: <td><input type="checkbox" name="delete[]" value="::row.cms_primaryKey::"  /></td>
 						
 						::if isOrderingEnabled ::
 							::set cols = cols+1::
-							<td><input type="input" name="order[:: row.cms_primaryKey ::]" value="::row.dataset__orderField::" class="order" /></td>
+							<td class="dragHandle"><input type="input" name="order[:: row.cms_primaryKey ::]" value="::row.dataset__orderField::" class="order" /></td>
 						::end::
 						
 						::foreach field fields::
@@ -166,16 +169,48 @@
 		var allChecked = false;
 		
 		$(document).ready(function(){
-			$("#datasetDeleteButton").click(function(){
+			$("#datasetDeleteButton, #datasetDeleteButtonTop").click(function(){
 				if(confirm("Delete checked rows?")){
 					return true;
 				}else{
 					return false;
 				}
 			});
+			
 			$("#datasetCheckAll").click(function(){
 				allChecked = !allChecked;
 				$(".datasetListTable input[type=checkbox]").attr("checked", allChecked);
 			});
+
+			::if isOrderingEnabled ::
+				// make rows draggable
+				$(".datasetListTable").tableDnD({
+					dragHandle: "dragHandle",
+					onDrop: function(table, row) {
+						var _t = $(row).find("td:eq(1) input");
+						var _p = $(row).prev().find("td:eq(1) input");
+						var _n = $(row).next().find("td:eq(1) input");
+						if (_p.length == 1 && _n.length == 1){
+							_t.val((Number(_p.val()) + Number(_n.val())) / 2);
+						}else if (_n.length == 1){
+							_t.val(Number(_n.val()) - 1);
+						}else{
+							_t.val(Number(_p.val()) + 1);
+						}
+					}
+				});
+				
+				// make a rollover for dragging of rows
+				$(".datasetListTable tr.draggable").each(function(){
+					$("td:eq(1) input", this).hide(0);
+					$("td:eq(1) input", this).after("<span>&nbsp;</span>");
+				});
+				$(".datasetListTable tr.draggable").hover(function(){
+					$(this.cells[1]).addClass('showDragHandle');
+				}, function(){
+					$(this.cells[1]).removeClass('showDragHandle');
+				});				
+				$('#helpIconOrder').attr('title', "Simply drag around your items until you have the correct order and then press the order button at the bottom of the list.");
+			::end::
 		});
 	</script>	

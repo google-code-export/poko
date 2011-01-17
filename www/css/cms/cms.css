@@ -460,7 +460,7 @@ fieldset.fieldsetNoDisplay legend{
 	padding: 5px;
 }
 
-#datasetDeleteButton
+#datasetDeleteButton, #datasetDeleteButtonTop
 {
 	background-image: url(../../res/cms/delete.png);
 	background-repeat: no-repeat;
@@ -469,13 +469,28 @@ fieldset.fieldsetNoDisplay legend{
 	margin-bottom: 40px;
 }
 
+#datasetDeleteButtonTop {
+	margin-bottom: 10px;
+}
 
-#datasetOrderButton
+#datasetOrderButton, #datasetOrderButtonTop
 {
 	background-image: url(../../res/cms/icon_order.png);
 	background-repeat: no-repeat;
 	padding-left: 18px;
 	margin-top: 10px;
+}
+
+.dragHandle:hover {
+	cursor: move;
+	background-image: url(../../res/cms/shading.png) no-repeat !important;
+}
+
+.showDragHandle span {
+	background: transparent url(../../res/cms/shading.png) no-repeat !important;
+	width: 16px;
+	height: 16px;
+	display: block;
 }
 
 /* ------------------------------------------------------- */

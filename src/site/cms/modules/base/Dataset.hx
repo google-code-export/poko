@@ -96,6 +96,7 @@ class Dataset extends DatasetBase
 		super.init();
 		
 		head.js.add("js/cms/jquery.qtip.min.js");
+		head.js.add("js/cms/jquery.tablednd.js");
 		
 		dataset = Std.parseInt(app.params.get("dataset"));
 		definition = new Definition(dataset);
