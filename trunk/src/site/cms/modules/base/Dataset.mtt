@@ -68,8 +68,8 @@
 	::end::
 	
 	<form action="" method="POST">
-		<input type="submit" id="datasetDeleteButtonTop" class="datasetDeleteButton" name="submitted_delete" value="delete checked"  />
-		::if isOrderingEnabled::<input type="submit" id="datasetOrderButtonTop" class="datasetOrderButton" name="submitted_order" value="order"  />::end::
+		<input type="submit" id="datasetDeleteButtonTop" class="datasetDeleteButton" name="submitted_delete" value="Delete Checked"  />
+		::if isOrderingEnabled::<input type="submit" id="datasetOrderButtonTop" class="datasetOrderButton" name="submitted_order" value="Update Order"  />::end::
 		
 		<table class="greyTable datasetListTable">
 			
@@ -120,8 +120,8 @@
 			
 			<input type="hidden" name="action" value="update" />
 		
-			<input type="submit" id="datasetDeleteButton" name="submitted_delete" value="delete checked"  />
-			::if isOrderingEnabled::<input type="submit" id="datasetOrderButton" name="submitted_order" value="order"  />::end::
+			<input type="submit" id="datasetDeleteButton" name="submitted_delete" value="Delete Checked"  />
+			::if isOrderingEnabled::<input type="submit" id="datasetOrderButton" name="submitted_order" value="Update Order"  />::end::
 	</form>
 	
 	::if paginationLinks != ""::
@@ -182,7 +182,7 @@
 				$(".datasetListTable input[type=checkbox]").attr("checked", allChecked);
 			});
 
-			::if isOrderingEnabled ::
+			::if (isOrderingEnabled && definition.params.dndOrdering)::
 				// make rows draggable
 				$(".datasetListTable").tableDnD({
 					dragHandle: "dragHandle",
@@ -213,4 +213,4 @@
 				$('#helpIconOrder').attr('title', "Simply drag around your items until you have the correct order and then press the order button at the bottom of the list.");
 			::end::
 		});
-	</script>	
+	</script>

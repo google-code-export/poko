@@ -102,6 +102,7 @@ class Definition extends DefinitionsBase
 				d.autoOrdering = form1.getElement('orderByField').value + "|" + form1.getElement('orderByDirection').value;
 				var p = new DefinitionParams();
 				p.usePaging = form1.getElement('usePaging').value == "1" ? true : false;
+				p.dndOrdering = form1.getElement('dndOrdering').value == "1" ? true : false;
 				p.perPage = form1.getElement('perPage').value;
 				p.pagingRange = form1.getElement('pagingRange').value;
 				p.useTabulation = form1.getElement('useTabulation').value == "1" ? true : false;
@@ -276,12 +277,29 @@ class Definition extends DefinitionsBase
 		if(!pagesMode) form1.addElement(new Readonly("table", "Table", definition.table), "simple");
 		form1.addElement(new Input("name", "Name", definition.name, false), "simple");
 		form1.addElement(new Input("description", "Description", definition.description, false), "simple");
-		
-		form1.addElement(new RadioGroup("showFiltering", "Filtering?", yesno, generalInfo.showFiltering, "0", false), "filt");
-		form1.addElement(new RadioGroup("showOrdering", "Ordering?", yesno, generalInfo.showOrdering, "0", false), "filt");
-		form1.addElement(new RadioGroup("allowCsv", "CSV Download?", yesno, generalInfo.allowCsv, "0", false), "filt");
-		
+				
 		if (!pagesMode) {
+			
+			// filtering and ordering
+			form1.addElement(new RadioGroup("showFiltering", "Filtering?", yesno, generalInfo.showFiltering, "0", false), "filt");
+			form1.addElement(new RadioGroup("showOrdering", "Ordering?", yesno, generalInfo.showOrdering, "0", false), "filt");
+			var i = new RadioGroup("dndOrdering", "DnD Ordering?", yesno, definition.params.dndOrdering ? "1" : "0", "1", false);
+			i.description = "Turn on for simple drag and drop ordering. Doesn't allow you to order over pages.";
+			form1.addElement(i, "filt");
+			form1.addElement(new RadioGroup("allowCsv", "CSV Download?", yesno, generalInfo.allowCsv, "0", false), "filt");
+			
+			var result = app.db.request("SHOW FIELDS FROM `" + definition.table + "`");
+			var fields = new List();
+			for(f in result) fields.add({key: f.Field, value: f.Field});
+			var s:Selectbox = new Selectbox("orderByField", "Order By", fields, orderBy);
+			form1.addElement(s, "filt");
+			var l2 = new List();
+			l2.add( { key: "ASC", value: "ASC" } );
+			l2.add( { key: "DESC", value: "DESC" } );
+			var s2:Selectbox = new Selectbox("orderByDirection", "Order Dir", l2, orderOrder);
+			s2.nullMessage = "";
+			form1.addElement(s2, "filt");
+			
 			// paging
 			form1.addElement(new RadioGroup("usePaging", "Pagulation?", yesno, definition.params.usePaging ? "1" : "0", "0", false), "page");
 			
@@ -308,19 +326,7 @@ class Definition extends DefinitionsBase
 			form1.addElement(new KeyValueInput("tabulationFields", "Tabulation Fields", definition.params.tabulationFields, p), "tab");
 		}
 		
-		if (!pagesMode) {
-			var result = app.db.request("SHOW FIELDS FROM `" + definition.table + "`");
-			var fields = new List();
-			for(f in result) fields.add({key: f.Field, value: f.Field});
-			var s:Selectbox = new Selectbox("orderByField", "Order By", fields, orderBy);
-			form1.addElement(s, "filt");
-			var l2 = new List();
-			l2.add( { key: "ASC", value: "ASC" } );
-			l2.add( { key: "DESC", value: "DESC" } );
-			var s2:Selectbox = new Selectbox("orderByDirection", "Order Dir", l2, orderOrder);
-			s2.nullMessage = "";
-			form1.addElement(s2, "filt");
-			
+		if (!pagesMode) {		
 			var i:TextArea = new TextArea("postCreateSql", "Post-create SQL", StringTools.htmlEscape(generalInfo.postCreateSql), false);
 			i.description = "An SQL statement that is run after a new record has been created. You can use any of the created records data by adding '#FIELD_NAME#'. ie UPDATE tbl SET name='Hello' WHERE id='#id#'.";
 			i.width = 400;

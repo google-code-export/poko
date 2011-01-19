@@ -2,7 +2,7 @@
 	<h3>
 		::label:: 
 		::if pagesMode==false && id !=null:: 
-			&gt; row ::id:: 
+			&gt; Row ::id:: 
 		::end::
 	</h3>
 ::end::

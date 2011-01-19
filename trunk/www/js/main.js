@@ -14,7 +14,7 @@ site.cms.modules.base.helper.MenuDef.prototype.addHeading = function(name) {
 	this.headings.push({ name : name, isSeperator : false});
 }
 site.cms.modules.base.helper.MenuDef.prototype.addItem = function(id,type,name,heading,indent,listChildren,linkChild) {
-	if(indent=== undefined) indent = 0;
+	if(indent == null) indent = 0;
 	this.items.push({ id : id, type : type, name : name, heading : heading, indent : indent, listChildren : listChildren, linkChild : linkChild});
 }
 site.cms.modules.base.helper.MenuDef.prototype.addSeperator = function() {
@@ -195,23 +195,21 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 							s += "<img src=\"./res/cms/";
 							s += (function($this) {
 								var $r;
-								var $e = (item.type);
-								switch( $e[1] ) {
-								case 3:
-								{
-									$r = null;
+								switch(item.type) {
+								case site.cms.modules.base.helper.MenuItemType.PAGE_ROLL:{
+									$r = "";
 								}break;
-								case 1:
-								{
+								case site.cms.modules.base.helper.MenuItemType.DATASET:{
 									$r = "site_list_list.png";
 								}break;
-								case 0:
-								{
+								case site.cms.modules.base.helper.MenuItemType.PAGE:{
 									$r = "site_list_page.png";
 								}break;
-								case 2:
-								{
+								case site.cms.modules.base.helper.MenuItemType.NULL:{
 									$r = "site_list_null.png";
+								}break;
+								default:{
+									$r = null;
 								}break;
 								}
 								return $r;
@@ -251,23 +249,21 @@ site.cms.modules.base.js.JsSiteView.createSorter = function() {
 			s += "<img src=\"./res/cms/";
 			s += (function($this) {
 				var $r;
-				var $e = (item.type);
-				switch( $e[1] ) {
-				case 3:
-				{
-					$r = null;
+				switch(item.type) {
+				case site.cms.modules.base.helper.MenuItemType.PAGE_ROLL:{
+					$r = "";
 				}break;
-				case 1:
-				{
+				case site.cms.modules.base.helper.MenuItemType.DATASET:{
 					$r = "site_list_list.png";
 				}break;
-				case 0:
-				{
+				case site.cms.modules.base.helper.MenuItemType.PAGE:{
 					$r = "site_list_page.png";
 				}break;
-				case 2:
-				{
+				case site.cms.modules.base.helper.MenuItemType.NULL:{
 					$r = "site_list_null.png";
+				}break;
+				default:{
+					$r = null;
 				}break;
 				}
 				return $r;
@@ -2186,15 +2182,15 @@ site.cms.modules.base.js.JsKeyValueInput.prototype.removeKeyValueInput = functio
 	new JQuery(link).parent().parent().parent().remove();
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.setupKeyValueInput = function(id,properties,minRows,maxRows) {
-	if(maxRows=== undefined) maxRows = 0;
-	if(minRows=== undefined) minRows = 0;
+	if(maxRows == null) maxRows = 0;
+	if(minRows == null) minRows = 0;
 	if(this.keyValueSets == null) this.keyValueSets = new List();
 	this.keyValueSets.add(new site.cms.modules.base.js.KeyValueSet(id,properties,this,minRows,maxRows));
 }
 site.cms.modules.base.js.JsKeyValueInput.prototype.__class__ = site.cms.modules.base.js.JsKeyValueInput;
 site.cms.modules.base.js.KeyValueSet = function(id,properties,request,minRows,maxRows) { if( id === $_ ) return; {
-	if(maxRows=== undefined) maxRows = 0;
-	if(minRows=== undefined) minRows = 0;
+	if(maxRows == null) maxRows = 0;
+	if(minRows == null) minRows = 0;
 	this.id = id;
 	this.properties = properties;
 	this.request = request;
@@ -2204,9 +2200,9 @@ site.cms.modules.base.js.KeyValueSet = function(id,properties,request,minRows,ma
 }}
 site.cms.modules.base.js.KeyValueSet.__name__ = ["site","cms","modules","base","js","KeyValueSet"];
 site.cms.modules.base.js.KeyValueSet.prototype.addRow = function(keyValue,valueValue,removeable) {
-	if(removeable=== undefined) removeable = true;
-	if(valueValue=== undefined) valueValue = "";
-	if(keyValue=== undefined) keyValue = "";
+	if(removeable == null) removeable = true;
+	if(valueValue == null) valueValue = "";
+	if(keyValue == null) keyValue = "";
 	if(this.maxRows > 0 && this.currentRows == this.maxRows) {
 		js.Lib.alert(("Only " + this.maxRows) + " allowed.");
 		return false;
