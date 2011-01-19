@@ -223,6 +223,8 @@ class DefinitionParams
 	public var useTabulation:Bool;
 	public var tabulationFields:String;
 	
+	public var dndOrdering:Bool;
+	
 	public function new()
 	{
 		usePaging = false;
@@ -231,5 +233,7 @@ class DefinitionParams
 		
 		useTabulation = false;
 		tabulationFields = null;
+		
+		dndOrdering = true;
 	}
 }
