@@ -162,6 +162,7 @@ class DatasetBase extends CmsTemplate
 					switch(item.type) {
 						case MenuItemType.PAGE_ROLL: // ???
 						case MenuItemType.DATASET:
+							// if it exists as a table, otherwise ignore it
 							if(Lambda.exists(tables, function(x){
 								return(x.id == item.id);
 							})) {
@@ -170,12 +171,13 @@ class DatasetBase extends CmsTemplate
 								// Add [e] edit link if user is admin
 								var editTag = isAdmin ? leftNavigation.editTag( "cms.modules.base.Definition&id=" + item.id + "&pagesMode=false" ) : '';
 								leftNavigation.addLink(item.heading, item.name, link, item.indent, false, editTag);
+								
 								if (item.listChildren != null) {
 									// get dataset
 									
 									var def:site.cms.common.Definition = new site.cms.common.Definition(item.id);
 									var el = def.getElement(item.listChildren);
-									if (el.type == "association") {
+									if (el != null && el.type == "association") {
 										var p = el.properties;
 										var primaryData = app.db.request("SHOW COLUMNS FROM `"+p.table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 										if (primaryData.length > 0) {
