@@ -100,6 +100,7 @@ class Poko
 		var controllerClass = Type.resolveClass( "site." + controllerId );
 		//var controllerType = Type.resolveClass("site." + findControllerClass());
 		
+		
 		var is404 = false;
 		if (controllerClass != null)
 		{
