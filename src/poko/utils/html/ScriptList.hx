@@ -27,10 +27,28 @@ class ScriptList
 		scripts.push( { type: type, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
 	}
 	
+	public function addExternalJS( url : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	{
+		scripts.push( { type: ScriptType.js, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
+	}
+	public function addExternalCSS( url : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	{
+		scripts.push( { type: ScriptType.css, isExternal: true, value: url, condition: condition, media: media, priority: priority } );
+	}
+	
+	
 	//public function addInline( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
 	public function addInline( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
 	{
 		scripts.push( { type: type, isExternal: false, value: source, condition: condition, media: media, priority: priority } );
+	}
+	public function addInlineJS( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	{
+		scripts.push( { type: ScriptType.js, isExternal: false, value: source, condition: condition, media: media, priority: priority } );
+	}
+	public function addInlineCSS( type : ScriptType, source : String, ?condition : String = null, ?media : String = null, ?priority : Int = 0 ) : Void
+	{
+		scripts.push( { type: ScriptType.css, isExternal: false, value: source, condition: condition, media: media, priority: priority } );
 	}
 	
 	//function compareScriptRef( a:ScriptRef, b:ScriptRef ) : Bool

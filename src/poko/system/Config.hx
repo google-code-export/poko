@@ -93,6 +93,7 @@ class Config
 		
 		defaultController = 'Index';
 
+		
 		defaultAction = 'main';
 
 		database_host = "localhost";

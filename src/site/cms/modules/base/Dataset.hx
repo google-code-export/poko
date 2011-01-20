@@ -247,6 +247,7 @@ class Dataset extends DatasetBase
 			hasWhere = true;
 		}
 		
+		
 		//do we load?
 		if (currentFilterSettings.enabled)
 		{
