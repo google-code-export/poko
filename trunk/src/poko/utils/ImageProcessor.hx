@@ -56,6 +56,9 @@ class ImageProcessor
 	
 	public var saveAlpha:Bool;
 	
+	public var mimeType:String;
+	public var outputFormat:ImageOutputFormat;
+	
 	public function new(file:String) 
 	{
 		fileName = file;
@@ -73,11 +76,20 @@ class ImageProcessor
 		
 		//var fname = fileName.lastIndexOf("/");
 		
-		resource = switch(getFileFormat(file))
+		outputFormat = getFileFormat(file);
+		
+		resource = switch(outputFormat)
 		{
 			case ImageOutputFormat.JPG: GD.imageCreateFromJpeg(file);
 			case ImageOutputFormat.GIF: GD.imageCreateFromGif(file);
 			case ImageOutputFormat.PNG: GD.imageCreateFromPng(file);
+		}
+		
+		mimeType = switch(outputFormat)
+		{
+			case ImageOutputFormat.JPG: "image/jpeg";
+			case ImageOutputFormat.GIF: "image/gif";
+			case ImageOutputFormat.PNG: "image/png";
 		}
 		
 		if(resource == null) throw("Could not load image");
