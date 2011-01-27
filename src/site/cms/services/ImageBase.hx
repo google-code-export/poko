@@ -59,7 +59,7 @@ class ImageBase extends poko.controllers.Controller
 			// hash for caching
 			var blankHash = Md5.encode(blankGif);
 			
-			setHeaders( Date.fromTime(0), "43", blankHash );
+			setHeaders( Date.fromTime(0), "43", blankHash, "image/gif" );
 			Lib.print(untyped __call__("base64_decode", blankGif));
 			
 			return;
@@ -84,7 +84,7 @@ class ImageBase extends poko.controllers.Controller
 			var length = FileSystem.exists(filename) ? untyped __call__("filesize", filename) : Std.string(imageStr.length);
 			
 			// Set content headers.
-			setHeaders( image.dateModified, length, image.hash );
+			setHeaders( image.dateModified, length, image.hash, image.mimeType );
 			
 			// Finally output the image.
 			Lib.print( imageStr );
@@ -93,17 +93,22 @@ class ImageBase extends poko.controllers.Controller
 		{
 			var dateModified = FileSystem.stat(site.cms.PokoCms.uploadFolder + src).mtime;
 			
+			
+			var mime = src.substr(src.lastIndexOf(".") + 1).toLowerCase();
+			if (mime == "jpg") mime = "jpeg";
+			mime = "image/" + mime;
+			
 			#if php
 				var length = untyped __call__("filesize", site.cms.PokoCms.uploadFolder + src);
 				// Set content headers.
-				setHeaders( dateModified, length, Md5.encode(src) );
+				setHeaders( dateModified, length, Md5.encode(src), mime );
 				// Finally output the image.
 				untyped __call__("readfile", site.cms.PokoCms.uploadFolder + src);
 				Sys.exit(1);
 			#else
 				var f = File.getContent(site.cms.PokoCms.uploadFolder + src);
 				// Set content headers.
-				setHeaders( dateModified, Std.string(f.length), Md5.encode(src) );
+				setHeaders( dateModified, Std.string(f.length), Md5.encode(src), mime );
 				// Finally output the image.
 				Lib.print( f );
 			#end
@@ -114,93 +119,14 @@ class ImageBase extends poko.controllers.Controller
 	{
 	}
 	
-	function setHeaders( dateModified : Date, length : String, hash : String ) : Void
+	function setHeaders( dateModified : Date, length : String, hash : String, mime : String ) : Void
 	{
 		Web.setHeader("Last-Modified", DateTools.format(dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT' );
 		Web.setHeader("Expires", DateTools.format(new Date(dateModified.getFullYear() + 1, dateModified.getMonth(), dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
 		Web.setHeader("Cache-Control" ,"public, max-age=31536000");
 		Web.setHeader("ETag", "\"" + hash + "\"");
 		Web.setHeader("Pragma", "");
-		Web.setHeader("Content-Type", "image");
+		Web.setHeader("Content-Type", mime);
 		Web.setHeader("Content-Length", length );
 	}
-	
-	/*override public function main():Void
-	{
-		var src:String = app.params.get("src");
-		
-		if (app.params.get("preset"))
-		{
-			
-			var image:ImageProcessor = new ImageProcessor(site.cms.PokoCms.uploadFolder + src);
-			image.cacheFolder = site.cms.PokoCms.uploadFolder + "cache";
-			image.format = ImageOutputFormat.JPG;
-			//image.forceNoCache = true;
-			
-			resizeImage( );
-			
-			switch(app.params.get("preset"))
-			{
-				case "projectImage":
-					image.queueFitSize( 1000, 1000 );
-				case "thumb":
-					image.queueCropToAspect( 50, 35 );
-					image.queueFitSize( 50, 35 );
-				case "projectItem":
-					image.queueCropToAspect( 50, 35 );
-					image.queueFitSize( 50, 35 );
-				case "flag": 
-					image.queueCropToAspect( 170, 115 );
-					image.queueFitSize( 170, 115 );
-				case "cropFit":
-					var w = Std.parseInt( app.params.get("w") );
-					var h = Std.parseInt( app.params.get("h") );
-					image.queueCropToAspect( w, h );
-					image.queueFitSize( w, h );
-			}			
-			
-			var dateModifiedString = DateTools.format(image.dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
-			Web.setHeader("Last-Modified", dateModifiedString);
-			Web.setHeader("Expires", DateTools.format(new Date(image.dateModified.getFullYear() + 1, image.dateModified.getMonth(), image.dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
-			Web.setHeader("Cache-Control" ,"public, max-age=31536000");
-			Web.setHeader("ETag", "\"" + image.hash + "\"");
-			Web.setHeader("Pragma", "");
-			
-			Web.setHeader("Content-Type", "image");
-			
-			var imageStr = image.getOutput();
-			
-			var filename = image.cacheFolder + "/" + image.getCacheName();
-			if ( FileSystem.exists( filename ) )
-				Web.setHeader("Content-Length", untyped __call__("filesize", filename));
-			else
-				Web.setHeader("Content-Length", Std.string(imageStr.length) );
-			
-			Lib.print( imageStr );
-			
-			
-		}
-		else 
-		{
-			var dateModified = FileSystem.stat(site.cms.PokoCms.uploadFolder + src).mtime;
-			var dateModifiedString = DateTools.format(dateModified, "%a, %d %b %Y %H:%M:%S") + ' GMT';
-			Web.setHeader("Last-Modified", dateModifiedString);
-			Web.setHeader("Expires", DateTools.format(new Date(dateModified.getFullYear() + 1, dateModified.getMonth(), dateModified.getDay(), 0, 0, 0), "%a, %d %b %Y %H:%M:%S") + ' GMT');
-			Web.setHeader("Cache-Control", "public, max-age=31536000");
-			Web.setHeader("ETag", "\"" + Md5.encode(src) + "\"");
-			Web.setHeader("Pragma", "");
-			
-			Web.setHeader("Content-Type", "image");
-			
-			#if php
-				Web.setHeader("Content-Length", untyped __call__("filesize", site.cms.PokoCms.uploadFolder + src));
-				untyped __call__("readfile", site.cms.PokoCms.uploadFolder + src);
-				Sys.exit(1);
-			#else
-				var f = File.getContent(site.cms.PokoCms.uploadFolder + src);
-				//Web.setHeader("Content-Length", f.length);
-				Lib.print( f );
-			#end
-		}
-	}*/
 }

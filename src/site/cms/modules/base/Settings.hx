@@ -42,10 +42,12 @@ class Settings extends SettingsBase
 				form.addElement(new FileUpload("cmsLogo", "CMS Logo", data.value, false));
 				
 				data = app.db.requestSingle("SELECT * FROM _settings WHERE `key`='googleMapsApiKey'");
-				var input = new Input("googleMapsApiKey", "Google Maps API Key", data.value, false);
-				input.useSizeValues = true;
-				input.width = 400;
-				form.addElement(input);
+				if (data != null){
+					var input = new Input("googleMapsApiKey", "Google Maps API Key", data.value, false);
+					input.useSizeValues = true;
+					input.width = 400;
+					form.addElement(input);
+				}
 				
 				form.setSubmitButton(form.addElement(new Button( "submit", "Submit")));
 				
