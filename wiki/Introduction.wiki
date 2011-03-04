@@ -12,9 +12,9 @@ Poko is loosely based on the the ideas of MVC (Model View Controller) frameworks
 
 If you're coming from an MVC background, you may like to think of the sytem like this:
 
-* Model: The database
-* View: A template
-* Controller: A class
+ * Model: The database
+ * View: A template
+ * Controller: A class
 
 Poko does *not* provide any CRUD (Create Read Update Delete) mechanisms, and encourages the use of the PokoCMS as a data management layer. The data for a lot of websites can generally be pulled from your data source (database) by one (or at most two) SQL query, so why complicate things?
 
@@ -40,19 +40,19 @@ PokoCMS also supplies hooks such as being able to run SQL queries on adding or d
 
 == Poko ==
 
-* An easy way to set up new sites, rather than just copypasting old ones
-* More examples
-* Optional URL re-writing (though of course it can be annoying when writing your templates, we know!)
+ * An easy way to set up new sites, rather than just copypasting old ones
+ * More examples
+ * Optional URL re-writing (though of course it can be annoying when writing your templates, we know!)
 
 == PokoCMS ==
  * Internationalization / multi-language support in PokoCMS
  * A better WYSIWYM editor, that includes detection of pasting from Word (or HTML sources)
  * Full documentation
-* Better, richer examples
-* A free Java Applet FTP uploader (anyone want to write one for us?)
-* Better user control with access rights for CRUD per table, row and 
-* Record / page locking
-* Some kind of "page roll" that makes it easier to use the system on page/article based sites, including the ability for editors to add pages
-* Nice popups with easy to use GUIs for Site Map options (there is a lot you can do with the Site Map but you have to read the code to know what it is!) 
-* A simple way to add new database fields when you can't be bothered going to phpMyAdmin
-* Auto-generation helper that can show a white-board template site directly from reading the Site Map.
+ * Better, richer examples
+ * A free Java Applet FTP uploader (anyone want to write one for us?)
+ * Better user control with access rights for CRUD per table, row and 
+ * Record / page locking
+ * Some kind of "page roll" that makes it easier to use the system on page/article based sites, including the ability for editors to add pages
+ * Nice popups with easy to use GUIs for Site Map options (there is a lot you can do with the Site Map but you have to read the code to know what it is!) 
+ * A simple way to add new database fields when you can't be bothered going to phpMyAdmin
+ * Auto-generation helper that can show a white-board template site directly from reading the Site Map.
