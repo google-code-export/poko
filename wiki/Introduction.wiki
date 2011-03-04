@@ -45,9 +45,9 @@ PokoCMS also supplies hooks such as being able to run SQL queries on adding or d
 * Optional URL re-writing (though of course it can be annoying when writing your templates, we know!)
 
 == PokoCMS ==
-* Internationalization / multi-language support in PokoCMS
-* A better WYSIWYM editor, that includes detection of pasting from Word (or HTML sources)
-* Full documentation
+ * Internationalization / multi-language support in PokoCMS
+ * A better WYSIWYM editor, that includes detection of pasting from Word (or HTML sources)
+ * Full documentation
 * Better, richer examples
 * A free Java Applet FTP uploader (anyone want to write one for us?)
 * Better user control with access rights for CRUD per table, row and 
