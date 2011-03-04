@@ -58,3 +58,5 @@ PokoCMS also supplies hooks such as being able to run SQL queries on adding or d
  * Nice popups with easy to use GUIs for Site Map options (there is a lot you can do with the Site Map but you have to read the code to know what it is!) 
  * A simple way to add new database fields when you can't be bothered going to phpMyAdmin
  * Auto-generation helper that can show a white-board template site directly from reading the Site Map.
+* Inline help when creating things liked linked tables.
+* Auto-generation (or some kind of helper) for fields needed for linked tables, and multilink tables!
