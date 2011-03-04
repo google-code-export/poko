@@ -18,6 +18,8 @@ If you're coming from an MVC background, you may like to think of the sytem like
 
 Poko does *not* provide any CRUD (Create Read Update Delete) mechanisms, and encourages the use of the PokoCMS as a data management layer. The data for a lot of websites can generally be pulled from your data source (database) by one (or at most two) SQL query, so why complicate things?
 
+It provides the flexibility of PHP (just start coding), but without just dropping you in the dessert with a map written in 5 different languages, none of them you understand, except the footnotes (if that makes any sense?).
+
 Templates can be written in either Templo or PHP, and by default the template with the same name (different extension) as the class file is used, with all of that class files public variables (and functions) accessible from the template. Accessing functions from PHP templates may be a little more tricky than from Templo.
 
 Currently Poko works best output to a PHP target, but may be modified for use with a Neko target.
