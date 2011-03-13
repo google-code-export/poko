@@ -51,10 +51,9 @@ class HtmlController extends Controller
 	
 	public var layoutView:View;
 	
-	public function new() 
+	public function new()
 	{
 		super();
-		
 		
 		head = new HtmlHeader();
 		head.title = "haxe poko";
