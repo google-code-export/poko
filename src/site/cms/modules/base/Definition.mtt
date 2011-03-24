@@ -69,7 +69,7 @@
 					<td><input type="checkbox" name="delete[]" value="::element.name::" /></td>
 					<td><input type="input" name="order[]" value="::repeat.element.number::" class="order" /></td>
 					<td>::element.name::</td>
-					::if !pagesMode::<td>(::if element.dbtype !=null::::element.dbtype::::end::)</td>::end::
+					::if !pagesMode::<td>(::if element.dbtype !=null:: ::controller.formatDbType(element.dbtype):: ::end::)</td>::end::
 					<td>(::element.type::)</td>
 					<td><a id="checkboxToggle_showInList_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInList"])::">::if element.showInList:: &#x2714; ::else:: &#x02610; ::end::</a></td>
 					<td><a id="checkboxToggle_showInFiltering_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInFiltering"])::">::if element.showInFiltering:: &#x2714; ::else:: &#x02610; ::end::</a></td>

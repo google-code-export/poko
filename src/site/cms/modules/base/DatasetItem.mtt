@@ -73,7 +73,11 @@
 					type: 'none'
 				}
 			}
-		});		
+		});
 	//});
+	
+	$(document).ready(function(){
+		$.fn.catchFormChanges();
+	});
 	
 </script>

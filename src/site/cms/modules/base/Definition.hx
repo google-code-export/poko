@@ -29,6 +29,7 @@ package site.cms.modules.base;
 
 import haxe.Serializer;
 import haxe.Unserializer;
+import php.Lib;
 import poko.form.elements.Checkbox;
 import poko.form.elements.RadioGroup;
 import poko.form.elements.Readonly;
@@ -395,5 +396,10 @@ class Definition extends DefinitionsBase
 		indentSelector.addOption( { key:2, value:2 } );
 		indentSelector.addOption( { key:3, value:3 } );
 		indentSelector.addOption( { key:4, value:4 } );	
+	}
+	
+	public function formatDbType(t:String)
+	{
+		return( (t.length < 20) ? t : t.substr(0, 17) + "..." );
 	}
 }
