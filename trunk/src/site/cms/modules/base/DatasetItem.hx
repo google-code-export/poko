@@ -102,6 +102,7 @@ class DatasetItem extends DatasetBase
 		head.js.add("js/cms/jquery-ui-1.7.2.custom.min.js");
 		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
 		head.js.add("js/cms/jquery.qtip.min.js");
+		head.js.add("js/cms/jquery.formChangeCatcher.js");
 		
 		head.js.add("js/cms/tiny_mce/tiny_mce.js");
 		head.js.add("js/cms/tiny_mce_browse.js");
