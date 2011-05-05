@@ -9,6 +9,9 @@ class Config
 	// Whether or not the site is in development mode (i.
 	public var development : Bool;
 	public var isLive : Bool;
+	public var printProcessingTime : Bool;
+	
+	public var useShortRequest:Bool;
 	
 	public var controllerPackage : String;
 	
@@ -31,6 +34,7 @@ class Config
 	public var encryptionKey : String;
 	public var sessionName : String;
 	
+	public var useDb : Bool;
 	public var database_host : String;
 	public var database_port : String;
 	public var database_user : String;
@@ -51,6 +55,9 @@ class Config
 		
 		development = false;
 		isLive = false;
+		useShortRequest = false;
+		useDb = true;
+		printProcessingTime = false;
 		
 		//indexFile
 		if(env.exists('SCRIPT_NAME'))
@@ -104,7 +111,9 @@ class Config
 		
 		sessionName = "poko";
 		
-		if (debug != null) this.dumpEnvironment(debug);
+		#if debug
+			if (debug != null) this.dumpEnvironment(debug);
+		#end
 		
 	}
 	
@@ -128,6 +137,7 @@ class Config
 
 	///// Debug method //////////////////////////////////////////////
 	
+	#if debug
 	public function dumpEnvironment(?logFile : Dynamic) : Void
 	{
 		var date = DateTools.format(Date.now(), '%Y-%m-%d %H:%M:%S');
@@ -191,4 +201,5 @@ class Config
 			#end
 		}
 	}
+	#end
 }

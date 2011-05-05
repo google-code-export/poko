@@ -32,6 +32,7 @@ package poko;
 
 import haxe.Timer;
 import htemplate.Template;
+import php.Sys;
 import poko.controllers.Controller;
 import php.Lib;
 import php.Session;
@@ -55,17 +56,15 @@ class Poko
 	public var db(getDb, null):Db;
 	private var __db:Db;
 	
-	public var session:Dynamic;
+	public var sessionData:Hash<Dynamic>;
 	
 	public function new() 
 	{
+		var time1 = Timer.stamp();
 		
-		//var time1 = Timer.stamp();
-		/*
-		var data = {one:"one", two:null}
-		var ht = new Template("my template {:two} ");
-		ht.execute(data);
-		*/
+		// for some reason we now have to kill the session before starting
+		// Session seems to be automatically making itself started = true WTF ?
+		Session.close();
 		
 		instance = this;
 		
@@ -74,20 +73,31 @@ class Poko
 		config = new Config();
 		config.init();
 		
-		var v="";
+		if (config.development) {
+			// show AND log errors
+			untyped __call__('ini_set', 'display_errors', 1);
+			untyped __php__("error_reporting(E_ALL ^ E_NOTICE);");
+			untyped __call__('ini_set', 'log_errors', 1);
+			untyped __php__("ini_set('error_log', dirname(__FILE__) . './error_log.txt');");
+		}
+		
+		// -------------------------------------------
+		// handle sessions, naming and saving of temp data
 		if (Session.getName() != config.sessionName) 
 		{
-			v = "YAY";
-			
 			Session.setName(config.sessionName);
 		}
 		
 		Session.start();
-		
+
 		if (!Session.exists("pokodata"))
-			Session.set("pokodata", { } );
-		
-		session = Session.get("pokodata");
+			sessionData = new Hash();
+		else
+			if (Std.is(Session.get("pokodata"), Hash))
+				sessionData = Session.get("pokodata");
+			else
+				sessionData = new Hash();
+		// -------------------------------------------
 		
 		params = Web.getParams();
 		
@@ -99,7 +109,6 @@ class Poko
 		
 		var controllerClass = Type.resolveClass( "site." + controllerId );
 		//var controllerType = Type.resolveClass("site." + findControllerClass());
-		
 		
 		var is404 = false;
 		if (controllerClass != null)
@@ -116,15 +125,18 @@ class Poko
 		if (is404) Lib.print("<font color=\"red\"><b>404: Not a valid request</b></font>");
 			
 		
-		Session.set("pokodata", session);
-		
-		//var time = Timer.stamp() - time1;
-		//Lib.print(time);
+		Session.set("pokodata", sessionData);
+
+		if (config.printProcessingTime){
+			var time = Timer.stamp() - time1;
+			Lib.print(time);
+		}
 	}
 	
 	private function findControllerClassByRewrite():String
 	{
 		var request = params.get( "request" );
+		if (request == null && config.useShortRequest) request = params.get( "r" );
 		var path = params.get( "path" );
 		trace( request );
 		trace( path );
@@ -134,6 +146,7 @@ class Poko
 	private function findControllerClass():String
 	{
 		//var tmp = ();
+		if (params.get("request") == null && config.useShortRequest) params.set("request", params.get( "r" ));
 		var c:String = url.getSegments()[0] != "" ? url.getSegments()[0] : params.get("request") != null ? params.get("request") : config.defaultController;
 
 		if (c.lastIndexOf(".") != -1)
@@ -147,10 +160,14 @@ class Poko
 	
 	public function getDb()
 	{
-		if (__db == null) 
-			__db = new Db();
-		__db.connect(config.database_host, config.database_database, config.database_user, config.database_password, config.database_port);
-		return __db;
+		if (config.useDb){
+			if (__db == null) 
+				__db = new Db();
+			__db.connect(config.database_host, config.database_database, config.database_user, config.database_password, config.database_port);
+			return __db;
+		}else {
+			return null;
+		}
 	}
 	
 	public function redirect(url:String)
