@@ -120,5 +120,8 @@ class PhpTools
 		
 	}
 	
-	
+	public static inline function base64Decode(s:String):String
+	{
+		return untyped __call__("base64_decode", s);
+	}
 }
