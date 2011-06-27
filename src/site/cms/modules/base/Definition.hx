@@ -100,8 +100,8 @@ class Definition extends DefinitionsBase
 		{
 			var d:Dynamic = form1.getData();
 			try{
-				d.autoOrdering = form1.getElement('orderByField').value + "|" + form1.getElement('orderByDirection').value;
 				var p = new DefinitionParams();
+				d.autoOrdering = form1.getElement('orderByField').value + "|" + form1.getElement('orderByDirection').value;
 				p.usePaging = form1.getElement('usePaging').value == "1" ? true : false;
 				p.dndOrdering = form1.getElement('dndOrdering').value == "1" ? true : false;
 				p.perPage = form1.getElement('perPage').value;

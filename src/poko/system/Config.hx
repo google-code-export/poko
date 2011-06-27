@@ -47,11 +47,16 @@ class Config
 	/**
 	 * Setting non-initialized constants.
 	 */
+	
+	public var navigationExt:Hash<String>;
+	 
 	private function new(?debug : Dynamic)
 	{
 		var env = Sys.environment();
 		
 		applicationPath = Web.getCwd();
+		
+		navigationExt = new Hash();
 		
 		development = false;
 		isLive = false;
