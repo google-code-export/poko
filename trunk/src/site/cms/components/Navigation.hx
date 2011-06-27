@@ -39,6 +39,8 @@ class Navigation extends Component
 	private var selected:String;
 	public var userName:String;
 	
+	public var items:Hash<String>;
+	
 	override public function init()
 	{
 		var name:String = app.params.get("request");
@@ -47,6 +49,32 @@ class Navigation extends Component
 		pageHeading = "page";
 		
 		//setSelected(name);
+		
+		var cmsController:CmsController = cast app.controller;
+		items = new Hash();
+		
+		if(cmsController.user.authenticated){
+
+			if (cmsController.user.isSuper()) {
+				items.set("modules.base.Pages", "Pages");
+				items.set("modules.base.Datasets", "Data");
+				items.set("modules.base.SiteView", "Site Map");
+				items.set("modules.media.Index", "Media");
+				items.set("modules.base.Settings", "Settings");
+				items.set("modules.base.Users", "Users");
+				items.set("modules.base.DbBackup", "Backup");
+				items.set("modules.help.Help", "Help");
+			}else if (cmsController.user.isAdmin()) {
+				items.set("modules.base.SiteView", "Site Map");
+				items.set("modules.base.Users", "Users");
+				items.set("modules.base.DbBackup", "Backup");
+			}else{
+				items.set("modules.base.SiteView", "Site Map");
+			}
+
+			items.set("modules.email.Index", "Email");
+			items.set("modules.base.ChangePassword", "Password");
+		}
 	}
 	
 	override public function main() 
@@ -57,44 +85,23 @@ class Navigation extends Component
 		var cmsController:CmsController = cast app.controller;
 		
 		if(cmsController.user.authenticated){
-			var contentExtra = "";
-			
-			if (cmsController.user.isSuper()) {
-				requests.set("modules.base.Pages", "Pages");
-				requests.set("modules.base.Datasets", "Data");
-				requests.set("modules.base.SiteView", "Site Map");
-				requests.set("modules.media.Index", "Media");
-				requests.set("modules.base.Settings", "Settings");
-				requests.set("modules.base.Users", "Users");
-				requests.set("modules.base.DbBackup", "Backup");
-				requests.set("modules.help.Help", "Help");
-			}else if (cmsController.user.isAdmin()) {
-				requests.set("modules.base.SiteView", "Site Map");
-				requests.set("modules.base.Users", "Users");
-				requests.set("modules.base.DbBackup", "Backup");
-			}else{
-				requests.set("modules.base.SiteView", "Site Map");
-			}
-			
-			requests.set("modules.email.Index", "Email");
-			
-			requests.set("modules.base.ChangePassword", "Password");
-			
 			content = "<ul id=\"headingNavigation\">\n";
-
-			for (request in requests.keys())
+			
+			for (k in app.config.navigationExt.keys())
+				items.set(k, app.config.navigationExt.get(k));
+			
+			for (item in items.keys())
 			{
-				var parts = request.split(".");
+				var parts = item.split(".");
 				if (parts[parts.length-1] == selected)
 				{
-					content += "<li><a href=\"?request=cms."+request+"\" class=\"navigation_selected\">" + requests.get(request) + "</a></li>\n";
+					content += "<li><a href=\"?request=cms."+item+"\" class=\"navigation_selected\">" + items.get(item) + "</a></li>\n";
 				} else {
-					content += "<li><a href=\"?request=cms."+request+"\">"+requests.get(request)+"</a></li>\n";
+					content += "<li><a href=\"?request=cms."+item+"\">"+items.get(item)+"</a></li>\n";
 				}
 			}
 			
 			content += "</ul>\n";
-			content += contentExtra;
 			
 			userName = cmsController.user.name;
 		}else {
