@@ -105,8 +105,9 @@
 	
 	<br /><br/>
 	<h4>Extras</h4>
-	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=multilink">Add 'Multilink'</a><br/>
-	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=linkdisplay">Add 'Link-Display'</a>
+	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=multilink">Add 'Multilink'</a><br />
+	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=linkdisplay">Add 'Link-Display'</a><br />
+	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=listformatter">Add 'List Formatter'</a>
 	::end::
 	
 <script>

@@ -117,9 +117,9 @@
 				<tr><td colspan="::cols::">No Content</td></tr>
 			::end::
 			</table>
-			
+
 			<input type="hidden" name="action" value="update" />
-		
+
 			<input type="submit" id="datasetDeleteButton" name="submitted_delete" value="Delete Checked"  />
 			::if isOrderingEnabled::<input type="submit" id="datasetOrderButton" name="submitted_order" value="Update Order"  />::end::
 	</form>

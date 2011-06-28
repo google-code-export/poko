@@ -198,11 +198,11 @@ class Dataset extends DatasetBase
 		allowCsv = definition.allowCsv;
 		
 		var ths = this;
-		fieldLabels= Lambda.map(fields, function(row:Dynamic) {	
+		fieldLabels= Lambda.map(fields, function(row:Dynamic) {
 			var el = ths.definition.getElement(row);
 			return el.label != "" ? el.label : el.name; 
 		});
-		
+
 		// Build SQL to get data
 		var sql = "SELECT *, `" + definition.primaryKey + "` as 'cms_primaryKey' ";
 		
@@ -750,6 +750,12 @@ class Dataset extends DatasetBase
 			return row.Field;
 		});
 		
+		// add listformatter items
+		for (element in definition.elements)
+			if (element.type == "listformatter")
+				if (element.showInList)
+					fields.add(element.name);
+		
 		// find matches on definition fields and table fields
 		fields = Lambda.filter(fields, function(row:String) {	
 			var match = Lambda.has(definitionFields, row) && ((ths.definition.getElement(row).type != "hidden" && ths.definition.getElement(row).type != "order" && ths.definition.getElement(row).showInList));
@@ -776,7 +782,7 @@ class Dataset extends DatasetBase
 		if (properties.formatter != null && properties.formatter != "")
 		{
 			var f:Formatter = Type.createInstance(Type.resolveClass(properties.formatter), []);
-			return f.format(data);
+			return f.format(row);
 		} else {
 			return switch(properties.type)
 			{
@@ -799,6 +805,8 @@ class Dataset extends DatasetBase
 				case "keyvalue": "list of values";
 				case "association":
 					properties.showAsLabel == "1" ? associateExtras.get(field).get(cast data) : data;
+				case "listformatter":
+					"LIST!";
 				default: data;
 			}
 		}

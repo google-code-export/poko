@@ -243,6 +243,20 @@ class Definition extends DefinitionsBase
 						var el = definition.addElement(linkname);
 						el.type = "multilink";
 						definition.save();
+					case "listformatter":
+						var lastlink = null; 
+						for (el in definition.elements)
+							if (el.type == "listformatter")
+								lastlink = el;
+						var linkname = "listformatter_";
+						if(lastlink == null)
+							linkname += "1";
+						else 
+							linkname += cast Std.parseInt(cast(lastlink.name.split("_")[1])) + 1;
+
+						var el = definition.addElement(linkname);
+						el.type = "listformatter";
+						definition.save();
 				}
 				
 		}

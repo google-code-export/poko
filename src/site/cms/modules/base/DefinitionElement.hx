@@ -77,7 +77,6 @@ class DefinitionElement extends DefinitionsBase
 		super();
 	}
 	
-	
 	/** remoting */
 	
 	override public function init()
@@ -281,7 +280,7 @@ class DefinitionElement extends DefinitionsBase
 		elements = new List();
 		form.addElement(new Readonly( "att_name", "Field", meta.name));
 
-		if (meta.type == "linkdisplay" || meta.type == "multilink"  ) 
+		if (meta.type == "linkdisplay" || meta.type == "multilink" || meta.type == "listformatter") 
 		{
 			// Sepcial display for links
 			form.addElement(new Input( "att_label", "Label", data.label));
@@ -461,7 +460,7 @@ class DefinitionElement extends DefinitionsBase
 		
 		form.addElement(new RadioGroup( "def_association_showAsLabel", "Show as Label?", yesno, data.showAsLabel, "0", false), "properties");
 		
-		//
+		// multilink
 		var multiTable:Selectbox = new Selectbox( "def_multilink_table", "With Table", tableList, data.table);
 		multiTable.onChange =  jsBind.getRawCall("onChangeSelectbox(this)");
 		form.addElement(multiTable, "properties");
@@ -484,8 +483,13 @@ class DefinitionElement extends DefinitionsBase
 		var multiLinkField2:Selectbox = new Selectbox( "def_multilink_linkField2", "Link Field 2", multiLinkFields, data.linkField2);
 		form.addElement(multiLinkField2, "properties");
 		
-		var assoc:Selectbox = new Selectbox("def_linkdisplay_table", "link Table", tableList, data.table);
+		// link display
+		var assoc:Selectbox = new Selectbox("def_linkdisplay_table", "Link Table", tableList, data.table);
 		form.addElement(assoc, "properties");
+		
+		// list formatter
+		var i:Input = new Input("def_listformatter_formatter", "Formatter Class", data.formatter);
+		form.addElement(i, "properties");
 		
 		// post SQL value --------------------------------------------------------------------------
 		form.addElement(new Hidden("def_post-sql-value_updateKeyTable", definition.table), "properties");
