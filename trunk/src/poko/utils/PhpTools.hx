@@ -124,4 +124,9 @@ class PhpTools
 	{
 		return untyped __call__("base64_decode", s);
 	}
+	
+	public static inline function uniqueId():String
+	{
+		return untyped __call__("uniqid", "", true);
+	}
 }
