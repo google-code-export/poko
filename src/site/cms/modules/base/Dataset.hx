@@ -109,6 +109,7 @@ class Dataset extends DatasetBase
 		jsBind = new JsBinding("site.cms.modules.base.js.JsDataset");
 		
 		remoting.addObject("api", { getFilterInfo:getFilterInfo } );
+		remoting.addObject("api", { updateData:remoteUpdateData } );
 		
 		// change layout for link view
 		if (linkMode)
@@ -134,6 +135,17 @@ class Dataset extends DatasetBase
 	{
 		getAssociationExtras();
 		return associateExtras.get(field);
+	}
+	
+	public function remoteUpdateData(_id:Int, _data:Dynamic, ?_hide:Bool = false):Dynamic
+	{
+		var response:Dynamic = { };
+		
+		response.hide = _hide;
+		response.id = _id;
+		response.error = !app.db.update(this.table, _data, '`id`='+Std.string(_id));
+		
+		return response;
 	}
 	
 	/** end remoting */
@@ -177,7 +189,7 @@ class Dataset extends DatasetBase
 		fields = getFieldMatches();
 	
 		// get primary key
-		var primaryData = app.db.request("SHOW COLUMNS FROM `"+table+"` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
+		var primaryData = app.db.request("SHOW COLUMNS FROM `" + table + "` WHERE `Key`='PRI' AND `Extra`='auto_increment'");
 		if (primaryData.length < 1)
 		{
 			messages.addError("<b>'"+table+"'</b> does not have a field set as both: <b>auto_increment</b> AND <b>primary key</b>");
@@ -779,10 +791,10 @@ class Dataset extends DatasetBase
 	{
 		var data:Dynamic = Reflect.field(row, field);
 		var properties = definition.getElement(field).properties;
-		if (properties.formatter != null && properties.formatter != "")
+		if (properties.formatter != null && properties.formatter != "" && properties.type != "listformatter")
 		{
 			var f:Formatter = Type.createInstance(Type.resolveClass(properties.formatter), []);
-			return f.format(row);
+			return f.format(data);
 		} else {
 			return switch(properties.type)
 			{
@@ -806,7 +818,8 @@ class Dataset extends DatasetBase
 				case "association":
 					properties.showAsLabel == "1" ? associateExtras.get(field).get(cast data) : data;
 				case "listformatter":
-					"LIST!";
+					var f:Formatter = Type.createInstance(Type.resolveClass(properties.formatter), []);
+					return f.format(row);
 				default: data;
 			}
 		}

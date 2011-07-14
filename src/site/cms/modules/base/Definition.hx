@@ -67,7 +67,6 @@ class Definition extends DefinitionsBase
 		
 		//
 		remoting.addObject("api", { toggleCheckbox:toggleCheckbox } );
-		
 		jsBind = new JsBinding("site.cms.modules.base.js.JsDefinition");
 		
 		head.css.add("css/cms/ui-lightness/jquery-ui-1.7.2.custom.css");
