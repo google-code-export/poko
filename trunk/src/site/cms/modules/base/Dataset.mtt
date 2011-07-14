@@ -54,22 +54,23 @@
 		::raw paginationLinks::
 	</div>
 	::end::
-	
-	::if tabFields != null::
-		<div id="datasetTabFields">
-			<ul>
-				::foreach f tabFields::
-					::set cc = ""::
-					::if f.value == tabFilter:: ::set cc = "datasetTabFieldSelected":: ::end::
-					<li class="::cc::"><a href="?request=cms.modules.base.Dataset&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::&tabFilter=::f.value::">::f.key::</a></li>
-				::end::
-			</ul>
-		</div>
-	::end::
-	
+		
 	<form action="" method="POST">
+	
 		<input type="submit" id="datasetDeleteButtonTop" class="datasetDeleteButton" name="submitted_delete" value="Delete Checked"  />
 		::if isOrderingEnabled::<input type="submit" id="datasetOrderButtonTop" class="datasetOrderButton" name="submitted_order" value="Update Order"  />::end::
+		
+		::if tabFields != null::
+			<div id="datasetTabFields">
+				<ul>
+					::foreach f tabFields::
+						::set cc = ""::
+						::if f.value == tabFilter:: ::set cc = "datasetTabFieldSelected":: ::end::
+						<li class="::cc::"><a href="?request=cms.modules.base.Dataset&dataset=::dataset::&linkMode=::linkMode::&linkToField=::linkToField::&linkTo=::linkTo::&linkValueField=::linkValueField::&linkValue=::linkValue::&siteMode=::siteMode::&autofilterBy=::autoFilterValue::&autofilterByAssoc=::autoFilterByAssocValue::&tabFilter=::f.value::">::f.key::</a></li>
+					::end::
+				</ul>
+			</div>
+		::end::
 		
 		<table class="greyTable datasetListTable">
 			
@@ -91,7 +92,7 @@
 			::set cols=0::
 			::if data.length > 0::
 				::foreach row data::
-					<tr class="draggable">
+					<tr class="draggable" id="dataset_row_::row.cms_primaryKey::">
 						::set cols= cols+1:: <td><input type="checkbox" name="delete[]" value="::row.cms_primaryKey::"  /></td>
 						
 						::if isOrderingEnabled ::

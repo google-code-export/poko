@@ -120,4 +120,18 @@ class JsDataset extends JsRequest
 					Lib.document.getElementById("filter_normal").style.display = "inline";
 		}
 	}
+	
+	public function updateData(_id:Int, _data:Dynamic, ?_hide:Bool = false)
+	{
+		remoting.api.updateData.call([_id, _data, _hide], onUpdateData);
+	}
+	
+	public function onUpdateData(response:Dynamic)
+	{
+		if (response.error) {
+			Lib.alert("Error updating record '" + response.id + "'");
+		}else {
+			if (response.hide) Lib.document.getElementById('dataset_row_' + response.id).style.display = 'none';
+		}
+	}
 }
