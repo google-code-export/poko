@@ -103,6 +103,7 @@ class Db
 		lastQuery = sql;
 		
 		var result:ResultSet  = cnx.request(sql);
+		numRows = result.length;
 		return result.results();
 	}
 	
