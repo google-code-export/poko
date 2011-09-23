@@ -366,10 +366,10 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new RadioGroup( "def_location_searchAddress", "Allow searching addresses?", yesno, data.searchAddress, "1", false), "properties");
 		
 		var rtf = new List();
-		rtf.add( { key:"Simple", value:"SIMPLE" } );
-		rtf.add( { key:"Simple w/ Format", value:"FORMAT"} );
-		rtf.add( { key:"Simple w/ tables", value:"SIMPLE_TABLES"} );
-		rtf.add( { key:"Advanced", value:"ADVANCED" } );
+		rtf.add( { key:"SIMPLE", value:"Simple" } );
+		rtf.add( { key:"FORMAT", value:"Simple w/ Format"} );
+		rtf.add( { key:"SIMPLE_TABLES", value:"Simple w/ tables"} );
+		rtf.add( { key:"ADVANCED", value:"Advanced" } );
 		
 		form.addElement(new Selectbox( "def_richtext-tinymce_mode", "Mode", rtf, data.mode, false,""), "properties");
 		form.addElement(new Input( "def_richtext-tinymce_width", "Width", data.width), "properties");

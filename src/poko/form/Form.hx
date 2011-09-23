@@ -203,9 +203,8 @@ class Form
 				element.populate();
 			}
 		}
-		
 	}
-	
+
 	public function clearData():Dynamic
 	{
 		var element:FormElement;

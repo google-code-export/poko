@@ -52,6 +52,7 @@ class DateSelector extends FormElement
 		if ( value != null )
 		{
 			this.datetime = Std.string(value);
+			
 			//this.value = datetime.substr(0, 10);
 			this.value = datetime;
 		}
@@ -73,6 +74,8 @@ class DateSelector extends FormElement
 	
 	override public function render():String
 	{
+		if (this.datetime == null && this.value != null) this.datetime = Std.string(value);
+		
 		var n = form.name + "_" +name;
 		var sb = new StringBuf();
 		

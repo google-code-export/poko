@@ -27,45 +27,46 @@
 
 
 package poko.form.elements;
-import haxe.Md5;
-import haxe.Timer;
-import php.FileSystem;
-import poko.Poko;
+
 import poko.form.Form;
 import poko.form.FormElement;
-import poko.utils.PhpTools;
+import poko.Poko;
 
-class ImageUpload extends FileUpload
+class Submit extends FormElement
 {
-	public var imageServiceUrl:String;
-	public var imageServicePreset:String;
-	
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?imageServiceUrl:String=null, ?imageServicePreset=null, ?toFolder:String=null, ?keepFullFileName:Bool=true ) 
+	public function new(name:String, value:String) 
 	{
-		super(name, label, value, required, toFolder, keepFullFileName);
-		
-		this.imageServiceUrl = imageServiceUrl != null ? imageServiceUrl : "?request=services.Image";
-		this.imageServicePreset = imageServicePreset != null ? imageServicePreset : "thumb";
+		super();
+		this.name = name;
+		this.value = value;
 	}
 	
-	override public function render():String
+	override public function isValid():Bool
 	{
-		var n = form.name + "_" +name;
-		var path = toFolder.substr((Poko.instance.config.applicationPath + "res/").length);
-		
-		var str:String = "";
-		str += '<img src="'+imageServiceUrl+'&preset='+imageServicePreset+'&src='+getFileName()+'" id="' + n + '__image" /><br/>';
-		str += '<input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' />';
-		if (!required && value != '' && value != null) str += '[ <a href="#" onclick="document.getElementById(\'' + n + '__delete\').value = \'1\'; document.getElementById(\'' + n + '__image\').style.visibility = \'hidden\'; return false;">remove</a> ]';
-		str += '<input type="hidden" name="' + n + '__previous" id="' + n + '__previous" value="'+value+'"/>';
-		str += '<input type="hidden" name="' + n + '__delete" id="' + n + '__delete" value="0"/>';
-		
-		return str;
+		return true;
 	}
 	
-	override public function toString() :String
+	override public function render() :String
+	{
+		var s = "<input type=\"submit\" class=\"" + getClasses() +"\" value=\"" + value + "\" " + attributes + " name=\"" +form.name + "_" +name + "\" id=\"" +form.name + "_" +name + "\" />";
+		return s;
+	}
+	
+	public function toString() :String
 	{
 		return render();
 	}
 	
+	override public function getPreview():String
+	{
+		return "<tr><td></td><td>" + this.render() + "<td></tr>";
+	}
+	
+	override public function populate():Void
+	{
+		super.populate();
+		var n = form.name + "_" + name;
+		if ( Poko.instance.params.exists(n) )
+			form.submittedButtonName = name;
+	}
 }

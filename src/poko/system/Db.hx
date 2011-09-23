@@ -224,9 +224,10 @@ class Db
 	}
 	
 	
-	public function count(table:String, ?where:String = ""):Int
+	public function count(table:String, ?where:String = null):Int
 	{
-		var sql = "SELECT COUNT(*) as count FROM `" + table + "` WHERE " + where;
+		var sql = "SELECT COUNT(*) as count FROM `" + table + "`";
+		if (where != null) sql += " WHERE " + where;
 		
 		lastQuery = sql;
 		
@@ -310,12 +311,12 @@ class Db
 		
 		for ( table in tables )
 		{
-			var result = cnx.request( "SELECT * FROM " + table );
+			var result = cnx.request( "SELECT * FROM `" + table + "`");
 			var numFields = result.nfields;
 			
-			output += "DROP TABLE IF EXISTS " + table + ";";
+			output += "DROP TABLE IF EXISTS `" + table + "`;";
 			
-			var createSql = cnx.request( "SHOW CREATE TABLE " + table ).next();
+			var createSql = cnx.request( "SHOW CREATE TABLE `" + table + "`").next();
 			//trace( createSql );
 			//break;
 			output += "\n\n" + Reflect.field( createSql, "Create Table" ) + ";\n\n";
@@ -324,14 +325,14 @@ class Db
 			{
 				for ( row in result )
 				{
-					output += "INSERT INTO " + table + " VALUES (";
+					output += "INSERT INTO `" + table + "` VALUES (";
 					
 					var j = 0;
 					for ( f in Reflect.fields( row ) )
 					{
 						var value = Reflect.field( row, f );
 						value = untyped __call__( "addslashes", value );
-						value = untyped __call__( "ereg_replace", "\n", "\\n", value );
+						value = untyped __call__( "str_replace", "\n", "\\n", value );
 						if ( value != "" && value != null )
 							output += '"' + value + '"';
 						else

@@ -350,7 +350,13 @@ class Dataset extends DatasetBase
 		
 		var sqlOrder = "";
 		
-		if (isOrderingEnabled && this.orderField != null && (!(optionsForm.isSubmitted() || currentFilterSettings.enabled) || orderByValue == null))
+		// default ordering by definition
+		if (definition.autoOrderingField != "" && definition.autoOrderingField != null)
+		{
+			sqlOrder += "ORDER BY `" + definition.autoOrderingField + "` " + definition.autoOrderingOrder;
+		}
+		// order by order field
+		else if (isOrderingEnabled && this.orderField != null && (!(optionsForm.isSubmitted() || currentFilterSettings.enabled) || orderByValue == null))
 		{
 			sqlOrder += "ORDER BY `dataset__orderField`";
 		}
@@ -358,11 +364,6 @@ class Dataset extends DatasetBase
 		else if ((optionsForm.isSubmitted() || currentFilterSettings.enabled) && orderByValue != null && orderByValue != "")
 		{
 			sqlOrder += "ORDER BY `" + orderByValue + "` " + orderByDirectionValue;
-		}
-		// default ordering by definition
-		else if (definition.autoOrderingField != "" && definition.autoOrderingField != null)
-		{
-			sqlOrder += "ORDER BY `" + definition.autoOrderingField + "` " + definition.autoOrderingOrder;
 		}
 		// Use Primary key
 		else{

@@ -17,33 +17,34 @@
 	<link rel="shortcut icon" href="::head.favicon::" />
 </head>
 <body>
-	<div id="haxe:trace"></div>
 	<div id="container">
 	
-		::if messages.getMessages().length > 1::
-			<div class="messageBlock" id="messageMessages"><ul>
-				::foreach m messages.getMessages()::
-					<li> ::m::</li>
-				::end::
-			</ul></div>
+		::if messages != null::
+			::if messages.getMessages().length > 1::
+				<div class="messageBlock" id="messageMessages"><ul>
+					::foreach m messages.getMessages()::
+						<li> ::m::</li>
+					::end::
+				</ul></div>
+			::end::
+			
+			::if messages.getWarnings().length > 1::
+				<div class="messageBlock" id="messageWarnings"><ul>
+					::foreach m messages.getWarnings()::
+						<li> ::m:: </li>
+					::end::
+				</ul></div>
+			::end::
+			
+			::if messages.getErrors().length > 1::
+				<div class="messageBlock" id="messageErrors"><ul>
+					::foreach m messages.getErrors()::
+						<li> ::m:: </li>
+					::end::
+				</ul></div>
+			::end::
 		::end::
-		
-		::if messages.getWarnings().length > 1::
-			<div class="messageBlock" id="messageWarnings"><ul>
-				::foreach m messages.getWarnings()::
-					<li> ::m:: </li>
-				::end::
-			</ul></div>
-		::end::
-		
-		::if messages.getErrors().length > 1::
-			<div class="messageBlock" id="messageErrors"><ul>
-				::foreach m messages.getErrors()::
-					<li> ::m:: </li>
-				::end::
-			</ul></div>
-		::end::
-		
+			
 		<div id="content">::raw controller.view.render()::</div>
 	
 		<div style="clear:both"></div>

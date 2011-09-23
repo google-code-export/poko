@@ -68,7 +68,7 @@ class FormElement
 		if (active == false)
 			return true;
 		
-		if (value == "" && required) 
+		if (value == "" && required || value == null && required) 
 		{
 			//errors.add("Please enter '" + ((label != null && label != "") ? label : name) + "'");
 			errors.add("<span class=\"formErrorsField\">" + ((label != null && label != "") ? label : name) + "</span> required.");

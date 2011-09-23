@@ -70,6 +70,7 @@ class Navigation extends Component
 				items.set("modules.base.DbBackup", "Backup");
 			}else{
 				items.set("modules.base.SiteView", "Site Map");
+				items.set("modules.media.Index", "Media");
 			}
 
 			items.set("modules.email.Index", "Email");

@@ -39,12 +39,12 @@ class CmsPopup extends CmsController
 		//additionalJsRequests.add("site.cms.js.JsCommon");
 	}
 	
-	override public function post()
+	/*override public function post()
 	{
 		/*messages = messages.getMessages();
 		warnings = messages.getWarnings();
 		errors = messages.getErrors();
-		*/
+		
 		messages.clearAll();		
-	}
+	}*/
 }
