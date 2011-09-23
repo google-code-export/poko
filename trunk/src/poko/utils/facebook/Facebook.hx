@@ -122,6 +122,13 @@ class Facebook {
 		
 	}
 	
+	public function apiGetRequests() {
+		return api("/me/apprequests");
+	}
+	public function apiGetRequestsForMe() {
+		return api("/me/apprequests");
+	}
+	
 	/* --------------------------------------------------- */
 	
 	public static function getSignedRequest(?signedRequest:String = null):FbSignedData
@@ -161,7 +168,8 @@ typedef FbSignedData = {
 	
 	// tab only
 	var page: {
-			liked:Bool
+			liked:Bool,
+			id:Int
 		};
 }
 

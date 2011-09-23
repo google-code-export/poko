@@ -55,14 +55,21 @@ class FileUpload extends FormElement
 	{
 		var n = form.name + "_" + name;
 		var previous = Poko.instance.params.get(n+"__previous");
+		var delete = Std.string(Poko.instance.params.get(n + "__delete"));
 		var file:Hash<Dynamic> = PhpTools.getFilesInfo().get(n);
+		
+		var oldfile = keepFullFileName ? previous : toFolder + previous;
+		
+		if (delete == '1' && FileSystem.exists(oldfile)) {
+			FileSystem.deleteFile(oldfile);
+			value = '';
+		}
 		
 		if (file != null && file.get("error") == 0)
 		{
 			if (FileSystem.exists(file.get("tmp_name")))
 			{
 				// delete previous uploaded file
-				var oldfile = keepFullFileName ? previous : toFolder + previous;
 				if (previous != null && previous != "" && FileSystem.exists(oldfile))
 				{
 					FileSystem.deleteFile(oldfile);
@@ -76,7 +83,7 @@ class FileUpload extends FormElement
 				value = keepFullFileName ? toFolder+newname : newname;
 			}
 		} 
-		else if (previous != null) 
+		else if (previous != null && delete != '1') 
 		{
 			// no upload- remember previous value
 			value = previous;
@@ -92,7 +99,9 @@ class FileUpload extends FormElement
 		
 		str += '<span class="fileName">'+getOriginalFileName()+'</span><br/>';
 		str += '<input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' />';
+		if (!required && value != '' && value != null) str += '[ <a href="#" onclick="document.getElementById(\'' + n + '__delete\').value = \'1\'; return false;">remove</a> ]';
 		str += '<input type="hidden" name="' + n + '__previous" id="' + n + '__previous" value="'+value+'"/>';
+		str += '<input type="hidden" name="' + n + '__delete" id="' + n + '__delete" value="0"/>';
 		
 		return str;
 	}
