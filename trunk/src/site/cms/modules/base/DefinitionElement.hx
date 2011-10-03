@@ -382,6 +382,9 @@ class DefinitionElement extends DefinitionsBase
 		form.addElement(new RadioGroup( "def_richtext-wym_required", "Required", yesno, data.required, "0", false), "properties");
 		form.addElement(new RadioGroup( "def_richtext-wym_allowTables", "Allow Tables", yesno, data.allowTables, "0", false), "properties");
 		form.addElement(new RadioGroup( "def_richtext-wym_allowImages", "Allow Images", yesno, data.allowImages, "1", false), "properties");
+		form.addElement(new RadioGroup( "def_richtext-wym_allowImages", "Allow Images", yesno, data.allowImages, "1", false), "properties");
+		form.addElement(new RadioGroup( "def_richtext-wym_useFtp", "Use FTP?", yesno, data.useFtp, "1", false), "properties");
+		form.addElement(new Input( "def_richtext-wym_ftpDirectory", "FTP directory", data.ftpDirectory), "properties");
 		
 		var t = new TextArea("def_richtext-wym_editorStyles", "Editor Styles", data.editorStyles, false, null);
 		t.width = 500;

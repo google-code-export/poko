@@ -95,23 +95,29 @@ class FileUpload extends FormElement
 			
 			str += "</div>";
 		}
-		
+
 		popupURL.id = n + "_mediaSelectorPopup";
 		popupURL.label = "library";
 		popupURL.contentUrl = "?request=cms.modules.media.MediaSelector&elementId=" + n + "&showOnlyLibraries=" + showOnlyLibraries.join(":");
 		popupURL.contentUrl += "&libraryViewThumb="+libraryViewThumb+"&libraryViewList="+libraryViewList;
 		popupURL.width = 700;
 		popupURL.height = 450;
-			
+
 		str += '<input type="hidden" name="' + n + '_libraryItemValue" id="' + n + '_libraryItemValue" value="" />';
 		str += '<div class="cmsComponentFileImageEdit">';
-			if(showUpload) str += '<div class="cmsComponentFileImageEditUpload"><input checked type="radio" id="' + n + '_cmsComponentFileImageEditOperationUpload" name="' + n + '_operation" value="'+ OPERATION_UPLOAD +'" /> <input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' onClick="document.getElementById(\'' + n + '_cmsComponentFileImageEditOperationUpload\').checked = true;" /></div>';
-			if(showLibrary) str += '<div class="cmsComponentFileImageEditLibrary"><input type="radio" id="' + n + '_cmsComponentFileImageEditOperationLibrary" name="' + n + '_operation" value="' + OPERATION_LIBRARY +'" /> ' + popupURL.render() + '<span id="' + n + '_libraryItemDisplay" class="cmsComponentFileImageEditLibraryDisplay"></span>';
+			if (showUpload) str += '<div class="cmsComponentFileImageEditUpload"><input';
+			if (showUpload && showLibrary) { str += ' checked type="radio" '; } else { str += ' type="hidden" '; }
+			if (showUpload) str += 'id="' + n + '_cmsComponentFileImageEditOperationUpload" name="' + n + '_operation" value="'+ OPERATION_UPLOAD +'" /> <input type="file" name="' + n + '" id="' + n + '" ' + attributes + ' onClick="document.getElementById(\'' + n + '_cmsComponentFileImageEditOperationUpload\').checked = true;" /> </div> ';
+			if (showLibrary) {
+				str += '<div class="cmsComponentFileImageEditLibrary"><input';
+				if (showUpload) { str += ' type="radio" '; } else { str += ' type="hidden" '; }
+				str += 'id="' + n + '_cmsComponentFileImageEditOperationLibrary" name="' + n + '_operation" value="' + OPERATION_LIBRARY +'" /> ' + popupURL.render() + '<span id="' + n + '_libraryItemDisplay" class="cmsComponentFileImageEditLibraryDisplay"></span> </div> ';
+			}
 		str += "</div>";
-		
+
 		return str;
 	}
-	
+
 	public function toString() :String
 	{
 		return render();

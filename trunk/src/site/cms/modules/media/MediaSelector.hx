@@ -4,23 +4,26 @@
  */
 
 package site.cms.modules.media;
+import haxe.Md5;
 import php.FileSystem;
+import php.io.File;
 import php.Lib;
 import php.Session;
 import php.Web;
 import poko.form.elements.Button;
+import site.cms.modules.base.formElements.FileUpload;
 import poko.form.elements.Selectbox;
 import poko.form.Form;
 import poko.js.JsBinding;
+import poko.utils.PhpTools;
 import site.cms.templates.CmsPopup;
 import site.cms.templates.CmsTemplate;
 
 class MediaSelector extends CmsPopup
 {
-	
-	
 	public var elementId:String;
 	public var form:Form;
+	public var uploadForm:Form;
 	public var selector:Selectbox;
 	public var items:List<String>;
 	private var gallery:String;
@@ -52,6 +55,9 @@ class MediaSelector extends CmsPopup
 			showOnlyLibraries = [];
 		}
 		
+		from = FROM_CMS;
+		if (app.params.get("from") != null) from = app.params.get("from");
+		
 		gallery = app.params.get("form1_galleryList");
 		if (showOnlyLibraries.length == 1) gallery = showOnlyLibraries[0];
 		if (gallery == null) gallery = Session.get('mediaGalleryLastGallery');
@@ -59,13 +65,17 @@ class MediaSelector extends CmsPopup
 		
 		allowViewThumb = (app.params.get("libraryViewThumb") == "1");
 		allowViewList = (app.params.get("libraryViewList") == "1");
+		
+		if (from == FROM_WYM) {
+			allowViewList = false;
+			allowViewThumb = true;
+			currentView = VIEW_THUMBS;
+		}
 	}
 	
 	override public function main()
 	{	
 		elementId = app.params.get("elementId");
-		from = FROM_CMS;
-		if (app.params.get("from") != null) from = app.params.get("from");
 		
 		if (app.params.get("viewType") != null)
 		{
@@ -114,6 +124,37 @@ class MediaSelector extends CmsPopup
 		form.addElement(selector);
 		form.setSubmitButton(new Button("submit", "submit"));
 		form.populateElements();
+		
+		// image upload
+		if (gallery != ""){
+			uploadForm = new Form('uploadForm');
+			var el = new FileUpload('file', 'File Upload');
+			el.showLibrary = false;
+			uploadForm.addElement(el);
+			uploadForm.addElement(new Button('submit', 'Add file'));
+			
+			if (uploadForm.isSubmitted()) {
+				// add new files
+				var files:Hash <Hash<Dynamic>> = PhpTools.getFilesInfo();
+				// data to insert into DB
+				var data:Hash<String> = new Hash();
+				
+				for (file in files.keys())
+				{
+					var info:Hash<Dynamic> = files.get(file);
+					var name = file.substr(form.name.length + 1);
+					var filename = info.get("name");
+					var randomString = Md5.encode(Date.now().toString()+Math.random());
+					
+					// upload file	
+					if (info.get("error") == 0) 
+					{
+						PhpTools.moveFile(info.get("tmp_name"), './res/media/galleries/' + gallery + '/' + randomString + filename);
+						data.set(name, randomString + filename);
+					}
+				}
+			}
+		}
 		
 		items = new List();
 		
