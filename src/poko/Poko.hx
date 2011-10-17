@@ -40,6 +40,7 @@ import php.Web;
 import poko.system.Db;
 import poko.system.Url;
 import poko.utils.PhpTools;
+import poko.utils.StringTools2;
 
 import site.Config;
 
@@ -103,9 +104,7 @@ class Poko
 		
 		url = new Url(Web.getURI());
 		
-		var useURLRewrite = false;
-		
-		controllerId = useURLRewrite ? findControllerClassByRewrite() : findControllerClass();	
+		controllerId = findControllerClass();	
 		
 		var controllerClass = Type.resolveClass( "site." + controllerId );
 		//var controllerType = Type.resolveClass("site." + findControllerClass());
@@ -133,20 +132,45 @@ class Poko
 		}
 	}
 	
-	private function findControllerClassByRewrite():String
+	private function setupForRewrite()
 	{
-		var request = params.get( "request" );
-		if (request == null && config.useShortRequest) request = params.get( "r" );
-		var path = params.get( "path" );
-		trace( request );
-		trace( path );
-		return "Index";
+		var requestUrl:String = null;
+		try {
+			requestUrl = untyped __var__('_SERVER', 'REDIRECT_URL');
+		}catch (e:Dynamic) { }
+		
+		if (requestUrl != null){
+			var r = requestUrl.split('/');
+			var r2 = new Array();
+			
+			for (v in r)
+				if (v != '') r2.push(v);
+			// no key/val
+			if (r2.length % 2 != 1) {
+				trace("Invalid URL: change to 404 later ...");
+				Sys.exit(1);
+			}else {
+				params.set('request', r2.shift());
+				var c = 0;
+				while (c < r2.length) {
+					params.set(r2[c], r2[c + 1]);
+					c += 2;
+				}
+			}
+		}
+	}
+	
+	private function setupForRouting()
+	{
+		// will make later if needed!
 	}
 	
 	private function findControllerClass():String
 	{
-		//var tmp = ();
 		if (params.get("request") == null && config.useShortRequest) params.set("request", params.get( "r" ));
+		
+		if (config.useUrlRewriting && params.get('request') == null) setupForRewrite();
+		
 		var c:String = url.getSegments()[0] != "" ? url.getSegments()[0] : params.get("request") != null ? params.get("request") : config.defaultController;
 
 		if (c.lastIndexOf(".") != -1)

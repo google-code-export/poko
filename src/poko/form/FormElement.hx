@@ -209,6 +209,21 @@ class FormElement
 		return css.trim();
 	}
 	
+	public function getErrorClasses()
+	{
+		var css = "";
+		
+		if ( required && form.isSubmitted() )
+		{
+			if ( value == "" )
+				css += " " + form.requiredErrorClass;
+			if ( !isValid() )
+				css += " " + form.invalidErrorClass;
+		}
+		
+		return css.trim();
+	}
+	
 	private inline function safeString(s:Dynamic) {
 		return s == null ? "" : Std.string(s).htmlEscape().split('"').join("&quot;");
 	}
