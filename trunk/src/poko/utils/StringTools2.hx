@@ -35,11 +35,15 @@ class StringTools2
 		
 	}
 	
-	public static function ucFirst(s:String) 
+	public static inline function ucFirst(s:String) 
 	{
-		var p1:String = s.substr(0, 1);
-		var p2:String = s.substr(1);
-		return p1.toUpperCase() + p2.toLowerCase();
+		#if php
+			return untyped __call__('ucfirst', s);
+		#else
+			var p1:String = s.substr(0, 1);
+			var p2:String = s.substr(1);
+			return p1.toUpperCase() + p2.toLowerCase();
+		#end
 	}
 	
 	/** takes string with %s identifiers and impodes array values */

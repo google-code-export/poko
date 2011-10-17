@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="Title" content="::head.title::" />
+    <meta name="Generator" content="haxe(haxe.org) - fwork" />
+    <meta name="Description" content="::head.description::" />
+    <meta name="Meta" content="::head.meta::" />
+    <meta name="Keywords" content="::head.keywords::" />
+	<meta name="Publisher" content="::head.publisher::" />
+	<meta name="Date" content="::head.date::" />
+	<title>::head.title::</title>
+	::raw head.getJs()::
+	::raw head.getCss()::
+	::raw "<!--[if IE 6]>":: ::head.getCssIe6():: ::raw "<![endif]-->"::
+	::raw "<!--[if IE 7]>":: ::head.getCssIe7():: ::raw "<![endif]-->"::
+	::raw head.getScripts()::
+	<link rel="shortcut icon" href="::head.favicon::" />
+</head>
+<body>
+	<div id="haxe:trace"></div>
+	<div id="container">
+		
+		<div id="heading">
+
+			<div id="headingLogo"></div>
+
+			<hr />
+			
+			::raw navigation::
+			
+			<div style="clear:both"></div>
+			
+			<hr />
+
+			::if user.authenticated::
+			<ul id="headingUserBox">
+				<div id="headingUserBoxName">Hello <b>::userName::</b></div>
+				<div id="headingUserBoxLogout"><a href="?request=cms.Index&logout=true">logout</a></div>
+			</ul>
+			::end::
+			
+			<div style="clear:both"></div>
+			
+			<hr />
+			
+		</div>
+
+		::if messages.getMessages().length > 0::
+			<div class="messageBlock" id="messageMessages"><ul>
+				::foreach m messages.getMessages()::
+					<li> ::raw m::</li>
+				::end::
+			</ul></div>
+		::end::
+		
+		::if messages.getWarnings().length > 0::
+			<div class="messageBlock" id="messageWarnings"><ul>
+				::foreach m messages.getWarnings()::
+					<li> ::raw m:: </li>
+				::end::
+			</ul></div>
+		::end::
+		
+		::if messages.getErrors().length > 0::
+			<div class="messageBlock" id="messageErrors"><ul>
+				::foreach m messages.getErrors()::
+					<li> ::raw m:: </li>
+				::end::
+			</ul></div>
+		::end::
+		
+		::if messages.getDebugs().length > 0::
+			<div class="messageBlock" id="messageDebugs"><ul>
+				::foreach m messages.getDebugs()::
+					<li> ::raw m:: </li>
+				::end::
+			</ul></div>
+		::end::			
+		
+		<div id="leftNavigation">::raw leftNavigation::</div>
+		<div id="content">::raw controller.view.render() ::</div>
+		
+		<div style="clear:both"></div>
+	</div>
+	::raw head.getJsCalls()::
+</body>
+</html>
+

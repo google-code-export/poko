@@ -1,0 +1,15 @@
+p {
+	margin-bottom: 20px;
+}
+
+.formLabelRequired {
+	font-weight: bold;
+}
+.formLabelRequiredError {
+	font-weight: bold;
+	color: #f60;
+}
+.formLabelError {
+	font-weight: bold;
+	color: #f00;	
+}

@@ -1,0 +1,27 @@
+
+::raw header::
+
+::foreach section sections.keys()::
+	::if !sectionsIsSeperator.get(section)::
+		<h3>::section::</h3>
+		<ul>
+			
+		::foreach item sections.get(section)::
+			::if item.link != null::
+				<li><a href="?request=::item.link::">::raw item.indents::::raw item.title:: </a>::raw item.extra::</li>
+			::else::
+				<li>::raw item.indents::::raw item.title::</li>
+			::end::
+		::end::
+
+		
+		</ul>
+	::else::
+		<hr class="leftNavigationSeperator" />
+	::end::
+	
+::end::
+
+<div id="leftNavigationFooter">
+	::raw footer::
+</div>

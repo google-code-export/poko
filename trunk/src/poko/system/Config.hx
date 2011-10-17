@@ -6,12 +6,24 @@ import php.Sys;
 
 class Config
 {
+	// sets up a default
+	public var useDb:Bool;
+	// '?r=Controller' instead of 'request=Controller'
+	public var useShortRequest:Bool;
+	// uses simple url rewriting ie /?r=Index&p=10 -> /Index/p/10
+	public var useUrlRewriting:Bool;
+	// which base url does it rewrite to?
+	public var urlRewriteBase:String;
+	// if this is set to true, it is assumed that you're putting '?r=Home&p=5&d=hello'
+	// as your URLs, otherwise it assumes rewritten ones ie '/home/p/5/d/hello'
+	public var urlRewriteFromParams:Bool;
+	// runs the router function in config
+	public var useUrlRouting:Bool;
+	
 	// Whether or not the site is in development mode (i.
 	public var development : Bool;
 	public var isLive : Bool;
 	public var printProcessingTime : Bool;
-	
-	public var useShortRequest:Bool;
 	
 	public var controllerPackage : String;
 	
@@ -25,6 +37,7 @@ class Config
 	public var permittedUriChars : String;
 	public var logDateFormat : String;
 	
+	
 	public var errorPage : String;
 	public var error404Page : String;
 	
@@ -32,9 +45,11 @@ class Config
 	public var defaultAction : String;
 	
 	public var encryptionKey : String;
-	public var sessionName : String;
 	
-	public var useDb : Bool;
+	public var sessionName : String;
+	public var sessionHelper : SessionHelper;
+	
+	// if you want to have a MySQL by default
 	public var database_host : String;
 	public var database_port : String;
 	public var database_user : String;
@@ -62,7 +77,17 @@ class Config
 		isLive = false;
 		useShortRequest = false;
 		useDb = true;
+		useUrlRewriting = false;
+		urlRewriteFromParams = false;
 		printProcessingTime = false;
+		
+		// if it's not set, set a default
+		if (sessionName == null) sessionName = "poko";
+		
+		// if we don't set a custom session helper, use the default
+		if (sessionHelper == null) {
+			sessionHelper = new SessionHelper(sessionName);
+		}
 		
 		//indexFile
 		if(env.exists('SCRIPT_NAME'))
@@ -113,8 +138,6 @@ class Config
 		database_user = "root";
 		database_password = "";
 		database_database = "";
-		
-		sessionName = "poko";
 		
 		#if debug
 			if (debug != null) this.dumpEnvironment(debug);

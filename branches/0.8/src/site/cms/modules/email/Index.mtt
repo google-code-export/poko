@@ -1,0 +1,46 @@
+	<div style="margin-bottom:50px;">
+		<h3>Create &amp; Send Email</h3>
+		
+		::if form.submittedButtonName != "sendBtn"::
+		<p style="margin-bottom:10px;">
+			A total of <strong>::userCount::</strong> users will received this email.
+		</p>
+		::end::
+		
+		::raw form.getOpenTag()::
+		
+		::raw form.getErrors()::
+		
+		::if form.submittedButtonName == "previewBtn" && form.isValid()::
+			<div>
+				<div style="background-color:#eeeeee;padding:5px;width:500px;margin-bottom:10px;margin-top:20px">::raw previewStr::</div>
+				<input type="hidden" name="emailForm_body" value="::raw editStr::"/>
+				<input type="hidden" name="emailForm_fromName" value="::raw form.getElement('fromName').value::"/>
+				<input type="hidden" name="emailForm_fromEmail" value="::raw form.getElement('fromEmail').value::"/>
+				<input type="hidden" name="emailForm_emailSubject" value="::raw form.getElement('emailSubject').value::"/>
+				<div style="display:inline">::raw form.getElement("editBtn") ::</div>
+				<div style="display:inline;margin-left:400px">::raw form.getElement("sendBtn") ::</div>
+			</div>
+		::elseif form.submittedButtonName == "sendBtn" && form.isValid()::
+			<p>Your mail was sent to <strong>::userCount::</strong> users!</p>
+		::else::
+			<p>
+				<em>The following variables are available:</em><br/>
+				<ul style="list-style-type: square; margin-left: 30px;margin-bottom: 20px;">
+				::foreach v emailVars::
+					<li><b>::raw controller.encodeVar(v.name) ::</b> - ::raw v.desc::</li> 
+				::end::
+				</ul>
+			</p>
+		
+			<table>
+				<tr><td width="100">::raw form.getLabel("fromName") ::</td><td>::raw form.getElement("fromName") ::</td></tr>
+				<tr><td>::raw form.getLabel("fromEmail") ::</td><td>::raw form.getElement("fromEmail") ::</td></tr>
+				<tr><td>::raw form.getLabel("emailSubject") ::</td><td>::raw form.getElement("emailSubject") ::</td></tr>
+				<tr><td colspan="2">::raw form.getElement("body") ::</td></tr>
+				<tr><td colspan="2">::raw form.getElement("previewBtn") ::</td></tr>
+			</table>
+		::end::	
+		
+		::raw form.getCloseTag()::
+	</div>

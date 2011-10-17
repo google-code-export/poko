@@ -1,0 +1,63 @@
+<h3>Locations</h3>
+
+<p>
+	Location selectors allow users to visually choose a location (latitude and longitude coordinates) using Google Maps.
+</p>
+<p>
+	A unique Google Maps API Key will need to be generated in order to use this form element. This can be done for free by, <a href="http://code.google.com/apis/maps/signup.html">signing up for the Google Maps API</a>.<br/>
+	When creating LocationSelector elements in haXe code, you can either specify this API key directly on the element, or define the key
+	under the main section in the Poko CMS settings page.
+</p>
+<br/><br/>
+
+<table>
+	<tr><td class="elmentLabel">::raw form.getLabel("location") ::</td><td>::raw form.getElement("location") ::</td></tr>
+	<tr><td colspan="2" class="elementDesc">
+		A simple location form element. Clicking the <strong>Edit Location</strong> link will open a popup window, allowing users to select latitude and longitude coordinates using Google Maps.
+<p><pre class="code" lang="haxe" style="display:none">
+var location = new LocationSelector("location", "Simple Location");
+form.addElement(location);
+</pre></p>
+	</td></tr>
+	
+	<tr><td class="elmentLabel">::raw form.getLabel("location2") ::</td><td>::raw form.getElement("location2") ::</td></tr>
+	<tr><td colspan="2" class="elementDesc">
+		A location element with default coordinates specified. When editing an undefined location, the map will center on our studio in Melbourne, Australia by default.
+<p><pre class="code" lang="haxe" style="display:none">
+var location = new LocationSelector("location", "Location with default");
+// Set default location to our studio in Melbourne. Location is specified as two floats separated by a comma.
+location.defaultLocation = "-37.797871, 144.986099";
+form.addElement(location);
+</pre></p>
+	</td></tr>
+	
+	<tr><td class="elmentLabel">::raw form.getLabel("location3") ::</td><td>::raw form.getElement("location3") ::</td></tr>
+	<tr><td colspan="2" class="elementDesc">
+		A location element with the ability to search for and locate a specific address.
+<p><pre class="code" lang="haxe" style="display:none">
+var location = new LocationSelector("location", "Location with search");
+// Enable searching for addresses
+location.searchAddress = true;
+form.addElement(location);
+</pre></p>
+	</td></tr>
+	
+	<tr><td class="elmentLabel">::raw form.getLabel("location") ::</td><td>::raw form.getElement("location") ::</td></tr>
+	<tr><td colspan="2" class="elementDesc">
+		An example showing all the configurable parameters being used.
+<p><pre class="code" lang="haxe" style="display:none">
+var location = new LocationSelector("location", "Advanced Location");
+// Enable searching for addresses.
+location.searchAddress = true;
+// Set the default location to central Australia.
+location.defaultLocation = "-25.641526373065755, 133.41796875";
+// Specify a custom Google Maps API Key. This can also be defined globally under the main settings menu in Poko CMS.
+location.googleMapsKey = "ABQIAAAAPEZwP3fTiAxipcxtf7x-gxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRPwWSQQtyYryiI5S6KBZMsOwuCsw";
+// Specify the width and height of the popup.
+location.popupWidth = 800;
+location.popupHeight = 600;
+form.addElement(location);
+</pre></p>
+	</td></tr>
+
+</table>

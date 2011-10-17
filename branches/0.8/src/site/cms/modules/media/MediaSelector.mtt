@@ -1,0 +1,55 @@
+<div id="mediaSelectorWrapper">
+
+	::if showOnlyLibraries.length == 0 || showOnlyLibraries.length > 1::
+		::raw form.getPreview()::
+	::end::
+
+	::if allowViewList && allowViewThumb::
+		::if currentView == "thumbs"::
+		<div id="galleryViewType">View as Thumbs | <a href="?request=cms.modules.media.MediaSelector&viewType=list&libraryViewThumb=1&libraryViewList=1&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">List</a></div>
+		::else::
+		<div id="galleryViewType">View as <a href="?request=cms.modules.media.MediaSelector&viewType=thumbs&libraryViewThumb=1&libraryViewList=1&from=::from::&form1_galleryList=::gallery::&elementId=::elementId::">Thumbs</a> | List</div>
+		::end::
+	::end::
+		
+	<div id="imageContent">
+		
+		::if currentView == "thumbs"::
+			::foreach item items::
+				<div class="galleryItem">
+					::raw controller.getItem(item)::
+				</div>
+			::end::
+			::if items.length == 0::
+				<div>No files</div>
+			::end::
+		::else::
+			<div class="galleryList">
+			::foreach item items::
+				<div class="galleryListItem">
+					::raw controller.getItem(item)::
+				</div>
+			::end::
+			</div>
+		::end::
+		
+		<div style="clear:both;">&nbsp;</div>
+	</div>
+
+	<div id="imageUpload">
+		::if uploadForm != null && gallery != null::
+			<b>Upload Image</b>
+			::raw uploadForm.getOpenTag()::
+			::raw uploadForm.getElement('file')::
+			::raw uploadForm.getElement('submit')::
+			::raw uploadForm.getCloseTag()::
+		::else::
+			<p>&lt; Please choose a gallery before uploading.</p>
+		::end::
+		
+		<div style="clear:both;">&nbsp;</div>
+	</div>
+
+</div>
+
+<div style="clear:both;">&nbsp;</div>

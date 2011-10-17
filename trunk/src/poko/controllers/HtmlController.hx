@@ -38,13 +38,12 @@ import php.Session;
 import php.Sys;
 import php.Web;
 import poko.js.JsBinding;
+import poko.utils.StringTools2;
 import poko.views.View;
 
 class HtmlController extends Controller
 {
 	public var head:HtmlHeader;
-	
-	//public var scriptes:ScriptList;
 		
 	public var jsBindings:Hash<JsBinding>;
 	public var jsCalls:List<String>;
@@ -92,6 +91,48 @@ class HtmlController extends Controller
 		#else
 			return StringTools.replace(input, "\n", "<br />");
 		#end
+	}
+	
+	public function url(u:String)
+	{
+		var c = Poko.instance.config;
+		if (c.useUrlRewriting) {
+			if (c.urlRewriteFromParams) {
+				// convert params to slashes
+				// assume '?r=Home&d=1' -> '/home/d/1'
+				var o:String = '';
+				var a:String = null;
+				untyped __php__('parse_str(substr($u, 1), $a);');
+				untyped __php__("foreach($a as $k=>$v){ if ($k != 'r' and $k != 'request'){ $o .= $k . '/' . $v . '/'; }else{ $o .= $v . '/'; } }");
+				return c.urlRewriteBase + '/' + o.substr(0, 1).toLowerCase() + o.substr(1);
+			}else{
+				return c.urlRewriteBase + u;
+			}
+		}else {
+			if (c.urlRewriteFromParams) {
+				return u;
+			}else{
+				// convert slashes to params
+				// assume '/home/d/1' -> '?r=Home&d=1
+				var a = u.split('/');
+				var rAdded = false;
+				var c = 0;
+				var o = null;
+				while (c < a.length) {
+					if (a[c] != '') {
+						if (!rAdded) {
+							o = '?r=' + StringTools2.ucFirst(a[c]);
+							rAdded = true;
+						}else {
+							o += '&' + a[c] + '=' + a[c + 1];
+							c++;
+						}
+					}
+					c++;
+				}
+				return o;
+			}
+		}
 	}
 	
 }

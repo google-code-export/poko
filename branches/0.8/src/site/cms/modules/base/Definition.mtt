@@ -1,0 +1,132 @@
+
+	<h3>Manage ::pageLabel:: : "::definition.name::"</h3>
+	
+	<div id="definitionOptions">
+		<div id=""><a href="#" onclick="$('#definitionOptionsForm').toggle(); return false;"><img src="./res/cms/cog.png" title="Toggle Definitions Options" align="absmiddle" /> Toggle Definitions Options</a></div>
+		<div id="definitionOptionsForm" style="display: none;">
+		
+		::raw form1.getOpenTag()::
+			
+			::raw form1.getErrors()::	
+			
+				::if form1.getFieldsets() != null ::
+					::foreach fieldset form1.getFieldsets() ::
+						::if fieldset.name != "__submit" && fieldset.elements.length > 0:: 
+							
+							::raw fieldset.getOpenTag() ::
+								<table class="greyTable">
+									::foreach element fieldset.elements ::
+									<tr>
+										<td class="labelTd">::raw element.getLabel():: ::if element.description != null && element.description != ""::<img class="qTip" src="./res/cms/help.png" title="::raw controller.nl2br(element.description)::" align="absmiddle" />::end::</td>
+										<td class="contentTd">::raw element::</td>
+									</tr>
+									::end::
+								</table>
+							::raw fieldset.getCloseTag() ::
+							
+						::end::
+					::end::
+				::else::
+					::foreach element elements::
+						<tr><td>::raw element.getLabel()::</td><td>::raw element::</td></tr>
+					::end::
+				::end::
+				
+				<tr><td colspan="2">::raw form1.submitButton::</td></tr>
+
+		::raw form1.getCloseTag()::
+		
+		</div>
+	</div>
+	
+	<br/><br/>
+	<h4>Defined Fields</h4>
+	
+	::if pagesMode::
+	<form action="" method="POST">
+		<input name="elementName" />
+		<input type="hidden" name="action" value="addElement" />
+		<button>Add Field</button>
+	</form>
+	::end::
+	
+	<form action="" method="POST">
+		<table class="greyTable" id="News">
+			<tr>
+				<td colspan="2"><b>order</b></td>
+				<td><b>field</b></td>
+				::if !pagesMode::<td><b>field type</b></td>::end::
+				<td><b>definition</b></td>
+				<td><b>vis</b></td>
+				<td><b>flt</b></td>
+				<td><b>ord</b></td>
+				<td>&nbsp;</td>
+			</tr>
+			
+			::foreach element definition.elements ::
+				
+				<tr>
+					<td><input type="checkbox" name="delete[]" value="::element.name::" /></td>
+					<td><input type="input" name="order[]" value="::repeat.element.number::" class="order" /></td>
+					<td>::element.name::</td>
+					::if !pagesMode::<td>(::if element.dbtype !=null:: ::controller.formatDbType(element.dbtype):: ::end::)</td>::end::
+					<td>(::element.type::)</td>
+					<td><a id="checkboxToggle_showInList_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInList"])::">::if element.showInList:: &#x2714; ::else:: &#x02610; ::end::</a></td>
+					<td><a id="checkboxToggle_showInFiltering_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInFiltering"])::">::if element.showInFiltering:: &#x2714; ::else:: &#x02610; ::end::</a></td>
+					<td><a id="checkboxToggle_showInOrdering_::repeat.element.index::" href="javascript:" onClick="::jsBind.getCall("toggleCheckbox", [element.name, repeat.element.index, "showInOrdering"])::">::if element.showInOrdering:: &#x2714; ::else:: &#x02610; ::end::</a></td>
+					<td><a href="?request=cms.modules.base.DefinitionElement&id=::id::&definition=::element.name::&pagesMode=::pagesMode::">edit</a></td>
+				</tr>
+				
+			::end::
+		</table>
+		<br />
+		<input type="hidden" name="action" value="update" />
+		<input type="submit" name="submitted_delete" value="delete & order" />
+	</form>
+	
+	::if !pagesMode::
+	<br /><br/>
+	<h4>Undefined Fields</h4>
+	<table class="greyTable" id="News">
+		<tr>
+				<td><b>field</b></td>
+				<td><b>type</b></td>
+				<td></td>
+		</tr>
+		
+		::foreach element undefinedFields ::
+		<tr>
+			<td>::element.Field::</td>
+			<td>(::element.Type::)</td>
+			<td><a href="?request=cms.modules.base.Definition&id=::id::&action=define&define=::element.Field::" >Define</a></td>
+		</tr>
+		::end::
+	</table>
+	
+	<br /><br/>
+	<h4>Extras</h4>
+	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=multilink">Add 'Multilink'</a><br />
+	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=linkdisplay">Add 'Link-Display'</a><br />
+	<a href="?request=cms.modules.base.Definition&id=::id::&action=addExtra&extra=listformatter">Add 'List Formatter'</a>
+	::end::
+	
+<script>
+		
+	$('.qTip').qtip({
+		tooltip: 'bottomRight',
+		style: 'cream',
+		show: {
+			delay: 200,
+			solo: true,
+			effect: {
+				type: 'none'
+			}
+		},
+		hide: {
+			effect: {
+				type: 'none'
+			}
+		}
+	});	
+	
+</script>

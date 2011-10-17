@@ -1,0 +1,534 @@
+html, body
+{
+	background-color:#E8E8E8;
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size:12px;
+	color:#222;
+	padding: none;
+}
+
+
+td,tr{
+	padding:3px;
+}
+
+p{
+	margin:5px;
+}
+
+textarea
+{
+	width:200px;
+	height:200px;
+	padding:2px;
+}
+
+hr{
+	height:1px;
+	background-color:#9e9e9e;
+	border:0px;
+}
+
+h1{
+	color:#000;
+	font-size:18px;
+}
+
+h2{
+	color:#000;
+	font-size:20px;
+}
+
+h3{
+	color:#000;
+	font-size:16px;
+}
+
+a, a:visited
+{
+	color:#ff6600;
+	text-decoration:none;
+}
+
+a:hover
+{
+	color:#000000;
+}
+
+fieldset{
+	padding: 10px;
+	border: 1px solid #ccc;	
+	margin: 20px 0;
+}
+
+fieldset legend{
+	padding: 0 10px;
+	font-weight: bold;
+}
+
+fieldset.fieldsetNoDisplay{
+	padding:0;
+	border:0;
+}
+fieldset.fieldsetNoDisplay legend{
+	display:none;
+}
+
+.radioItemHorizontal {
+	float: left;
+	margin-right: 10px;
+}
+
+#container
+{
+	
+	background-color:#e8e8e8;
+}
+
+#content
+{
+	margin-left: 170px;
+	display:block;
+	background: #fff;
+	margin-top: 40px;
+	margin-right: 11px;
+	margin-bottom: 20px;
+	padding: 11px;
+	min-width: 428px;
+	max-width: 900px;
+}
+
+#loginBox
+{
+	background: #f3f3f3;
+	padding: 11px;
+}
+#loginBox h2
+{
+	margin-bottom: 20px;
+}
+#loginBoxSubmit
+{
+	margin-top: 20px;
+	display: relative;
+}
+
+#content h3
+{
+	background: url('../../res/cms/theme/default/heading-long-bg.png') no-repeat;
+	width: 440px;
+	height: 62px;
+	color: #fff;
+	font-size: 13px;
+	padding-left: 10px;
+	margin-left: -11px;
+	margin-top: -31px;
+	margin-bottom: -31px;
+}
+
+#headingLogo
+{
+	background: url('../../res/cms/theme/default/logo.png') 2px 20px no-repeat;
+	width:174px;
+	height:95px;
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+
+#headingLogo span
+{
+	display:none;
+}
+
+#heading 
+{
+	height: 130px;	
+	background-image: url('../../res/cms/theme/default/bg.png');
+}
+
+#heading hr
+{
+	display: none;
+}
+
+#heading #headingNavigation
+{
+	padding-left: 11px;
+}
+
+#heading #headingNavigation li
+{
+	float: left;
+}
+
+#heading #headingNavigation li a
+{
+	display: block;
+	width: 80px;
+	height: 25px;
+	background: url('../../res/cms/theme/default/button0.png') no-repeat;
+	text-align: center;
+	color: #fff;
+	margin-right: 5px;
+	font-size: 12px;
+	font-weight: bold;
+	padding-top: 5px;
+}
+
+#heading #headingNavigation li a:hover
+{
+	background: url('../../res/cms/theme/default/button1.png') no-repeat;
+}
+
+#heading hr
+{
+	height:2px;
+}
+
+#headingUserBox
+{
+	width: 300px;
+	height: 20px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background: url('../../res/cms/theme/default/login-bg.png') no-repeat;
+	font-size: 12px;
+}
+#headingUserBox a
+{
+	color: #93dd22;
+}
+#headingUserBox a:hover
+{
+	color: #fff;
+}
+
+#headingUserBoxName
+{
+	float: left;
+	color: #fff;
+	padding-top: 2px;
+	padding-left: 10px;
+}
+
+#headingUserBoxLogout
+{
+	float: right;
+	padding-top: 2px;
+	padding-right: 10px;	
+}
+
+#pageHeading h2
+{
+	margin:10px;
+	margin-top:15px;
+}
+
+
+#leftNavigation
+{
+	clear: left;
+	float:left;
+	width:150px;
+	padding-top: 15px;
+}
+
+#leftNavigation h3
+{
+	background: url('../../res/cms/theme/default/heading-short-bg.png') no-repeat;
+	width: 150px;
+	height: 20px;
+	color: #fff;
+	font-size: 13px;
+	padding-left: 10px;
+	margin-left: 11px;
+}
+
+#leftNavigation ul
+{
+	margin-left: 11px;
+	background: #fff;
+	color: #000;
+	width: 144px;
+	padding: 3px;
+	margin-bottom: 5px;
+}
+
+#leftNavigation ul a
+{
+	color: #000;
+	font-size: 12px;
+}
+#leftNavigation ul a:hover
+{
+	color: #FF6600;
+}
+
+.leftNavigationSeperator
+{
+	height: 2px;
+	background: #aaa;
+	margin: 11px 0px 11px 11px;
+	width: 150px;
+}
+
+#leftNavigationFooter a
+{
+	display: block;
+	width: 144px;
+	margin: 11px 0px 11px 11px;
+	background: #244d49;
+	color: #fff;
+	font-size: 11px;
+	padding: 3px;
+}
+#leftNavigationFooter a:hover
+{
+	background: #486460;
+}
+
+.description
+{
+	font-size:12px;
+}
+
+.order
+{
+	width: 30px;
+}
+
+.greyTable > tbody >tr > td
+{
+	/*border: 1px solid #e0e0e0;*/
+	background-color:#f8f8f8;
+	padding:10px;
+	border:2px solid #fff;
+}
+
+
+.labelTd
+{
+	width:100px;
+}
+
+.contentTd
+{
+	width:450px;
+}
+
+.helpWrapper {
+
+}
+
+.helpWrapper p {
+	margin-bottom: 1.5em;
+}
+
+.managePageLink
+{
+	background: url(../../res/cms/pencil.gif) no-repeat;
+}
+
+/* -------------------------------------------------------
+*	Messages, Warnings and Errors
+*/
+
+.messageBlock
+{
+	display:block;
+	width:auto;
+	margin: 0px auto 10px auto;
+	background-color:#fff;
+	padding: 1ex;
+	text-align:left;
+	font-size:112%;
+}
+
+#messageMessages, #messageWarnings, #messageErrors
+{
+	padding-left: 45px;
+	padding-top: 19px;
+	min-height: 25px;
+	margin-bottom: -0px;
+}
+
+#messageMessages
+{
+	color: #426F30;
+	background: #fff url('../../res/cms/tick.png') 20px 20px  no-repeat;
+}
+
+#messageWarnings
+{
+	color: #DFA200;
+	background: #fff url('../../res/cms/error.png') 20px 20px  no-repeat;
+}
+
+#messageErrors
+{
+	color: #CF3719;
+	background: #fff url('../../res/cms/exclamation.png') 20px 20px  no-repeat;
+}
+
+/* ------------------------------------------------------- */
+/* filter tabs */
+#datasetTabFields li {
+	display: inline;
+	padding: 5px;
+	padding-bottom: 10px;
+	background: #eee;
+}
+#datasetTabFields li.datasetTabFieldSelected {
+	background: #f8f8f8;
+	border: 3px solid #fff;
+	border-bottom: 1px solid #fff;
+	padding: 10px;
+}
+
+/* ------------------------------------------------------- */
+/* paging */
+
+.datasetPagination {
+	height: 50px;
+}
+
+.datasetPagination a {
+	background: #eee;
+	padding: 5px;
+	margin: 1px;
+}
+.datasetPagination a:hover {
+	background: #fff;
+	border: 1px solid #eee;
+	padding: 4px;
+}
+
+.datasetPagination span.paginationCurrent {
+	background: #f8f8f8;
+	padding: 10px;
+	font-weight: bold;
+	margin: 1px;
+}
+
+.datasetPagination span.paginationOf {
+	margin-left: 15px;
+}
+
+/* ------------------------------------------------------- */
+/* filtering and ordering controls */
+
+#filterOrderWrapper
+{
+	background: #f6f6f6;
+	margin: 10px 0;
+	padding: 5px;
+}
+/*
+#filterOptions
+{
+	background: green;
+}
+
+#filter_normal
+{
+	background: purple;
+}
+
+#filter_assoc
+{
+	background: lightgreen;
+}
+
+#orderOptions
+{
+	background: orange;
+}
+
+#filterOrderButtons
+{
+	background: red;
+}
+*/
+/* ------------------------------------------------------- */
+
+#datasetActionsWrapper
+{
+	background: #eee;
+	width: auto;
+	margin: 10px 0;
+	padding: 5px;
+}
+
+#datasetDeleteButton, #datasetDeleteButtonTop
+{
+	background-image: url(../../res/cms/delete.png);
+	background-repeat: no-repeat;
+	padding-left: 18px;
+	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+#datasetDeleteButtonTop {
+	margin-bottom: 10px;
+}
+
+#datasetOrderButton, #datasetOrderButtonTop
+{
+	background-image: url(../../res/cms/icon_order.png);
+	background-repeat: no-repeat;
+	padding-left: 18px;
+	margin-top: 10px;
+}
+
+.dragHandle:hover {
+	cursor: move;
+	background-image: url(../../res/cms/shading.png) no-repeat !important;
+}
+
+.showDragHandle span {
+	background: transparent url(../../res/cms/shading.png) no-repeat !important;
+	width: 16px;
+	height: 16px;
+	display: block;
+}
+
+/* ------------------------------------------------------- */
+
+.cmsSettinsThemeWrapper
+{
+	width: 240px;
+	height: 180px;
+	padding: 10px;
+	background: #ddd;
+	margin: 20px;
+	float: left;
+}
+
+.cmsSettinsThemeWrapper:hover
+{
+	background: #eee;
+}
+
+.cmsSettinsThemeWrapperCurrent
+{
+	border: 3px solid #000;
+	padding: 7px;
+}
+
+#cmsDatasetItemOverallHelp
+{
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+.cmsDatasetListRecordAction
+{
+	width: 50px;
+}
+
+.leftNavEdit
+{
+	float: right;
+}

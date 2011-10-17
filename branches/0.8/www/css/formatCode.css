@@ -1,0 +1,14 @@
+pre.code {
+	border: 1px solid black;
+	padding: 5px;
+	background-color: #ffffff;
+}
+span.comment {
+	color: #ff00ff;
+}
+span[class~=comment][class~=php] {
+	color: red;
+}
+a.codeToggle {
+	clear: both;
+}
